@@ -1,0 +1,38 @@
+name: Injury news
+
+on:
+  repository_dispatch:
+    types: [injury_news]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Ingest news and re-run projections
+        working-directory: scripts
+        env:
+          NEWS_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python ingest_news.py
+          if [ -f ../data/player_games.csv ]; then python build_model.py; fi
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet && exit 0
+          git commit -m "news: $(date -u +%H:%M:%SZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

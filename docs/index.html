@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc Lab</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#142033; --muted:#5B6878; --line:#D5DCE4;
+  --rim:#E8590C; --rim-soft:#FCE3D3; --make:#0F8F6A; --miss:#C8324B; --chip:#E9EDF2;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42;}}
+:root[data-theme="dark"]{
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--rim);outline-offset:2px}
+
+header{position:relative;overflow:hidden;padding:28px 20px 0;max-width:1200px;margin:0 auto}
+.arc{position:absolute;right:-60px;top:-140px;width:420px;height:420px;pointer-events:none}
+.arc path{fill:none;stroke:var(--rim);stroke-width:3;stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 1.4s ease-out .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (max-width:600px){.arc{width:240px;height:240px;right:-70px;top:-110px;opacity:.55}}
+@media (prefers-reduced-motion:reduce){.arc path{animation:none;stroke-dashoffset:0}}
+h1{font:700 clamp(44px,8vw,72px)/.9 var(--display);margin:0;letter-spacing:-.5px}
+.sub{color:var(--muted);margin:6px 0 18px;font-size:15px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{font:600 19px var(--display);background:none;border:0;color:var(--muted);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-color:var(--rim)}
+
+main{max-width:1200px;margin:0 auto;padding:16px 20px 60px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.chip{font:500 14px var(--body);background:var(--chip);color:var(--ink);border:1px solid transparent;border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+input[type=search],input[type=number],select{font:15px var(--body);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+input[type=number]{width:64px;padding:4px 6px}
+label.inline{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:14px}
+
+.outs{background:var(--surface);border-left:4px solid var(--miss);padding:8px 12px;margin-bottom:14px;font-size:14px}
+.outs strong{font-family:var(--display);font-size:16px}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font:600 15px var(--display);color:var(--muted);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1}
+td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.name{font-weight:600}
+.meta{color:var(--muted);font-size:12px}
+.big{font:700 20px var(--display)}
+.ladder{display:inline-flex;gap:2px}
+.ladder span{width:40px;text-align:center;padding:3px 0;border-radius:3px;font:600 14px var(--display)}
+.spark{display:inline-flex;gap:2px;align-items:flex-end;height:22px;vertical-align:middle}
+.spark i{width:5px;background:var(--line);border-radius:1px}
+.spark i.hit{background:var(--make)}
+.flag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;background:var(--rim-soft);color:var(--ink);margin-left:4px}
+.flag.q{background:var(--chip)}
+.pos{color:var(--make);font-weight:600}.neg{color:var(--miss)}
+.rk{font:600 15px var(--display)}
+.rk.hot{color:var(--rim)}
+.heat td{font:600 15px var(--display)}
+.heat td small{display:block;font:400 11px var(--body);color:var(--muted)}
+.news{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.news li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.tag{font:700 14px var(--display);padding:2px 8px;border-radius:4px;align-self:start;color:#fff;background:var(--muted)}
+.tag.OUT,.tag.DOUBTFUL{background:var(--miss)}
+.tag.QUESTIONABLE,.tag.MIN{background:var(--rim)}
+.tag.STARTING,.tag.AVAILABLE{background:var(--make)}
+.empty{padding:28px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:8px}
+.foot{color:var(--muted);font-size:13px;margin-top:10px;max-width:72ch}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <svg class="arc" viewBox="0 0 420 420" aria-hidden="true"><path d="M30 0 V150 A180 180 0 0 0 390 150 V0"/></svg>
+  <h1>Arc Lab</h1>
+  <p class="sub" id="status">Loading tonight's slate…</p>
+  <nav role="tablist">
+    <button role="tab" data-tab="threes" aria-selected="true">Threes</button>
+    <button role="tab" data-tab="props" aria-selected="false">Props</button>
+    <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
+    <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
+  </nav>
+</header>
+
+<main>
+  <div class="controls" id="gameChips"></div>
+
+  <section id="threes">
+    <div class="controls">
+      <input type="search" id="q3" placeholder="Search player" aria-label="Search player">
+      <span id="posChips3"></span>
+    </div>
+    <div id="outs3"></div>
+    <div class="scroll"><table id="t3"></table></div>
+    <p class="foot">Ladder shows the chance of making at least 1, 2, 3, 4 and 5 threes. Opp rank is how many threes tonight's opponent allows to this position, adjusted for minutes: 1 gives up the most, 30 the fewest. Bars show makes over the last 10 games, green when they cleared the line.</p>
+  </section>
+
+  <section id="props" hidden>
+    <div class="controls">
+      <select id="stat" aria-label="Stat">
+        <option value="pts">Points</option><option value="reb">Rebounds</option>
+        <option value="ast">Assists</option><option value="pra">Pts + Reb + Ast</option>
+        <option value="tpm">3-pointers made</option>
+      </select>
+      <input type="search" id="qp" placeholder="Search player" aria-label="Search player">
+      <label class="inline">Break-even % <input type="number" id="be" min="50" max="70" step="0.1"></label>
+    </div>
+    <div class="scroll"><table id="tp"></table></div>
+    <p class="foot">Lines fill in from your Underdog board when <code>data/lines.json</code> is present; otherwise they start at the model's fair line. Edit any line to see the chance of going over. Edge is the over chance minus your break-even (55% matches a 3-pick at 6x).</p>
+  </section>
+
+  <section id="defense" hidden>
+    <div class="controls">
+      <select id="dstat" aria-label="Stat">
+        <option value="tpm">3-pointers made</option><option value="tpa">3-point attempts</option>
+        <option value="pts">Points</option><option value="reb">Rebounds</option><option value="ast">Assists</option>
+      </select>
+      <span id="dmode"></span>
+    </div>
+    <div class="scroll"><table id="td" class="heat"></table></div>
+    <p class="foot" id="dnote"></p>
+    <p class="foot">Tap a position to sort teams by who gives up the most to it.</p>
+  </section>
+
+  <section id="news" hidden>
+    <div class="controls" id="newsChips"></div>
+    <ul class="news" id="newsList"></ul>
+  </section>
+</main>
+
+<script>
+const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", newsTag:"all",
+           sort3:"p2", sortP:"auto", lines:{}, edits:{}, be:55};
+try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
+const $ = id => document.getElementById(id);
+const POS = ["PG","SG","SF","PF","C"];
+const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","POINTS":"pts","REB":"reb","REBOUNDS":"reb",
+                  "AST":"ast","ASSISTS":"ast","PRA":"pra","PTS+REB+AST":"pra"};
+let P = null, D = null, N = [];
+
+const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
+  .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
+const pct = x => (100*x).toFixed(0)+"%";
+const over = (pmf, L) => pmf.reduce((a,v,k)=>a+(k>L?v:0),0);
+const atLeast = (pmf, k) => pmf.slice(k).reduce((a,v)=>a+v,0);
+const fair = pmf => { let c=0; for(let k=0;k<pmf.length;k++){ c+=pmf[k]; if(c>=0.5) return k-0.5<0?0.5:k-0.5; } return 0.5; };
+const ago = ts => { const m=Math.round((Date.now()-new Date(ts))/60000);
+  return m<1?"just now":m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} hr ago`:new Date(ts).toLocaleDateString(); };
+
+async function load(path, fallback){
+  try { const r = await fetch(`${path}?t=${Date.now()}`); return r.ok ? await r.json() : fallback; }
+  catch(e){ return fallback; }
+}
+
+function heatColor(p){ // surface -> rim
+  const css = getComputedStyle(document.documentElement);
+  return `color-mix(in srgb, ${css.getPropertyValue("--rim")} ${Math.round(p*100)}%, ${css.getPropertyValue("--surface")})`;
+}
+
+function chips(el, items, current, onPick){
+  el.innerHTML = items.map(([v,l])=>`<button class="chip" aria-pressed="${v===current}" data-v="${v}">${l}</button>`).join("");
+  el.onclick = e => { const b=e.target.closest("button"); if(b){ onPick(b.dataset.v); } };
+}
+
+function active(){ return (P?.players||[]).filter(p=>!p.inactive && (S.game==="all" || [p.team,p.opp].sort().join("-")===S.game)); }
+
+function lineFor(p, stat){
+  const key = `${p.id}:${stat}`;
+  if (S.edits[key] !== undefined) return S.edits[key];
+  const l = S.lines[`${norm(p.name)}:${stat}`];
+  return l !== undefined ? l : fair(p[stat].pmf);
+}
+
+function spark(arr, L){
+  const mx = Math.max(...arr, L+1, 1);
+  return `<span class="spark" aria-label="Last ${arr.length}: ${arr.join(", ")}">${
+    arr.map(v=>`<i class="${v>L?"hit":""}" style="height:${Math.max(2,20*v/mx)}px"></i>`).join("")}</span>`;
+}
+
+function flags(p){
+  return (p.flags||[]).map(f=>`<span class="flag ${f==="Q"?"q":""}">${f==="Q"?"Questionable":f}</span>`).join("");
+}
+
+function sortable(table, cols, key, set){
+  table.querySelector("thead").onclick = e => {
+    const th = e.target.closest("th"); if(!th || !th.dataset.k) return;
+    set(th.dataset.k); render();
+  };
+}
+
+function renderThrees(){
+  const q = norm($("q3").value);
+  let rows = active().filter(p => (S.pos3==="all"||p.pos===S.pos3) && (!q||norm(p.name).includes(q)));
+  rows = rows.map(p => { const L = lineFor(p,"tpm"); const ud = S.lines[`${norm(p.name)}:tpm`];
+    return {p, L, ud, p1:atLeast(p.tpm.pmf,1), p2:atLeast(p.tpm.pmf,2), p3:atLeast(p.tpm.pmf,3),
+            mean:p.tpm.mean, edge: ud!==undefined ? over(p.tpm.pmf, ud)-S.be/100 : -1,
+            rk:p.dvp_rank?.tpm ?? 99}; });
+  const k = S.sort3;
+  rows.sort((a,b)=> k==="rk" ? a.rk-b.rk : (b[k]??0)-(a[k]??0));
+  const hasLines = rows.some(r=>r.ud!==undefined);
+  const head = `<thead><tr><th>Player</th><th data-k="mean">Min · 3PA</th><th data-k="mean">Proj</th>
+    <th data-k="p2">Makes 1+ to 5+</th><th data-k="rk">Opp rank</th>
+    ${hasLines?`<th data-k="edge">Underdog</th>`:""}<th>Last 10</th></tr></thead>`;
+  const body = rows.map(({p,L,ud,mean,rk,edge})=>`<tr>
+    <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp} · ${pct(p.make_p)} 3P</div></td>
+    <td>${p.min.toFixed(0)} min<div class="meta">${p.tpa.mean.toFixed(1)} att</div></td>
+    <td class="big">${mean.toFixed(1)}</td>
+    <td><span class="ladder">${[1,2,3,4,5].map(n=>{const v=atLeast(p.tpm.pmf,n);
+      return `<span style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ threes">${pct(v)}</span>`}).join("")}</span></td>
+    <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>
+    ${hasLines?`<td>${ud!==undefined?`${ud} <span class="${edge>=.03?"pos":edge<0?"neg":""}">${pct(over(p.tpm.pmf,ud))}</span>`:"–"}</td>`:""}
+    <td>${spark(p.last10.tpm, L)}</td></tr>`).join("");
+  $("t3").innerHTML = head + `<tbody>${body}</tbody>`;
+  sortable($("t3"), null, null, v=>S.sort3=v);
+  const outs = (P?.players||[]).filter(p=>p.inactive && (S.game==="all"||[p.team,p.opp].sort().join("-")===S.game));
+  $("outs3").innerHTML = outs.length ? `<div class="outs"><strong>Not playing:</strong> ${outs.map(o=>`${o.name} (${o.team}${o.status==="DOUBTFUL"?", doubtful":""})`).join(", ")}</div>` : "";
+  if(!rows.length) $("t3").innerHTML = `<tbody><tr><td class="empty">No players match. Clear the search or pick another game.</td></tr></tbody>`;
+}
+
+function renderProps(){
+  const st = S.stat, q = norm($("qp").value);
+  let rows = active().filter(p=>!q||norm(p.name).includes(q)).map(p=>{
+    const L = lineFor(p, st), po = over(p[st].pmf, L);
+    const hits = p.last10[st].filter(v=>v>L).length;
+    return {p, L, po, edge: po - S.be/100, mean:p[st].mean, hit: hits/Math.max(p.last10[st].length,1), hits,
+            fromUD: S.lines[`${norm(p.name)}:${st}`]!==undefined, rk:p.dvp_rank?.[st==="pra"?"pts":st]??99};
+  });
+  const k = S.sortP;
+  rows.sort((a,b)=> k==="auto" ? (b.fromUD-a.fromUD) || (a.fromUD ? b.edge-a.edge : b.mean-a.mean)
+                  : k==="rk" ? a.rk-b.rk : b[k]-a[k]);
+  const head = `<thead><tr><th>Player</th><th data-k="mean">Min</th><th data-k="mean">Proj</th><th>Line</th>
+    <th data-k="po">Over</th><th data-k="edge">Edge</th><th data-k="hit">L10 over</th><th data-k="rk">Opp rank</th><th>Last 10</th></tr></thead>`;
+  const body = rows.map(({p,L,po,edge,mean,hits,fromUD,rk})=>`<tr>
+    <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td>
+    <td>${p.min.toFixed(0)}</td><td class="big">${mean.toFixed(1)}</td>
+    <td><input type="number" step="0.5" value="${L}" data-id="${p.id}" aria-label="Line for ${p.name}">
+      <div class="meta">${fromUD?"Underdog":"Fair"}</div></td>
+    <td class="big">${pct(po)}</td>
+    <td class="${edge>=.03?"pos":edge<0?"neg":""}">${edge>=0?"+":""}${(100*edge).toFixed(1)}</td>
+    <td>${hits}/${p.last10[S.stat].length}</td>
+    <td><span class="rk ${rk<=5?"hot":""}">${st==="pra"||rk===99?"–":rk}</span></td>
+    <td>${spark(p.last10[st], L)}</td></tr>`).join("");
+  $("tp").innerHTML = head + `<tbody>${body}</tbody>`;
+  sortable($("tp"), null, null, v=>S.sortP=v);
+  $("tp").querySelectorAll("input").forEach(inp=>inp.onchange=()=>{
+    const v = parseFloat(inp.value); S.edits[`${inp.dataset.id}:${S.stat}`] = isNaN(v)?undefined:v; render(); });
+}
+
+function renderDefense(){
+  if(!D){ $("td").innerHTML=""; return; }
+  const st = S.dstat, m = S.dmode;
+  const teams = Object.keys(D.teams).sort();
+  if(S.dsort) teams.sort((a,b)=>(D.teams[a][S.dsort]?.[st]?.rk??99)-(D.teams[b][S.dsort]?.[st]?.rk??99));
+  const vals = t => POS.map(p=>D.teams[t][p]?.[st]);
+  const head = `<thead><tr><th>Team</th>${POS.map(p=>`<th data-p="${p}" title="Sort by ${p}">${p}${S.dsort===p?" ▾":""}</th>`).join("")}</tr></thead>`;
+  const body = teams.map(t=>`<tr><td class="name">${t}</td>${vals(t).map(v=>{
+      if(!v) return "<td>–</td>";
+      const heat = Math.max(0, Math.min(1, (30 - v.rk) / 29));
+      const shown = m==="f" ? `${v.f>=1?"+":""}${Math.round((v.f-1)*100)}%` : (v.pg ?? "–");
+      return `<td style="background:${heatColor(heat*0.85)}">${shown}<small>rank ${v.rk}</small></td>`; }).join("")}</tr>`).join("");
+  $("td").innerHTML = head + `<tbody>${body}</tbody>`;
+  $("td").querySelector("thead").onclick = e => { const th=e.target.closest("th"); if(!th) return;
+    S.dsort = th.dataset.p || null; render(); };
+  $("dnote").textContent = m==="f"
+    ? `Percent above or below league average per minute at each position, blended with league average early in the season so a few games don't swing it. Rank 1 gives up the most. Season ${D.season-1}–${String(D.season).slice(2)}.`
+    : `Raw per-game totals allowed to each position this season. Rank still uses the minute-adjusted rate.`;
+}
+
+function renderNews(){
+  const tags = ["all","OUT","QUESTIONABLE","STARTING","AVAILABLE"];
+  chips($("newsChips"), tags.map(t=>[t, t==="all"?"All":t[0]+t.slice(1).toLowerCase()]), S.newsTag, v=>{S.newsTag=v; render();});
+  const items = N.filter(n=>S.newsTag==="all"||n.tag===S.newsTag).slice().reverse();
+  $("newsList").innerHTML = items.length ? items.map(n=>`<li><span class="tag ${n.tag.split(" ")[0]}">${n.tag}</span>
+     <span>${n.text.replace(/</g,"&lt;")}</span><span></span><span class="meta">${ago(n.received||n.ts)}</span></li>`).join("")
+    : `<li class="empty" style="display:block">No news yet. Items appear here as your phone forwards Underdog NBA alerts.</li>`;
+}
+
+function render(){
+  const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
+  chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
+  $("gameChips").hidden = S.tab==="defense"||S.tab==="news";
+  chips($("posChips3"), [["all","All"], ...POS.map(p=>[p,p])], S.pos3, v=>{S.pos3=v; render();});
+  chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
+  if(S.tab==="threes") renderThrees();
+  if(S.tab==="props") renderProps();
+  if(S.tab==="defense") renderDefense();
+  if(S.tab==="news") renderNews();
+}
+
+document.querySelector("nav").onclick = e => {
+  const b = e.target.closest("button"); if(!b) return;
+  S.tab = b.dataset.tab;
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
+  ["threes","props","defense","news"].forEach(id=>$(id).hidden = id!==S.tab);
+  render();
+};
+$("q3").oninput = render; $("qp").oninput = render;
+$("stat").onchange = e => { S.stat = e.target.value; render(); };
+$("dstat").onchange = e => { S.dstat = e.target.value; render(); };
+$("be").value = S.be;
+$("be").onchange = e => { S.be = parseFloat(e.target.value)||55; try{localStorage.setItem("arc_be", S.be);}catch(_){} render(); };
+
+async function boot(){
+  [P, D, N] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", [])]);
+  const L = await load("data/lines.json", {lines:[]});
+  S.lines = {};
+  for(const l of (L.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
+  if(!P){ $("status").textContent = "No projections yet. Run the Update data workflow once to build them."; }
+  else {
+    const n = P.players.filter(p=>!p.inactive).length;
+    const d = new Date(P.date+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+    $("status").textContent = `${d}: ${P.games.length} games, ${n} players projected. Updated ${ago(P.updated)}.`;
+  }
+  render();
+}
+boot();
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); render(); }, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+name: Update data and projections
+
+on:
+  schedule:
+    - cron: "0 14 * * *"   # ~10am ET: overnight box scores + morning slate
+    - cron: "30 21 * * *"  # ~5:30pm ET: refreshed rosters/injury tags before tip
+  workflow_dispatch:
+    inputs:
+      backfill_start:
+        description: "Backfill start date (YYYY-MM-DD), blank for a normal run"
+        required: false
+      backfill_end:
+        description: "Backfill end date (YYYY-MM-DD)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Fetch games
+        working-directory: scripts
+        env:
+          START: ${{ inputs.backfill_start }}
+          END: ${{ inputs.backfill_end }}
+        run: |
+          if [ -n "$START" ]; then
+            python fetch_games.py --start "$START" ${END:+--end "$END"}
+          else
+            python fetch_games.py
+          fi
+      - name: Build model
+        working-directory: scripts
+        run: python build_model.py
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data docs/data
+          git diff --cached --quiet && exit 0
+          git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
