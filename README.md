@@ -9,7 +9,9 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | Piece | Runs on | What it does |
 |---|---|---|
 | `scripts/fetch_games.py` | GitHub Actions, 10am and 5:30pm ET | Pulls box scores, tonight's slate, rosters and ESPN injury tags |
+| `scripts/positions.py` | Same workflow | Assigns PG/SG/SF/PF/C from play style into `data/positions.csv` (ESPN only gives G/F/C) |
 | `scripts/build_model.py` | Same workflow | Defense vs position, minutes, and 8,000 simulated games per player |
+| `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
 | `docs/index.html` | GitHub Pages | The site |
 
@@ -44,6 +46,8 @@ Use a fine-grained personal access token scoped to only this repo with **Content
 
 Exempt MacroDroid from battery optimization, or Android will kill it overnight.
 
+The site header shows the phone's last alert time next to the Underdog lines' age. `scripts/health.py` (workflow *Lines watchdog*) posts to Discord via the `DISCORD_WEBHOOK_URL` secret when `docs/data/lines.json` is missing or more than 45 minutes old between 90 minutes before the first tip and 3 hours after the last: once when it goes stale, once when it recovers, state in `data/health_state.json`.
+
 Timing: Discord gets the alert in a second or two, which is what you bet off. The site updates 45–90 seconds later (Action run plus Pages deploy), which is fine for research.
 
 ## Underdog lines
@@ -70,6 +74,8 @@ Stats kept: `3PM`, `PTS`, `REB`, `AST`, `PRA`, main lines only, games not yet st
 
 ## Model notes
 
+- **Positions:** ESPN's box scores, rosters and athlete pages only say G/F/C, so `positions.py` sorts each player within ESPN's group by per-36 rates over the backfill: guards with 5.5+ assists are PG, forwards with 7.5+ rebounds (or 6.5+ with under 3.5 3PA) are PF, forwards with 9.5+ rebounds and 2+ blocks are C. Under 150 minutes keeps the group default. The table is `data/positions.csv`; put a position in the `override` column to pin a player and it survives regeneration.
+- **Minutes baseline:** with 5+ games this season, the last 10 weighted (half-life 4). With fewer, `(n * recent + (5 - n) * last_season_avg) / 5`, where last season's average skips its final 14 days (rest and tank games). Those players carry a `Minutes blend n/5` or `Last season minutes` flag; a player whose last game was for another team last season gets `Offseason move (OLD->NEW)`.
 - **Minutes:** recent games weighted (half-life 4 games), scaled so each team totals 240. Ruled-out players' minutes go to teammates, 2.5x weighted toward the same position. Questionable widens the minutes range; a minutes limit caps at 24.
 - **Threes:** attempts per minute (half-life 12 games) × minutes × opponent's attempt rate allowed to that position, then makes = binomial on attempts at the shooter's 3P%, blended with 150 attempts of league average.
 - **Defense vs position:** per-minute stats allowed to each position vs league average, with last season at 35% weight and 600 minutes of league average blended in so early-season numbers don't swing wildly. It already reflects pace, so pace isn't applied twice.

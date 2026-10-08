@@ -41,6 +41,9 @@ jobs:
           else
             python fetch_games.py
           fi
+      - name: Assign positions
+        working-directory: scripts
+        run: python positions.py
       - name: Build model
         working-directory: scripts
         env:

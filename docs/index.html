@@ -80,6 +80,9 @@ tr:last-child td{border-bottom:0}
 .tag.STARTING,.tag.AVAILABLE{background:var(--make)}
 .empty{padding:28px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:8px}
 .foot{color:var(--muted);font-size:13px;margin-top:10px;max-width:72ch}
+#fresh{font-size:13px;color:var(--muted);margin-top:4px}
+#fresh .stale{color:var(--miss);font-weight:600}
+#fresh .ok{color:var(--make)}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -88,6 +91,7 @@ tr:last-child td{border-bottom:0}
   <svg class="arc" viewBox="0 0 420 420" aria-hidden="true"><path d="M30 0 V150 A180 180 0 0 0 390 150 V0"/></svg>
   <h1>Arc Lab</h1>
   <p class="sub" id="status">Loading tonight's slate…</p>
+  <p id="fresh"></p>
   <nav role="tablist">
     <button role="tab" data-tab="threes" aria-selected="true">Threes</button>
     <button role="tab" data-tab="props" aria-selected="false">Props</button>
@@ -314,11 +318,23 @@ $("dstat").onchange = e => { S.dstat = e.target.value; render(); };
 $("be").value = S.be;
 $("be").onchange = e => { S.be = parseFloat(e.target.value)||55; try{localStorage.setItem("arc_be", S.be);}catch(_){} render(); };
 
+function freshness(L){
+  const last = N.length ? (N[N.length-1].received || N[N.length-1].ts) : null;
+  const phone = last ? `Phone: last alert ${ago(last)}` : "Phone: no alerts yet";
+  const upd = L && L.updated ? new Date(L.updated) : null;
+  const age = upd ? (Date.now()-upd)/60000 : null;
+  const n = (L?.lines||[]).length;
+  const lines = !upd ? "Lines: none from Underdog yet" : `Lines: ${n} from Underdog, updated ${ago(L.updated)}`;
+  const cls = !upd ? "" : age > 45 ? "stale" : "ok";
+  $("fresh").innerHTML = `<span>${phone}</span> &middot; <span class="${cls}" title="${upd? upd.toISOString():""}">${lines}${cls==="stale"?" (stale)":""}</span>`;
+}
+
 async function boot(){
   [P, D, N] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", [])]);
-  const L = await load("data/lines.json", {lines:[]});
+  const L = await load("data/lines.json", null);
   S.lines = {};
-  for(const l of (L.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
+  freshness(L);
+  for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
   if(!P){ $("status").textContent = "No projections yet. Run the Update data workflow once to build them."; }
   else {
     const n = P.players.filter(p=>!p.inactive).length;

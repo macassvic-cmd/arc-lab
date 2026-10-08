@@ -1,0 +1,38 @@
+name: Lines watchdog
+
+on:
+  schedule:
+    - cron: "*/15 21-23 * * *"   # 5pm-8pm ET
+    - cron: "*/15 0-5 * * *"     # 8pm-1am ET
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests
+      - name: Check lines freshness
+        working-directory: scripts
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python health.py
+      - name: Commit state
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/health_state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "health: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
