@@ -5,11 +5,13 @@ Outputs (read by the site):
   docs/data/projections.json  per-player minutes, means and full stat distributions
 """
 import datetime as dt
+import math
 
 import numpy as np
 import pandas as pd
 
-from common import DATA_DIR, POSITIONS, SITE_DATA, norm_name, norm_pos, read_json, write_json
+from common import DATA_DIR, NBA_TEAMS, POSITIONS, SITE_DATA, norm_name, norm_pos, read_json, write_json
+from odds import OddsBlaze
 
 N_SIM = 8000
 STATS = ["tpm", "tpa", "reb", "ast", "pts"]
@@ -21,6 +23,12 @@ MIN_HALF_LIFE = 4           # games
 RATE_HALF_LIFE = 12         # games
 TEAM_MINUTES = 240
 MAX_MIN = 40
+# Blowout risk: NBA final margins run ~N(spread, 13.5). In a 20+ point game regular starters sit
+# roughly the last 8 minutes. Base minutes already include the blowouts a pick'em produces, so
+# only the EXTRA blowout chance a lopsided spread adds is shaved off.
+BLOWOUT_MARGIN = 20
+MARGIN_SD = 13.5
+BLOWOUT_STARTER_LOSS = 8.0
 RNG = np.random.default_rng(7)
 
 
@@ -28,7 +36,7 @@ def load_games():
     df = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"player_id": str, "event_id": str})
     df["date"] = pd.to_datetime(df["date"])
     df["pos"] = df["pos"].map(norm_pos)
-    return df
+    return df[df.team.isin(NBA_TEAMS) & df.opp.isin(NBA_TEAMS)]
 
 
 # ---------------- defense vs position ----------------
@@ -37,8 +45,10 @@ def build_dvp(df, cur):
     d["w"] = np.where(d.season == cur, 1.0, PRIOR_SEASON_DVP_W)
     for s in STATS + ["min"]:
         d[f"w_{s}"] = d[s] * d.w
+    # Positions with no minutes (ESPN box scores are mostly generic G/F, so PF can be empty) are left out
+    # rather than producing NaN, which would be written into dvp.json and break the site's JSON parse.
     lg = {p: {s: d.loc[d.pos == p, f"w_{s}"].sum() / d.loc[d.pos == p, "w_min"].sum() for s in STATS}
-          for p in POSITIONS}
+          for p in POSITIONS if d.loc[d.pos == p, "w_min"].sum() > 0}
     agg = d.groupby(["opp", "pos"])[[f"w_{s}" for s in STATS] + ["w_min"]].sum()
 
     shown = df[df.season == cur]
@@ -47,6 +57,8 @@ def build_dvp(df, cur):
 
     teams = {}
     for (team, pos), row in agg.iterrows():
+        if pos not in lg:
+            continue
         for s in STATS:
             rate = (row[f"w_{s}"] + K_MIN_DVP * lg[pos][s]) / (row["w_min"] + K_MIN_DVP)
             pg = per_game.loc[(team, pos), s] / gp[team] if (team, pos) in per_game.index else None
@@ -154,6 +166,40 @@ def allocate_minutes(active, outs):
         freed = left
 
 
+def blowout_shave(spread):
+    """Expected extra minutes a full-time starter loses to garbage time at this spread."""
+    if spread is None:
+        return 0.0
+
+    def p_blowout(s):
+        return 1 - 0.5 * (1 + math.erf((BLOWOUT_MARGIN - abs(s)) / (MARGIN_SD * math.sqrt(2))))
+
+    return BLOWOUT_STARTER_LOSS * max(p_blowout(spread) - p_blowout(0), 0.0)
+
+
+def apply_blowout(players, own_spread):
+    """Shave starters' minutes in a lopsided game (both sides sit starters) and hand them to the
+    bench. own_spread is from this team's view (negative = favored). Returns minutes shaved."""
+    shave = blowout_shave(own_spread)
+    if shave < 0.3:
+        return 0.0
+    starters = [p for p in players if p["starter_rate"] >= 0.5 and p["min"] >= 20]
+    bench = [p for p in players if p not in starters and p["min"] < MAX_MIN]
+    if not starters or not bench:
+        return 0.0
+    freed = 0.0
+    for p in starters:
+        cut = shave * min(p["min"] / 34.0, 1.0)
+        p["min"] -= cut
+        p["sd_min"] += cut / 2
+        p["flags"].append(f"Blowout risk ({own_spread:+.1f})")
+        freed += cut
+    tw = sum(p["min"] for p in bench)
+    for p in bench:
+        p["min"] += freed * p["min"] / tw
+    return shave
+
+
 def pmf(x, top):
     counts = np.bincount(np.clip(x, 0, top), minlength=top + 1) / len(x)
     arr = [round(float(v), 4) for v in counts]
@@ -191,11 +237,17 @@ def main():
     lg_pct = float(tpm_lg.tpm.sum() / max(tpm_lg.tpa.sum(), 1))
     nstat = news_status(news, slate["date"])
     played = df.groupby("team").date.max()
+    ob = OddsBlaze()
+    spreads = ob.spreads() if ob.enabled and slate["games"] else {}
+    if slate["games"] and not spreads:
+        print("[model] no spreads (" + ("OddsBlaze returned nothing" if ob.enabled else "ODDSBLAZE_API_KEY not set") + "), blowout risk skipped")
 
     by_id = {pid: g for pid, g in df[df.season >= cur - 1].groupby("player_id")}
     out_players, games_out = [], []
     for game in slate["games"]:
-        games_out.append(game)
+        mk = spreads.get((game["away"], game["home"]))
+        games_out.append({**game, "spread": mk["home_spread"] if mk else None, "total": mk["total"] if mk else None,
+                          "odds_book": mk["book"] if mk else None})
         for team, opp, home in [(game["home"], game["away"], 1), (game["away"], game["home"], 0)]:
             roster = slate.get("rosters", {}).get(team)
             if roster is None:  # fallback: whoever played for the team most recently
@@ -228,6 +280,7 @@ def main():
                     entry["flags"].append("New team")
                 team_players.append(entry)
             allocate_minutes(team_players, outs)
+            apply_blowout(team_players, (mk["home_spread"] if home else -mk["home_spread"]) if mk else None)
             yesterday = pd.Timestamp(slate["date"]) - pd.Timedelta(days=1)
             b2b = team in played and played[team] == yesterday
             for p in team_players:

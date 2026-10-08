@@ -8,6 +8,9 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"            # raw game logs (not served)
 SITE_DATA = ROOT / "docs" / "data"  # JSON the site reads
 POSITIONS = ["PG", "SG", "SF", "PF", "C"]
+# ESPN abbreviations for the 30 teams. Anything else (All-Star STARS/STRIPES/WORLD, Rising Stars) is not a real game.
+NBA_TEAMS = {"ATL", "BKN", "BOS", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GS", "HOU", "IND", "LAC", "LAL", "MEM",
+             "MIA", "MIL", "MIN", "NO", "NY", "OKC", "ORL", "PHI", "PHX", "POR", "SA", "SAC", "TOR", "UTAH", "WSH"}
 
 # ESPN sometimes lists generic G / F / G-F etc. Map them to a single bucket.
 POS_MAP = {"PG": "PG", "SG": "SG", "SF": "SF", "PF": "PF", "C": "C",

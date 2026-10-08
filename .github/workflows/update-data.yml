@@ -43,6 +43,8 @@ jobs:
           fi
       - name: Build model
         working-directory: scripts
+        env:
+          ODDSBLAZE_API_KEY: ${{ secrets.ODDSBLAZE_API_KEY }}
         run: python build_model.py
       - name: Commit
         run: |

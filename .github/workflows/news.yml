@@ -25,6 +25,7 @@ jobs:
         working-directory: scripts
         env:
           NEWS_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          ODDSBLAZE_API_KEY: ${{ secrets.ODDSBLAZE_API_KEY }}
         run: |
           python ingest_news.py
           if [ -f ../data/player_games.csv ]; then python build_model.py; fi

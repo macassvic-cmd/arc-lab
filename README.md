@@ -48,7 +48,25 @@ Timing: Discord gets the alert in a second or two, which is what you bet off. Th
 
 ## Underdog lines
 
-Have your Underdog board scraper write `docs/data/lines.json` in the shape of `lines.example.json`. Stats accepted: `3PM`, `PTS`, `REB`, `AST`, `PRA`. The site then shows over chances and edge against your break-even.
+Lines come from the Underdog board scraper in `pirate-bets-pc` (`python -m reader.underdog_scraper`). Set these in that repo's `.env` and the scraper hands every fresh board to `scripts/underdog_lines.py` here, which writes `docs/data/lines.json` and pushes it:
+
+```
+ARC_LAB_DIR=C:\Users\vmora\Downloads\arc-lab\arc-lab
+ARC_LAB_LINES_SECONDS=600   # at most one write/push per 10 minutes
+ARC_LAB_PUSH=1              # 0 = write the file, don't commit
+ODDSBLAZE_API_KEY=...       # optional, see below
+```
+
+One-off, from this repo:
+```
+python scripts/underdog_lines.py --snapshot ..\..\pirate-bets-pc\reader\board_snapshots\underdog.json --push
+```
+
+Stats kept: `3PM`, `PTS`, `REB`, `AST`, `PRA`, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and, when an OddsBlaze key is present, `sharp`: the first book in `ODDSBLAZE_SHARP_BOOKS` (default Pinnacle, Circa, DraftKings, FanDuel) with its `line`, `over`/`under` American prices, devigged `fair_over`, and `exact` (false when the book's nearest line differs from Underdog's). The site reads `player`, `stat`, `line` (the shape of `lines.example.json`); the rest is for you and your validation agent.
+
+## OddsBlaze
+
+`scripts/odds.py` is the one client. Key: `ODDSBLAZE_API_KEY` in the environment or a `.env` here (see `.env.example`), plus the repo secret of the same name for Actions (`gh secret set ODDSBLAZE_API_KEY`). Without it everything still runs: lines have no `sharp`, and the model skips blowout risk and says so in the log.
 
 ## Model notes
 
@@ -56,10 +74,12 @@ Have your Underdog board scraper write `docs/data/lines.json` in the shape of `l
 - **Threes:** attempts per minute (half-life 12 games) × minutes × opponent's attempt rate allowed to that position, then makes = binomial on attempts at the shooter's 3P%, blended with 150 attempts of league average.
 - **Defense vs position:** per-minute stats allowed to each position vs league average, with last season at 35% weight and 600 minutes of league average blended in so early-season numbers don't swing wildly. It already reflects pace, so pace isn't applied twice.
 - **Points, rebounds, assists, PRA** come from the same simulated minutes, so they're correlated the way real games are.
+- **Blowout risk:** game spreads from OddsBlaze. Final margins run about N(spread, 13.5); starters sit roughly the last 8 minutes of a 20+ point game. The extra blowout chance a spread adds over a pick'em, times those 8 minutes, comes off each regular starter (scaled by their minutes) and goes to the bench, on both teams. A 7.5-point spread shaves about 0.9 minutes, 14.5 about 2.2. Those players get a `Blowout risk (-12.5)` flag and a wider minutes range; `spread`, `total` and `odds_book` sit on each game in `projections.json`.
 
 ## Known limits to fix next
 
 - ESPN positions are sometimes generic (G, F); those map to SG and SF.
-- No blowout risk yet. That needs spreads from your odds API to shave minutes in lopsided games.
+- Blowout shave is a fixed curve, not fit to data. Check it against actual starter minutes by spread after a month.
+- OddsBlaze NBA market names are matched by keyword (`stat_for_market` in `scripts/odds.py`), written against the docs rather than a live response. Verify once with a key.
 - Usage bump when a star sits is only through minutes for now, not shot share.
 - Track closing-line value from day one before trusting edges.

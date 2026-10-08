@@ -10,7 +10,7 @@ import time
 
 import requests
 
-from common import DATA_DIR, norm_pos, read_json, write_json
+from common import DATA_DIR, NBA_TEAMS, norm_pos, read_json, write_json
 
 BASE = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba"
 PLAYER_CSV = DATA_DIR / "player_games.csv"
@@ -43,6 +43,12 @@ def et_today():
 def scoreboard(day):
     data = get(f"{BASE}/scoreboard?dates={day:%Y%m%d}&limit=50") or {}
     return data.get("events", [])
+
+
+def real_game(comp):
+    """Both competitors are NBA teams (filters All-Star / Rising Stars, which ESPN tags as regular season)."""
+    abbrs = [c.get("team", {}).get("abbreviation") for c in comp.get("competitors", [])]
+    return len(abbrs) == 2 and all(a in NBA_TEAMS for a in abbrs)
 
 
 def split(v):
@@ -102,7 +108,7 @@ def parse_box(event_id, date, season, summary):
 def ingest(start, end):
     seen = set(read_json(SEEN, []))
     new_file = not PLAYER_CSV.exists()
-    added = 0
+    added, rejected = 0, []
     with open(PLAYER_CSV, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         if new_file:
@@ -115,6 +121,10 @@ def ingest(start, end):
                 comp = ev["competitions"][0]
                 if eid in seen or season.get("type") != 2 or not comp["status"]["type"].get("completed"):
                     continue  # regular season, completed, not yet stored
+                if not real_game(comp):
+                    seen.add(eid)  # All-Star weekend is tagged regular season by ESPN; never store it
+                    rejected.append((day.isoformat(), " vs ".join(c["team"]["abbreviation"] for c in comp["competitors"])))
+                    continue
                 summ = get(f"{BASE}/summary?event={eid}")
                 rows = parse_box(eid, day.isoformat(), season.get("year"), summ or {})
                 if rows:
@@ -124,7 +134,7 @@ def ingest(start, end):
                 time.sleep(0.4)
             day += dt.timedelta(days=1)
     write_json(SEEN, sorted(seen))
-    print(f"[ingest] {added} new games")
+    print(f"[ingest] {added} new games, {len(rejected)} rejected (not NBA teams): {rejected}")
 
 
 def roster(team_id):
@@ -147,6 +157,8 @@ def save_slate(day):
         if ev.get("season", {}).get("type") != 2:
             continue
         comp = ev["competitions"][0]
+        if not real_game(comp):
+            continue
         teams = {c["homeAway"]: c["team"] for c in comp["competitors"]}
         games.append({"event_id": ev["id"], "start": ev.get("date"),
                       "home": teams["home"]["abbreviation"], "away": teams["away"]["abbreviation"]})
