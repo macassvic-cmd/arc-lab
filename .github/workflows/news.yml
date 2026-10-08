@@ -26,6 +26,7 @@ jobs:
         env:
           NEWS_PAYLOAD: ${{ toJson(github.event.client_payload) }}
           ODDSBLAZE_API_KEY: ${{ secrets.ODDSBLAZE_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           python ingest_news.py
           if [ -f ../data/player_games.csv ]; then python build_model.py; fi
@@ -34,6 +35,7 @@ jobs:
           git config user.name "arc-lab-bot"
           git config user.email "actions@users.noreply.github.com"
           git add docs/data
+          [ -f data/health_state.json ] && git add data/health_state.json
           git diff --cached --quiet && exit 0
           git commit -m "news: $(date -u +%H:%M:%SZ)"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

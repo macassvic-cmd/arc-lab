@@ -151,8 +151,18 @@ def roster(team_id):
     return out
 
 
+def all_teams():
+    data = get(f"{BASE}/teams?limit=40") or {}
+    try:
+        return [t["team"] for t in data["sports"][0]["leagues"][0]["teams"]]
+    except (KeyError, IndexError):
+        return []
+
+
 def save_slate(day):
-    games, rosters = [], {}
+    """Tonight's games plus ALL 30 rosters (not only tonight's teams), so the model can tell a star who
+    moved to a team that is off tonight from one who has vanished from ESPN entirely."""
+    games = []
     for ev in scoreboard(day):
         if ev.get("season", {}).get("type") != 2:
             continue
@@ -162,11 +172,13 @@ def save_slate(day):
         teams = {c["homeAway"]: c["team"] for c in comp["competitors"]}
         games.append({"event_id": ev["id"], "start": ev.get("date"),
                       "home": teams["home"]["abbreviation"], "away": teams["away"]["abbreviation"]})
-        for t in teams.values():
+    rosters = {}
+    for t in all_teams():
+        if t.get("abbreviation") in NBA_TEAMS:
             rosters[t["abbreviation"]] = roster(t["id"])
             time.sleep(0.3)
     write_json(SLATE, {"date": day.isoformat(), "games": games, "rosters": rosters})
-    print(f"[slate] {day}: {len(games)} games")
+    print(f"[slate] {day}: {len(games)} games, {len(rosters)} rosters")
 
 
 if __name__ == "__main__":

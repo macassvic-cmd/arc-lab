@@ -13,6 +13,7 @@ import pandas as pd
 from common import DATA_DIR, NBA_TEAMS, POSITIONS, SITE_DATA, norm_name, norm_pos, read_json, write_json
 from odds import OddsBlaze
 from positions import position_map
+from health import STATE as HEALTH_STATE, notify
 
 N_SIM = 8000
 STATS = ["tpm", "tpa", "reb", "ast", "pts"]
@@ -25,7 +26,7 @@ PRIOR_TAIL_DAYS = 14        # last two weeks of the prior regular season: rest/t
 BLEND_GAMES = 5             # under this many current-season games, minutes blend with last season
 RATE_HALF_LIFE = 12         # games
 TEAM_MINUTES = 240
-MAX_MIN = 40
+MAX_MIN = 39  # 95th percentile of regular starters' minutes in regulation games, 2025-26 backfill (40.0 with OT)
 # Blowout risk: NBA final margins run ~N(spread, 13.5). In a 20+ point game regular starters sit
 # roughly the last 8 minutes. Base minutes already include the blowouts a pick'em produces, so
 # only the EXTRA blowout chance a lopsided spread adds is shaved off.
@@ -178,10 +179,19 @@ def scale_to(players, total):
 
 
 ROTATION_FLOOR = 4  # projected minutes under this: not in the rotation, dropped from the output
-# Vacated minutes (OUT / DOUBTFUL players) go to teammates in proportion to their normal role (base_min),
-# multiplied by SAME_POS_WEIGHT for the same position. Pending the vacated-vs-absorbed decision on the
-# 40/20 split, this one constant is the whole rule.
-SAME_POS_WEIGHT = 2.5
+# Vacated minutes (OUT / DOUBTFUL players). Shares are of VACATED minutes (the absent player's
+# projected minutes). Backtested on 1,235 absence team-games of the 2025-26 backfill (per-player MAE of
+# rotation teammates' minutes; no redistribution = 5.34):
+#   spread by top-absorber probability:   20% 5.22  30% 5.25  40% 5.34  67% 5.74   <- shipped, share 0.20
+#   proportional to role:                 20% 5.25  30% 5.26  40% 5.31  67% 5.57
+#   concentrate 40/27 on predicted #1/#2: 20% 5.25  30% 5.34  40% 5.50  67% 6.07
+# Observed: only ~26% of vacated minutes land on rotation teammates (trailing avg >= 6 who played);
+# the rest goes to deep bench / call-ups, so ROTATION_SHARE is far below Muse's 67%.
+REDISTRIBUTION = "spread"      # "spread" (b) or "concentrate" (a)
+ROTATION_SHARE = 0.20          # (b): share of vacated minutes spread over the rotation by absorber probability
+TOP1_SHARE, TOP2_SHARE = 0.40, 0.27  # (a): shares of vacated minutes to the predicted #1 and #2 absorbers
+SAME_POS_WEIGHT = 2.5          # role-similarity prior: same position counts this much more
+HISTORY_MIN_GAMES = 3          # past games this player missed (same team) before history outranks role similarity
 # Usage bump when regular starters sit, measured on the 2025-26 backfill (1,390 team-games with a regular
 # starter absent; remaining starters' per-36 rates vs their own baseline, minutes-weighted, 95% CI):
 #   1 absent:  FGA +4.9% [3.3, 6.5]  pts +5.8% [3.6, 8.2]  3PA +3.2% [0.7, 6.1]  ast +3.9% [0.8, 7.6]  reb +1.4% [-0.9, 3.9]
@@ -205,30 +215,83 @@ def trim_to(players, total):
         scale_to(players, total)
 
 
-def allocate_minutes(active, outs):
+def role_probs(out, active):
+    """Role-similarity prior: bigger roles absorb more, same position SAME_POS_WEIGHT times more."""
+    w = {p["id"]: p["base_min"] * (SAME_POS_WEIGHT if p["pos"] == out["pos"] else 1.0) for p in active}
+    z = sum(w.values()) or 1.0
+    return {k: v / z for k, v in w.items()}
+
+
+class AbsorberHistory:
+    """Who soaked up minutes in past games this player missed (same team). Built from the game logs
+    with each player's trailing-10 average before each game, so a gain is actual minus trailing."""
+
+    def __init__(self, df, before):
+        d = df[df.date < before].sort_values("date")
+        d = d.assign(trail=d.groupby(["player_id", "team"])["min"].transform(lambda x: x.shift(1).rolling(10, min_periods=3).mean()))
+        self.games = {t: [(e, g.date.iloc[0], dict(zip(g.player_id, g["min"] - g.trail))) for e, g in grp.groupby("event_id")]
+                      for t, grp in d.groupby("team")}
+        self.span = {(pid, t): (g.date.min(), g.date.max()) for (pid, t), g in d.groupby(["player_id", "team"])}
+
+    def missed(self, out, team):
+        span = self.span.get((out["id"], team))
+        if not span:
+            return []
+        return [gains for e, date, gains in self.games.get(team, []) if span[0] <= date <= span[1] and out["id"] not in gains]
+
+    def probs(self, out, team, active):
+        """{player id: P(top absorber)} from HISTORY_MIN_GAMES+ past absences, else None."""
+        ids = {p["id"] for p in active}
+        tops = []
+        for gains in self.missed(out, team):
+            g = {k: v for k, v in gains.items() if k in ids and v == v}
+            if g:
+                tops.append(max(g, key=g.get))
+        if len(tops) < HISTORY_MIN_GAMES:
+            return None
+        return {i: tops.count(i) / len(tops) for i in ids}
+
+
+def give(active, vacated, shares):
+    """Add vacated * share to each player, respecting MAX_MIN; what doesn't fit spills to the others by share."""
+    pool = {p["id"]: p for p in active}
+    pending = {k: vacated * v for k, v in shares.items() if v > 0 and k in pool}
+    for _ in range(5):
+        if sum(pending.values()) < 0.3:
+            break
+        spill = 0.0
+        for k, add in list(pending.items()):
+            room = max(MAX_MIN - pool[k]["min"], 0.0)
+            pool[k]["min"] += min(add, room)
+            spill += max(0.0, add - room)
+        open_ = [p for p in active if p["min"] < MAX_MIN - 0.1]
+        if spill < 0.3 or not open_:
+            break
+        z = sum(shares.get(p["id"], 0) or 1e-9 for p in open_)
+        pending = {p["id"]: spill * (shares.get(p["id"], 0) or 1e-9) / z for p in open_}
+
+
+def allocate_minutes(active, outs, team=None, history=None):
     """1) Normalize the full roster to 240 from the top of the depth chart down (trim_to).
-    2) Hand ruled-out players' minutes to teammates, weighted toward the same position."""
+    2) Redistribute each ruled-out player's minutes per REDISTRIBUTION (see the constants above)."""
     everyone = active + outs
     for p in outs:
         p["min"] = p["base_min"]
     trim_to(everyone, TEAM_MINUTES)
     for p in active:
         p["pre_min"] = p["min"]
-    freed = sum(o["min"] for o in outs)
-    out_pos = {o["pos"] for o in outs}
-    for _ in range(5):
-        open_ = [p for p in active if p["min"] < MAX_MIN]
-        if freed < 0.5 or not open_:
-            break
-        w = {id(p): p["base_min"] * (SAME_POS_WEIGHT if p["pos"] in out_pos else 1.0) for p in open_}
-        tw = sum(w.values())
-        left = 0.0
-        for p in open_:
-            add = freed * w[id(p)] / tw
-            room = MAX_MIN - p["min"]
-            p["min"] += min(add, room)
-            left += max(0.0, add - room)
-        freed = left
+    for o in outs:
+        if o["min"] < 0.5 or not active:
+            continue
+        probs = (history.probs(o, team, active) if history is not None else None) or role_probs(o, active)
+        if REDISTRIBUTION == "concentrate":
+            rank = sorted(active, key=lambda p: -probs.get(p["id"], 0))
+            shares = {rank[0]["id"]: TOP1_SHARE}
+            if len(rank) > 1:
+                shares[rank[1]["id"]] = TOP2_SHARE
+        else:
+            shares = {k: ROTATION_SHARE * v for k, v in probs.items()}
+        give(active, o["min"], shares)
 
 
 def blowout_shave(spread):
@@ -299,6 +362,47 @@ def simulate(p, opp, dvp, absent_starters=0):
     return out
 
 
+STARTER_SHARE = 0.8       # started this share of their games last season (20+ games) = a regular starter
+NEWS_DAYS = 7             # a news item within this many days of the slate confirms an ESPN inactive tag
+
+
+def unconfirmed_starters(df, cur, slate, news, out_players):
+    """Regular starters from last season whose team plays tonight but who are (a) tagged inactive by ESPN
+    with no news item about them in the last NEWS_DAYS, or (b) on no ESPN roster at all (only judged when the
+    slate carries every roster). Posts one Discord message per run, once per player per slate date, state in
+    data/health_state.json. They stay out of the projections; this just stops it being silent."""
+    prior = df[df.season == cur - 1].sort_values("date")
+    a = prior.groupby("player_id").agg(gp=("event_id", "nunique"), starts=("starter", "sum"), name=("player", "last"), team=("team", "last"))
+    regs = a[(a.starts >= STARTER_SHARE * a.gp) & (a.gp >= 20)]
+    tonight = {g["home"] for g in slate["games"]} | {g["away"] for g in slate["games"]}
+    rosters = slate.get("rosters") or {}
+    on_roster = {str(x["id"]): t for t, r in rosters.items() for x in r}
+    full_rosters = len(rosters) >= 25
+    since = dt.datetime.fromisoformat(slate["date"]) - dt.timedelta(days=NEWS_DAYS)
+    newsed = {norm_name(n["player"]) for n in news if n.get("player") and dt.datetime.fromisoformat(n["received"].replace("Z", "")) >= since}
+    inactive = {p["id"]: p for p in out_players if p.get("inactive")}
+    found = []
+    for pid, r in regs.iterrows():
+        team = on_roster.get(pid, None if full_rosters else r.team)
+        if team is None:
+            if r.team in tonight:
+                found.append({"id": pid, "name": r["name"], "team": r.team, "reason": "not on any ESPN roster"})
+            continue
+        if team in tonight and pid in inactive and norm_name(r["name"]) not in newsed:
+            found.append({"id": pid, "name": r["name"], "team": team, "reason": f"ESPN tag {inactive[pid]['status']}, no news in {NEWS_DAYS} days"})
+    if found:
+        state = read_json(HEALTH_STATE, {})
+        done = state.get("unconfirmed", {})
+        fresh = [f for f in found if done.get(f["id"]) != slate["date"]]
+        if fresh:
+            notify("\U0001f50d Arc Lab: regular starters inactive without news tonight: " +
+                   "; ".join(f"{f['name']} ({f['team']}, {f['reason']})" for f in fresh))
+            for f in fresh:
+                done[f["id"]] = slate["date"]
+            write_json(HEALTH_STATE, {**state, "unconfirmed": done})
+    return found
+
+
 def season_of(date_str):
     """ESPN season year for a slate date: the 2026-27 season is 2027, and it starts in the fall."""
     d = dt.date.fromisoformat(date_str)
@@ -319,6 +423,7 @@ def main():
     lg_pct = float(tpm_lg.tpm.sum() / max(tpm_lg.tpa.sum(), 1))
     nstat = news_status(news, slate["date"])
     played = df.groupby("team").date.max()
+    history = AbsorberHistory(df, pd.Timestamp(slate["date"]))
     ob = OddsBlaze()
     spreads = ob.spreads() if ob.enabled and slate["games"] else {}
     if slate["games"] and not spreads:
@@ -366,7 +471,7 @@ def main():
                 elif prof["baseline"].startswith("blend"):
                     entry["flags"].append(f"Minutes {prof['baseline']}")
                 team_players.append(entry)
-            allocate_minutes(team_players, outs)
+            allocate_minutes(team_players, outs, team, history)
             team_players = [p for p in team_players if p["min"] >= ROTATION_FLOOR]
             apply_blowout(team_players, (mk["home_spread"] if home else -mk["home_spread"]) if mk else None)
             absent_starters = sum(1 for o in outs if o["starter_rate"] >= 0.5)
@@ -392,12 +497,14 @@ def main():
                 out_players.append({"id": o["id"], "name": o["name"], "team": team, "opp": opp,
                                     "pos": o["pos"], "status": o["status"], "inactive": True})
 
+    alerts = unconfirmed_starters(df, cur, slate, news, out_players)
     write_json(SITE_DATA / "dvp.json", {"season": cur, "positions": POSITIONS, "league": lg, "teams": dvp,
                                         "updated": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z"})
     write_json(SITE_DATA / "projections.json", {
         "date": slate["date"], "season": cur, "games": games_out, "league_3p_pct": round(lg_pct, 3),
-        "players": out_players, "updated": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z"})
-    print(f"[model] {len([p for p in out_players if not p.get('inactive')])} players projected")
+        "players": out_players, "alerts": alerts,
+        "updated": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z"})
+    print(f"[model] {len([p for p in out_players if not p.get('inactive')])} players projected, {len(alerts)} unconfirmed starters")
 
 
 if __name__ == "__main__":
