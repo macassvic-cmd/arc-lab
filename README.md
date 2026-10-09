@@ -12,6 +12,7 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | `scripts/positions.py` | Same workflow | Assigns PG/SG/SF/PF/C from play style into `data/positions.csv` (ESPN only gives G/F/C) |
 | `scripts/build_model.py` | Same workflow | Defense vs position, minutes, and 8,000 simulated games per player |
 | `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
+| `scripts/paper_log.py` | All three workflows | Logs every prop with an Underdog line, freezes the close at tip, grades it, writes `results.json` for the Results tab |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
 | `docs/index.html` | GitHub Pages | The site |
 
@@ -69,6 +70,10 @@ python scripts/underdog_lines.py --snapshot ..\..\pirate-bets-pc\reader\board_sn
 ```
 
 Stats kept: `3PM`, `PTS`, `REB`, `AST`, `PRA`, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and, when an OddsBlaze key is present, `sharp`: the first book in `ODDSBLAZE_SHARP_BOOKS` (default Pinnacle, Circa, DraftKings, FanDuel) with its `line`, `over`/`under` American prices, devigged `fair_over`, and `exact` (false when the book's nearest line differs from Underdog's). The site reads `player`, `stat`, `line` (the shape of `lines.example.json`); the rest is for you and your validation agent.
+
+## Paper log and Results tab
+
+`scripts/paper_log.py snapshot` runs after every model build (update and phone-feed workflows) and every 15 minutes in the evening (watchdog workflow). It logs each prop that has an Underdog line to `data/paper_log.csv` with the model's over probability; the first snapshot where the model's side beats break-even (`BREAKEVEN = 0.55`) by `MIN_EDGE = 0.03` is the entry, and the last snapshot before tip is the close (line, probability, and the sharp book's devigged probability when its line matches). `paper_log.py settle` runs after each morning's box scores: it grades rows, voids DNPs, and writes `docs/data/results.json` (hit rate, units at break-even payout, closing line value, calibration of all logged props, projection error by stat, cumulative units, recent picks). The Results tab reads it. Nothing is graded until there is at least one night of lines and box scores.
 
 ## OddsBlaze
 

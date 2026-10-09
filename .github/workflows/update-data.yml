@@ -41,6 +41,9 @@ jobs:
           else
             python fetch_games.py
           fi
+      - name: Settle paper log
+        working-directory: scripts
+        run: python paper_log.py settle
       - name: Assign positions
         working-directory: scripts
         run: python positions.py
@@ -50,6 +53,9 @@ jobs:
           ODDSBLAZE_API_KEY: ${{ secrets.ODDSBLAZE_API_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python build_model.py
+      - name: Snapshot paper log
+        working-directory: scripts
+        run: python paper_log.py snapshot
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"

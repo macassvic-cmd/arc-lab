@@ -1,5 +1,7 @@
 name: Lines watchdog
 
+# Every 15 minutes in the evening: lines freshness alert, plus a paper-log snapshot so the last one before tip is the close.
+
 on:
   schedule:
     - cron: "*/15 21-23 * * *"   # 5pm-8pm ET
@@ -28,11 +30,15 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python health.py
+      - name: Snapshot paper log (closing lines)
+        working-directory: scripts
+        run: python paper_log.py snapshot
       - name: Commit state
         run: |
           git config user.name "arc-lab-bot"
           git config user.email "actions@users.noreply.github.com"
           [ -f data/health_state.json ] && git add data/health_state.json
+          [ -f data/paper_log.csv ] && git add data/paper_log.csv
           git diff --cached --quiet && exit 0
           git commit -m "health: $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

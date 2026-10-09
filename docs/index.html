@@ -84,6 +84,17 @@ tr:last-child td{border-bottom:0}
 #fresh .stale{color:var(--miss);font-weight:600}
 #fresh .ok{color:var(--make)}
 [hidden]{display:none!important}
+/* Results tab */
+h2{font:700 26px var(--display);margin:28px 0 8px}
+.verdict{background:var(--surface);border-left:4px solid var(--rim);padding:10px 14px;margin:0 0 14px;max-width:80ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.stat b{display:block;font:700 34px/1.1 var(--display)}
+.stat span{color:var(--muted);font-size:13px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.chart svg{display:block;width:100%;height:180px}
+.bar{display:inline-block;height:8px;background:var(--rim);border-radius:2px;vertical-align:middle}
+.bar.act{background:var(--make)}
 </style>
 </head>
 <body>
@@ -97,6 +108,7 @@ tr:last-child td{border-bottom:0}
     <button role="tab" data-tab="props" aria-selected="false">Props</button>
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
+    <button role="tab" data-tab="results" aria-selected="false">Results</button>
   </nav>
 </header>
 
@@ -144,6 +156,21 @@ tr:last-child td{border-bottom:0}
     <div class="controls" id="newsChips"></div>
     <ul class="news" id="newsList"></ul>
   </section>
+
+  <section id="results" hidden>
+    <p class="verdict" id="verdict"></p>
+    <div class="stats" id="rstats"></div>
+    <h2>Units over time</h2>
+    <div id="rchart" class="chart"></div>
+    <h2>Calibration</h2>
+    <p class="foot">When the model says a prop goes over X% of the time, does it? Rows close to each other mean the probabilities can be trusted. All logged props count here, not just picks.</p>
+    <div class="scroll"><table id="rcal"></table></div>
+    <h2>By stat</h2>
+    <div class="scroll"><table id="rstat"></table></div>
+    <h2>Recent picks</h2>
+    <div class="scroll"><table id="rpicks"></table></div>
+    <p class="foot" id="rnote"></p>
+  </section>
 </main>
 
 <script>
@@ -154,7 +181,7 @@ const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","POINTS":"pts","REB":"reb","REBOUNDS":"reb",
                   "AST":"ast","ASSISTS":"ast","PRA":"pra","PTS+REB+AST":"pra"};
-let P = null, D = null, N = [];
+let P = null, D = null, N = [], R = null;
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -287,6 +314,54 @@ function renderDefense(){
     : `Descriptive: raw per-game totals allowed to each position this season. Rank still uses the minute-adjusted rate. Projections use at most a ±2% nudge from these.`;
 }
 
+function renderResults(){
+  if(!R || !R.overall.n){
+    $("verdict").textContent = "No picks logged yet. Rows appear once lines.json has Underdog lines and the model finds an edge of at least 3 points over break-even.";
+    ["rstats","rchart"].forEach(id=>$(id).innerHTML=""); ["rcal","rstat","rpicks"].forEach(id=>$(id).innerHTML="");
+    return;
+  }
+  const o = R.overall, be = R.breakeven;
+  const fmtP = v => v==null ? "–" : pct(v);
+  const mkt = o.market_close_p;
+  let verdict;
+  if(o.decided < 150) verdict = `${o.decided} graded picks so far. That's too few to judge an edge; results this early are mostly noise. Watch the market close number: it settles much faster than win rate.`;
+  else if(mkt!=null && mkt > be) verdict = `Sharp books' closing prices give your side ${pct(mkt)} on average, above the ${pct(be)} break-even. That's the sign of a real edge.`;
+  else if(mkt!=null) verdict = `Closing prices give your side ${pct(mkt)}, below the ${pct(be)} break-even. Treat any profit so far as variance until this turns.`;
+  else verdict = `${o.decided} graded picks. Add sharp over/under odds to lines.json to measure closing line value, which is the stronger test.`;
+  $("verdict").textContent = verdict;
+  const card = (v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`;
+  $("rstats").innerHTML = [
+    card(o.decided, "graded picks"),
+    card(fmtP(o.hit_rate), `hit rate (break-even ${pct(be)})`),
+    card(`${o.units>=0?"+":""}${o.units}`, "units at break-even payout"),
+    card(fmtP(mkt), `closing market odds on your side (${o.market_n} picks)`),
+    card(fmtP(o.beat_close_rate), "picks where the line moved your way"),
+  ].join("");
+  const sr = R.series;
+  if(sr.length > 1){
+    const ys = sr.map(d=>d.units), lo=Math.min(0,...ys), hi=Math.max(0,...ys), span=(hi-lo)||1;
+    const x = i => 10 + 580*i/(sr.length-1), y = v => 170 - 160*(v-lo)/span;
+    $("rchart").innerHTML = `<svg viewBox="0 0 600 180" preserveAspectRatio="none" role="img" aria-label="Cumulative units">
+      <line x1="10" x2="590" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)"/>
+      <polyline fill="none" stroke="var(--rim)" stroke-width="2.5" points="${sr.map((d,i)=>`${x(i)},${y(d.units)}`).join(" ")}"/></svg>
+      <div class="meta">${sr[0].date} to ${sr[sr.length-1].date}: ${sr[sr.length-1].units} units</div>`;
+  } else $("rchart").innerHTML = `<div class="meta">The chart starts after two days of graded picks.</div>`;
+  $("rcal").innerHTML = `<thead><tr><th>Model said</th><th>Props</th><th>Predicted</th><th>Actually went over</th></tr></thead><tbody>${
+    R.calibration.map(c=>`<tr><td>${pct(c.lo)}–${pct(c.hi)}</td><td>${c.n}</td>
+      <td>${pct(c.pred)} <span class="bar" style="width:${c.pred*80}px"></span></td>
+      <td>${pct(c.actual)} <span class="bar act" style="width:${c.actual*80}px"></span></td></tr>`).join("")}</tbody>`;
+  const names = {tpm:"3PM",pts:"Points",reb:"Rebounds",ast:"Assists",pra:"PRA"};
+  $("rstat").innerHTML = `<thead><tr><th>Stat</th><th>Picks</th><th>Hit rate</th><th>Units</th><th>Close odds</th><th>Proj. error</th></tr></thead><tbody>${
+    Object.entries(R.by_stat).map(([k,v])=>`<tr><td>${names[k]||k}</td><td>${v.decided}</td><td>${fmtP(v.hit_rate)}</td>
+      <td>${v.units}</td><td>${fmtP(v.market_close_p)}</td><td>${R.mae[k]?.mae ?? "–"}</td></tr>`).join("")}</tbody>`;
+  $("rpicks").innerHTML = `<thead><tr><th>Player</th><th>Pick</th><th>Model</th><th>Close line</th><th>Close odds</th><th>Actual</th><th>Result</th></tr></thead><tbody>${
+    R.recent.map(r=>`<tr><td><span class="name">${r.player}</span><div class="meta">${r.date} ${r.team} vs ${r.opp}</div></td>
+      <td>${r.pick} ${r.entry_line} ${names[r.stat]||r.stat}</td><td>${r.entry_p?pct(+r.entry_p):"–"}</td>
+      <td>${r.close_line||"–"}</td><td>${r.close_odds_p?pct(+r.close_odds_p):"–"}</td><td>${r.actual||"–"}</td>
+      <td class="${r.result==="win"?"pos":r.result==="loss"?"neg":""}">${r.result||"pending"}</td></tr>`).join("")}</tbody>`;
+  $("rnote").textContent = `Picks are props where the model's chance beat break-even by ${Math.round(R.min_edge*100)}+ points. Entry is the first time that happened; close is the last line captured before tip. Updated ${ago(R.updated)}.`;
+}
+
 function renderNews(){
   const tags = ["all","OUT","QUESTIONABLE","STARTING","AVAILABLE"];
   chips($("newsChips"), tags.map(t=>[t, t==="all"?"All":t[0]+t.slice(1).toLowerCase()]), S.newsTag, v=>{S.newsTag=v; render();});
@@ -299,20 +374,21 @@ function renderNews(){
 function render(){
   const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
   chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
-  $("gameChips").hidden = S.tab==="defense"||S.tab==="news";
+  $("gameChips").hidden = S.tab==="defense"||S.tab==="news"||S.tab==="results";
   chips($("posChips3"), [["all","All"], ...POS.map(p=>[p,p])], S.pos3, v=>{S.pos3=v; render();});
   chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
   if(S.tab==="threes") renderThrees();
   if(S.tab==="props") renderProps();
   if(S.tab==="defense") renderDefense();
   if(S.tab==="news") renderNews();
+  if(S.tab==="results") renderResults();
 }
 
 document.querySelector("nav").onclick = e => {
   const b = e.target.closest("button"); if(!b) return;
   S.tab = b.dataset.tab;
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
-  ["threes","props","defense","news"].forEach(id=>$(id).hidden = id!==S.tab);
+  ["threes","props","defense","news","results"].forEach(id=>$(id).hidden = id!==S.tab);
   render();
 };
 $("q3").oninput = render; $("qp").oninput = render;
@@ -333,7 +409,7 @@ function freshness(L){
 }
 
 async function boot(){
-  [P, D, N] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", [])]);
+  [P, D, N, R] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null)]);
   const L = await load("data/lines.json", null);
   S.lines = {};
   freshness(L);
