@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc Lab Backtest</title>
+<meta name="description" content="Walk-forward historical simulation of the Arc Lab projection model over the 2025-26 NBA season. Not live picks.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#142033; --muted:#5B6878; --line:#D5DCE4;
+  --rim:#E8590C; --rim-soft:#FCE3D3; --make:#0F8F6A; --miss:#C8324B; --chip:#E9EDF2; --warn:#FFF4D6; --warn-ink:#7A4B00;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42; --warn:#3A2E12; --warn-ink:#F3D28B;}}
+:root[data-theme="dark"]{
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42; --warn:#3A2E12; --warn-ink:#F3D28B;}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--rim);outline-offset:2px}
+header{padding:28px 16px 0;max-width:1100px;margin:0 auto}
+h1{font:700 clamp(40px,7vw,64px)/.9 var(--display);margin:0;letter-spacing:-.5px}
+h1 small{display:block;font:600 22px var(--display);color:var(--muted);letter-spacing:0;margin-top:6px}
+.sub{color:var(--muted);margin:6px 0 10px;font-size:15px}
+.banner{background:var(--warn);color:var(--warn-ink);border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:10px 14px;margin:10px 0 0;font-size:15px}
+.banner b{font-family:var(--display);font-size:18px;margin-right:6px}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+h2{font:700 26px var(--display);margin:28px 0 8px}
+h2 span{color:var(--muted);font:500 15px var(--body);margin-left:8px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.chip{font:500 14px var(--body);background:var(--chip);color:var(--ink);border:1px solid transparent;border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.stat b{display:block;font:700 32px/1.1 var(--display)}
+.stat span{color:var(--muted);font-size:13px}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font:600 15px var(--display);color:var(--muted);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1}
+td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.bar{display:inline-block;height:8px;background:var(--rim);border-radius:2px;vertical-align:middle}
+.bar.act{background:var(--make)}
+.pos{color:var(--make);font-weight:600}.neg{color:var(--miss);font-weight:600}
+.verdict{background:var(--surface);border-left:4px solid var(--rim);padding:10px 14px;margin:0 0 14px;max-width:80ch}
+.foot{color:var(--muted);font-size:13px;margin-top:10px;max-width:80ch}
+.empty{padding:28px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:8px}
+ul.notes{max-width:80ch;padding-left:20px}
+ul.notes li{margin:4px 0}
+.meta{color:var(--muted);font-size:12px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Arc Lab <small>Backtest · 2025-26 walk-forward</small></h1>
+  <p class="sub"><a href="./">Back to tonight's slate</a></p>
+  <div class="banner"><b>Historical simulation.</b> Every number here comes from re-running the model on past dates with only earlier games visible. None of it is a live pick, none of it is in the paper log, and the Results tab on the main page is kept separate.</div>
+</header>
+<main>
+  <p class="verdict" id="verdict">Loading…</p>
+  <div class="stats" id="cards"></div>
+
+  <h2>Projection error <span>mean absolute error per player-game, model vs each player's trailing-10 average</span></h2>
+  <div class="scroll"><table id="mae"></table></div>
+  <p class="foot">Bias is projection minus actual, so a positive number means the model runs high. "24+ min" rows are players projected for at least 24 minutes, which is roughly the set that gets a prop line.</p>
+
+  <h2>Threes <span>calibration of P(at least k made)</span></h2>
+  <div class="controls" id="kChips"></div>
+  <p class="meta" id="kSummary"></p>
+  <div class="scroll"><table id="kCal"></table></div>
+  <p class="foot">Each row groups player-games by what the model said. A calibrated model's "actually hit" matches "model said" in every row. Brier score is the mean squared error of the probability (lower is better); the base-rate Brier is what you'd get by always predicting the season-wide hit rate.</p>
+
+  <h2>Points, rebounds, assists, PRA <span>calibration at the fair line</span></h2>
+  <div class="controls" id="sChips"></div>
+  <p class="meta" id="sSummary"></p>
+  <div class="scroll"><table id="sOff"></table></div>
+  <div style="height:10px"></div>
+  <div class="scroll"><table id="sCal"></table></div>
+  <p class="foot">The fair line is the x.5 line where the model's P(over) is nearest 50%. The first table steps that line up and down in whole points, the way books post alternates. The second groups all of those alt lines by the model's P(over). No actual market lines are involved.</p>
+
+  <h2>By month <span>does it get better as the season's data accumulates?</span></h2>
+  <div class="scroll"><table id="month"></table></div>
+
+  <h2>By absent starters <span>the usage bump and minutes redistribution both key off this</span></h2>
+  <div class="scroll"><table id="absent"></table></div>
+  <p class="foot">Rows split by how many regular starters the model believed were out for that team. If the per-36 gap widens as absences rise, the usage bump is overshooting; if the minutes bias changes sign, the redistribution share is off.</p>
+
+  <h2>Against the market <span>closing lines, hit rate, ROI</span></h2>
+  <div id="market"></div>
+
+  <h2>How the simulation was run</h2>
+  <ul class="notes" id="notes"></ul>
+  <p class="foot" id="updated"></p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const pct = v => v==null || isNaN(v) ? "–" : Math.round(v*100) + "%";
+const num = (v, d=2) => v==null || isNaN(v) ? "–" : (+v).toFixed(d);
+const NAMES = {min:"Minutes", tpm:"3PM", pts:"Points", reb:"Rebounds", ast:"Assists", pra:"PRA"};
+const S = {k:"1", s:"pts"};
+let B = null;
+
+function chips(el, items, cur, on){
+  el.innerHTML = items.map(([v,l])=>`<button class="chip" aria-pressed="${v===cur}" data-v="${v}">${l}</button>`).join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>on(b.dataset.v));
+}
+function calTable(buckets, said, hit){
+  return `<thead><tr><th>${said}</th><th>Player-games</th><th>Model said</th><th>${hit}</th><th>Gap</th></tr></thead><tbody>${
+    buckets.map(c=>{const gap=c.actual-c.pred; return `<tr><td>${pct(c.lo)}–${pct(c.hi)}</td><td>${c.n}</td>
+      <td>${pct(c.pred)} <span class="bar" style="width:${c.pred*80}px"></span></td>
+      <td>${pct(c.actual)} <span class="bar act" style="width:${c.actual*80}px"></span></td>
+      <td class="${Math.abs(gap)>=0.05?"neg":""}">${gap>=0?"+":""}${(gap*100).toFixed(1)} pts</td></tr>`;}).join("")}</tbody>`;
+}
+
+function render(){
+  if(!B){ $("verdict").textContent = "No backtest has been generated yet. Run scripts/backtest.py to build data/backtest.json."; return; }
+  const m = B.mae, t1 = B.threes["1"], lp = B.lines.pts;
+  const better = Object.keys(m).filter(s=>m[s].mae < m[s].naive_mae).length;
+  $("verdict").textContent = `${B.rows.toLocaleString()} player-games across ${B.games} games, ${B.start} to ${B.end}. The model beat a plain trailing-10 average on ${better} of ${Object.keys(m).length} stats. At the model's own fair points line, overs hit ${pct(lp.at_fair.over)} against a target of 50%. P(1+ threes) Brier ${num(t1.brier,4)} vs ${num(t1.brier_base,4)} for the base rate.`;
+  const card = (v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`;
+  $("cards").innerHTML = [
+    card(B.dates, "game dates replayed"),
+    card(B.games, "games"),
+    card(B.rows.toLocaleString(), "player-games scored"),
+    card(pct(B.coverage), "of players who played were projected"),
+    card(num(m.min.mae,1), "minutes MAE"),
+    card(num(m.pts.mae,1), "points MAE"),
+  ].join("");
+  $("mae").innerHTML = `<thead><tr><th>Stat</th><th>Model MAE</th><th>Trailing-10 MAE</th><th>Bias</th><th>Model MAE, 24+ min</th><th>Trailing-10, 24+ min</th></tr></thead><tbody>${
+    Object.entries(m).map(([s,v])=>`<tr><td>${NAMES[s]||s}</td><td class="${v.mae<v.naive_mae?"pos":"neg"}">${num(v.mae)}</td><td>${num(v.naive_mae)}</td>
+      <td>${v.bias>=0?"+":""}${num(v.bias)}</td><td class="${v.mae_24plus<v.naive_mae_24plus?"pos":"neg"}">${num(v.mae_24plus)}</td><td>${num(v.naive_mae_24plus)}</td></tr>`).join("")}</tbody>`;
+
+  chips($("kChips"), ["1","2","3","4"].map(k=>[k, `${k}+ threes`]), S.k, v=>{S.k=v; render();});
+  const k = B.threes[S.k];
+  $("kSummary").textContent = `${k.n.toLocaleString()} player-games. Model said ${pct(k.pred)} on average, ${pct(k.actual)} actually hit. Brier ${num(k.brier,4)} (base rate ${num(k.brier_base,4)}).`;
+  $("kCal").innerHTML = calTable(k.buckets, "Model said", "Actually hit");
+
+  chips($("sChips"), ["pts","reb","ast","pra"].map(s=>[s, NAMES[s]]), S.s, v=>{S.s=v; render();});
+  const l = B.lines[S.s];
+  $("sSummary").textContent = `At the fair line: model P(over) ${pct(l.at_fair.pred)}, actual over rate ${pct(l.at_fair.over)} on ${l.at_fair.n.toLocaleString()} player-games. Across ${l.alt_n.toLocaleString()} alt lines: Brier ${num(l.brier,4)} vs ${num(l.brier_base,4)} for a coin flip.`;
+  $("sOff").innerHTML = `<thead><tr><th>Line</th><th>Player-games</th><th>Model P(over)</th><th>Actually over</th><th>Gap</th></tr></thead><tbody>${
+    l.by_offset.map(o=>{const gap=o.over-o.pred; return `<tr><td>fair ${o.offset===0?"":(o.offset>0?"+":"")+(o.offset||"")}</td><td>${o.n}</td><td>${pct(o.pred)}</td><td>${pct(o.over)}</td>
+      <td class="${Math.abs(gap)>=0.05?"neg":""}">${gap>=0?"+":""}${(gap*100).toFixed(1)} pts</td></tr>`;}).join("")}</tbody>`;
+  $("sCal").innerHTML = calTable(l.buckets, "Model P(over)", "Actually over");
+
+  $("month").innerHTML = `<thead><tr><th>Month</th><th>Dates</th><th>Player-games</th><th>Min MAE</th><th>Pts MAE</th><th>Reb MAE</th><th>Ast MAE</th><th>3PM MAE</th><th>Brier 1+ threes</th><th>Over at fair pts line</th></tr></thead><tbody>${
+    B.monthly.map(r=>`<tr><td>${r.month}</td><td>${r.dates}</td><td>${r.n}</td><td>${num(r.mae_min)}</td><td>${num(r.mae_pts)}</td><td>${num(r.mae_reb)}</td><td>${num(r.mae_ast)}</td><td>${num(r.mae_tpm)}</td><td>${num(r.brier_tpm_1,4)}</td><td>${pct(r.over_pts_fair)}</td></tr>`).join("")}</tbody>`;
+
+  $("absent").innerHTML = `<thead><tr><th>Starters out</th><th>Player-games</th><th>Minutes bias</th><th>Points bias</th><th>Pts/36 model</th><th>Pts/36 actual</th><th>Gap</th><th>Over at fair pts line</th><th>P(1+ threes) said / hit</th></tr></thead><tbody>${
+    (B.by_absent||[]).map(r=>{const gap=r.pts36_proj/r.pts36_act-1; return `<tr><td>${r.absent===2?"2+":r.absent}</td><td>${r.n.toLocaleString()}</td><td>${r.bias_min>=0?"+":""}${num(r.bias_min)}</td><td>${r.bias_pts>=0?"+":""}${num(r.bias_pts)}</td>
+      <td>${num(r.pts36_proj)}</td><td>${num(r.pts36_act)}</td><td class="${Math.abs(gap)>=0.03?"neg":""}">${gap>=0?"+":""}${(gap*100).toFixed(1)}%</td><td>${pct(r.over_pts_fair)}</td><td>${pct(r.p1_pred)} / ${pct(r.p1_act)}</td></tr>`;}).join("")}</tbody>`;
+
+  const mk = B.market;
+  if(mk && mk.available){
+    $("market").innerHTML = `<div class="stats">${[card(mk.picks,"simulated picks"),card(pct(mk.hit_rate),"hit rate"),card(num(mk.roi,3),"ROI vs close")].join("")}</div>`;
+  } else {
+    $("market").innerHTML = `<div class="empty"><b>Not available.</b> ${mk?.reason||""}<br><br>${mk?.cost||""}</div>`;
+  }
+  const n = B.notes || {};
+  $("notes").innerHTML = [
+    `For each date, defense-vs-position, player rates, minutes baselines and absorber history were rebuilt from games strictly before that date.`,
+    `A team's roster for the night was everyone who played for it in the previous ${n.roster_days} days, plus anyone in that night's box score.`,
+    `Absences: ${n.absences}. Books price from the same injury report, but a late scratch is "known" here when it may not have been at close.`,
+    n.no_spreads ? `No historical spreads, so the blowout shave was off.` : ``,
+    n.no_news ? `No injury news text, so no questionable-tag widening or minutes limits.` : ``,
+    n.positions_full_season ? `Play-style positions come from data/positions.csv, which is built from the whole season (they move the simulation by at most ±2%).` : ``,
+    `Players were scored only when they played. ${pct(B.coverage)} of players who played had a projection; the rest were new to the team, under 3 games of history, or projected under the ${4}-minute rotation floor.`,
+  ].filter(Boolean).map(x=>`<li>${x}</li>`).join("");
+  $("updated").textContent = `Generated ${B.updated} by scripts/backtest.py. Season ${B.season}.`;
+}
+
+fetch("data/backtest.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{B=j; render();}).catch(()=>render());
+</script>
+</body>
+</html>

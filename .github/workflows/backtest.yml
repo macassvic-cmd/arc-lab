@@ -1,0 +1,47 @@
+name: Walk-forward backtest (historical simulation)
+
+# Manual only. Replays the season date by date with only earlier games visible and writes
+# data/backtest_rows.csv.gz + docs/data/backtest.json for the Backtest page. It never touches
+# data/paper_log.csv or docs/data/results.json.
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "First date to replay (YYYY-MM-DD)"
+        required: false
+        default: "2025-11-01"
+      end:
+        description: "Last date to replay (YYYY-MM-DD), blank for the end of the data"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commit
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Replay the season
+        working-directory: scripts
+        env:
+          START: ${{ inputs.start }}
+          END: ${{ inputs.end }}
+        run: python backtest.py --start "${START:-2025-11-01}" ${END:+--end "$END"}
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/backtest_rows.csv.gz docs/data/backtest.json
+          git diff --cached --quiet && exit 0
+          git commit -m "backtest: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

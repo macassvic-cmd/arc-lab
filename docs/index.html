@@ -40,6 +40,8 @@ h1{font:700 clamp(44px,8vw,72px)/.9 var(--display);margin:0;letter-spacing:-.5px
 nav{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
 nav button{font:600 19px var(--display);background:none;border:0;color:var(--muted);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
 nav button[aria-selected="true"]{color:var(--ink);border-color:var(--rim)}
+nav .navlink{font:600 19px var(--display);color:var(--muted);padding:10px 14px;margin-left:auto;text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent}
+nav .navlink::after{content:" 97";font-size:14px}
 
 main{max-width:1200px;margin:0 auto;padding:16px 20px 60px}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
@@ -109,6 +111,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
+    <a class="navlink" href="backtest.html">Backtest</a>
   </nav>
 </header>
 
