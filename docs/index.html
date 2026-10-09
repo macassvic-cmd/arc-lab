@@ -110,7 +110,7 @@ tr:last-child td{border-bottom:0}
     </div>
     <div id="outs3"></div>
     <div class="scroll"><table id="t3"></table></div>
-    <p class="foot">Ladder shows the chance of making at least 1, 2, 3, 4 and 5 threes. Opp rank is how many threes tonight's opponent allows to this position, adjusted for minutes: 1 gives up the most, 30 the fewest. Bars show makes over the last 10 games, green when they cleared the line.</p>
+    <p class="foot">Ladder shows the chance of making at least 1, 2, 3, 4 and 5 threes. Opp rank is how many threes tonight's opponent allowed to this position last season, adjusted for minutes: 1 gave up the most, 30 the fewest. Descriptive only; the projection nudges at most ±2% from it. Bars show makes over the last 10 games, green when they cleared the line.</p>
   </section>
 
   <section id="props" hidden>
@@ -196,7 +196,10 @@ function spark(arr, L){
 }
 
 function flags(p){
-  return (p.flags||[]).map(f=>`<span class="flag ${f==="Q"?"q":""}">${f==="Q"?"Questionable":f}</span>`).join("");
+  return (p.flags||[]).map(f=>{
+    const tip = f.startsWith("may gain minutes") && p.min_gain ? ` title="Model adds about ${p.min_gain} min; redistribution cuts minutes error by only ~2%, so treat it as a lean"` : "";
+    return `<span class="flag ${f==="Q"?"q":""}"${tip}>${f==="Q"?"Questionable":f}</span>`;
+  }).join("");
 }
 
 function sortable(table, cols, key, set){
@@ -280,8 +283,8 @@ function renderDefense(){
   $("td").querySelector("thead").onclick = e => { const th=e.target.closest("th"); if(!th) return;
     S.dsort = th.dataset.p || null; render(); };
   $("dnote").textContent = m==="f"
-    ? `Percent above or below league average per minute at each position, blended with league average early in the season so a few games don't swing it. Rank 1 gives up the most. Season ${D.season-1}–${String(D.season).slice(2)}.`
-    : `Raw per-game totals allowed to each position this season. Rank still uses the minute-adjusted rate.`;
+    ? `Descriptive: what teams allowed to each position last season, percent above or below league average per minute, blended with league average early in the season. Not predictive: in testing, position added nothing beyond the team, so projections only nudge by ±2% from it. Rank 1 gave up the most. Season ${D.season-1}–${String(D.season).slice(2)}.`
+    : `Descriptive: raw per-game totals allowed to each position this season. Rank still uses the minute-adjusted rate. Projections use at most a ±2% nudge from these.`;
 }
 
 function renderNews(){

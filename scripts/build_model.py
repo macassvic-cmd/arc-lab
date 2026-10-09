@@ -83,8 +83,14 @@ def build_dvp(df, cur):
     return teams, lg
 
 
+# Muse V2 (2026-10-08): positional defense adds nothing predictive beyond the team (3PA/36 R2 0.4526 with or without
+# it), so the factor only nudges the simulation. The full numbers stay in dvp.json for the DvP tab, labeled descriptive.
+DVP_CLAMP = 0.02
+
+
 def dvp_factor(dvp, opp, pos, stat):
-    return dvp.get(opp, {}).get(pos, {}).get(stat, {}).get("f", 1.0)
+    f = dvp.get(opp, {}).get(pos, {}).get(stat, {}).get("f", 1.0)
+    return float(np.clip(f, 1 - DVP_CLAMP, 1 + DVP_CLAMP))
 
 
 # ---------------- player profiles ----------------
@@ -186,7 +192,9 @@ ROTATION_FLOOR = 4  # projected minutes under this: not in the rotation, dropped
 #   proportional to role:                 20% 5.25  30% 5.26  40% 5.31  67% 5.57
 #   concentrate 40/27 on predicted #1/#2: 20% 5.25  30% 5.34  40% 5.50  67% 6.07
 # Observed: only ~26% of vacated minutes land on rotation teammates (trailing avg >= 6 who played);
-# the rest goes to deep bench / call-ups, so ROTATION_SHARE is far below Muse's 67%.
+# the rest goes to deep bench / call-ups, so ROTATION_SHARE is far below the 67% first proposed (Muse agreed
+# 2026-10-08: the 40%/67% figures picked the top absorber after the fact). Redistribution trims minutes error by
+# ~2%, so the site words the gain softly and keeps the number in a tooltip (min_gain).
 REDISTRIBUTION = "spread"      # "spread" (b) or "concentrate" (a)
 ROTATION_SHARE = 0.20          # (b): share of vacated minutes spread over the rotation by absorber probability
 TOP1_SHARE, TOP2_SHARE = 0.40, 0.27  # (a): shares of vacated minutes to the predicted #1 and #2 absorbers
@@ -482,7 +490,8 @@ def main():
                     p["flags"].append("B2B")
                 gain = p["min"] - p["pre_min"]
                 if outs and gain >= 2:
-                    p["flags"].append(f"+{gain:.0f} min ({', '.join(surname(o['name']) for o in outs)} out)")
+                    p["flags"].append(f"may gain minutes ({', '.join(surname(o['name']) for o in outs)} out)")
+                    p["min_gain"] = round(gain, 1)
                 if absent_starters:
                     p["flags"].append(f"Usage +{100 * USAGE_BUMP['pts'] * min(absent_starters, USAGE_MAX_ABSENT):.0f}% pts")
                 sim = simulate(p, opp, dvp, absent_starters)
@@ -490,6 +499,7 @@ def main():
                     "id": p["id"], "name": p["name"], "team": team, "opp": opp, "home": home,
                     "pos": p["pos"], "min": round(p["min"], 1), "base_min": round(p["pre_min"], 1),
                     "pct": round(p["pct"], 3), "flags": p["flags"], "last10": p["last10"], "baseline": p["baseline"],
+                    "min_gain": p.get("min_gain"),
                     "dvp_rank": {s: dvp.get(opp, {}).get(p["pos"], {}).get(s, {}).get("rk") for s in STATS},
                     **sim,
                 })
