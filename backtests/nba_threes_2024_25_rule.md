@@ -45,8 +45,10 @@ Run in this order; nothing after step 1 runs until step 1 passes.
   books quoting both sides at that line of over / (over + under) in implied probability; a book quoting one side only is
   ignored. Model P(over x.5) = P(k+) with k = x + 0.5 from the walk-forward pmf (THREES_K extended to 1..8).
 - Outcome = actual threes made > line (box score). Rows where the player did not play are dropped (DNP, no projection).
-- Payout: Underdog's live 4-pick Standard payout multiplier, fetched at grading time and recorded in the report with its
-  source and timestamp; break-even per pick = (1/payout)^(1/4).
+- Payout (amended 2026-10-17 by the user, before any grading): No public live endpoint exists; payout fixed at 12x (standard
+  non-correlated 4-pick) as read from the app on 2026-10-17. Break-even = (1/12)^0.25 = 53.7% per pick. Applies to
+  non-correlated entries only (picks from different games). (3-pick pays 6.5x, for reference only.) The grader takes it as
+  `--payout 12 --payout-source "Underdog app, read 2026-10-17"` and records both in the report.
 - Weeks for (c): ISO weeks of the game date (UTC). Calibration buckets for (d): deciles of model P(over) at the graded line,
   bucket error = |mean model P - hit rate|, judged at n >= 30.
 - Encompassing (a): logistic regression of hit on [1, logit(model P), logit(no-vig close P)] by IRLS; cluster-robust (CR1)
