@@ -277,6 +277,9 @@ def grade(season, rows_path, out_dir, report_path, season_label, payout=None, pa
                grade=dict(a_encompassing=a, b_sample=b, c_drop_best_week=c, d_calibration=dd, e_picks=e, overall_pass=overall),
                summary=close_only, by_week=[dict(week=w, n=int(len(g)), picks=int(g.pick.sum()), pick_wins=int(g[g.pick].hit.sum()), hit_rate=round(float(g.hit.mean()), 3)) for w, g in graded.groupby("week")],
                credits=dict(spent=spent(out_dir / "usage.jsonl"), budget_stop=BUDGET_STOP),
+               notes=["Positions table (data/positions_2025.csv) is built from full-season 2023-24 and 2024-25 play-style data: a minor lookahead that affects the defense-vs-position factor only (clamped to +/-2%).",
+                      "No 2024-25 or 2023-24 data was used to fit any model parameter, prior, cap, clamp or calibration (constants measured on the 2025-26 backfill or hand-set; no calibration.json on main).",
+                      "No injury-news inputs and no spreads (blowout shave off); absences read off the box score."],
                updated=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"))
     write_json(report_path, doc)
     graded[["event_id", "date", "player", "team", "opp", "line", "model_p", "close_p", "n_books", "hit", "pick", "week"]].to_csv(out_dir / "graded_rows.csv", index=False)
