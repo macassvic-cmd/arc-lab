@@ -100,6 +100,9 @@ ul.notes li{margin:4px 0}
   <h2>Against the market <span>closing lines, hit rate, ROI</span></h2>
   <div id="market"></div>
 
+  <h2 id="close24h">Closing-line backtest: 2024-25 threes <span>locked rule, Underdog pick definition, vs The Odds API close</span></h2>
+  <div id="close24"><div class="empty">Not run yet. Rule: backtests/nba_threes_2024_25_rule.md; script: scripts/backtest_threes_close.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -182,6 +185,25 @@ function render(){
 }
 
 fetch("data/backtest.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{B=j; render();}).catch(()=>render());
+
+function renderClose(C){
+  if(!C) return;
+  const g=C.grade, card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, pf=x=>x?'<span class="pos">PASS</span>':'<span class="neg">FAIL</span>';
+  const a=g.a_encompassing, c=g.c_drop_best_week, d=g.d_calibration, e=g.e_picks, s=C.summary;
+  $("close24").innerHTML = `<div class="stats">${[card(C.games,"games with a close"),card(C.rows.toLocaleString(),"graded threes props"),card(e.n,"picks"),
+      card(e.win_rate==null?"–":pct(e.win_rate),`pick win rate (break-even ${e.break_even==null?"–":pct(e.break_even)})`),card(num(s.brier_model,4),`Brier model (close ${num(s.brier_close,4)})`),
+      card(g.overall_pass?"PASS":"FAIL","all five gates")].join("")}</div>
+    <table><thead><tr><th>Gate</th><th>Result</th><th>Detail</th></tr></thead><tbody>
+      <tr><td>(a) encompassing</td><td>${pf(a.pass)}</td><td>logit(hit) ~ logit(model) + logit(close), SEs clustered by game: model coef ${a.coef[1]} (se ${a.se[1]}, one-sided p ${a.model_p_value}), close coef ${a.coef[2]}; ${a.n} rows, ${a.clusters} games</td></tr>
+      <tr><td>(b) sample</td><td>${pf(g.b_sample.pass)}</td><td>${g.b_sample.n.toLocaleString()} graded props (need 300)</td></tr>
+      <tr><td>(c) drop best week</td><td>${pf(c.pass)}</td><td>without ${c.best_week}: model coef ${c.encompassing.coef[1]} p ${c.encompassing.model_p_value}; picks ${c.picks.n}, win ${c.picks.win_rate==null?"–":pct(c.picks.win_rate)} vs ${c.picks.break_even==null?"–":pct(c.picks.break_even)}</td></tr>
+      <tr><td>(d) calibration</td><td>${pf(d.pass)}</td><td>worst decile gap at n ≥ 30: ${(d.worst_off_at_n30*100).toFixed(1)} pts (limit 10)</td></tr>
+      <tr><td>(e) picks</td><td>${pf(e.pass)}</td><td>${e.n} picks (need 200), ${e.won} won, win rate ${e.win_rate==null?"–":pct(e.win_rate)} vs break-even ${e.break_even==null?"–":pct(e.break_even)}; avg edge ${e.avg_edge==null?"–":(e.avg_edge*100).toFixed(1)+" pts"}</td></tr>
+    </tbody></table>
+    <p class="sub">Pick rule: ${C.pick_rule}. Payout: ${C.payout.multiplier?C.payout.multiplier+"x":"not available"} (${C.payout.source||"–"}). Close = median no-vig P(over) across ${C.books_median} books (median) at the modal line, snapshot at or before tip. Credits spent ${C.credits.spent.toLocaleString()} (stop at ${C.credits.budget_stop.toLocaleString()}). Season ${C.season}, generated ${C.updated}.</p>
+    <table><thead><tr><th>Model P bucket</th><th>n</th><th>Model</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${d.buckets.map(b=>`<tr><td>${b.bucket}</td><td>${b.n}</td><td>${pct(b.model)}</td><td>${pct(b.actual)}</td><td class="${b.n>=30&&b.off>0.1?"neg":""}">${(b.off*100).toFixed(1)} pts</td></tr>`).join("")}</tbody></table>`;
+}
+fetch("data/backtest_threes_2024_25.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderClose).catch(()=>{});
 </script>
 </body>
 </html>

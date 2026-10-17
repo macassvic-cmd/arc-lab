@@ -24,6 +24,7 @@ What the simulation knows at "tip-off" of each date, and what it does not:
   - Players are only scored when they actually played; a projection for a DNP is dropped.
 """
 import argparse
+from pathlib import Path
 import datetime as dt
 import gzip
 import io
@@ -42,7 +43,7 @@ REPORT = SITE_DATA / "backtest.json"
 ROSTER_DAYS = 21
 DEFAULT_START = "2025-11-01"
 SCORED = ["min", "tpm", "pts", "reb", "ast", "pra"]
-THREES_K = [1, 2, 3, 4]
+THREES_K = [1, 2, 3, 4, 5, 6, 7, 8]   # closing lines run up to 7.5 for the top shooters
 LINE_STATS = ["pts", "reb", "ast", "pra"]
 OFFSETS = [-3, -2, -1, 0, 1, 2, 3]   # alt lines around the fair line used for the calibration buckets
 BUCKETS = [(i / 10, (i + 1) / 10) for i in range(10)]
@@ -138,11 +139,16 @@ def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, 
     return rows
 
 
-def run(start, end=None):
-    df = bm.load_games()
-    cur = int(df.season.max())
+def run(start, end=None, season=None, out_path=ROWS, positions_path=None):
+    df = bm.load_games(apply_positions=positions_path is None)
+    if positions_path is not None:                # positions built from the replayed seasons only (no later-season play-style data)
+        pmap = position_map(positions_path)
+        if pmap: df["pos"] = df["player_id"].map(pmap).fillna(df["pos"])
+    if season is not None:                       # historical season: nothing after it exists; the season before it is the prior
+        df = df[df.season <= int(season)].copy()
+    cur = int(season) if season is not None else int(df.season.max())
     df["pra"] = df.pts + df.reb + df.ast
-    pos_map = position_map()
+    pos_map = position_map(positions_path) if positions_path is not None else position_map()
     naive = trailing_means(df)
     dates = sorted(d for d in df.date.unique() if d >= pd.Timestamp(start) and (end is None or d <= pd.Timestamp(end)))
     print(f"[backtest] {len(dates)} dates {dates[0].date()} .. {dates[-1].date()}, season {cur}")
@@ -181,10 +187,12 @@ def run(start, end=None):
             print(f"[backtest] {i}/{len(dates)} {day.date()}  {sum(len(x) for x in all_rows)} rows  {time.time() - t0:.0f}s")
     out = pd.concat(all_rows, ignore_index=True)
     out = out.merge(naive, on=["player_id", "event_id"], how="left")
+    rows_path = out_path
     ROWS.parent.mkdir(parents=True, exist_ok=True)
-    with gzip.open(ROWS, "wt", encoding="utf-8", newline="") as f:
+    rows_path.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(rows_path, "wt", encoding="utf-8", newline="") as f:
         out.to_csv(f, index=False)
-    print(f"[backtest] wrote {len(out)} rows to {ROWS.name}")
+    print(f"[backtest] wrote {len(out)} rows to {rows_path.name}")
     return out
 
 
@@ -279,14 +287,14 @@ def by_absent(d):
     return out
 
 
-def report(rows=None):
-    d = rows if rows is not None else pd.read_csv(ROWS, dtype={"player_id": str, "event_id": str})
+def report(rows=None, rows_path=ROWS, report_path=REPORT, season_label="2025-26", label=None):
+    d = rows if rows is not None else pd.read_csv(rows_path, dtype={"player_id": str, "event_id": str})
     d = d[d.act_min > 0].copy()
     played_total = int(d.groupby("event_id").n_played.first().sum() * 1)  # per team-game count of players who played
     team_games = d.groupby(["event_id", "team"]).n_played.first()
     doc = {
         "kind": "historical simulation",
-        "season": "2025-26",
+        "season": season_label, "label": label,
         "start": d.date.min(), "end": d.date.max(),
         "dates": int(d.date.nunique()), "games": int(d.event_id.nunique()),
         "rows": int(len(d)), "played_rows": int(team_games.sum()),
@@ -304,7 +312,7 @@ def report(rows=None):
                    "cost": MARKET_COST},
         "updated": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None, microsecond=0).isoformat() + "Z",
     }
-    write_json(REPORT, doc)
+    write_json(report_path, doc)
     print(f"[backtest] report: {doc['rows']} player-games over {doc['dates']} dates; MAE pts {doc['mae']['pts']['mae']} "
           f"(naive {doc['mae']['pts']['naive_mae']}), min {doc['mae']['min']['mae']}; Brier 1+ threes {doc['threes']['1']['brier']}")
     return doc
@@ -317,7 +325,15 @@ if __name__ == "__main__":
     ap.add_argument("cmd", nargs="?", default="all", choices=["run", "report", "all"])
     ap.add_argument("--start", default=DEFAULT_START)
     ap.add_argument("--end", default=None)
+    ap.add_argument("--season", type=int, default=None, help="ESPN season year of a past season to replay (2025 = 2024-25); later seasons are dropped first")
+    ap.add_argument("--rows", default=None, help="rows file for this run (default data/backtest_rows.csv.gz)")
+    ap.add_argument("--report", default=None, help="report JSON for this run (default docs/data/backtest.json)")
+    ap.add_argument("--label", default=None)
+    ap.add_argument("--positions", default=None, help="positions table to use instead of data/positions.csv")
     args = ap.parse_args()
-    rows = run(args.start, args.end) if args.cmd in ("run", "all") else None
+    rows_path = Path(args.rows) if args.rows else ROWS
+    report_path = Path(args.report) if args.report else REPORT
+    season_label = f"{args.season - 1}-{str(args.season)[2:]}" if args.season else "2025-26"
+    rows = run(args.start, args.end, args.season, rows_path, Path(args.positions) if args.positions else None) if args.cmd in ("run", "all") else None
     if args.cmd in ("report", "all"):
-        report(rows)
+        report(rows, rows_path, report_path, season_label, args.label)
