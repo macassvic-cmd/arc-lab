@@ -100,6 +100,7 @@ ul.notes li{margin:4px 0}
   <h2>Against the market <span>closing lines, hit rate, ROI</span></h2>
   <div id="market"></div>
 
+  <p class="sub">Walk-forward season shown above: <a href="backtest.html">2025-26</a> · <a href="backtest.html?season=2024-25">2024-25</a> (the 2024-25 run is the out-of-sample season used by the closing-line test below).</p>
   <h2 id="close24h">Closing-line backtest: 2024-25 threes <span>locked rule, Underdog pick definition, vs The Odds API close</span></h2>
   <div id="close24"><div class="empty">Not run yet. Rule: backtests/nba_threes_2024_25_rule.md; script: scripts/backtest_threes_close.py.</div></div>
 
@@ -184,7 +185,8 @@ function render(){
   $("updated").textContent = `Generated ${B.updated} by scripts/backtest.py. Season ${B.season}.`;
 }
 
-fetch("data/backtest.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{B=j; render();}).catch(()=>render());
+const SEASON_FILE = {"2024-25":"data/backtest_2024_25.json"}[new URLSearchParams(location.search).get("season")] || "data/backtest.json";
+fetch(SEASON_FILE, {cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{B=j; render();}).catch(()=>render());
 
 function renderClose(C){
   if(!C) return;
