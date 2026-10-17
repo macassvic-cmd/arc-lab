@@ -222,7 +222,7 @@ def grade(season, rows_path, out_dir, report_path, season_label, payout=None, pa
     close = closing_rows(out_dir)
     if close.empty:
         raise SystemExit("no closing rows pulled yet")
-    d = rows.merge(close, on=["event_id", "name_key"], how="inner")
+    d = rows.merge(close.drop(columns=["player"]), on=["event_id", "name_key"], how="inner")   # rows keep the box-score name
     d["k"] = (d.line + 0.5).round().astype(int)
     kcols = {k: f"p_tpm_{k}" for k in range(1, 9)}
     d = d[d.k.isin(kcols)].copy()
@@ -263,7 +263,7 @@ def grade(season, rows_path, out_dir, report_path, season_label, payout=None, pa
     bins = pd.cut(graded.model_p, np.linspace(0, 1, 11), include_lowest=True)
     cal = []
     for b_, g in graded.groupby(bins, observed=True):
-        cal.append(dict(bucket=str(b_), n=int(len(g)), model=round(float(g.model_p.mean()), 4), actual=round(float(g.hit.mean()), 4), off=round(abs(float(g.model_p.mean() - g.hit.mean())), 4)))
+        cal.append(dict(bucket=f"{max(b_.left, 0):.1f}-{b_.right:.1f}", n=int(len(g)), model=round(float(g.model_p.mean()), 4), actual=round(float(g.hit.mean()), 4), off=round(abs(float(g.model_p.mean() - g.hit.mean())), 4)))
     dd = dict(buckets=cal, worst_off_at_n30=max([x["off"] for x in cal if x["n"] >= MIN_BUCKET], default=0.0))
     dd["pass"] = bool(dd["worst_off_at_n30"] <= MAX_BUCKET_OFF)
     overall = bool(a["pass"] and b["pass"] and c["pass"] and dd["pass"] and e["pass"])
