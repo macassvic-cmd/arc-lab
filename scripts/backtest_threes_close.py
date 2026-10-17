@@ -87,10 +87,22 @@ def spent(usage_log):
     return tot
 
 
-def pull(season, rows_path, out_dir, budget=BUDGET_STOP, max_games=None):
-    """Closing player_threes for every game in the walk-forward rows (one snapshot per game, cached)."""
+LIST_SNAPSHOT = "T12:00:00Z"   # events listing for a US date: noon UTC, before any tip (23:59Z missed matinees that had already tipped)
+
+
+def pull(season, rows_path, out_dir, budget=BUDGET_STOP, max_games=None, retry_missing=False):
+    """Closing player_threes for every game in the walk-forward rows (one snapshot per game, cached). --retry-missing drops the
+       'no Odds API event' markers and re-lists their dates (the first pass listed at 23:59Z and missed games that had tipped)."""
     out_dir.mkdir(parents=True, exist_ok=True)
     usage = out_dir / "usage.jsonl"
+    if retry_missing:
+        ev0 = read_json(out_dir / "events_by_date.json", {}); n_rm = 0
+        for fn in out_dir.glob("*.json"):
+            if fn.name == "events_by_date.json": continue
+            d = read_json(fn, {})
+            if d.get("missing"):
+                ev0.pop(d["date"], None); fn.unlink(); n_rm += 1
+        write_json(out_dir / "events_by_date.json", ev0); print(f"[close] retry: {n_rm} missing markers removed, their dates will be re-listed at {LIST_SNAPSHOT}")
     rows = pd.read_csv(rows_path, dtype={"player_id": str, "event_id": str}, usecols=["event_id", "date", "team", "opp", "home"])
     games = rows.drop_duplicates("event_id")
     games = games.assign(home_team=np.where(games.home == 1, games.team, games.opp), away_team=np.where(games.home == 1, games.opp, games.team))
@@ -101,7 +113,7 @@ def pull(season, rows_path, out_dir, budget=BUDGET_STOP, max_games=None):
     for date, g in games.groupby("date"):
         if date not in ev_by_date:
             # snapshot at 23:59Z of the US date: lists that day's events (tip times are ET evenings = 23:00Z-03:00Z next day)
-            snap = f"{date}T23:59:59Z"
+            snap = f"{date}{LIST_SNAPSHOT}"
             s = spent(usage)
             if s > budget:
                 print(f"[close] BUDGET STOP: {s:,} credits spent > {budget:,}; {done} games pulled this run"); return False
@@ -296,6 +308,7 @@ if __name__ == "__main__":
     ap.add_argument("--rows", required=True)
     ap.add_argument("--budget", type=int, default=BUDGET_STOP)
     ap.add_argument("--max-games", type=int, default=None, help="pull at most this many new games (smoke test)")
+    ap.add_argument("--retry-missing", action="store_true", help="re-list dates whose games had no Odds API event and pull them")
     ap.add_argument("--payout", type=float, default=None, help="Underdog 4-pick payout multiplier from a live capture (with --payout-source)")
     ap.add_argument("--payout-source", default=None)
     args = ap.parse_args()
@@ -304,6 +317,6 @@ if __name__ == "__main__":
     report_path = SITE_DATA / f"backtest_threes_{args.season - 1}_{str(args.season)[2:]}.json"
     ok = True
     if args.cmd in ("pull", "all"):
-        ok = pull(args.season, Path(args.rows), out_dir, args.budget, args.max_games)
+        ok = pull(args.season, Path(args.rows), out_dir, args.budget, args.max_games, args.retry_missing)
     if args.cmd in ("grade", "all") and ok:
         grade(args.season, Path(args.rows), out_dir, report_path, label, args.payout, args.payout_source)
