@@ -1,0 +1,50 @@
+name: High-threes backtest
+# Regenerates the Part B outputs from committed code and the box scores on main: the current model's walk-forwards for 2023-24,
+# 2024-25 and 2025-26 (minutes input + baseline), the step-2 bar, the dedicated high-threes model (fit on 2023-24 only, frozen
+# parameters, walk-forward 2024-25 gate + 2025-26 check) and its grade against backtests/high_threes_rule.md. Writes only
+# data/*rows*.csv.gz, data/high_threes_params.json and docs/data/high_threes_*.json; never paper_log.csv or results.json.
+# Needs data/player_games_history.csv (backfill-history.yml) for 2023-24 and 2024-25.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: arc-lab-data
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Historical seasons present
+        working-directory: scripts
+        run: python -c "import pandas as pd; d=pd.read_csv('../data/player_games_history.csv', dtype=str); g=d.groupby('season').event_id.nunique(); print(g.to_string()); assert {2024,2025} <= set(g.index.astype(int)), 'run backfill-history.yml first'"
+      - name: Current model walk-forwards (minutes input and baseline; prior games only)
+        working-directory: scripts
+        run: |
+          python build_positions_season.py --season 2024 --out ../data/positions_2024.csv
+          python build_positions_season.py --season 2025 --out ../data/positions_2025.csv
+          python backtest.py --season 2024 --start 2023-10-24 --end 2024-04-14 --rows ../data/backtest_rows_2024.csv.gz --report ../data/backtest_2023_24_report.json --label 2023-24 --positions ../data/positions_2024.csv
+          python backtest.py --season 2025 --start 2024-10-22 --end 2025-04-13 --rows ../data/backtest_rows_2025.csv.gz --report ../docs/data/backtest_2024_25.json --label 2024-25 --positions ../data/positions_2025.csv
+          python backtest.py --season 2026 --start 2025-10-21 --end 2026-04-12 --rows ../data/backtest_rows_2026.csv.gz --report ../data/backtest_2025_26_report.json --label 2025-26
+      - name: Step-2 bar (current model on 2024-25)
+        working-directory: scripts
+        run: python high_threes_baseline.py --season 2025
+      - name: High-threes model: fit on 2023-24, walk-forward, grade
+        working-directory: scripts
+        run: python high_threes.py all
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/high_threes_params.json data/high_threes_rows_*.csv.gz data/backtest_rows_202*.csv.gz data/positions_2024.csv data/positions_2025.csv docs/data/high_threes_baseline.json docs/data/high_threes_backtest.json docs/data/backtest_2024_25.json
+          git diff --cached --quiet && exit 0
+          git commit -m "high-threes backtest: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
