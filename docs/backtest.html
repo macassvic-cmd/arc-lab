@@ -110,6 +110,9 @@ ul.notes li{margin:4px 0}
   <h2 id="high3h">Dedicated high-threes model <span>P(4+), P(5+), P(6+), P(7+) &middot; fit on 2023-24 only, gated on 2024-25, 2025-26 as a consistency check &middot; no prices</span></h2>
   <div id="high3"><div class="empty">Not run yet. Rule: backtests/high_threes_rule.md; scripts: scripts/high_threes_baseline.py (bar), scripts/high_threes.py (model); workflow high-threes.yml.</div></div>
 
+  <h2 id="headroomh">Tail program: headroom audit <span>oracle decomposition on 2023-24 &middot; DraftKings vs the current model on 2024-25 &middot; pre-registered decision table, report-only</span></h2>
+  <div id="headroom"><div class="empty">Not run yet. Rule: backtests/headroom_audit_rule.md; script: scripts/headroom_audit.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -246,6 +249,22 @@ function renderHigh(H){
     <ul>${H.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${H.generated}.</p>`;
 }
 fetch("data/high_threes_backtest.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderHigh).catch(()=>{});
+function renderHeadroom(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, ci=c=>c?` [${pct(c[0])}, ${pct(c[1])}]`:"", pp=x=>x==null?"–":((x>=0?"+":"")+(x*100).toFixed(1)+" pts"), ppci=c=>c?` [${pp(c[0])}, ${pp(c[1])}]`:"";
+  const O=R.oracle, L=O.levels, S=O.steps, D=R.dk_head_to_head, X=R.decision;
+  $("headroom").innerHTML = `<div class="stats">${[card(X.oracle_verdict,`oracle-3PA gain ${X.oracle_gain_pp>=0?"+":""}${X.oracle_gain_pp} pts (thresholds +5 / +15)`),card(X.market_verdict,`DK − current ${X.dk_minus_current_pp>=0?"+":""}${X.dk_minus_current_pp} pts (±3 band)`),card("see below","model #3")].join("")}</div>
+    <h3>1. Oracle decomposition, 2023-24 · ${O.n.toLocaleString()} player-games, ${O.positives} actual 5+ games (base rate ${pct(O.base_rate)}), top decile = ${O.top_decile_n} rows</h3>
+    <table><thead><tr><th>Level</th><th>Top-decile capture of actual 5+ (95% CI)</th><th>Log loss 5+</th><th>Mean P(5+)</th></tr></thead><tbody>${["a","b","c","d"].map(k=>`<tr><td>(${k}) ${L[k].label}</td><td><b>${pct(L[k].capture)}</b>${ci(L[k].capture_ci)}</td><td>${num(L[k].logloss,4)}</td><td>${pct(L[k].mean_p)}</td></tr>`).join("")}</tbody></table>
+    <table><thead><tr><th>Step</th><th>Capture change (95% CI)</th></tr></thead><tbody>${[["a → b: minutes error","minutes_error"],["b → c: attempt-rate error","attempt_rate_error"],["c → d: 3P% estimation error","pct_estimation_error"],["a → c: total, minutes + attempts","total_a_to_c"],["a → d: total","total_a_to_d"]].map(([l,k])=>`<tr><td>${l}</td><td>${pp(S[k].diff)}${ppci(S[k].ci)}</td></tr>`).join("")}</tbody></table>
+    <p class="sub">${O.irreducible_note}</p>
+    <h3>2. DraftKings vs the current model, 2024-25 · ${D.n.toLocaleString()} player-games where DK quoted Over 4.5 at the close, ${D.positives} actual 5+ (base rate ${pct(D.base_rate)})</h3>
+    <table><thead><tr><th>Ranking by</th><th>Top-decile capture (95% CI)</th><th>Log loss 5+</th><th>Mean P(5+)</th></tr></thead><tbody>${[["dk","DraftKings de-vigged P(5+)"],["current","current model"],["pooled_books","pooled books"]].map(([k,l])=>`<tr><td>${l}</td><td><b>${pct(D[k].capture)}</b>${ci(D[k].capture_ci)}</td><td>${num(D[k].logloss,4)}</td><td>${pct(D[k].mean_p)}</td></tr>`).join("")}</tbody></table>
+    <p class="sub">DK − current: ${pp(D.dk_minus_current.diff)}${ppci(D.dk_minus_current.ci)}. Top-decile overlap: ${D.overlap_top_decile.both} rows in both (hit ${pct(D.overlap_top_decile.hit_rate_both)}), ${D.overlap_top_decile.dk_only} DK-only (hit ${pct(D.overlap_top_decile.hit_rate_dk_only)}), ${D.overlap_top_decile.current_only} model-only (hit ${pct(D.overlap_top_decile.hit_rate_current_only)}). ${D.season}.</p>
+    <h3>3. Decision table (pre-registered)</h3><ul><li><b>${X.oracle_verdict}</b> — ${X.oracle_rule}.</li><li><b>${X.market_verdict}</b> — ${X.market_rule}.</li><li>Model #3 (synthesis, not part of the table): ${X.model_3_synthesis}</li></ul>
+    <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
+}
+fetch("data/headroom_audit.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderHeadroom).catch(()=>{});
 </script>
 </body>
 </html>
