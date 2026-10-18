@@ -105,11 +105,14 @@ def parse_box(event_id, date, season, summary):
     return rows
 
 
-def ingest(start, end):
-    seen = set(read_json(SEEN, []))
-    new_file = not PLAYER_CSV.exists()
+def ingest(start, end, out=None):
+    """out=None: the live file (data/player_games.csv, read by the live model). out='history': data/player_games_history.csv with
+       its own seen list, for past seasons the live model must not see (backtests concatenate both files)."""
+    csv_path, seen_path = (PLAYER_CSV, SEEN) if not out else (DATA_DIR / f"player_games_{out}.csv", DATA_DIR / f"seen_events_{out}.json")
+    seen = set(read_json(seen_path, []))
+    new_file = not csv_path.exists()
     added, rejected = 0, []
-    with open(PLAYER_CSV, "a", newline="") as f:
+    with open(csv_path, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         if new_file:
             w.writeheader()
@@ -133,8 +136,8 @@ def ingest(start, end):
                     added += 1
                 time.sleep(0.4)
             day += dt.timedelta(days=1)
-    write_json(SEEN, sorted(seen))
-    print(f"[ingest] {added} new games, {len(rejected)} rejected (not NBA teams): {rejected}")
+    write_json(seen_path, sorted(seen))
+    print(f"[ingest] {added} new games -> {csv_path.name}, {len(rejected)} rejected (not NBA teams): {rejected}")
 
 
 def roster(team_id):
@@ -185,12 +188,14 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--start")
     ap.add_argument("--end")
+    ap.add_argument("--out", help="write to data/player_games_<out>.csv instead of the live file (past seasons for backtests; no slate refresh)")
     args = ap.parse_args()
     DATA_DIR.mkdir(exist_ok=True)
     today = et_today()
     if args.start:
         ingest(dt.date.fromisoformat(args.start),
-               dt.date.fromisoformat(args.end) if args.end else today - dt.timedelta(days=1))
+               dt.date.fromisoformat(args.end) if args.end else today - dt.timedelta(days=1), out=args.out)
     else:
-        ingest(today - dt.timedelta(days=3), today - dt.timedelta(days=1))
-    save_slate(today)
+        ingest(today - dt.timedelta(days=3), today - dt.timedelta(days=1), out=args.out)
+    if not args.out:
+        save_slate(today)
