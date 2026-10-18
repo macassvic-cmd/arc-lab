@@ -140,7 +140,7 @@ def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, 
 
 
 def run(start, end=None, season=None, out_path=ROWS, positions_path=None):
-    df = bm.load_games(apply_positions=positions_path is None)
+    df = bm.load_games(apply_positions=positions_path is None, include_history=season is not None)   # replayed seasons may live in the history file
     if positions_path is not None:                # positions built from the replayed seasons only (no later-season play-style data)
         pmap = position_map(positions_path)
         if pmap: df["pos"] = df["player_id"].map(pmap).fillna(df["pos"])
