@@ -37,7 +37,7 @@ jobs:
       - name: Step-2 bar (current model on 2024-25)
         working-directory: scripts
         run: python high_threes_baseline.py --season 2025
-      - name: High-threes model: fit on 2023-24, walk-forward, grade
+      - name: "High-threes model: fit on 2023-24, walk-forward, grade"
         working-directory: scripts
         run: python high_threes.py all
       - name: Commit
