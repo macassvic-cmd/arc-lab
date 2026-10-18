@@ -113,6 +113,9 @@ ul.notes li{margin:4px 0}
   <h2 id="headroomh">Tail program: headroom audit <span>oracle decomposition on 2023-24 &middot; DraftKings vs the current model on 2024-25 &middot; pre-registered decision table, report-only</span></h2>
   <div id="headroom"><div class="empty">Not run yet. Rule: backtests/headroom_audit_rule.md; script: scripts/headroom_audit.py.</div></div>
 
+  <h2 id="ladderh">Tail program test 1: DraftKings ladder-shape diagnostic <span>does DK's alternate ladder price a player's minutes and 3PM variability? &middot; no outcomes used</span></h2>
+  <div id="ladder"><div class="empty">Not run yet. Rule: backtests/ladder_shape_diagnostic_rule.md; script: scripts/ladder_shape_diagnostic.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -265,6 +268,16 @@ function renderHeadroom(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
 }
 fetch("data/headroom_audit.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderHeadroom).catch(()=>{});
+function renderLadder(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, L=R.ladder, S=R.shape, T=R.thresholds, ci=c=>c?` [${c[0]}, ${c[1]}]`:"";
+  $("ladder").innerHTML = `<div class="stats">${[card(R.outcome,R.outcome_text),card(L.holdout_resid_sd.toFixed(3)+" logit",`holdout residual SD (F needs &lt; ${T.resid_sd_F})`),card(L.corr_rung.toFixed(3),`residual × shape correlation, rung level${ci(L.corr_rung_ci)} (F needs |r| &lt; ${T.corr_F}, P needs r ≥ ${T.corr_P})`),card(L.fit_r2.toFixed(3),"fit R² of logit(tail P) ~ main line × main price × distance")].join("")}</div>
+    <p class="sub">${L.rungs.toLocaleString()} DraftKings tail rungs (distance 1–4 above DK's main line) on ${L.player_games.toLocaleString()} player-games in ${L.games} games; ${L.fit_games} games fit (${L.fit_rungs.toLocaleString()} rungs), the rest held out (${L.holdout_rungs.toLocaleString()} rungs). Player-game mean residual × shape: ${L.corr_player_game}${ci(L.corr_player_game_ci)}; Spearman at the rung level ${L.spearman_rung}. Components: minutes CV ${L.corr_components.corr_min_cv}, shrunk VMR ${L.corr_components.corr_vmr}.</p>
+    <table><thead><tr><th>Rung distance</th><th>Holdout rungs</th><th>Residual SD</th><th>Residual × shape</th><th>Mean implied tail P (all rungs)</th></tr></thead><tbody>${L.by_distance.map(b=>`<tr><td>main + ${b.d}</td><td>${b.n.toLocaleString()}</td><td>${b.resid_sd.toFixed(3)}</td><td>${b.corr.toFixed(3)}</td><td>${pct(L.mean_tail_p_by_d[b.d])}</td></tr>`).join("")}</tbody></table>
+    <p class="sub">Shape score: mean of z(trailing-${S.window} minutes CV) and z(EB-shrunk 3PM variance-to-mean ratio), ≥ ${S.min_games} prior games; ${S.scored_player_games.toLocaleString()} 2024-25 player-games scored. League VMR prior by method of moments on ${S.prior.season}: mean ${S.prior.prior_mean}, strength K ${S.prior.K} (${S.prior.players} players). Component correlation ${S.corr_components}. Regression coefficients: ${Object.entries(L.coefficients).map(([k,v])=>k+" "+v).join(", ")}.</p>
+    <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
+}
+fetch("data/ladder_shape_diagnostic.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderLadder).catch(()=>{});
 </script>
 </body>
 </html>
