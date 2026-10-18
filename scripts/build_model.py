@@ -36,10 +36,15 @@ BLOWOUT_STARTER_LOSS = 8.0
 RNG = np.random.default_rng(7)
 
 
-def load_games(apply_positions=True):
+def load_games(apply_positions=True, include_history=False):
     """Game logs. pos is ESPN's generic G/F/C mapped to SG/SF/C, then replaced per player by the
-    play-style assignment in data/positions.csv (see positions.py) when apply_positions is on."""
+    play-style assignment in data/positions.csv (see positions.py) when apply_positions is on.
+    include_history (backtests only, never the live build): also read data/player_games_history.csv, the past seasons kept out of
+    the live file so the site's projections never see them."""
     df = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"player_id": str, "event_id": str})
+    hist = DATA_DIR / "player_games_history.csv"
+    if include_history and hist.exists():
+        df = pd.concat([df, pd.read_csv(hist, dtype={"player_id": str, "event_id": str})], ignore_index=True).drop_duplicates(["event_id", "player_id"])
     df["date"] = pd.to_datetime(df["date"])
     df["pos"] = df["pos"].map(norm_pos)
     df = df[df.team.isin(NBA_TEAMS) & df.opp.isin(NBA_TEAMS)]
