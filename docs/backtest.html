@@ -104,6 +104,9 @@ ul.notes li{margin:4px 0}
   <h2 id="close24h">Closing-line backtest: 2024-25 threes <span>locked rule, Underdog pick definition, vs The Odds API close</span></h2>
   <div id="close24"><div class="empty">Not run yet. Rule: backtests/nba_threes_2024_25_rule.md; script: scripts/backtest_threes_close.py.</div></div>
 
+  <h2 id="alt24h">Alternate threes: is the market calibrated at the tail? <span>2024-25, locked rule, de-vigged closing rungs vs hit rate &middot; reported alongside the box-score dispersion test</span></h2>
+  <div id="alt24"><div class="empty">Not run yet. Rule: backtests/nba_threes_alt_calibration_rule.md; script: scripts/backtest_threes_alt_calibration.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -206,6 +209,25 @@ function renderClose(C){
     <table><thead><tr><th>Model P bucket</th><th>n</th><th>Model</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${d.buckets.map(b=>`<tr><td>${b.bucket}</td><td>${b.n}</td><td>${pct(b.model)}</td><td>${pct(b.actual)}</td><td class="${b.n>=30&&b.off>0.1?"neg":""}">${(b.off*100).toFixed(1)} pts</td></tr>`).join("")}</tbody></table>`;
 }
 fetch("data/backtest_threes_2024_25.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderClose).catch(()=>{});
+function renderAlt(A){
+  if(!A) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, T=A.tails, f=T.full, d=T.drop_best_week, pp=x=>x==null?"–":((x>=0?"+":"")+(x*100).toFixed(1)+" pts");
+  const row=b=>`<tr><td>${b.bucket!=null?b.bucket:(b.line!=null?"Over "+b.line:b.n_books+(b.n_books>=6?"+":"")+" books")}</td><td>${b.n.toLocaleString()}</td><td>${b.fair==null?"–":pct(b.fair)}</td><td>${b.hit==null?"–":pct(b.hit)}</td><td class="${b.gap!=null&&Math.abs(b.gap)>=0.03&&b.n>=30?(b.gap>0?"pos":"neg"):""}">${pp(b.gap)}${b.se!=null?` <span class="sub">±${(1.96*b.se*100).toFixed(1)}</span>`:""}</td></tr>`;
+  const tbl=(rows,h)=>`<table><thead><tr><th>${h}</th><th>Rungs</th><th>De-vigged P</th><th>Hit rate</th><th>Gap (hit − fair, 95% CI)</th></tr></thead><tbody>${rows.map(row).join("")}</tbody></table>`;
+  const k=A.by_kind;
+  $("alt24").innerHTML = `<div class="stats">${[card(A.underpriced?"UNDERPRICED":"CALIBRATED",A.underpriced?"market underprices tails":"market tails are calibrated → tail modeling stops"),card(f.n.toLocaleString(),"tail rungs (5+ threes or ≥2 above main)"),
+      card(pp(f.gap),`tail gap, hit − de-vigged (need ≥ +3.0, n ≥ 500)`),card(d.n?pp(d.gap):"–",`tail gap without ${T.best_week||"best week"}`),card(A.summary.rungs_graded.toLocaleString(),`graded rungs, ${A.summary.games} games`),card(num(A.summary.brier_market_all,4),`Brier of the de-vigged price (tails ${num(A.summary.brier_market_tail,4)})`)].join("")}</div>
+    <p class="sub"><b>${A.verdict}.</b> Locked-rule outcome: ${A.verdict_rule}. ${A.rule} De-vig: ${A.devig}. Books per rung: ${Object.entries(A.books_per_rung.distribution).map(([k,v])=>k+" books: "+v.toLocaleString()).join(", ")} (median ${A.books_per_rung.median}, ${A.books_per_rung.distinct_books.length} distinct: ${A.books_per_rung.distinct_books.join(", ")}). Credits ${A.pull.credits_spent.toLocaleString()} (stop ${A.pull.budget_stop.toLocaleString()}). Rule committed ${A.rule_commit||"–"}.</p>
+    ${tbl(A.buckets,"All rungs by de-vigged P")}
+    ${tbl(A.buckets_tail,"Tail rungs by de-vigged P")}
+    ${tbl([{bucket:"5+ threes (line ≥ 4.5)",...k.five_plus},{bucket:"≥ 2 above the main line",...k.two_above_main},{bucket:"non-tail rungs",...k.non_tail},{bucket:"every rung",...k.all_rungs}],"Rung kind")}
+    ${tbl(A.by_line,"By line")}
+    ${tbl(A.by_books,"By books quoting the rung")}
+    <table><thead><tr><th>Book (its own de-vigged price)</th><th>All rungs</th><th>Gap</th><th>Tail rungs</th><th>Tail gap</th></tr></thead><tbody>${(A.per_book||[]).map(r=>`<tr><td>${r.book}</td><td>${r.all_rungs.n.toLocaleString()}</td><td>${pp(r.all_rungs.gap)}</td><td>${r.tail_rungs.n?r.tail_rungs.n.toLocaleString():"–"}</td><td>${r.tail_rungs.n?pp(r.tail_rungs.gap):"–"}</td></tr>`).join("")}</tbody></table>
+    <table><thead><tr><th>ISO week</th><th>Tail rungs</th><th>De-vigged P</th><th>Hit rate</th><th>Gap</th></tr></thead><tbody>${T.weekly.map(w=>`<tr class="${w.week===T.best_week?"hl":""}"><td>${w.week}${w.week===T.best_week?" (best, dropped)":""}</td><td>${w.n}</td><td>${pct(w.fair)}</td><td>${pct(w.hit)}</td><td>${pp(w.gap)}</td></tr>`).join("")}</tbody></table>
+    <ul>${A.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${A.generated}. Dispersion test: <span id="disp-note">not yet in this repository; it will appear next to this section when it runs.</span></p>`;
+}
+fetch("data/backtest_threes_alt_calibration.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderAlt).catch(()=>{});
 </script>
 </body>
 </html>

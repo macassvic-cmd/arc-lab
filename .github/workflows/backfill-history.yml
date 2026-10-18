@@ -1,0 +1,44 @@
+name: Backfill historical box scores
+# Past regular seasons for the backtests, written to data/player_games_history.csv (own seen list). The live model reads only
+# data/player_games.csv, so this never changes what the site projects. Same fetcher and validation as the live backfill
+# (regular season only, completed games, both competitors NBA teams, All-Star weekend rejected).
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "First date (YYYY-MM-DD), e.g. 2023-10-24 for 2023-24"
+        required: true
+      end:
+        description: "Last date (YYYY-MM-DD), e.g. 2025-04-13 for the end of 2024-25"
+        required: true
+
+concurrency:
+  group: arc-lab-data
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Fetch history
+        working-directory: scripts
+        run: python fetch_games.py --start "${{ inputs.start }}" --end "${{ inputs.end }}" --out history
+      - name: Validate
+        working-directory: scripts
+        run: python -c "import pandas as pd; d=pd.read_csv('../data/player_games_history.csv', dtype=str); g=d.groupby('season').event_id.nunique(); print(g.to_string()); assert (d.groupby(['event_id','player_id']).size()<=1).all(), 'duplicate player-game rows'"
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/player_games_history.csv data/seen_events_history.json
+          git diff --cached --quiet && exit 0
+          git commit -m "data: historical box scores ${{ inputs.start }}..${{ inputs.end }}"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
