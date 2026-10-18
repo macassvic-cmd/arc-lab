@@ -217,12 +217,13 @@ function renderAlt(A){
   const k=A.by_kind;
   $("alt24").innerHTML = `<div class="stats">${[card(A.underpriced?"UNDERPRICED":"CALIBRATED",A.underpriced?"market underprices tails":"market tails are calibrated → tail modeling stops"),card(f.n.toLocaleString(),"tail rungs (5+ threes or ≥2 above main)"),
       card(pp(f.gap),`tail gap, hit − de-vigged (need ≥ +3.0, n ≥ 500)`),card(d.n?pp(d.gap):"–",`tail gap without ${T.best_week||"best week"}`),card(A.summary.rungs_graded.toLocaleString(),`graded rungs, ${A.summary.games} games`),card(num(A.summary.brier_market_all,4),`Brier of the de-vigged price (tails ${num(A.summary.brier_market_tail,4)})`)].join("")}</div>
-    <p class="sub"><b>${A.verdict}.</b> ${A.rule} De-vig: ${A.devig}. Credits ${A.pull.credits_spent.toLocaleString()} (stop ${A.pull.budget_stop.toLocaleString()}). Rule committed ${A.rule_commit||"–"}.</p>
+    <p class="sub"><b>${A.verdict}.</b> Locked-rule outcome: ${A.verdict_rule}. ${A.rule} De-vig: ${A.devig}. Books per rung: ${Object.entries(A.books_per_rung.distribution).map(([k,v])=>k+" books: "+v.toLocaleString()).join(", ")} (median ${A.books_per_rung.median}, ${A.books_per_rung.distinct_books.length} distinct: ${A.books_per_rung.distinct_books.join(", ")}). Credits ${A.pull.credits_spent.toLocaleString()} (stop ${A.pull.budget_stop.toLocaleString()}). Rule committed ${A.rule_commit||"–"}.</p>
     ${tbl(A.buckets,"All rungs by de-vigged P")}
     ${tbl(A.buckets_tail,"Tail rungs by de-vigged P")}
     ${tbl([{bucket:"5+ threes (line ≥ 4.5)",...k.five_plus},{bucket:"≥ 2 above the main line",...k.two_above_main},{bucket:"non-tail rungs",...k.non_tail},{bucket:"every rung",...k.all_rungs}],"Rung kind")}
     ${tbl(A.by_line,"By line")}
     ${tbl(A.by_books,"By books quoting the rung")}
+    <table><thead><tr><th>Book (its own de-vigged price)</th><th>All rungs</th><th>Gap</th><th>Tail rungs</th><th>Tail gap</th></tr></thead><tbody>${(A.per_book||[]).map(r=>`<tr><td>${r.book}</td><td>${r.all_rungs.n.toLocaleString()}</td><td>${pp(r.all_rungs.gap)}</td><td>${r.tail_rungs.n?r.tail_rungs.n.toLocaleString():"–"}</td><td>${r.tail_rungs.n?pp(r.tail_rungs.gap):"–"}</td></tr>`).join("")}</tbody></table>
     <table><thead><tr><th>ISO week</th><th>Tail rungs</th><th>De-vigged P</th><th>Hit rate</th><th>Gap</th></tr></thead><tbody>${T.weekly.map(w=>`<tr class="${w.week===T.best_week?"hl":""}"><td>${w.week}${w.week===T.best_week?" (best, dropped)":""}</td><td>${w.n}</td><td>${pct(w.fair)}</td><td>${pct(w.hit)}</td><td>${pp(w.gap)}</td></tr>`).join("")}</tbody></table>
     <ul>${A.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${A.generated}. Dispersion test: <span id="disp-note">not yet in this repository; it will appear next to this section when it runs.</span></p>`;
 }

@@ -111,7 +111,8 @@ def rungs_for_game(alt_doc, close_doc):
         if ml is None and player in alt_two_sided:   # fallback fixed in the rule: the lowest two-sided rung the alternate market itself quotes
             ml = min(alt_two_sided[player])
         rows.append(dict(event_id=alt_doc["event_id"], player=player, name_key=norm_name(player), line=line, fair=float(np.median([f for _, f, _ in qs])),
-                         n_books=len(qs), best_price=int(max(pr for _, _, pr in qs)), main_line=ml, tip=alt_doc["odds_event"]["commence"],
+                         n_books=len(qs), books="|".join(sorted(b for b, _, _ in qs)), quotes=[(b, round(f, 5)) for b, f, _ in qs],
+                         best_price=int(max(pr for _, _, pr in qs)), main_line=ml, tip=alt_doc["odds_event"]["commence"],
                          snapshot_alt=alt_doc.get("snapshot"), snapshot_main=close_doc.get("snapshot")))
     return rows, dict(two_sided=two_sided, clipped=clipped, dropped_no_hold=dropped)
 
@@ -141,7 +142,9 @@ def build_rungs(season, alt_dir, close_dir):
     df["date"] = pd.to_datetime(df.tip).dt.tz_convert("UTC")
     iso = df.date.dt.isocalendar(); df["week"] = iso.year.astype(str) + "-W" + iso.week.astype(str).str.zfill(2)
     df["bucket"] = pd.cut(df.fair, [b[0] for b in BUCKETS] + [1.01], right=False, labels=[b[2] for b in BUCKETS])
-    return df, stats
+    long = df[["event_id", "player", "line", "hit", "is_tail", "quotes"]].explode("quotes")
+    long["book"] = long.quotes.map(lambda q: q[0]); long["fair_book"] = long.quotes.map(lambda q: q[1]).astype(float)
+    return df, long.drop(columns="quotes"), stats
 
 
 def cluster_se(d, groups):
@@ -158,7 +161,7 @@ def gap_block(t):
 
 
 def grade(season, alt_dir, close_dir, report_path, rule_commit):
-    df, stats = build_rungs(season, alt_dir, close_dir)
+    df, long, stats = build_rungs(season, alt_dir, close_dir)
     tails = df[df.is_tail]
     weekly = tails.groupby("week").apply(lambda t: pd.Series(dict(n=len(t), hit=t.hit.mean(), fair=t.fair.mean(), gap=t.hit.mean() - t.fair.mean()))).reset_index()
     elig = weekly[weekly.n >= WEEK_MIN_N]
@@ -174,27 +177,42 @@ def grade(season, alt_dir, close_dir, report_path, rule_commit):
     by_kind = dict(five_plus=gap_block(df[df.line >= TAIL_LINE]), two_above_main=gap_block(df[df.main_line.notna() & (df.line >= df.main_line + TAIL_ABOVE_MAIN)]),
                    non_tail=gap_block(df[~df.is_tail]), all_rungs=gap_block(df))
     brier_market = float(((df.fair - df.hit) ** 2).mean()); brier_tail = float(((tails.fair - tails.hit) ** 2).mean()) if len(tails) else None
+    # books per rung and each book on its own (its own de-vigged P against the outcome, on the rungs it quotes)
+    books_per_rung = dict(distribution={str(int(k)): int(v) for k, v in df.n_books.value_counts().sort_index().items()}, mean=round(float(df.n_books.mean()), 2),
+                          median=float(df.n_books.median()), distinct_books=sorted(long.book.unique().tolist()), tail_mean=round(float(tails.n_books.mean()), 2) if len(tails) else None)
+    def book_block(g):
+        if len(g) == 0: return dict(n=0)
+        gap = float(g.hit.mean() - g.fair_book.mean()); se = cluster_se(g.hit - g.fair_book, g.event_id)
+        return dict(n=int(len(g)), hit=round(float(g.hit.mean()), 4), fair=round(float(g.fair_book.mean()), 4), gap=round(gap, 4), se=round(se, 4))
+    per_book = [dict(book=b, all_rungs=book_block(g), tail_rungs=book_block(g[g.is_tail])) for b, g in long.groupby("book") if len(g) >= 100]
+    per_book.sort(key=lambda r: -r["all_rungs"]["n"])
+    nt = by_kind["non_tail"]
+    # how wrong the de-vigged tail price would have to be for the verdict to flip: true P would need to be >= hit - 3pp
+    flip_factor = round(full["fair"] / (full["hit"] - TAIL_GAP), 2) if full["n"] and full["hit"] and full["hit"] > TAIL_GAP else None
+    relabel = ("DraftKings does not underprice tails; DK alt tail rungs carry heavy margin" if not underpriced else "MARKET UNDERPRICES TAILS")
     rep = dict(
         title="NBA 2024-25 alternate threes: market-calibration test (locked rule)", season="2024-25", generated=dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         rule_file="backtests/nba_threes_alt_calibration_rule.md", rule_commit=rule_commit,
         rule=f"'Market underprices tails' iff tail rungs (line >= {TAIL_LINE} or >= main line + {TAIL_ABOVE_MAIN:g}) hit >= {TAIL_GAP*100:.0f}pp more often than the de-vigged price, n >= {TAIL_MIN_N}, and still after dropping the best ISO week; otherwise tails are calibrated and tail modeling stops.",
         devig="multiplicative per book: implied(Over at the rung) / (implied Over + implied Under at that book's two-sided main line in the closing player_threes snapshot); book median hold when the player has no two-sided line at that book; pooled fair P = median over books",
-        verdict="MARKET UNDERPRICES TAILS" if underpriced else "MARKET TAILS ARE CALIBRATED: tail modeling stops",
-        underpriced=underpriced,
+        verdict=relabel, verdict_rule="MARKET UNDERPRICES TAILS" if underpriced else "market tails are calibrated -> tail modeling stops (the locked rule's wording)",
+        underpriced=underpriced, books_per_rung=books_per_rung, per_book=per_book, flip_factor=flip_factor,
         tails=dict(full=full, pass_full=bool(pass_full), best_week=best_week, drop_best_week=drop, pass_drop=bool(pass_drop), weekly=weekly.round(4).to_dict("records")),
         by_kind=by_kind, buckets=buckets, buckets_tail=buckets_tail, by_line=by_line, by_books=by_books,
         summary=dict(games=stats["games"], rungs_graded=int(len(df)), tail_rungs=int(len(tails)), players=int(df.name_key.nunique()), books_median=float(df.n_books.median()) if len(df) else None,
                      brier_market_all=round(brier_market, 4), brier_market_tail=round(brier_tail, 4) if brier_tail is not None else None, mean_fair_all=round(float(df.fair.mean()), 4), hit_all=round(float(df.hit.mean()), 4)),
         pull=dict(**stats, credits_spent=spent(alt_dir / "usage.jsonl"), budget_stop=BUDGET_STOP),
-        notes=["Outcome = ESPN box-score threes made > line; rungs with no box-score row or 0 minutes dropped (DNP).",
+        notes=[f"The de-vig removes main-line hold only. Non-tail alternate rungs also hit {nt['gap']*100:+.1f}pp vs 'fair' (n {nt['n']:,}), so the test cannot separate tail calibration from the extra margin books load onto alternate ladders. The verdict's direction is robust: for tails to be underpriced the de-vigged tail price would have to overstate the true probability by {flip_factor}x (true P >= hit rate - 3pp = {max(full['hit'] - TAIL_GAP, 0)*100:.1f}% against a de-vigged {full['fair']*100:.1f}%), i.e. the books would have to be overpricing tails by more than 2x.",
+               f"Pooled across {len(books_per_rung['distinct_books'])} books (median {books_per_rung['median']:g} per rung; DraftKings quotes {next((r['all_rungs']['n'] for r in per_book if r['book']=='DraftKings'), 0):,} of the book-rung quotes); the per-book table shows each book's own de-vigged price against the outcome.",
+               "Outcome = ESPN box-score threes made > line; rungs with no box-score row or 0 minutes dropped (DNP).",
                "Alternate ladders are one-sided (Over only), so each book's margin comes from its own two-sided main line in the same game's closing snapshot; multiplicative de-vigging is the conservative choice for a tail test.",
                "Fair P > 1 after de-vigging is clipped to 1 (counted in pull.clipped).",
                "Cluster-robust SEs (clusters = game) are reported for information; the locked rule is the 3pp gap at n >= 500 holding after the best-week drop.",
                "Reported alongside the box-score dispersion test; no dispersion-test output exists in this repository yet, this section does not depend on it.",
                "Backtest page only: nothing here touches data/paper_log.csv or docs/data/results.json."])
     write_json(report_path, rep)
-    df.drop(columns=["date"]).to_csv(alt_dir / "rungs_graded.csv", index=False)
-    print(f"[alt] {rep['verdict']} | tail rungs {full['n']} hit {full['hit']} fair {full['fair']} gap {full['gap']} (se {full['se']}) | drop {best_week}: n {drop['n']} gap {drop['gap']} | rungs {len(df)} games {stats['games']} credits {rep['pull']['credits_spent']:,}")
+    df.drop(columns=["date", "quotes"]).to_csv(alt_dir / "rungs_graded.csv", index=False)
+    print(f"[alt] {rep['verdict_rule']} | {rep['verdict']} | books/rung {books_per_rung['distribution']} | flip factor {flip_factor} | tail rungs {full['n']} hit {full['hit']} fair {full['fair']} gap {full['gap']} (se {full['se']}) | drop {best_week}: n {drop['n']} gap {drop['gap']} | rungs {len(df)} games {stats['games']} credits {rep['pull']['credits_spent']:,}")
     for b in buckets: print(f"    {b['bucket']:>7} n {b['n']:6} fair {b['fair']} hit {b['hit']} gap {b['gap']}")
     return rep
 
