@@ -116,6 +116,9 @@ ul.notes li{margin:4px 0}
   <h2 id="ladderh">Tail program test 1: DraftKings ladder-shape diagnostic <span>does DK's alternate ladder price a player's minutes and 3PM variability? &middot; no outcomes used</span></h2>
   <div id="ladder"><div class="empty">Not run yet. Rule: backtests/ladder_shape_diagnostic_rule.md; script: scripts/ladder_shape_diagnostic.py.</div></div>
 
+  <h2 id="shape3h">Tail program test 3: conditional shape mispricing at DraftKings <span>top vs bottom shape tercile, hit rate minus de-vigged price, 2024-25 &middot; locked rule</span></h2>
+  <div id="shape3"><div class="empty">Not run yet. Rule: backtests/shape_mispricing_rule.md; script: scripts/shape_mispricing.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -278,6 +281,17 @@ function renderLadder(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
 }
 fetch("data/ladder_shape_diagnostic.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderLadder).catch(()=>{});
+function renderShape3(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, G=R.gate, U=G.universe, pp=x=>x==null?"–":((x>=0?"+":"")+(x*100).toFixed(2)+" pts"), ci=c=>c?` [${pp(c[0])}, ${pp(c[1])}]`:"";
+  const row=(l,b)=>`<tr><td>${l}</td><td>${b.n.toLocaleString()}</td><td>${b.hits}</td><td>${pct(b.hit_rate)}</td><td>${pct(b.devig)}</td><td>${pp(b.gap)}${ci(b.gap_ci)}</td></tr>`;
+  $("shape3").innerHTML = `<div class="stats">${[card(G.pass_?"PASS":"KILL",R.verdict),card(pp(G.D),`D = gap(top) − gap(bottom)${ci(G.D_ci)}; pass needs ≥ +${(R.pass_threshold*100).toFixed(1)} pts with the CI above 0`),card(U.rungs.toLocaleString(),`DK tail rungs, ${U.player_games.toLocaleString()} player-games, ${U.hits.toLocaleString()} hits`),card(U.starter_adjusted_rungs.toLocaleString(),"rungs with the +1 SD starter-out adjustment")].join("")}</div>
+    <table><thead><tr><th>Shape tercile</th><th>Rungs</th><th>Hits</th><th>Hit rate</th><th>DK de-vigged P</th><th>Gap (95% CI, player-game clusters)</th></tr></thead><tbody>${row("top",G.top)}${row("middle",G.middle)}${row("bottom",G.bottom)}</tbody></table>
+    <p class="sub">By rung kind: 5+ threes D ${pp(G.by_kind["5+"].D)} (top ${G.by_kind["5+"].top.n.toLocaleString()} / bottom ${G.by_kind["5+"].bottom.n.toLocaleString()} rungs); ≥ 2 above main D ${pp(G.by_kind["2 above main"].D)}. Information only: without the starter-out adjustment D ${pp(G.without_starter_adjustment.D)}${ci(G.without_starter_adjustment.D_ci)}; minutes CV alone D ${pp(G.components.min_cv.D)}, shrunk VMR alone D ${pp(G.components.vmr_shrunk.D)}. Tercile cuts of the adjusted score: ${U.tercile_cuts.join(" / ")}; shape SD ${R.shape_sd}.</p>
+    <p class="sub">2025-26 consistency check: ${R.consistency_2025_26&&!R.consistency_2025_26.available?R.consistency_2025_26.note:"see table"}.</p>
+    <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
+}
+fetch("data/shape_mispricing.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderShape3).catch(()=>{});
 </script>
 </body>
 </html>
