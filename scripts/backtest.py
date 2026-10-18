@@ -126,6 +126,7 @@ def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, 
                "baseline": p["baseline"]}
         for s in ["tpm", "pts", "reb", "ast", "pra"]:
             row[f"proj_{s}"] = sim[s]["mean"]
+        row["proj_tpa"] = sim["tpa"]["mean"]; row["make_p"] = sim.get("make_p")   # expected attempts and the make probability the sim used (headroom audit)
         for k in THREES_K:
             row[f"p_tpm_{k}"] = round(p_at_least(sim["tpm"]["pmf"], k), 4)
         for s in LINE_STATS:
