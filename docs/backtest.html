@@ -107,6 +107,9 @@ ul.notes li{margin:4px 0}
   <h2 id="alt24h">Alternate threes: is the market calibrated at the tail? <span>2024-25, locked rule, de-vigged closing rungs vs hit rate &middot; reported alongside the box-score dispersion test</span></h2>
   <div id="alt24"><div class="empty">Not run yet. Rule: backtests/nba_threes_alt_calibration_rule.md; script: scripts/backtest_threes_alt_calibration.py.</div></div>
 
+  <h2 id="high3h">Dedicated high-threes model <span>P(4+), P(5+), P(6+), P(7+) &middot; fit on 2023-24 only, gated on 2024-25, 2025-26 as a consistency check &middot; no prices</span></h2>
+  <div id="high3"><div class="empty">Not run yet. Rule: backtests/high_threes_rule.md; scripts: scripts/high_threes_baseline.py (bar), scripts/high_threes.py (model); workflow high-threes.yml.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -228,6 +231,21 @@ function renderAlt(A){
     <ul>${A.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${A.generated}. Dispersion test: <span id="disp-note">not yet in this repository; it will appear next to this section when it runs.</span></p>`;
 }
 fetch("data/backtest_threes_alt_calibration.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderAlt).catch(()=>{});
+function renderHigh(H){
+  if(!H) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, pf=x=>x?'<span class="pos">PASS</span>':'<span class="neg">FAIL</span>', ci=c=>c?` [${c[0]}, ${c[1]}]`:"", pp=x=>x==null?"–":((x>=0?"+":"")+(x*100).toFixed(1)+" pts");
+  const g=H.gate, S=H.seasons, M=S["2025"].models, names={new:"new high-threes",current:"current Arc Lab",poisson:"trailing-10 Poisson"};
+  const row=(k,name)=>{const r=M[name]["k"+k]; return `<td>${num(r.logloss,4)}<span class="sub">${ci(r.logloss_ci)}</span></td>`};
+  const capRow=name=>{const r=M[name].k5; return `${pct(r.top_decile_capture)}<span class="sub">${ci(r.top_decile_capture_ci)}</span>`};
+  const calTbl=(name,k)=>{const r=M[name]["k"+k]; return `<table><thead><tr><th>${names[name]} · ${k}+ bucket</th><th>n</th><th>Predicted</th><th>Actual</th><th>Gap (95% CI)</th></tr></thead><tbody>${r.calibration.filter(c=>c.n>0).map(c=>`<tr><td>${c.bucket}</td><td>${c.n.toLocaleString()}</td><td>${pct(c.pred)}</td><td>${pct(c.actual)}</td><td class="${c.within_2pp===false?"neg":(c.within_2pp?"pos":"")}">${pp(c.gap)}${ci(c.gap_ci)}${c.within_2pp==null?' <span class="sub">(n &lt; 200, not graded)</span>':''}</td></tr>`).join("")}</tbody></table>`};
+  const seasonTbl=(key)=>{const s=S[key]; if(!s) return ""; const m=s.models; return `<h3>${s.label} · ${s.n.toLocaleString()} player-games, ${s.games} games</h3><table><thead><tr><th>Model</th><th>Log loss 4+</th><th>Log loss 5+</th><th>Log loss 6+</th><th>Log loss 7+</th><th>Top-decile capture 5+</th><th>Worst gap at n ≥ 200 (4+/5+/6+)</th></tr></thead><tbody>${Object.keys(names).map(nm=>`<tr><td>${names[nm]}</td>${[4,5,6,7].map(k=>`<td>${num(m[nm]["k"+k].logloss,4)}<span class="sub">${ci(m[nm]["k"+k].logloss_ci)}</span></td>`).join("")}<td>${pct(m[nm].k5.top_decile_capture)}<span class="sub">${ci(m[nm].k5.top_decile_capture_ci)}</span></td><td>${[4,5,6].map(k=>m[nm]["k"+k].worst_gap_at_n200==null?"–":(m[nm]["k"+k].worst_gap_at_n200*100).toFixed(1)).join(" / ")} pts</td></tr>`).join("")}</tbody></table>`};
+  $("high3").innerHTML = `<div class="stats">${[card(g.overall_pass?"PASS":"FAIL","2024-25 gate, all three criteria"),card(pf(g.a_logloss.pass_),"(a) log loss 4+ and 5+ beats both baselines"),card(pf(g.b_calibration.pass_),"(b) every bucket n ≥ 200 within ±2 pts, 4+/5+/6+"),card(pf(g.c_capture.pass_),`(c) top-decile P(5+) capture ${pct(g.c_capture.value)} vs bar ${pct(g.c_capture.bar)}`)].join("")}</div>
+    <p class="sub">Rule ${H.rule_file} committed ${H.rule_commit||"–"}. Parameters fit on 2023-24 only: blend w5 ${H.params.blend.w5}, w15 ${H.params.blend.w15}, season ${H.params.blend.w_season}, shrinkage K ${H.params.blend.K}; Poisson terms ${Object.entries(H.params.poisson).map(([k,v])=>k+" "+v).join(", ")}; NB size by group ${Object.entries(H.params.nb_size_by_group).map(([k,v])=>k+" "+v).join(", ")}; beta-binomial m ${H.params.beta_binomial.m}, κ ${H.params.beta_binomial.kappa}. Log-loss differences new − baseline on 2024-25 (negative = new better): ${Object.entries(g.a_logloss.diffs).map(([k,v])=>k.replace("_"," ")+" "+v.diff+ci(v.ci)).join("; ")}.</p>
+    ${seasonTbl("2025")}${seasonTbl("2026")}${seasonTbl("2024")}
+    <h3>Calibration on 2024-25 (gate buckets)</h3>${[4,5,6].map(k=>calTbl("new",k)).join("")}
+    <ul>${H.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${H.generated}.</p>`;
+}
+fetch("data/high_threes_backtest.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderHigh).catch(()=>{});
 </script>
 </body>
 </html>
