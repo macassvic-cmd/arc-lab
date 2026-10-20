@@ -1,11 +1,12 @@
 name: Lines watchdog
 
-# Every 15 minutes in the evening: lines freshness alert, plus a paper-log snapshot so the last one before tip is the close.
+# Every 15 minutes, all day: health.py only acts inside the slate-driven window (90 minutes before the day's earliest tip to
+# 3 hours after the latest tip, from data/slate.json), so afternoon tips are covered and quiet hours cost one no-op run.
+# The paper-log snapshot runs alongside so the last one before tip is the close.
 
 on:
   schedule:
-    - cron: "*/15 21-23 * * *"   # 5pm-8pm ET
-    - cron: "*/15 0-5 * * *"     # 8pm-1am ET
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:

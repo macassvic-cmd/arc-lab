@@ -1,7 +1,7 @@
 """Lines freshness watchdog.
 
-Runs from .github/workflows/health.yml every 15 minutes in the evening (and on demand). During
-tonight's game window it checks docs/data/lines.json and posts to Discord (DISCORD_WEBHOOK_URL)
+Runs from .github/workflows/health.yml every 15 minutes all day (and on demand); the window below decides
+whether a run acts. During the day's game window it checks docs/data/lines.json and posts to Discord (DISCORD_WEBHOOK_URL)
 when the file is missing, has no `updated` stamp, or is older than STALE_MINUTES.
 
 Throttling is the same as mlb-fantasy's stale_lines_watchdog: alert once on the TRANSITION into
