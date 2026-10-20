@@ -48,8 +48,13 @@ def label(doc, box):
     return {**out, "scorer_id": sid, "scorer": r.player, "scorer_team": r.team, "scorer_started": int(r.starter), "label_clean": 1, "reason": "ok"}
 
 
+FIRST_SEASON = 2025   # labels cover 2024-25 onward (the rule's backfill seasons plus every live season)
+
+
 def backfill(seasons=None):
     ev = events(seasons)
+    if not seasons:
+        ev = ev[ev.season >= FIRST_SEASON].reset_index(drop=True)
     done = set(pd.read_csv(HIST, dtype={"event_id": str}).event_id) if HIST.exists() else set()
     frames = [pd.read_csv(DATA_DIR / fn, dtype={"event_id": str, "player_id": str}, usecols=["event_id", "player_id", "player", "team", "starter"]) for fn in ("player_games.csv", "player_games_history.csv") if (DATA_DIR / fn).exists()]
     box = pd.concat(frames).drop_duplicates(["event_id", "player_id"])
