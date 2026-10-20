@@ -122,6 +122,12 @@ ul.notes li{margin:4px 0}
   <h2 id="v2gateh">v2 ladder engine: recalibration gate <span>isotonic maps fit on 2023-24, gated per stat on 2024-25 &middot; locked rule &middot; no prices</span></h2>
   <div id="v2gate"><div class="empty">Not run yet. Rule: backtests/ladder_v2_rule.md; script: scripts/ladder_calibrate.py.</div></div>
 
+  <section id="v3cov-wrap">
+    <h2>v3 data foundation: coverage</h2>
+    <p class="sub">Play-by-play (ESPN summary, zero credits) for every regular-season game, the derived stint / rotation / lineup tables and the game-context table. Numbers only; modelling waits for the feature gate (backtests/v3_feature_gate.md).</p>
+    <div id="v3cov"></div>
+  </section>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -312,6 +318,21 @@ function renderGate(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${R.generated}.</p>`;
 }
 fetch("data/ladder_v2_gate.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderGate).catch(()=>{});
+function renderV3(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, n=x=>x==null?"–":Number(x).toLocaleString(), sh=x=>x==null?"–":(100*x).toFixed(1)+"%";
+  const B=R.by_season||[], G=R.game_context;
+  const tot=k=>B.reduce((a,s)=>a+(s[k]||0),0);
+  $("v3cov").innerHTML = `<div class="stats">${[card(`${n(tot("games_complete"))} / ${n(tot("games_box"))}`,`games with complete play-by-play (${sh(tot("games_box")?tot("games_complete")/tot("games_box"):null)})`),card(sh(B.length?B.reduce((a,s)=>a+(s.join_rate||0),0)/B.length:null),"player-games joined to a box score (mean of seasons)"),card(n(tot("lineups")),`five-man lineups, ${sh(tot("lineups")?tot("lineups_thin")/tot("lineups"):null)} thin (&lt; 25 min)`),card(G?sh(G.share_officials):"–","games with a referee crew"),card(G?sh(G.share_vegas_total):"–","games with a Vegas total (historical: none without credits)")].join("")}</div>
+    <table><thead><tr><th>Season</th><th>Games (box)</th><th>Play file</th><th>With plays</th><th>Complete PBP</th><th>All periods clean</th><th>Minutes match</th><th>Team sum ok</th><th>Player-games joined</th><th>Within 1.5 min</th><th>Median |gap|</th><th>Lineups (thin)</th></tr></thead><tbody>${B.map(s=>`<tr><td>${s.season}</td><td>${n(s.games_box)}</td><td>${n(s.games_with_file)}</td><td>${n(s.games_with_plays)}</td><td><b>${n(s.games_complete)}</b> <span class="sub">${sh(s.share_complete)}</span></td><td>${n(s.games_all_periods_clean)}</td><td>${n(s.games_minutes_match)}</td><td>${n(s.games_team_sum_ok)}</td><td>${n(s.player_games_joined)} / ${n(s.player_games_box)} <span class="sub">${sh(s.join_rate)}</span></td><td>${n(s.player_games_within_1_5_min)}</td><td>${s.median_abs_minutes_gap} min</td><td>${n(s.lineups)} (${sh(s.lineups_thin_share)})</td></tr>`).join("")}</tbody></table>
+    <p class="sub">Complete = ${R.complete_definition}.</p>
+    <table><thead><tr><th>Failure reason</th><th>Count</th></tr></thead><tbody>${(R.failure_reasons||[]).map(f=>`<tr><td>${f.reason}</td><td>${n(f.count)}</td></tr>`).join("")}</tbody></table>
+    ${G?`<h3>Game context (data/game_context.csv)</h3><div class="stats">${[card(n(G.games),"games"),card(`${n(G.with_officials)} (${sh(G.share_officials)})`,"with officials"),card(`${n(G.with_travel_both_sides)} (${sh(G.share_travel)})`,"with travel for both teams"),card(n(G.with_crew_history),"with referee trailing history"),card(n(G.neutral_site_games),"neutral-site games"),card(n(G.altitude_games),"altitude games (DEN / UTAH home)"),card(`${n(G.with_vegas_total)} (${sh(G.share_vegas_total)})`,"with a Vegas total")].join("")}</div>
+    <table><thead><tr><th>Season</th><th>Games</th><th>With officials</th><th>With travel</th><th>With Vegas total</th><th>Mean pace</th><th>Back-to-back team-games</th></tr></thead><tbody>${(G.by_season||[]).map(s=>`<tr><td>${s.season}</td><td>${n(s.games)}</td><td>${n(s.with_officials)}</td><td>${n(s.with_travel)}</td><td>${n(s.with_vegas_total)}</td><td>${s.mean_pace}</td><td>${n(s.b2b_team_games)}</td></tr>`).join("")}</tbody></table><p class="sub">${G.note}</p>`:""}
+    ${R.tracking?`<h3>Tracking and role stats (v3 item 2: stats.nba.com / cdn.nba.com)</h3>${Object.values(R.tracking).map(T=>`<p class="sub"><b>${T.environment}</b>: ${T.responded_with_json} / ${T.attempted} endpoint families answered with JSON (timeout ${T.timeout_seconds}s, ${T.generated}) — ${T.verdict}.</p><table><thead><tr><th>Endpoint family</th><th>HTTP status</th><th>JSON</th><th>Rows</th><th>Seconds</th></tr></thead><tbody>${T.endpoints.map(e=>`<tr><td>${e.endpoint}</td><td>${e.status==null?(e.error||"no response"):e.status}</td><td>${e.json?"yes":"no"}</td><td>${e.rows==null?"–":e.rows}</td><td>${e.seconds}</td></tr>`).join("")}</tbody></table>`).join("")}`:""}
+    <ul>${(R.notes||[]).map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Source: ${R.source}. Generated ${R.generated}.</p>`;
+}
+fetch("data/v3_coverage.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderV3).catch(()=>{});
 </script>
 </body>
 </html>

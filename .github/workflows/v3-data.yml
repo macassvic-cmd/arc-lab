@@ -1,0 +1,52 @@
+name: v3 data foundation
+# Play-by-play (ESPN summary `plays`, zero Odds API credits) for every regular-season game of 2023-24, 2024-25 and 2025-26, the
+# derived stint / rotation / lineup tables, the game-context table and the coverage report the Backtest page reads. Reads box
+# scores from data/player_games.csv (live season) and data/player_games_history.csv (backfill-history.yml). Writes only the v3
+# data files listed in the commit step; never paper_log.csv, results.json or anything the live model reads.
+on:
+  workflow_dispatch:
+    inputs:
+      seasons:
+        description: "ESPN season years to fetch (space-separated), e.g. 2024 2025 2026"
+        required: false
+        default: "2024 2025 2026"
+
+concurrency:
+  group: arc-lab-data
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Box-score seasons present
+        working-directory: scripts
+        run: python -c "import pandas as pd; from pathlib import Path; fs=[f for f in ('../data/player_games.csv','../data/player_games_history.csv') if Path(f).exists()]; d=pd.concat(pd.read_csv(f, dtype=str, usecols=['event_id','season']) for f in fs).drop_duplicates('event_id'); print(d.groupby('season').size().to_string())"
+      - name: Fetch play-by-play (cached per game, skips stored games)
+        working-directory: scripts
+        run: python pbp_store.py --seasons ${{ inputs.seasons }}
+      - name: Derived tables + coverage
+        working-directory: scripts
+        run: python pbp_tables.py
+      - name: Game context
+        working-directory: scripts
+        run: python game_context.py
+      - name: Tracking / role stats capture check (stats.nba.com, numbers only)
+        working-directory: scripts
+        run: python tracking_probe.py --timeout 20
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pbp_plays_*.csv.gz data/stints.csv.gz data/rotation_games.csv.gz data/rotation_profile.csv data/lineups.csv.gz data/game_context.csv docs/data/v3_coverage.json
+          git diff --cached --quiet && exit 0
+          git commit -m "v3 data: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
