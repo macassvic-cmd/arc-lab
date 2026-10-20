@@ -119,6 +119,9 @@ ul.notes li{margin:4px 0}
   <h2 id="shape3h">Tail program test 3: conditional shape mispricing at DraftKings <span>top vs bottom shape tercile, hit rate minus de-vigged price, 2024-25 &middot; locked rule</span></h2>
   <div id="shape3"><div class="empty">Not run yet. Rule: backtests/shape_mispricing_rule.md; script: scripts/shape_mispricing.py.</div></div>
 
+  <h2 id="v2gateh">v2 ladder engine: recalibration gate <span>isotonic maps fit on 2023-24, gated per stat on 2024-25 &middot; locked rule &middot; no prices</span></h2>
+  <div id="v2gate"><div class="empty">Not run yet. Rule: backtests/ladder_v2_rule.md; script: scripts/ladder_calibrate.py.</div></div>
+
   <h2>How the simulation was run</h2>
   <ul class="notes" id="notes"></ul>
   <p class="foot" id="updated"></p>
@@ -292,6 +295,23 @@ function renderShape3(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
 }
 fetch("data/shape_mispricing.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderShape3).catch(()=>{});
+function renderGate(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, G=R.gate_2024_25, D=R.decisions, NM={tpm:"3PM",pts:"PTS",ast:"AST",reb:"REB"}, ci=c=>c?` [${c[0]}, ${c[1]}]`:"", pf=x=>x?'<span class="pos">pass</span>':'<span class="neg">fail</span>', gp=x=>x==null?"– (no cell n ≥ 200)":(x*100).toFixed(1)+" pts";
+  const stats=Object.keys(NM);
+  const rungTbl=st=>{const P=G[st].per_rung; return `<table><thead><tr><th>${NM[st]} rung</th><th>n</th><th>Base rate</th><th>Mean P raw</th><th>Mean P recal</th><th>Log loss raw</th><th>Log loss recal</th></tr></thead><tbody>${Object.keys(P).map(k=>`<tr><td>${k}+</td><td>${P[k].n.toLocaleString()}</td><td>${pct(P[k].base_rate)}</td><td>${pct(P[k].mean_p_raw)}</td><td>${pct(P[k].mean_p_cal)}</td><td>${num(P[k].logloss_raw,4)}</td><td>${num(P[k].logloss_cal,4)}</td></tr>`).join("")}</tbody></table>`};
+  const bk=(st,k,key)=>{const b=G[st].per_rung[k][key]; return b.filter(c=>c.n).map(c=>`<tr><td>${Math.round(c.lo*100)}–${Math.round(c.hi*100)}%</td><td>${c.n.toLocaleString()}</td><td>${pct(c.pred)}</td><td>${pct(c.actual)}</td><td class="${c.graded&&Math.abs(c.gap)>0.03?"neg":""}">${(c.gap*100).toFixed(1)} pts${c.graded?"":' <span class="sub">(n &lt; 200, not graded)</span>'}</td></tr>`).join("")};
+  const C=R.consistency_2025_26, V=R.before_v2_vs_v2_2024_25;
+  $("v2gate").innerHTML = `<div class="stats">${stats.map(st=>card(D[st].adopt?"ADOPT":"RAW",`${NM[st]}: (a) log loss ${pf(D[st].a_logloss)}, (b) worst gap ${pf(D[st].b_worst_gap)}`)).join("")}</div>
+    <p class="sub">Engine: 3PA = minutes × equal-weight blend of last-5 / last-15 / season 3PA-per-minute, EB-shrunk toward position (K = 120 min); PTS / AST / REB Gaussian with sigma pts ${R.sigma.pts}, ast ${R.sigma.ast}, reb ${R.sigma.reb} (SD of projection − actual over ${R.sigma_n.toLocaleString()} 2023-24 player-games). Maps fit on 2023-24 (${R.fit_2023_24.rows.toLocaleString()} rows, ${R.fit_2023_24.games} games); gate on 2024-25 (${G.rows.toLocaleString()} rows, ${G.games} games). Adopted: ${R.adopted.length?R.adopted.map(s=>NM[s]).join(", "):"none — every stat ships raw P(k+)"}. Rule ${R.rule_file} committed ${R.rule_commit||"–"}.</p>
+    <table><thead><tr><th>Stat (2024-25, all rungs pooled)</th><th>Rows</th><th>Log loss raw</th><th>Log loss recal</th><th>raw − recal (95% CI, player-game bootstrap)</th><th>Worst gap raw</th><th>Worst gap recal</th><th>Decision</th></tr></thead><tbody>${stats.map(st=>`<tr><td>${NM[st]}</td><td>${G[st].n_rows.toLocaleString()}</td><td>${num(G[st].logloss_raw,4)}</td><td>${num(G[st].logloss_cal,4)}</td><td>${(G[st].diff_raw_minus_cal>=0?"+":"")+G[st].diff_raw_minus_cal.toFixed(5)}${ci(G[st].diff_ci)}</td><td>${gp(G[st].worst_gap_raw)}</td><td>${gp(G[st].worst_gap_cal)}</td><td>${D[st].adopt?'<span class="pos">adopt maps</span>':'<span class="neg">ship raw</span>'}</td></tr>`).join("")}</tbody></table>
+    ${stats.map(rungTbl).join("")}
+    <h3>Calibration on 2024-25, raw engine (the deciles the gate reads)</h3>${stats.map(st=>Object.keys(G[st].per_rung).map(k=>`<table><thead><tr><th>${NM[st]} ${k}+ · model said</th><th>n</th><th>Mean P</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${bk(st,k,"buckets_raw")}</tbody></table>`).join("")).join("")}
+    ${C&&C.rows?`<h3>2025-26 consistency only (not gated; that season was also the one the live model was tuned on earlier)</h3><table><thead><tr><th>Stat</th><th>Rows</th><th>Log loss raw</th><th>Log loss recal</th><th>Worst gap raw</th><th>Worst gap recal</th></tr></thead><tbody>${stats.map(st=>`<tr><td>${NM[st]}</td><td>${C[st].n_rows.toLocaleString()}</td><td>${num(C[st].logloss_raw,4)}</td><td>${num(C[st].logloss_cal,4)}</td><td>${gp(C[st].worst_gap_raw)}</td><td>${gp(C[st].worst_gap_cal)}</td></tr>`).join("")}</tbody></table>`:""}
+    ${V?`<h3>Information only: engine before v2 vs v2 on the same 2024-25 rows (${V.n.toLocaleString()} player-games)</h3><table><thead><tr><th>Measure</th><th>Before v2</th><th>v2</th></tr></thead><tbody>${Object.keys(V.tpm).map(k=>`<tr><td>Log loss 3PM ${k}+</td><td>${num(V.tpm[k].logloss_before,4)}</td><td>${num(V.tpm[k].logloss_v2,4)}</td></tr>`).join("")}${["pts","ast","reb"].map(s=>`<tr><td>MAE ${NM[s]}</td><td>${num(V[s].mae_before,3)}</td><td>${num(V[s].mae_v2,3)}</td></tr>`).join("")}</tbody></table>`:""}
+    <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${R.generated}.</p>`;
+}
+fetch("data/ladder_v2_gate.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderGate).catch(()=>{});
 </script>
 </body>
 </html>

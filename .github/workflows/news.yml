@@ -31,6 +31,7 @@ jobs:
           python ingest_news.py
           if [ -f ../data/player_games.csv ]; then python build_model.py; fi
           python paper_log.py snapshot
+          python ladder_log.py snapshot
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"
@@ -38,6 +39,7 @@ jobs:
           git add docs/data
           [ -f data/health_state.json ] && git add data/health_state.json
           [ -f data/paper_log.csv ] && git add data/paper_log.csv
+          [ -f data/ladder_log.csv ] && git add data/ladder_log.csv
           git diff --cached --quiet && exit 0
           git commit -m "news: $(date -u +%H:%M:%SZ)"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

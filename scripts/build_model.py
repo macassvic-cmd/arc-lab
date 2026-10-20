@@ -152,6 +152,80 @@ def profile(g, cur, lg_pct, prior_cutoff=None):
     }
 
 
+# ---------------- v2 ladder engine (backtests/ladder_v2_rule.md, section 1) ----------------
+# 3PA per minute = equal-weight mean of the last-5, last-15 and season-to-date rates (fixed a priori), EB-shrunk toward the
+# league rate at the player's position with K = 120 minutes (fixed a priori). Under BLEND_GAMES current-season games the prior
+# season fills the windows at PRIOR_SEASON_RATE_W. Nothing here is fitted.
+TPA_WINDOWS = (5, 15, None)   # None = season to date
+TPA_PRIOR_MIN = 120.0
+# Gaussian ladders for PTS / AST / REB: P(X >= k) = 1 - Phi((k - 0.5 - mu) / sigma). sigma = SD of (projected mean - actual) over
+# the 2023-24 walk-forward of this engine (scripts/backtest.py --season 2024 -> data/v2_rows_2024.csv.gz, 18,375 player-games
+# who played, 155 dates), measured once on 2026-10-20 by `scripts/ladder_calibrate.py sigmas`; not a tuning knob
+# (ladder_calibrate.py refuses to run if these drift from the measurement). Residual SD grows with the projection (pts 5.1 / 6.1 /
+# 7.9 by projection tercile), which a single sigma ignores; the isotonic maps absorb what they can, the rest is a v3 question.
+SIGMA = {"pts": 6.5044, "ast": 2.0175, "reb": 2.6527}
+RUNGS = {"tpm": [3, 4, 5, 6, 7], "pts": [10, 15, 20, 25, 30], "ast": [4, 6, 8, 10], "reb": [6, 8, 10, 12]}
+CALIBRATION = read_json(DATA_DIR / "ladder_calibration.json", {})   # adopted isotonic maps per stat / rung (gate in the rule)
+
+
+def pos_tpa_rates(df, cur):
+    """League 3PA per minute by position from the games in df: current season weight 1, prior season PRIOR_SEASON_RATE_W."""
+    d = df[df.season >= cur - 1]
+    w = np.where(d.season.values == cur, 1.0, PRIOR_SEASON_RATE_W)
+    out = {}
+    for pos in POSITIONS:
+        m = d.pos.values == pos
+        mins = float((d["min"].values[m] * w[m]).sum())
+        if mins > 0:
+            out[pos] = float((d.tpa.values[m] * w[m]).sum() / mins)
+    return out
+
+
+def tpa_rate_v2(g, cur, pos, pos_rates):
+    """Section-1 3PA rate for one player. g = his games (current + prior season), newest first."""
+    cur_g = g[g.season == cur]
+    if len(cur_g) >= BLEND_GAMES:
+        seq, w = cur_g, np.ones(len(cur_g))
+    else:
+        seq = pd.concat([cur_g, g[g.season == cur - 1]])
+        w = np.where(seq.season.values == cur, 1.0, PRIOR_SEASON_RATE_W)
+    mins, tpa = seq["min"].values * w, seq.tpa.values * w
+    rates = []
+    for n in TPA_WINDOWS:
+        mm, tt = (mins[:n].sum(), tpa[:n].sum()) if n else (mins.sum(), tpa.sum())
+        if mm > 0:
+            rates.append(tt / mm)
+    if not rates:
+        return 0.0
+    blend, M = float(np.mean(rates)), float(mins.sum())
+    prior = (pos_rates or {}).get(pos)
+    if prior is None:
+        return blend
+    return (M * blend + TPA_PRIOR_MIN * prior) / (M + TPA_PRIOR_MIN)
+
+
+def gauss_tail(mu, sigma, k):
+    return 0.5 * (1 - math.erf((k - 0.5 - mu) / (sigma * math.sqrt(2))))
+
+
+def apply_map(stat, k, p):
+    """Isotonic map (adopted under the rule's gate) as step-interpolation over its breakpoints; identity when none is adopted."""
+    m = CALIBRATION.get(stat, {}).get(str(k))
+    if not m:
+        return p
+    xs, ys = m["x"], m["y"]
+    return float(np.clip(np.interp(p, xs, ys), 0.005, 0.995))
+
+
+def ladders(sim):
+    """P(X >= k) raw and shipped for every rung. 3PM from the simulation pmf; PTS / AST / REB Gaussian with SIGMA."""
+    out = {}
+    for stat, ks in RUNGS.items():
+        raw = {k: (float(sum(sim["tpm"]["pmf"][k:])) if stat == "tpm" else gauss_tail(sim[stat]["mean"], SIGMA[stat], k)) for k in ks}
+        out[stat] = {str(k): {"raw": round(v, 4), "p": round(apply_map(stat, k, v), 4)} for k, v in raw.items()}
+    return out
+
+
 def news_status(news, slate_date):
     """Latest classified tag per player from the last ~20 hours of news."""
     cutoff = dt.datetime.fromisoformat(slate_date) - dt.timedelta(hours=8)
@@ -444,6 +518,7 @@ def main():
 
     by_id = {pid: g for pid, g in df[df.season >= cur - 1].groupby("player_id")}
     pos_map = position_map()
+    pos_rates = pos_tpa_rates(df, cur)
     out_players, games_out = [], []
     for game in slate["games"]:
         mk = spreads.get((game["away"], game["home"]))
@@ -465,6 +540,7 @@ def main():
                 entry = {"id": str(ath["id"]), "name": ath["name"], "team": team, "opp": opp, "home": home,
                          "pos": pos_map.get(str(ath["id"])) or (norm_pos(ath.get("pos")) if ath.get("pos") else g.iloc[-1].pos),
                          "status": status, "flags": [], **prof}
+                entry["rates"] = {**prof["rates"], "tpa": tpa_rate_v2(g.sort_values("date", ascending=False), cur, entry["pos"], pos_rates)}
                 if status in ("OUT", "DOUBTFUL"):
                     outs.append(entry)
                     continue
@@ -506,6 +582,7 @@ def main():
                     "pct": round(p["pct"], 3), "flags": p["flags"], "last10": p["last10"], "baseline": p["baseline"],
                     "min_gain": p.get("min_gain"),
                     "dvp_rank": {s: dvp.get(opp, {}).get(p["pos"], {}).get(s, {}).get("rk") for s in STATS},
+                    "ladder": ladders(sim),
                     **sim,
                 })
             for o in outs:

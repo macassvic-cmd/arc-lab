@@ -96,7 +96,7 @@ def trailing_means(df):
     return pd.concat([d[["player_id", "event_id"]], t], axis=1)
 
 
-def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, lg_pct, dvp, history):
+def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, lg_pct, dvp, history, pos_rates=None):
     """Rebuild one team the way build_model.main does for a live slate, from history only."""
     roster_ids = set(recent_ids) | set(played)
     team_players, outs = [], []
@@ -107,6 +107,7 @@ def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, 
         prof = bm.profile(g, cur, lg_pct, None)
         entry = {"id": pid, "name": g.iloc[0].player, "team": team, "opp": opp, "home": home,
                  "pos": pos_map.get(pid) or g.iloc[-1].pos, "status": None, "flags": [], **prof}
+        entry["rates"] = {**prof["rates"], "tpa": bm.tpa_rate_v2(g, cur, entry["pos"], pos_rates)}   # v2 ladder engine (ladder_v2_rule.md s.1)
         if pid not in played:
             entry["status"] = "OUT"
             outs.append(entry)
@@ -161,6 +162,7 @@ def run(start, end=None, season=None, out_path=ROWS, positions_path=None):
         dvp, _ = bm.build_dvp(hist, cur)
         lg_pct = float(hist.tpm.sum() / max(hist.tpa.sum(), 1))
         history = bm.AbsorberHistory(hist, day)
+        pos_rates = bm.pos_tpa_rates(hist, cur)
         teams_today = set(today.team)
         recent = hist[(hist.date >= day - pd.Timedelta(days=ROSTER_DAYS)) & hist.team.isin(teams_today)]
         recent_ids = recent.groupby("team").player_id.apply(set).to_dict()
@@ -175,7 +177,7 @@ def run(start, end=None, season=None, out_path=ROWS, positions_path=None):
                 opp = sides[1 - home]
                 box = game[game.team == team]
                 played = set(box.loc[box["min"] > 0, "player_id"])
-                rows = project_team(team, opp, home, hist_by_id, played, recent_ids.get(team, set()), pos_map, cur, lg_pct, dvp, history)
+                rows = project_team(team, opp, home, hist_by_id, played, recent_ids.get(team, set()), pos_map, cur, lg_pct, dvp, history, pos_rates)
                 actual = box.set_index("player_id")
                 for r in rows:
                     a = actual.loc[r["player_id"]]

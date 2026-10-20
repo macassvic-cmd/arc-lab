@@ -44,6 +44,14 @@ jobs:
       - name: Settle paper log
         working-directory: scripts
         run: python paper_log.py settle
+      - name: Play-by-play store + first-basket labels (ESPN, no credits)
+        working-directory: scripts
+        run: |
+          python pbp_store.py
+          python first_basket.py backfill
+      - name: Grade the ladder log (last pre-tip snapshot vs box scores)
+        working-directory: scripts
+        run: python ladder_log.py grade
       - name: Assign positions
         working-directory: scripts
         run: python positions.py
@@ -56,6 +64,9 @@ jobs:
       - name: Snapshot paper log
         working-directory: scripts
         run: python paper_log.py snapshot
+      - name: Ladder log snapshot (append-only, pre-tip rows only)
+        working-directory: scripts
+        run: python ladder_log.py snapshot
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"

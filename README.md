@@ -14,7 +14,11 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
 | `scripts/paper_log.py` | All three workflows | Logs every prop with an Underdog line, freezes the close at tip, grades it, writes `results.json` for the Results tab |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
+| `scripts/ladder_log.py` | Both data workflows | v2 ladders: appends every pre-tip P(k+) to the immutable `data/ladder_log.csv`, grades the last pre-tip snapshot hit/miss, writes `performance.json` |
+| `scripts/ladder_calibrate.py` | Manual | Isotonic recalibration of the ladders under `backtests/ladder_v2_rule.md` (fit 2023-24, gate 2024-25); adopted maps in `data/ladder_calibration.json` |
+| `scripts/pbp_store.py`, `scripts/first_basket.py` | Update workflow | ESPN play-by-play cache (`data/pbp_raw/`, not committed) and first-basket labels + coverage |
 | `docs/index.html` | GitHub Pages | The site |
+| `docs/performance.html` | GitHub Pages | Every logged ladder rung graded against the box score: tiers, positions, calibration per rung, live season only |
 
 ## Setup (about 15 minutes)
 

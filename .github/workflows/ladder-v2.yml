@@ -1,0 +1,46 @@
+name: Ladder v2 recalibration gate
+# Regenerates the v2 ladder gate from committed code and the box scores on main: the v2 engine's walk-forwards for 2023-24 (fit),
+# 2024-25 (gate) and 2025-26 (consistency), the measured sigmas, the isotonic maps and their per-stat decision under
+# backtests/ladder_v2_rule.md. Writes data/v2_rows_*.csv.gz, data/ladder_sigma.json, data/ladder_calibration.json and
+# docs/data/ladder_v2_gate.json; never data/ladder_log.csv, paper_log.csv or results.json. Needs data/player_games_history.csv.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: arc-lab-data
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: Historical seasons present
+        working-directory: scripts
+        run: python -c "import pandas as pd; d=pd.read_csv('../data/player_games_history.csv', dtype=str); g=d.groupby('season').event_id.nunique(); print(g.to_string()); assert {2024,2025} <= set(g.index.astype(int)), 'run backfill-history.yml first'"
+      - name: v2 engine walk-forwards (prior games only)
+        working-directory: scripts
+        run: |
+          python build_positions_season.py --season 2024 --out ../data/positions_2024.csv
+          python build_positions_season.py --season 2025 --out ../data/positions_2025.csv
+          python backtest.py --season 2024 --start 2023-10-24 --end 2024-04-14 --rows ../data/v2_rows_2024.csv.gz --report ../data/v2_report_2023_24.json --label 2023-24 --positions ../data/positions_2024.csv
+          python backtest.py --season 2025 --start 2024-10-22 --end 2025-04-13 --rows ../data/v2_rows_2025.csv.gz --report ../docs/data/backtest_2024_25.json --label 2024-25 --positions ../data/positions_2025.csv
+          python backtest.py --season 2026 --start 2025-10-21 --end 2026-04-12 --rows ../data/v2_rows_2026.csv.gz --report ../data/v2_report_2025_26.json --label 2025-26
+      - name: "Sigmas, isotonic fit (2023-24), gate (2024-25)"
+        working-directory: scripts
+        run: python ladder_calibrate.py all
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/v2_rows_*.csv.gz data/v2_report_*.json data/positions_2024.csv data/positions_2025.csv data/ladder_sigma.json data/ladder_calibration.json docs/data/ladder_v2_gate.json docs/data/backtest_2024_25.json
+          git diff --cached --quiet && exit 0
+          git commit -m "ladder v2 gate: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

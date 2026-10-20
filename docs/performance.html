@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc Lab Performance</title>
+<meta name="description" content="Every Arc Lab ladder projection logged before tip and graded against the box score. Live season only, hit or miss, nothing filtered.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#142033; --muted:#5B6878; --line:#D5DCE4;
+  --rim:#E8590C; --rim-soft:#FCE3D3; --make:#0F8F6A; --miss:#C8324B; --chip:#E9EDF2; --warn:#FFF4D6; --warn-ink:#7A4B00;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42; --warn:#3A2E12; --warn-ink:#F3D28B;}}
+:root[data-theme="dark"]{
+  --bg:#0F1724; --surface:#172234; --ink:#E7EDF4; --muted:#93A1B3; --line:#26344A;
+  --rim:#FF7A2E; --rim-soft:#3A2618; --make:#34C79A; --miss:#F0647D; --chip:#1F2C42; --warn:#3A2E12; --warn-ink:#F3D28B;}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--rim);outline-offset:2px}
+header{padding:28px 16px 0;max-width:1100px;margin:0 auto}
+h1{font:700 clamp(40px,7vw,64px)/.9 var(--display);margin:0;letter-spacing:-.5px}
+h1 small{display:block;font:600 22px var(--display);color:var(--muted);letter-spacing:0;margin-top:6px}
+.sub{color:var(--muted);margin:6px 0 10px;font-size:15px}
+.banner{background:var(--surface);border-left:4px solid var(--rim);border-radius:8px;padding:12px 16px;margin:12px 0 0;font:600 20px var(--display)}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+h2{font:700 26px var(--display);margin:28px 0 8px}
+h2 span{color:var(--muted);font:500 15px var(--body);margin-left:8px}
+h3{font:600 19px var(--display);margin:18px 0 6px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+select,input[type=search]{font:500 15px var(--body);padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.stat b{display:block;font:700 32px/1.1 var(--display)}
+.stat span{color:var(--muted);font-size:13px}
+.stat.tier{border-top:4px solid var(--rim)}
+.scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font:600 15px var(--display);color:var(--muted);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1}
+td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.pos{color:var(--make);font-weight:600}.neg{color:var(--miss);font-weight:600}
+.thin{color:var(--muted)}
+.thin::after{content:" thin";font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.foot{color:var(--muted);font-size:13px;margin:6px 0 0}
+ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
+.empty{padding:18px;color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Arc Lab <small>Performance · live season</small></h1>
+  <p class="sub"><a href="./">Tonight's slate</a> · <a href="backtest.html">Backtest</a></p>
+  <div class="banner" id="hdr">Every pick graded against real results. Nothing filtered, nothing hidden.</div>
+  <p class="sub" id="status">Loading…</p>
+</header>
+<main>
+  <div class="stats" id="cards"></div>
+
+  <h2>Tiers <span>hit rate and record when the model said at least this much</span></h2>
+  <div class="stats" id="tiers"></div>
+  <div class="scroll"><table id="tierStat"></table></div>
+
+  <h2>By position</h2>
+  <div class="scroll"><table id="byPos"></table></div>
+
+  <h2>By stat and rung <span>calibration: probability buckets × hit rate × n</span></h2>
+  <div class="controls">
+    <select id="fStat" aria-label="Stat"><option value="tpm">3PM</option><option value="pts">PTS</option><option value="ast">AST</option><option value="reb">REB</option></select>
+    <select id="fRung" aria-label="Rung"></select>
+    <input type="search" id="fQ" placeholder="Search player" aria-label="Search player">
+  </div>
+  <div class="stats" id="rungCards"></div>
+  <div class="scroll"><table id="cal"></table></div>
+  <p class="foot">Cells with fewer than 30 graded rungs are flagged thin. A calibrated model's "hit" column matches "model said" in every row.</p>
+  <h3>Players <span class="foot">graded rungs for the selected stat</span></h3>
+  <div class="scroll"><table id="players"></table></div>
+  <h3>Recent picks <span class="foot" id="recentNote"></span></h3>
+  <div class="scroll"><table id="recent"></table></div>
+
+  <section id="fbSec" hidden>
+    <h2>First basket <span>P(player scores first), ten starters, graded binary</span></h2>
+    <div class="stats" id="fbCards"></div>
+    <div class="scroll"><table id="fbCal"></table></div>
+  </section>
+
+  <h2>Method</h2>
+  <ul class="notes" id="method"></ul>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const pct = x => x==null ? "–" : (100*x).toFixed(1)+"%";
+const NAMES = {tpm:"3PM", pts:"PTS", ast:"AST", reb:"REB"};
+const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+let R = null; const S = {stat:"tpm", rung:"all", q:""};
+const card = (v,l,cls="") => `<div class="stat ${cls}"><b>${v}</b><span>${l}</span></div>`;
+const rec = b => b && b.n ? `${b.record} · ${pct(b.hit_rate)}` : "–";
+
+function render(){
+  if(!R || R.empty || !R.overall || !R.overall.n){
+    $("status").textContent = R && R.generated ? `No graded rungs yet (updated ${R.generated}). Projections are logged before tip and graded the morning after.` : "No performance data yet.";
+    return;
+  }
+  const L = R.log, O = R.overall;
+  $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · shipped P is raw except ${R.calibration_adopted.length? R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate)" : "nowhere (no stat passed the recalibration gate)"}.`;
+  $("cards").innerHTML = [card(O.record,"overall record, every graded rung"), card(pct(O.hit_rate),"hit rate"), card(L.graded.toLocaleString(),"graded rungs"), card(L.pending.toLocaleString(),"logged, game not yet graded"), card(L.void.toLocaleString(),"void (player did not play)")].join("");
+  $("tiers").innerHTML = R.tiers.map(t=>card(pct(t.hit_rate), `≥ ${Math.round(t.min_p*100)}% PROB · ${t.record}`, "tier")).join("");
+  $("tierStat").innerHTML = `<thead><tr><th>Stat</th><th>All</th>${R.tiers.map(t=>`<th>≥ ${Math.round(t.min_p*100)}%</th>`).join("")}</tr></thead><tbody>${Object.keys(NAMES).map(st=>`<tr><td>${NAMES[st]}</td><td>${rec(R.by_stat[st])}</td>${R.tiers.map(t=>`<td>${rec(t.by_stat[st])}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  const poss = ["PG","SG","SF","PF","C"].filter(p=>R.by_pos[p]);
+  $("byPos").innerHTML = `<thead><tr><th>Position</th><th>All</th>${Object.values(NAMES).map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${poss.map(p=>`<tr><td>${p}</td><td>${rec(R.by_pos[p])}</td>${Object.keys(NAMES).map(st=>`<td>${rec(R.by_pos[p].by_stat[st])}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  renderStat();
+  if(R.first_basket && R.first_basket.overall && R.first_basket.overall.n){
+    const F = R.first_basket; $("fbSec").hidden = false;
+    $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded")].join("");
+    $("fbCal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Hit</th></tr></thead><tbody>${F.buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.actual)}</td></tr>`).join("")}</tbody>`;
+  }
+  $("method").innerHTML = R.method.map(m=>`<li>${m}</li>`).join("");
+}
+
+function renderStat(){
+  const st = S.stat, B = R.by_stat[st], rungs = Object.keys(B.by_rung).map(Number).sort((a,b)=>a-b);
+  const sel = $("fRung"); const cur = S.rung;
+  sel.innerHTML = `<option value="all">All rungs</option>` + rungs.map(k=>`<option value="${k}">${NAMES[st]} ${k}+</option>`).join("");
+  sel.value = rungs.includes(Number(cur)) ? cur : "all"; S.rung = sel.value;
+  const blocks = S.rung==="all" ? rungs.map(k=>B.by_rung[k]) : [B.by_rung[S.rung]];
+  const merge = (key) => { const out=[]; for(let i=0;i<10;i++){ let n=0,ps=0,hs=0; blocks.forEach(b=>{const c=b.buckets[i]; if(c.n){n+=c.n; ps+=c.pred*c.n; hs+=c.actual*c.n;}}); out.push({lo:i/10,hi:(i+1)/10,n,pred:n?ps/n:null,actual:n?hs/n:null,thin:n<30}); } return out; };
+  const buckets = S.rung==="all" ? merge() : B.by_rung[S.rung].buckets;
+  const tot = blocks.reduce((a,b)=>({n:a.n+b.n,hits:a.hits+b.hits}),{n:0,hits:0});
+  $("rungCards").innerHTML = [card(`${tot.hits}-${tot.n-tot.hits}`, `${NAMES[st]} ${S.rung==="all"?"all rungs":S.rung+"+"} record`), card(pct(tot.n?tot.hits/tot.n:null),"hit rate"),
+    ...R.tiers.map(t=>{ const b = S.rung==="all" ? t.by_stat[st] : B.by_rung[S.rung].tiers[String(t.min_p)]; return card(rec(b), `≥ ${Math.round(t.min_p*100)}% PROB`); })].join("");
+  $("cal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td><td class="${b.n&&b.actual-b.pred<-0.05?"neg":b.n&&b.actual-b.pred>0.05?"pos":""}">${b.n?((b.actual-b.pred)>=0?"+":"")+((b.actual-b.pred)*100).toFixed(1)+" pts":"–"}</td></tr>`).join("")}</tbody>`;
+  const q = norm(S.q);
+  const pl = R.players.filter(p=>p.by_stat[st] && (!q || norm(p.player).includes(q))).slice(0,60);
+  $("players").innerHTML = pl.length ? `<thead><tr><th>Player</th><th>Pos</th><th>${NAMES[st]} record</th><th>Hit rate</th><th>All stats</th></tr></thead><tbody>${pl.map(p=>`<tr><td>${p.player} <span class="foot">${p.team}</span></td><td>${p.pos}</td><td>${p.by_stat[st].record}</td><td>${pct(p.by_stat[st].hit_rate)}</td><td>${p.record}</td></tr>`).join("")}</tbody>` : `<tbody><tr><td class="empty">No graded players match.</td></tr></tbody>`;
+  const rows = R.recent.filter(r=>r.stat===st && (S.rung==="all"||r.rung===Number(S.rung)) && (!q||norm(r.player).includes(q))).slice(0,300);
+  $("recentNote").textContent = `last ${R.recent_dates.length} graded date${R.recent_dates.length===1?"":"s"} (${R.recent_dates.join(", ")}), highest P first`;
+  $("recent").innerHTML = rows.length ? `<thead><tr><th>Date</th><th>Player</th><th>Game</th><th>Pick</th><th>Model said</th><th>Actual</th><th>Result</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.date}</td><td>${r.player} <span class="foot">${r.pos}</span></td><td>${r.team} v ${r.opp}</td><td>${NAMES[r.stat]} ${r.rung}+</td><td>${pct(r.p)}</td><td>${r.actual}</td><td class="${r.hit?"pos":"neg"}">${r.hit?"HIT":"MISS"}</td></tr>`).join("")}</tbody>` : `<tbody><tr><td class="empty">Nothing graded for this filter yet.</td></tr></tbody>`;
+}
+$("fStat").onchange = e => { S.stat = e.target.value; S.rung="all"; renderStat(); };
+$("fRung").onchange = e => { S.rung = e.target.value; renderStat(); };
+$("fQ").oninput = e => { S.q = e.target.value; renderStat(); };
+fetch(`data/performance.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{ R=d; render(); }).catch(()=>{ $("status").textContent="Could not load performance.json."; });
+</script>
+</body>
+</html>

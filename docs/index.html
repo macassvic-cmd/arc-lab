@@ -111,7 +111,8 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
-    <a class="navlink" href="backtest.html">Backtest</a>
+    <a class="navlink" href="performance.html">Performance</a>
+    <a class="navlink" href="backtest.html" style="margin-left:0">Backtest</a>
   </nav>
 </header>
 
@@ -250,13 +251,13 @@ function renderThrees(){
   rows.sort((a,b)=> k==="rk" ? a.rk-b.rk : (b[k]??0)-(a[k]??0));
   const hasLines = rows.some(r=>r.ud!==undefined);
   const head = `<thead><tr><th>Player</th><th data-k="mean">Min · 3PA</th><th data-k="mean">Proj</th>
-    <th data-k="p2">Makes 1+ to 5+</th><th data-k="rk">Opp rank</th>
+    <th data-k="p2">Makes 1+ to 7+</th><th data-k="rk">Opp rank</th>
     ${hasLines?`<th data-k="edge">Underdog</th>`:""}<th>Last 10</th></tr></thead>`;
   const body = rows.map(({p,L,ud,mean,rk,edge})=>`<tr>
     <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp} · ${pct(p.make_p)} 3P</div></td>
     <td>${p.min.toFixed(0)} min<div class="meta">${p.tpa.mean.toFixed(1)} att</div></td>
     <td class="big">${mean.toFixed(1)}</td>
-    <td><span class="ladder">${[1,2,3,4,5].map(n=>{const v=atLeast(p.tpm.pmf,n);
+    <td><span class="ladder">${[1,2,3,4,5,6,7].map(n=>{const v=p.ladder?.tpm?.[n] ? p.ladder.tpm[n].p : atLeast(p.tpm.pmf,n);
       return `<span style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ threes">${pct(v)}</span>`}).join("")}</span></td>
     <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>
     ${hasLines?`<td>${ud!==undefined?`${ud} <span class="${edge>=.03?"pos":edge<0?"neg":""}">${pct(over(p.tpm.pmf,ud))}</span>`:"–"}</td>`:""}
@@ -279,11 +280,13 @@ function renderProps(){
   const k = S.sortP;
   rows.sort((a,b)=> k==="auto" ? (b.fromUD-a.fromUD) || (a.fromUD ? b.edge-a.edge : b.mean-a.mean)
                   : k==="rk" ? a.rk-b.rk : b[k]-a[k]);
-  const head = `<thead><tr><th>Player</th><th data-k="mean">Min</th><th data-k="mean">Proj</th><th>Line</th>
+  const RUNGS = {tpm:[3,4,5,6,7], pts:[10,15,20,25,30], ast:[4,6,8,10], reb:[6,8,10,12]};
+  const head = `<thead><tr><th>Player</th><th data-k="mean">Min</th><th data-k="mean">Proj</th>${RUNGS[st]?`<th>Ladder ${RUNGS[st][0]}+ to ${RUNGS[st][RUNGS[st].length-1]}+</th>`:""}<th>Line</th>
     <th data-k="po">Over</th><th data-k="edge">Edge</th><th data-k="hit">L10 over</th><th data-k="rk">Opp rank</th><th>Last 10</th></tr></thead>`;
   const body = rows.map(({p,L,po,edge,mean,hits,fromUD,rk})=>`<tr>
     <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td>
     <td>${p.min.toFixed(0)}</td><td class="big">${mean.toFixed(1)}</td>
+    ${RUNGS[st]?`<td><span class="ladder">${RUNGS[st].map(n=>{const e=p.ladder?.[st]?.[n]; const v=e?e.p:(st==="tpm"?atLeast(p.tpm.pmf,n):null); return v==null?"":`<span style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ ${st.toUpperCase()}">${pct(v)}</span>`;}).join("")}</span></td>`:""}
     <td><input type="number" step="0.5" value="${L}" data-id="${p.id}" aria-label="Line for ${p.name}">
       <div class="meta">${fromUD?"Underdog":"Fair"}</div></td>
     <td class="big">${pct(po)}</td>
