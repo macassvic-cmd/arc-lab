@@ -1,1 +1,1 @@
-{"sigma":{"pts":6.5044,"ast":2.0175,"reb":2.6527},"n":18375,"source":"SD of (projected mean - actual) over the 2023-24 walk-forward rows of the v2 engine (data/v2_rows_2024.csv.gz, players who played)","rule":"backtests/ladder_v2_rule.md section 1","generated":"2026-10-20T06:55:42Z"}
+{"sigma":{"pts":6.5044,"ast":2.018,"reb":2.6524},"n":18372,"source":"SD of (projected mean - actual) over the 2023-24 walk-forward rows of the v2 engine (data/v2_rows_2024.csv.gz, players who played)","rule":"backtests/ladder_v2_rule.md section 1","generated":"2026-10-20T08:35:41Z"}
