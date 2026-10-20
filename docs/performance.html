@@ -114,7 +114,7 @@ function render(){
     return;
   }
   const L = R.log, O = R.overall;
-  $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · shipped P is raw except ${R.calibration_adopted.length? R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate)" : "nowhere (no stat passed the recalibration gate)"}.`;
+  $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · ${R.calibration_adopted.length? "shipped P is recalibrated for "+R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate) and raw elsewhere" : "shipped P is the raw engine probability for every stat (no stat passed the recalibration gate)"}.`;
   $("cards").innerHTML = [card(O.record,"overall record, every graded rung"), card(pct(O.hit_rate),"hit rate"), card(L.graded.toLocaleString(),"graded rungs"), card(L.pending.toLocaleString(),"logged, game not yet graded"), card(L.void.toLocaleString(),"void (player did not play)")].join("");
   $("tiers").innerHTML = R.tiers.map(t=>card(pct(t.hit_rate), `≥ ${Math.round(t.min_p*100)}% PROB · ${t.record}`, "tier")).join("");
   $("tierStat").innerHTML = `<thead><tr><th>Stat</th><th>All</th>${R.tiers.map(t=>`<th>≥ ${Math.round(t.min_p*100)}%</th>`).join("")}</tr></thead><tbody>${Object.keys(NAMES).map(st=>`<tr><td>${NAMES[st]}</td><td>${rec(R.by_stat[st])}</td>${R.tiers.map(t=>`<td>${rec(t.by_stat[st])}</td>`).join("")}</tr>`).join("")}</tbody></table>`;

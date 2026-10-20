@@ -41,7 +41,7 @@ nav{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
 nav button{font:600 19px var(--display);background:none;border:0;color:var(--muted);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
 nav button[aria-selected="true"]{color:var(--ink);border-color:var(--rim)}
 nav .navlink{font:600 19px var(--display);color:var(--muted);padding:10px 14px;margin-left:auto;text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent}
-nav .navlink::after{content:" 97";font-size:14px}
+nav .navlink::after{content:" ↗";font-size:14px}
 
 main{max-width:1200px;margin:0 auto;padding:16px 20px 60px}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
@@ -181,6 +181,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", newsTag:"all",
            sort3:"p2", sortP:"auto", lines:{}, edits:{}, be:55};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
+if(["threes","props","defense","news","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","defense","news","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","POINTS":"pts","REB":"reb","REBOUNDS":"reb",
