@@ -6104,3 +6104,8 @@ event_id,date,season,phase,idx,team,opp,home,player_id,player,pos,started,shot_t
 401908948,2026-10-16,2027,preseason,4,PHX,UTAH,1,3136193,Devin Booker,SG,1,mid,0,49.0,0
 401908948,2026-10-16,2027,preseason,5,UTAH,PHX,0,5041955,Darryn Peterson,SG,1,mid,1,58.0,0
 401914126,2026-10-16,2027,preseason,1,IND,MIL,1,3133603,Kelly Oubre Jr.,SG,1,rim,1,5.0,
+401909088,2026-10-20,2027,regular,1,DET,BOS,1,3908845,John Collins,SF,1,3,0,28.0,
+401909088,2026-10-20,2027,regular,2,DET,BOS,1,3157465,Duncan Robinson,SF,1,3,0,48.0,1
+401909088,2026-10-20,2027,regular,3,DET,BOS,1,3908845,John Collins,SF,1,rim,1,51.0,1
+401909089,2026-10-20,2027,regular,1,PHI,NY,0,4431678,Tyrese Maxey,SG,1,3,1,16.0,
+401909090,2026-10-20,2027,regular,1,SA,OKC,1,4395630,Devin Vassell,SG,1,3,1,18.0,
