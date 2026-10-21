@@ -122,6 +122,9 @@ ul.notes li{margin:4px 0}
   <h2 id="v2gateh">v2 ladder engine: recalibration gate <span>isotonic maps fit on 2023-24, gated per stat on 2024-25 &middot; locked rule &middot; no prices</span></h2>
   <div id="v2gate"><div class="empty">Not run yet. Rule: backtests/ladder_v2_rule.md; script: scripts/ladder_calibrate.py.</div></div>
 
+  <h2 id="fbgateh">First basket v2: attempt-based model gate <span>fit 2024-25, graded 2025-26 against uniform 1/10 and the v1 makes-only model &middot; locked rule &middot; no prices</span></h2>
+  <div id="fbgate"><div class="empty">Not run yet. Rule: backtests/first_basket_v2_rule.md; script: scripts/first_basket_model.py.</div></div>
+
   <section id="v3cov-wrap">
     <h2>v3 data foundation: coverage</h2>
     <p class="sub">Play-by-play (ESPN summary, zero credits) for every regular-season game, the derived stint / rotation / lineup tables and the game-context table. Numbers only; modelling waits for the feature gate (backtests/v3_feature_gate.md).</p>
@@ -318,6 +321,20 @@ function renderGate(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Generated ${R.generated}.</p>`;
 }
 fetch("data/ladder_v2_gate.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderGate).catch(()=>{});
+function renderFB(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, ci=c=>c?` [${c[0]}, ${c[1]}]`:"", M=R.grade.models, F=R.fit.models, C=R.fit.constants, K=R.fit.K;
+  const row=(name,m)=>`<tr><td>${name}</td><td>${m.n.toLocaleString()}</td><td>${num(m.log_loss,4)}</td><td>${pct(m.top1)}</td><td>${pct(m.top3)}</td></tr>`;
+  const ok=R.decision==="SHIP";
+  $("fbgate").innerHTML = `<div class="stats">${[card(ok?"SHIP":"FAIL",R.decision_text),card(num(M.v2.log_loss,4),`v2 log loss, 2025-26 (${M.v2.n.toLocaleString()} games)`),card(num(M.v1.log_loss,4),"v1 makes-only log loss"),card(num(M.uniform.log_loss,4),"uniform 1/10 log loss"),card(pct(M.v2.top1),"v2 top pick scored first"),card(pct(M.v2.top3),"scorer in v2's top 3")].join("")}</div>
+    <table><thead><tr><th>2025-26 (graded)</th><th>Games</th><th>Log loss</th><th>Top-1</th><th>Top-3</th></tr></thead><tbody>${row("v2 attempt-based",M.v2)}${row("v1 makes-only",M.v1)}${row("uniform 1/10",M.uniform)}</tbody></table>
+    <p class="sub">v2 &minus; uniform log-loss gain ${(M.uniform.log_loss-M.v2.log_loss).toFixed(4)}${ci(R.grade.v2_minus_uniform_ci)} &rarr; ${R.grade.beats_uniform?'<span class="pos">pass</span>':'<span class="neg">fail</span>'}; v2 &minus; v1 gain ${(M.v1.log_loss-M.v2.log_loss).toFixed(4)}${ci(R.grade.v2_minus_v1_ci)} &rarr; ${R.grade.beats_v1?'<span class="pos">pass</span>':'<span class="neg">fail</span>'} (paired bootstrap over games, 95% CI must exclude 0).</p>
+    <table><thead><tr><th>2024-25 (fit, walk-forward)</th><th>Games</th><th>Log loss</th><th>Top-1</th><th>Top-3</th></tr></thead><tbody>${row("v2 attempt-based",F.v2)}${row("v1 makes-only",F.v1)}${row("uniform 1/10",F.uniform)}</tbody></table>
+    <p class="sub">Constants frozen after the 2024-25 coordinate search: K_tip ${K.K_tip}, K_h2h ${K.K_h2h}, K_a ${K.K_a}, K_b ${K.K_b}, K_c ${K.K_c}. Chain terms from the 2024-25 opening sequences (${C.n_games.toLocaleString()} games, ${C.n_attempts.toLocaleString()} attempts): first attempt by the possession team r = ${C.r}, same team after a miss o = ${C.o}, make rates rim ${C.M.rim} / mid ${C.M.mid} / 3 ${C.M["3"]}, bench share eps = ${C.eps}, first made field goal by the possession team r1 = ${C.r1}.</p>
+    ${R.coverage&&R.coverage.length?`<h3>Label coverage (first made field goal)</h3><table><thead><tr><th>Season</th><th>Phase</th><th>Games</th><th>Play file</th><th>Gradable</th><th>Jump ball captured</th><th>First attempt by possession team</th><th>Scorer started</th><th>Median attempts to first FG</th></tr></thead><tbody>${R.coverage.map(b=>`<tr><td>${b.season}</td><td>${b.phase}</td><td>${b.games}</td><td>${b.games_with_play_file}</td><td><b>${b.gradable}</b> <span class="sub">${pct(b.gradable_share)}</span></td><td>${pct(b.jump_ball_captured_share)}</td><td>${pct(b.first_attempt_by_possession_team_share)}</td><td>${pct(b.first_fg_scorer_started_share)}</td><td>${b.median_attempts_to_first_fg==null?"&ndash;":b.median_attempts_to_first_fg}</td></tr>`).join("")}</tbody></table>`:""}
+    <p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"&ndash;"}. Generated ${R.generated}.</p>`;
+}
+fetch("data/first_basket_gate.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderFB).catch(()=>{});
 function renderV3(R){
   if(!R) return;
   const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, n=x=>x==null?"–":Number(x).toLocaleString(), sh=x=>x==null?"–":(100*x).toFixed(1)+"%";

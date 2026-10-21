@@ -1,9 +1,12 @@
 """Play-by-play store: ESPN summary `plays` for every regular-season game, compacted to data/pbp_raw/<event_id>.json.gz (a local
-cache like data/odds_*; never served). Zero Odds API credits. Shared by first_basket.py (v2) and the v3 stint / lineup / context
-builders.
+cache like data/odds_*; never served). Zero Odds API credits. Shared by first_basket.py / first_shot.py and the v3 stint /
+lineup / context builders. Postseason and preseason games (first_basket_v2_rule.md, section 1) are enumerated from the ESPN
+scoreboard with `seasontype` 3 / 1 day by day and stored with their box-score roster, since they are outside the box-score files.
 
   python pbp_store.py --seasons 2025 2026 2024      backfill (skips games already stored)
   python pbp_store.py                               games of the last 3 days from the live box-score file
+  python pbp_store.py --phase postseason --seasons 2025 2026     play-in + playoffs of 2024-25 and 2025-26
+  python pbp_store.py --phase preseason --seasons 2025 2026 2027  the 2024, 2025 and 2026 preseasons
 """
 import argparse
 import datetime as dt
@@ -40,16 +43,45 @@ def events(seasons=None, days=None):
     return d.sort_values("date").reset_index(drop=True)
 
 
-def get(url, tries=3):
+def get(url, tries=3, params=None):
     for i in range(tries):
         try:
-            r = S.get(url, timeout=30)
+            r = S.get(url, params=params, timeout=30)
             if r.status_code == 200:
                 return r.json()
         except requests.RequestException:
             pass
         time.sleep(2 * (i + 1))
     return None
+
+
+# Day spans scanned on the ESPN scoreboard for games outside the regular season (season = ESPN season year, e.g. 2026 = 2025-26).
+PHASE_SPANS = {"postseason": (3, lambda y: (dt.date(y, 4, 10), dt.date(y, 6, 30))), "preseason": (1, lambda y: (dt.date(y - 1, 9, 25), dt.date(y - 1, 10, 25)))}
+EXTRA = DATA_DIR / "pbp_extra_events.csv"   # every postseason / preseason game found, committed so Actions can label without rescanning
+
+
+def extra_events(phase, seasons, sleep=0.15):
+    """(event_id, date, season, phase, home, away) for completed NBA-vs-NBA games of the phase; appended to data/pbp_extra_events.csv."""
+    from common import NBA_TEAMS
+    seasontype, span = PHASE_SPANS[phase]
+    known = pd.read_csv(EXTRA, dtype={"event_id": str}) if EXTRA.exists() else pd.DataFrame(columns=["event_id", "date", "season", "phase", "home", "away"])
+    rows = []
+    for season in seasons:
+        day, end = span(int(season))
+        while day <= end:
+            data = get(f"{BASE}/scoreboard", params={"dates": day.strftime("%Y%m%d"), "seasontype": seasontype}) or {}
+            for e in data.get("events", []):
+                comp = e["competitions"][0]
+                tm = {c["homeAway"]: (c.get("team") or {}).get("abbreviation") for c in comp["competitors"]}
+                if (e.get("season") or {}).get("type") != seasontype or not comp["status"]["type"].get("completed") or not all(a in NBA_TEAMS for a in tm.values()):
+                    continue   # not this phase, not final, or an exhibition against a non-NBA club
+                rows.append({"event_id": e["id"], "date": day.isoformat(), "season": int(season), "phase": phase, "home": tm["home"], "away": tm["away"]})
+            day += dt.timedelta(days=1); time.sleep(sleep)
+    found = pd.DataFrame(rows, columns=known.columns)
+    allx = pd.concat([known, found]).drop_duplicates("event_id").sort_values(["date", "event_id"])
+    allx.to_csv(EXTRA, index=False)
+    print(f"[pbp] {phase} {list(seasons)}: {len(found)} games on the scoreboard, {len(allx)} in {EXTRA.name}")
+    return found
 
 
 def clock_secs(s):
@@ -78,23 +110,27 @@ def compact(summary):
                       "att": p.get("pointsAttempted"), "shooting": bool(p.get("shootingPlay")), "home": p.get("homeScore"), "away": p.get("awayScore"),
                       "ath": [(a.get("athlete") or {}).get("id") for a in p.get("participants", [])], "x": (p.get("coordinate") or {}).get("x"), "y": (p.get("coordinate") or {}).get("y"),
                       "wall": p.get("wallclock")})
-    starters = {}
+    starters, roster = {}, {}
     for block in summary.get("boxscore", {}).get("players", []):
         tid = block["team"]["id"]
         for stat in block.get("statistics", []):
             starters[tid] = [a["athlete"]["id"] for a in stat.get("athletes", []) if a.get("starter")]
+            labels = [l.upper() for l in stat.get("labels", [])]
+            roster[tid] = [{"id": (a.get("athlete") or {}).get("id"), "name": (a.get("athlete") or {}).get("displayName"), "pos": ((a.get("athlete") or {}).get("position") or {}).get("abbreviation"),
+                            "starter": int(bool(a.get("starter"))), "min": dict(zip(labels, a.get("stats") or [])).get("MIN"), "dnp": bool(a.get("didNotPlay"))}
+                           for a in stat.get("athletes", []) if (a.get("athlete") or {}).get("id")]
             break
-    return {"meta": meta, "starters": starters, "plays": plays}
+    return {"meta": meta, "starters": starters, "roster": roster, "plays": plays}
 
 
-def store(event_id, date, season):
+def store(event_id, date, season, phase="regular"):
     out = RAW / f"{event_id}.json.gz"
     if out.exists():
         return "cached"
     summ = get(f"{BASE}/summary?event={event_id}")
     if summ is None:
         return "fetch_failed"
-    doc = {"event_id": str(event_id), "date": date, "season": int(season), "fetched": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), **compact(summ)}
+    doc = {"event_id": str(event_id), "date": date, "season": int(season), "phase": phase, "fetched": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), **compact(summ)}
     doc["status"] = "ok" if doc["plays"] else "no_plays"
     RAW.mkdir(parents=True, exist_ok=True)
     with gzip.open(out, "wt", encoding="utf-8") as f:
@@ -115,11 +151,16 @@ if __name__ == "__main__":
     ap.add_argument("--seasons", nargs="*", help="ESPN season years, e.g. 2025 = 2024-25")
     ap.add_argument("--days", type=int, default=3)
     ap.add_argument("--sleep", type=float, default=0.4)
+    ap.add_argument("--phase", choices=list(PHASE_SPANS), help="postseason / preseason games of --seasons (scoreboard scan) instead of regular-season box-score games")
     a = ap.parse_args()
-    ev = events(a.seasons) if a.seasons else events(days=a.days)
+    if a.phase:
+        ev = extra_events(a.phase, a.seasons or [])
+    else:
+        ev = events(a.seasons) if a.seasons else events(days=a.days)
+        ev["phase"] = "regular"
     counts, t0 = {}, time.time()
     for i, r in enumerate(ev.itertuples(), 1):
-        st = store(r.event_id, r.date, r.season)
+        st = store(r.event_id, r.date, r.season, r.phase)
         counts[st] = counts.get(st, 0) + 1
         if st != "cached":
             time.sleep(a.sleep)

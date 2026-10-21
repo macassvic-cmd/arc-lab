@@ -92,9 +92,14 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   <div class="scroll"><table id="recent"></table></div>
 
   <section id="fbSec" hidden>
-    <h2>First basket <span>P(player scores first), ten starters, graded binary</span></h2>
+    <h2>First basket <span>P(player scores the game's first made field goal), ten projected starters per game, graded binary</span></h2>
     <div class="stats" id="fbCards"></div>
+    <p class="sub">Hit rate measures accuracy, not profit. Edge requires comparing to prices.</p>
+    <div class="stats" id="fbCards2"></div>
+    <h3>Calibration <span class="foot">every logged starter row, model P vs share who scored first</span></h3>
     <div class="scroll"><table id="fbCal"></table></div>
+    <h3>Recent games <span class="foot">top pick vs the actual first scorer</span></h3>
+    <div class="scroll"><table id="fbRecent"></table></div>
   </section>
 
   <h2>Method</h2>
@@ -124,8 +129,10 @@ function render(){
   renderStat();
   if(R.first_basket && R.first_basket.overall && R.first_basket.overall.n){
     const F = R.first_basket; $("fbSec").hidden = false;
-    $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded")].join("");
-    $("fbCal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Hit</th></tr></thead><tbody>${F.buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.actual)}</td></tr>`).join("")}</tbody>`;
+    $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded"), card(F.pending_games,"logged, not yet graded"), card(F.void_games,"void (no clean label)")].join("");
+    $("fbCards2").innerHTML = [card(pct(F.top3_rate),"scorer in the top 3"), card(F.log_loss_v2==null?"\u2013":F.log_loss_v2.toFixed(3),`log loss (uniform 1/10: ${F.log_loss_uniform==null?"\u2013":F.log_loss_uniform.toFixed(3)})`), card(pct(F.starter_match_rate),"projected starters who actually started"), card(pct(F.scorer_among_logged_share),"first scorer was among the ten logged")].join("");
+    $("fbCal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Scored first</th></tr></thead><tbody>${F.buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td></tr>`).join("")}</tbody>`;
+    $("fbRecent").innerHTML = `<thead><tr><th>Date</th><th>Game</th><th>Top pick</th><th>P</th><th>First scorer</th><th>Hit</th><th>Top 3</th></tr></thead><tbody>${(F.recent||[]).map(r=>`<tr><td>${r.date}</td><td>${r.away} @ ${r.home}</td><td>${r.top_pick}</td><td>${pct(r.top_p)}</td><td>${r.scorer}${r.scorer_logged?"":" (not logged)"}</td><td class="${r.hit?"pos":"neg"}">${r.hit?"hit":"miss"}</td><td>${r.top3?"yes":"no"}</td></tr>`).join("")}</tbody>`;
   }
   $("method").innerHTML = R.method.map(m=>`<li>${m}</li>`).join("");
 }

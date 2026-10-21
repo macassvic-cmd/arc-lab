@@ -17,6 +17,7 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | `scripts/ladder_log.py` | Both data workflows | v2 ladders: appends every pre-tip P(k+) to the immutable `data/ladder_log.csv`, grades the last pre-tip snapshot hit/miss, writes `performance.json` |
 | `scripts/ladder_calibrate.py` | Manual | Isotonic recalibration of the ladders under `backtests/ladder_v2_rule.md` (fit 2023-24, gate 2024-25); adopted maps in `data/ladder_calibration.json` |
 | `scripts/pbp_store.py`, `scripts/first_basket.py` | Update workflow | ESPN play-by-play cache (`data/pbp_raw/`, not committed) and first-basket labels + coverage |
+| `scripts/first_shot.py`, `scripts/first_basket_model.py` | Update workflow (labels, snapshot, grade); gate manual | First-shot labels (`data/first_shot_*.csv`, regular season + postseason + preseason), the attempt-based first-basket model under `backtests/first_basket_v2_rule.md`, its gate (`docs/data/first_basket_gate.json`), the append-only `data/first_basket_log.csv` and its grading |
 | `docs/index.html` | GitHub Pages | The site |
 | `docs/performance.html` | GitHub Pages | Every logged ladder rung graded against the box score: tiers, positions, calibration per rung, live season only |
 
