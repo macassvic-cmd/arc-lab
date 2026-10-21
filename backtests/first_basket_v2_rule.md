@@ -106,3 +106,16 @@ normalised over the five starters. P_v1(i) = P(T scores first) * share(i) * (1 -
 Own section: headline record and hit rate of the top pick, mean P of the top pick, games graded, calibration table, top-3 rate,
 log loss vs uniform, starter-projection match rate, and the line "Hit rate measures accuracy, not profit. Edge requires
 comparing to prices." Live data only; walk-forwards stay on the Backtest page.
+
+## Addendum, 2026-10-21: shipped by CEO override after a FAIL
+
+Sections 0-6 above are unchanged. The gate ran as written and FAILED (`docs/data/first_basket_gate.json`: 2025-26 log loss v2
+2.2930 vs v1 2.3009 vs uniform 2.3034, both paired-bootstrap CIs include 0). Section 4 says a fail means no live log and no page
+section. The CEO overruled that outcome on 2026-10-21 and ordered the model live. Under that order:
+
+- The gate JSON and the Backtest page verdict stay exactly as reported.
+- `data/first_basket_params.json` is a number-for-number copy of the gate's published 2024-25 fit block (K_tip 5, K_h2h 10, K_a 40,
+  K_b 20, K_c 8; r .8691, o .2987, M rim .582 / mid .4488 / 3 .3545, eps .0008, r1 .6385). No refit, no constant change. Section 2d's
+  "two complete seasons for the live model" re-estimation was not run, on the same order.
+- Sections 5 and 6 run as written from the first pre-tip snapshot of 2026-10-21. 2026-10-20 stays blank.
+- Every page that shows live first-basket output carries the override note and the accuracy-not-profit line.

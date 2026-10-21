@@ -49,7 +49,10 @@ jobs:
         run: |
           python pbp_store.py
           python first_basket.py backfill
-          python first_shot.py backfill   # labels keep accruing; the v2 model failed its gate (docs/data/first_basket_gate.json), so nothing is logged live
+          python first_shot.py backfill   # first-shot labels (the first-basket model's grading target)
+      - name: Grade the first-basket log (last pre-tip snapshot vs first-shot labels; merged into performance.json by the ladder grade)
+        working-directory: scripts
+        run: python first_basket_model.py grade   # live by CEO override 2026-10-21; the gate verdict (FAIL) stands in docs/data/first_basket_gate.json
       - name: Grade the ladder log (last pre-tip snapshot vs box scores)
         working-directory: scripts
         run: python ladder_log.py grade
@@ -68,6 +71,9 @@ jobs:
       - name: Ladder log snapshot (append-only, pre-tip rows only)
         working-directory: scripts
         run: python ladder_log.py snapshot
+      - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
+        working-directory: scripts
+        run: python first_basket_model.py snapshot
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"

@@ -2,7 +2,10 @@
 
   python first_basket_model.py gate       walk-forward 2024-25 (constant search, section 2f) and 2025-26 (grade, section 4) ->
                                           docs/data/first_basket_gate.json + data/first_basket_params.json (frozen constants)
+  python first_basket_model.py freeze     write data/first_basket_params.json from the gate's published fit block, as-is (2026-10-21
+                                          override: the gate FAILED and stays FAILED; the model ships on the CEO's order, no refit)
   python first_basket_model.py snapshot   append tonight's ten projected starters per untipped game to data/first_basket_log.csv
+                                          and write docs/data/first_basket_today.json (tonight's projections for the Performance page)
   python first_basket_model.py grade      grade the last pre-tip snapshot of every logged game -> docs/data/first_basket_performance.json
 
 Target: the game's first made field goal (free throws excluded). Inputs are the committed label tables from first_shot.py; no raw
@@ -28,6 +31,9 @@ LOG = DATA_DIR / "first_basket_log.csv"
 PARAMS = DATA_DIR / "first_basket_params.json"
 GATE = SITE_DATA / "first_basket_gate.json"
 PERF = SITE_DATA / "first_basket_performance.json"
+TODAY = SITE_DATA / "first_basket_today.json"
+OVERRIDE = ("Shipped 2026-10-21 by CEO override after the locked gate FAILED (docs/data/first_basket_gate.json, Backtest page). "
+            "Constants are the gate's published 2024-25 fit, unchanged; the gate verdict is unchanged.")
 RULE = "backtests/first_basket_v2_rule.md"
 LOG_FIELDS = ["date", "event_id", "tip", "team", "opp", "home", "player_id", "player", "pos", "p_first_basket", "p_first_attempt", "top_pick", "jumper", "logged_at"]
 TYPES = ("rim", "mid", "3")
@@ -303,6 +309,21 @@ def gate():
 
 
 # ---------------------------------------------------------------- live
+def freeze():
+    """CEO override (2026-10-21): write the frozen-parameter file from the fit block already published in the gate JSON, number
+    for number. No refit, no constant change, no edit to the gate JSON. Refuses to overwrite an existing file."""
+    if PARAMS.exists():
+        print(f"[first-basket] {PARAMS.name} already frozen: not touched"); return
+    g = read_json(GATE, None)
+    if not g or g.get("decision") is None:
+        raise SystemExit("[first-basket] no gate JSON to freeze from")
+    write_json(PARAMS, {"rule_file": RULE, "rule_commit": g["rule_commit"], "gate_decision": g["decision"], "gate_generated": g["generated"],
+                        "frozen": now().strftime("%Y-%m-%dT%H:%M:%SZ"), "K": g["fit"]["K"], "constants": g["fit"]["constants"],
+                        "constants_note": "copied as-is from docs/data/first_basket_gate.json fit block (2024-25 chain terms); frozen for 2026-27",
+                        "override": OVERRIDE})
+    print(f"[first-basket] frozen K={g['fit']['K']} constants={g['fit']['constants']} (gate decision {g['decision']})")
+
+
 def projected_starters(P, box):
     """Per team on tonight's slate: the five active players with the highest start share over their last five games, projected
     minutes breaking ties (rule section 5)."""
@@ -334,30 +355,42 @@ def snapshot():
     starters = projected_starters(P, box)
     K, C = params["K"], params["constants"]
     t, ts = now(), now().strftime("%Y-%m-%dT%H:%M:%SZ")
-    rows, skipped = [], 0
+    rows, today, skipped = [], [], []
     for g in P["games"]:
         tip = dt.datetime.fromisoformat(g["start"].replace("Z", "+00:00"))
+        tip_s = tip.strftime("%Y-%m-%dT%H:%M:%SZ")
         if t >= tip:
-            skipped += 1; continue
+            skipped.append({"event_id": g["event_id"], "away": g["away"], "home": g["home"], "tip": tip_s, "reason": "already tipped when this run started (earlier rows, if any, stand)"}); continue
         hs, as_ = starters.get(g["home"], []), starters.get(g["away"], [])
         if len(hs) != 5 or len(as_) != 5:
-            print(f"[first-basket] {g['away']}@{g['home']}: fewer than five projected starters, skipped"); continue
+            short = [tm for tm, lst in ((g["home"], hs), (g["away"], as_)) if len(lst) != 5]
+            skipped.append({"event_id": g["event_id"], "away": g["away"], "home": g["home"], "tip": tip_s, "reason": f"fewer than five projected starters for {', '.join(short)}: not guessed"})
+            print(f"[first-basket] {g['away']}@{g['home']}: {skipped[-1]['reason']}, skipped"); continue
         strs = [Row(team=p["team"], player_id=p["id"], player=p["name"], pos=p["pos"]) for p in hs + as_]
         game = Row(event_id=g["event_id"], date=P["date"], season=pre_season, home=g["home"], away=g["away"], label_clean=0, first_fg_id=None, first_fg_started=None)
         G = T.features(game, strs, pre_season=pre_season)
         S = score_game(G, K, C)
         top = int(np.argmax(S["v2"]))
+        game_rows = []
         for i, s in enumerate(G["starters"]):
-            rows.append({"date": P["date"], "event_id": g["event_id"], "tip": tip.strftime("%Y-%m-%dT%H:%M:%SZ"), "team": s["team"], "opp": g["away"] if s["home"] else g["home"], "home": s["home"],
-                         "player_id": s["player_id"], "player": s["player"], "pos": s["pos"], "p_first_basket": round(float(S["v2"][i]), 4), "p_first_attempt": round(float(S["p_attempt"][i]), 4),
-                         "top_pick": int(i == top), "jumper": s["jumper"], "logged_at": ts})
+            game_rows.append({"date": P["date"], "event_id": g["event_id"], "tip": tip_s, "team": s["team"], "opp": g["away"] if s["home"] else g["home"], "home": s["home"],
+                              "player_id": s["player_id"], "player": s["player"], "pos": s["pos"], "p_first_basket": round(float(S["v2"][i]), 4), "p_first_attempt": round(float(S["p_attempt"][i]), 4),
+                              "top_pick": int(i == top), "jumper": s["jumper"], "logged_at": ts})
+        rows += game_rows
+        today.append({"event_id": g["event_id"], "tip": tip_s, "away": g["away"], "home": g["home"], "p_tip_home": round(float(S["p_tip"]), 3),
+                      "top_pick": game_rows[top]["player"], "top_team": game_rows[top]["team"], "top_p": game_rows[top]["p_first_basket"],
+                      "starters": [{k: r[k] for k in ("team", "home", "player", "pos", "p_first_basket", "p_first_attempt", "top_pick", "jumper")} for r in game_rows]})
     new_file = not LOG.exists()
     with open(LOG, "a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=LOG_FIELDS)
         if new_file:
             w.writeheader()
         w.writerows(rows)
-    print(f"[first-basket] appended {len(rows)} rows for {P['date']} ({skipped} games skipped: already tipped)")
+    write_json(TODAY, {"date": P["date"], "generated": ts, "slate_updated": P.get("updated"), "games": today, "skipped": skipped, "rows_appended": len(rows),
+                       "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.", "override": OVERRIDE, "params_frozen": params.get("frozen"), "K": K, "constants": C})
+    print(f"[first-basket] appended {len(rows)} rows for {P['date']} ({len(today)} games logged, {len(skipped)} skipped)")
+    for x in skipped:
+        print(f"[first-basket]   skipped {x['away']}@{x['home']} ({x['tip']}): {x['reason']}")
     return len(rows)
 
 
@@ -410,11 +443,12 @@ def grade():
            "recent": pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60).to_dict("records") if n else [],
            "method": ["Ten projected starters per game logged before tip; the graded snapshot is the last row before tip. Append-only log (data/first_basket_log.csv).",
                       "Hit = the player scored the game's first made field goal (free throws excluded). A game without a clean label is void (shown, not hidden).",
-                      f"Calibration cells with n < {THIN} are flagged thin. No tuning on these results, ever; constants frozen by the 2025-26 gate ({RULE})."]}
+                      f"Calibration cells with n < {THIN} are flagged thin. No tuning on these results, ever; constants frozen from the gate's 2024-25 fit ({RULE}).",
+                      OVERRIDE]}
     write_json(PERF, doc)
     print(f"[first-basket] graded {n} games ({doc['overall']['record']}), {doc['pending_games']} pending, {doc['void_games']} void")
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "gate"
-    {"gate": gate, "snapshot": snapshot, "grade": grade}[cmd]()
+    {"gate": gate, "freeze": freeze, "snapshot": snapshot, "grade": grade}[cmd]()
