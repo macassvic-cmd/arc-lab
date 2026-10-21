@@ -344,13 +344,15 @@ class Row:
 def team_first_shooters(games, st, seasons):
     """team -> {player_id: (name, games in which he started and took the team's first attempt)} over the given seasons."""
     started = set(zip(st.event_id, st.player_id))
-    out = defaultdict(lambda: defaultdict(lambda: [None, 0]))
+    out = defaultdict(lambda: defaultdict(lambda: [None, 0])); team_games = defaultdict(int)
     for g in games[games.season.isin(seasons)].itertuples():
         for side in ("home", "away"):
             team, pid, name = getattr(g, side), getattr(g, f"{side}_fga_id"), getattr(g, f"{side}_fga_player")
-            if isinstance(pid, str) and (g.event_id, pid) in started:
-                out[team][pid][0] = name; out[team][pid][1] += 1
-    return out
+            if isinstance(pid, str):
+                team_games[team] += 1
+                if (g.event_id, pid) in started:
+                    out[team][pid][0] = name; out[team][pid][1] += 1
+    return {t: {pid: (nm, c, c / team_games[t]) for pid, (nm, c) in d.items()} for t, d in out.items()}
 
 
 def why_lines(G, S, K, top, shooters):
@@ -381,9 +383,9 @@ def why_lines(G, S, K, top, shooters):
     share_l = f"Takes ~{share:.0%} of {team}'s first shots: {base}" + (", " + ", ".join(movers) if movers else "") + "."
     # role change: a first-shot taker of this team (started, since last season) who is not among tonight's five
     tonight = {x["player_id"] for x in st if x["team"] == team}
-    gone = sorted([(c, nm) for pid, (nm, c) in shooters.get(team, {}).items() if pid not in tonight and c >= 3], reverse=True)[:2]
+    gone = sorted([(sh, c, nm) for pid, (nm, c, sh) in shooters.get(team, {}).items() if pid not in tonight and c >= 5 and sh >= 0.10], reverse=True)[:2]
     if gone:
-        role_l = "; ".join(f"{nm} ({c} of {team}'s first shots since last season) is not starting tonight" for c, nm in gone) + ": that share redistributes pro-rata."
+        role_l = "; ".join(f"{nm} took {sh:.0%} of {team}'s first shots since last season ({c}) and is not in tonight's projected five" for sh, c, nm in gone) + ": that share redistributes pro-rata."
     # shot mix, only when extreme and on his own attempts
     own = np.array([s["types"][t] for t in TYPES], dtype=float); pos = np.array([s["pos_types"][t] for t in TYPES], dtype=float)
     pos_mix = pos / pos.sum() if pos.sum() else np.array([0.4, 0.3, 0.3])
