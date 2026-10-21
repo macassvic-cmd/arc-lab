@@ -366,6 +366,11 @@ def tname(abbr):
     return TEAM_NAMES.get(abbr, abbr)
 
 
+def poss(abbr):
+    nm = tname(abbr)
+    return nm + ("'" if nm.endswith("s") else "'s")
+
+
 def join_names(xs):
     xs = list(xs)
     return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
@@ -416,7 +421,7 @@ def why_lines(G, S, K, top, shooters, tenure):
     sa = shrink(s["f"], s["n"], s["base_pos"], K["K_a"]); sb = shrink(s["f_opp"], s["n_opp"], sa, K["K_b"])
     share = float(S["share"][top]); movers = []
     if here[0]:
-        base = f"Took ~{here[1] / here[0]:.0%} of the {tname(team)}' first shots as a starter since 2024-25 ({here[1]} of {here[0]})"
+        base = f"Took ~{here[1] / here[0]:.0%} of the {poss(team)} first shots as a starter since 2024-25 ({here[1]} of {here[0]})"
         if n_oth:
             base += f"; {f_oth} of {n_oth} for the {join_names(tname(t) for t in others)} before that"
     elif n_oth:
@@ -429,12 +434,12 @@ def why_lines(G, S, K, top, shooters, tenure):
         movers.append(f"{pre_here[1]} of {pre_here[0]} for the {tname(team)} this preseason")
     for t, v in pre_others.items():
         movers.append(f"{v[1]} of {v[0]} for the {tname(t)} this preseason")
-    share_l = base + ("; " + "; ".join(movers) if movers else "") + f". Model share after shrinkage: ~{share:.0%} of the {tname(team)}' first shots tonight."
+    share_l = base + ("; " + "; ".join(movers) if movers else "") + f". Model share after shrinkage: ~{share:.0%} of the {poss(team)} first shots tonight."
     # role change: a first-shot taker of this team (started, since last season) who is not among tonight's five
     tonight = {x["player_id"] for x in st if x["team"] == team}
     gone = sorted([(sh, c, nm) for pid, (nm, c, sh) in shooters.get(team, {}).items() if pid not in tonight and c >= 5 and sh >= 0.10], reverse=True)[:2]
     if gone:
-        role_l = "; ".join(f"{nm} took {sh:.0%} of the {tname(team)}' first shots since last season ({c}) and is not in tonight's projected five" for sh, c, nm in gone) + ": that share redistributes pro-rata."
+        role_l = "; ".join(f"{nm} took {sh:.0%} of the {poss(team)} first shots since last season ({c}) and is not in tonight's projected five" for sh, c, nm in gone) + ": that share redistributes pro-rata."
     # shot mix, only when extreme and on his own attempts
     own = np.array([s["types"][t] for t in TYPES], dtype=float); pos = np.array([s["pos_types"][t] for t in TYPES], dtype=float)
     pos_mix = pos / pos.sum() if pos.sum() else np.array([0.4, 0.3, 0.3])
