@@ -86,6 +86,10 @@ tr:last-child td{border-bottom:0}
 #fresh .stale{color:var(--miss);font-weight:600}
 #fresh .ok{color:var(--make)}
 [hidden]{display:none!important}
+/* First Basket tab */
+.fbGame{margin:0 0 26px}.fbGame h2{margin:22px 0 4px}.fbMeta{color:var(--muted);font:500 14px var(--body)}
+.fbTop{margin:4px 0 6px;font-size:16px}.fbWhy{margin:0 0 10px;padding-left:20px;color:var(--muted);font-size:14px;max-width:80ch}
+.fbTable{max-width:760px}tr.fbPick td{font-weight:700}
 /* Results tab */
 h2{font:700 26px var(--display);margin:28px 0 8px}
 .verdict{background:var(--surface);border-left:4px solid var(--rim);padding:10px 14px;margin:0 0 14px;max-width:80ch}
@@ -108,6 +112,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
   <nav role="tablist">
     <button role="tab" data-tab="threes" aria-selected="true">Threes</button>
     <button role="tab" data-tab="props" aria-selected="false">Props</button>
+    <button role="tab" data-tab="firstbasket" aria-selected="false">First Basket</button>
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
@@ -161,6 +166,13 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <ul class="news" id="newsList"></ul>
   </section>
 
+  <section id="firstbasket" hidden>
+    <p class="sub" id="fbNote"></p>
+    <p class="foot"><b>Hit rate measures accuracy, not profit. Edge requires comparing to prices.</b> Graded record on the <a href="performance.html#fbSec">Performance page</a>.</p>
+    <p class="foot" id="fbOverride"></p>
+    <div id="fbGames"></div>
+  </section>
+
   <section id="results" hidden>
     <p class="verdict" id="verdict"></p>
     <div class="stats" id="rstats"></div>
@@ -181,12 +193,12 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", newsTag:"all",
            sort3:"p2", sortP:"auto", lines:{}, edits:{}, be:55};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
-if(["threes","props","defense","news","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","defense","news","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
+if(["threes","props","firstbasket","defense","news","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","defense","news","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","POINTS":"pts","REB":"reb","REBOUNDS":"reb",
                   "AST":"ast","ASSISTS":"ast","PRA":"pra","PTS+REB+AST":"pra"};
-let P = null, D = null, N = [], R = null;
+let P = null, D = null, N = [], R = null, FB = null;
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -378,6 +390,20 @@ function renderNews(){
     : `<li class="empty" style="display:block">No news yet. Items appear here as your phone forwards Underdog NBA alerts.</li>`;
 }
 
+function renderFirstBasket(){
+  if(!FB || !FB.games){ $("fbNote").textContent = "No pre-tip snapshot for tonight yet. The first-basket log is written before tip by the update workflow."; $("fbGames").innerHTML = ""; $("fbOverride").textContent = ""; return; }
+  const ptTime = iso => new Date(iso).toLocaleTimeString("en-US",{timeZone:"America/Los_Angeles",hour:"numeric",minute:"2-digit"}) + " PT";
+  const d = new Date(FB.date+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+  $("fbNote").textContent = `${d}: ${FB.games.length} game${FB.games.length===1?"":"s"} logged before tip, ten projected starters each. P(first basket) = chance the player scores the game's first made field goal. Snapshot ${ago(FB.generated)}${FB.skipped&&FB.skipped.length?`; ${FB.skipped.length} game${FB.skipped.length===1?"":"s"} not logged`:""}.`;
+  $("fbOverride").textContent = FB.override || "";
+  const games = FB.games.filter(g => S.game==="all" || [g.home,g.away].sort().join("-")===S.game);
+  const block = g => `<div class="fbGame"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)} &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}</span></h2>
+    <p class="fbTop">Top candidate: <b>${g.top_pick}</b> <span class="fbMeta">${g.top_team}</span> &middot; P(first basket) <b>${(100*g.top_p).toFixed(1)}%</b></p>
+    ${g.why && g.why.length ? `<ul class="fbWhy">${g.why.map(w=>`<li>${w}</li>`).join("")}</ul>` : ""}
+    <div class="scroll"><table class="fbTable"><thead><tr><th style="text-align:left">Team</th><th style="text-align:left">Player</th><th>Pos</th><th>P(first basket)</th><th>P(first attempt)</th></tr></thead><tbody>${g.starters.slice().sort((a,b)=>b.p_first_basket-a.p_first_basket).map(r=>`<tr class="${r.top_pick?"fbPick":""}"><td style="text-align:left">${r.team}</td><td style="text-align:left">${r.player}${r.jumper?' <span class="fbMeta">jumper</span>':""}</td><td>${r.pos}</td><td>${(100*r.p_first_basket).toFixed(1)}%</td><td>${(100*r.p_first_attempt).toFixed(1)}%</td></tr>`).join("")}</tbody></table></div></div>`;
+  $("fbGames").innerHTML = games.map(block).join("") + (FB.skipped && FB.skipped.length ? `<p class="foot">Not logged: ${FB.skipped.map(x=>`${x.away} @ ${x.home} (${x.reason})`).join("; ")}.</p>` : "");
+}
+
 function render(){
   const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
   chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
@@ -386,6 +412,7 @@ function render(){
   chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
   if(S.tab==="threes") renderThrees();
   if(S.tab==="props") renderProps();
+  if(S.tab==="firstbasket") renderFirstBasket();
   if(S.tab==="defense") renderDefense();
   if(S.tab==="news") renderNews();
   if(S.tab==="results") renderResults();
@@ -395,7 +422,7 @@ document.querySelector("nav").onclick = e => {
   const b = e.target.closest("button"); if(!b) return;
   S.tab = b.dataset.tab;
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
-  ["threes","props","defense","news","results"].forEach(id=>$(id).hidden = id!==S.tab);
+  ["threes","props","firstbasket","defense","news","results"].forEach(id=>$(id).hidden = id!==S.tab);
   render();
 };
 $("q3").oninput = render; $("qp").oninput = render;
@@ -416,7 +443,7 @@ function freshness(L){
 }
 
 async function boot(){
-  [P, D, N, R] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null)]);
+  [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
   const L = await load("data/lines.json", null);
   S.lines = {};
   freshness(L);
@@ -430,7 +457,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); render(); }, 60000);
 </script>
 </body>
 </html>

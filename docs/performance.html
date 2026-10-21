@@ -96,9 +96,8 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <h2>First basket <span>P(player scores the game's first made field goal), ten projected starters per game, graded binary</span></h2>
     <p class="sub"><b>Hit rate measures accuracy, not profit. Edge requires comparing to prices.</b></p>
     <p class="foot" id="fbOverride"></p>
-    <h3>Tonight's projections <span class="foot" id="fbTodayNote"></span></h3>
-    <div id="fbToday"></div>
-    <h3>Graded results <span class="foot">top pick per game, from the morning after</span></h3>
+    <p class="foot">Tonight's projections are on the <a href="index.html#firstbasket">main page's First Basket tab</a>. This section is the graded record only.</p>
+    <h3>Graded results <span class="foot">top pick per game, graded the morning after</span></h3>
     <div class="stats" id="fbCards"></div>
     <div class="stats" id="fbCards2"></div>
     <h3>Calibration <span class="foot">every logged starter row, model P vs share who scored first</span></h3>
@@ -115,31 +114,22 @@ const $ = id => document.getElementById(id);
 const pct = x => x==null ? "–" : (100*x).toFixed(1)+"%";
 const NAMES = {tpm:"3PM", pts:"PTS", ast:"AST", reb:"REB"};
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
-let R = null, FBT = null; const S = {stat:"tpm", rung:"all", q:""};
+let R = null; const S = {stat:"tpm", rung:"all", q:""};
 const card = (v,l,cls="") => `<div class="stat ${cls}"><b>${v}</b><span>${l}</span></div>`;
 const rec = b => b && b.n ? `${b.record} · ${pct(b.hit_rate)}` : "–";
 
 function renderFB(){
-  const F = R && R.first_basket, T = FBT, graded = F && F.overall && F.overall.n, today = T && T.games && T.games.length;
-  if(!graded && !today && !(T && T.skipped && T.skipped.length)) return;
+  const F = R && R.first_basket, graded = F && F.overall && F.overall.n;
+  if(!F || !(graded || F.pending_games || F.void_games)) return;
   $("fbSec").hidden = false;
-  $("fbOverride").textContent = (T && T.override) || (F && F.method && F.method[F.method.length-1]) || "";
-  if(T){
-    $("fbTodayNote").textContent = `${T.date} · ${T.games.length} game${T.games.length===1?"":"s"} logged before tip · snapshot ${T.generated}${T.skipped.length?` · ${T.skipped.length} skipped`:""}`;
-    const gameBlock = g => `<div class="fbGame"><h4>${g.away} @ ${g.home} <span class="foot">tip ${g.tip.replace("T"," ").replace("Z"," UTC")} · P(home wins tip) ${pct(g.p_tip_home)}</span></h4>
-      <p class="sub">Top candidate: <b>${g.top_pick}</b> <span class="foot">${g.top_team}</span> · P(first basket) <b>${pct(g.top_p)}</b></p>
-      <div class="scroll"><table><thead><tr><th>Team</th><th>Player</th><th>Pos</th><th>P(first basket)</th><th>P(first attempt)</th></tr></thead><tbody>${g.starters.slice().sort((a,b)=>b.p_first_basket-a.p_first_basket).map(r=>`<tr class="${r.top_pick?"fbTop":""}"><td>${r.team}</td><td>${r.player}${r.jumper?' <span class="foot">jumper</span>':""}</td><td>${r.pos}</td><td>${pct(r.p_first_basket)}</td><td>${pct(r.p_first_attempt)}</td></tr>`).join("")}</tbody></table></div></div>`;
-    $("fbToday").innerHTML = T.games.map(gameBlock).join("") + (T.skipped.length ? `<p class="foot">Not logged: ${T.skipped.map(x=>`${x.away} @ ${x.home} (${x.reason})`).join("; ")}.</p>` : "");
-  } else {
-    $("fbTodayNote").textContent = ""; $("fbToday").innerHTML = `<p class="foot">No pre-tip snapshot for today yet.</p>`;
-  }
+  $("fbOverride").textContent = (F.method && F.method[F.method.length-1]) || "";
   if(graded){
     $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded"), card(F.pending_games,"logged, not yet graded"), card(F.void_games,"void (no clean label)")].join("");
     $("fbCards2").innerHTML = [card(pct(F.top3_rate),"scorer in the top 3"), card(F.log_loss_v2==null?"\u2013":F.log_loss_v2.toFixed(3),`log loss (uniform 1/10: ${F.log_loss_uniform==null?"\u2013":F.log_loss_uniform.toFixed(3)})`), card(pct(F.starter_match_rate),"projected starters who actually started"), card(pct(F.scorer_among_logged_share),"first scorer was among the ten logged")].join("");
     $("fbCal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Scored first</th></tr></thead><tbody>${F.buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td></tr>`).join("")}</tbody>`;
     $("fbRecent").innerHTML = `<thead><tr><th>Date</th><th>Game</th><th>Top pick</th><th>P</th><th>First scorer</th><th>Hit</th><th>Top 3</th></tr></thead><tbody>${(F.recent||[]).map(r=>`<tr><td>${r.date}</td><td>${r.away} @ ${r.home}</td><td>${r.top_pick}</td><td>${pct(r.top_p)}</td><td>${r.scorer}${r.scorer_logged?"":" (not logged)"}</td><td class="${r.hit?"pos":"neg"}">${r.hit?"hit":"miss"}</td><td>${r.top3?"yes":"no"}</td></tr>`).join("")}</tbody>`;
   } else {
-    $("fbCards").innerHTML = card(F && F.pending_games ? F.pending_games : (today ? T.games.length : 0), "games logged, graded the morning after");
+    $("fbCards").innerHTML = card(F.pending_games || 0, "games logged, graded the morning after");
     $("fbCards2").innerHTML = ""; $("fbCal").innerHTML = `<tbody><tr><td class="empty">Nothing graded yet.</td></tr></tbody>`; $("fbRecent").innerHTML = `<tbody><tr><td class="empty">Nothing graded yet.</td></tr></tbody>`;
   }
 }
@@ -183,10 +173,7 @@ function renderStat(){
 $("fStat").onchange = e => { S.stat = e.target.value; S.rung="all"; renderStat(); };
 $("fRung").onchange = e => { S.rung = e.target.value; renderStat(); };
 $("fQ").oninput = e => { S.q = e.target.value; renderStat(); };
-Promise.all([
-  fetch(`data/performance.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-  fetch(`data/first_basket_today.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
-]).then(([d,t])=>{ R=d; FBT=t; if(!d && !t){ $("status").textContent="Could not load performance.json."; return; } render(); });
+fetch(`data/performance.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{ R=d; render(); }).catch(()=>{ $("status").textContent="Could not load performance.json."; });
 </script>
 </body>
 </html>

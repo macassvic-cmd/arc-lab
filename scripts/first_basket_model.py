@@ -341,6 +341,62 @@ class Row:
         self.__dict__.update(kw)
 
 
+def team_first_shooters(games, st, seasons):
+    """team -> {player_id: (name, games in which he started and took the team's first attempt)} over the given seasons."""
+    started = set(zip(st.event_id, st.player_id))
+    out = defaultdict(lambda: defaultdict(lambda: [None, 0]))
+    for g in games[games.season.isin(seasons)].itertuples():
+        for side in ("home", "away"):
+            team, pid, name = getattr(g, side), getattr(g, f"{side}_fga_id"), getattr(g, f"{side}_fga_player")
+            if isinstance(pid, str) and (g.event_id, pid) in started:
+                out[team][pid][0] = name; out[team][pid][1] += 1
+    return out
+
+
+def why_lines(G, S, K, top, shooters):
+    """2-3 lines on what moved the top pick's number, each computed from the components score_game used: tip (2a), attempt-share
+    samples (2b), a departed first-shot taker whose share redistributed (2b normalisation), an extreme shot mix (2c). Nothing is
+    asserted that the counts do not show; with no standout driver the fallback says so."""
+    st = G["starters"]; s = st[top]; team = s["team"]; home = bool(s["home"]); opp = G["away"] if home else G["home"]
+    names = {x["player_id"]: x["player"] for x in st}
+    tip_l, role_l, mix_l = None, None, None
+    # tip
+    tip = G["tip"]; p_team = float(S["p_tip"]) if home else 1 - float(S["p_tip"])
+    my_j, opp_j = (tip["jumper_home"], tip["jumper_away"]) if home else (tip["jumper_away"], tip["jumper_home"])
+    n_h2h = tip["h2h_n"]; w_h2h = tip["h2h_home_wins"] if home else n_h2h - tip["h2h_home_wins"]
+    rec = tip["home" if home else "away"]
+    if p_team >= 0.58:
+        if n_h2h >= 3 and w_h2h / n_h2h >= 0.75:
+            tip_l = f"{names.get(my_j, 'Jumper')} {w_h2h}-{n_h2h - w_h2h} vs {names.get(opp_j, 'the opposing jumper')} on tips; {team} first possession ~{p_team:.0%}."
+        elif rec[1]:
+            tip_l = f"{team} first possession ~{p_team:.0%} ({names.get(my_j, 'jumper')} {rec[0]}-{rec[1] - rec[0]} on tips in the sample)."
+    # attempt share: name the samples that moved it
+    sa = shrink(s["f"], s["n"], s["base_pos"], K["K_a"]); sb = shrink(s["f_opp"], s["n_opp"], sa, K["K_b"]); sc = shrink(s["f_pre"], s["n_pre"], sb, K["K_c"])
+    share = float(S["share"][top]); movers = []
+    if s["n_opp"] and abs(sb - sa) >= 0.02:
+        movers.append(f"{s['f_opp']} of {s['n_opp']} vs {opp}")
+    if s["n_pre"] and abs(sc - sb) >= 0.02:
+        movers.append(f"{s['f_pre']} of {s['n_pre']} this preseason")
+    base = f"{s['f']} of {s['n']} first attempts as a starter since 2024-25" if s["n"] else f"no regular-season starts in the sample, {s['pos']} baseline {s['base_pos']:.0%}"
+    share_l = f"Takes ~{share:.0%} of {team}'s first shots: {base}" + (", " + ", ".join(movers) if movers else "") + "."
+    # role change: a first-shot taker of this team (started, since last season) who is not among tonight's five
+    tonight = {x["player_id"] for x in st if x["team"] == team}
+    gone = sorted([(c, nm) for pid, (nm, c) in shooters.get(team, {}).items() if pid not in tonight and c >= 3], reverse=True)[:2]
+    if gone:
+        role_l = "; ".join(f"{nm} ({c} of {team}'s first shots since last season) is not starting tonight" for c, nm in gone) + ": that share redistributes pro-rata."
+    # shot mix, only when extreme and on his own attempts
+    own = np.array([s["types"][t] for t in TYPES], dtype=float); pos = np.array([s["pos_types"][t] for t in TYPES], dtype=float)
+    pos_mix = pos / pos.sum() if pos.sum() else np.array([0.4, 0.3, 0.3])
+    mix = (own + K_TYPE * pos_mix) / (own.sum() + K_TYPE); make = float(S["make"][top]); n_own = int(own.sum())
+    if n_own >= 5 and mix[0] >= 0.6:
+        mix_l = f"Rim-heavy first shots ({own[0]:.0f} of {n_own} at the rim): makes more of them, make rate ~{make:.0%}."
+    elif n_own >= 5 and mix[2] >= 0.5:
+        mix_l = f"Three-heavy first shots ({own[2]:.0f} of {n_own} from three): boom or bust, make rate ~{make:.0%}."
+    if not (tip_l or role_l or mix_l or movers):
+        return [f"No standout driver: highest base attempt share on his team ({base})."]
+    return [x for x in (tip_l, share_l, role_l, mix_l) if x][:3]
+
+
 def snapshot():
     params = read_json(PARAMS, None)
     if not params:
@@ -353,6 +409,7 @@ def snapshot():
     _, T = walk(games, st, set())
     pre_season = int(P.get("season") or games.season.max())
     starters = projected_starters(P, box)
+    shooters = team_first_shooters(games, st, {pre_season - 1, pre_season})
     K, C = params["K"], params["constants"]
     t, ts = now(), now().strftime("%Y-%m-%dT%H:%M:%SZ")
     rows, today, skipped = [], [], []
@@ -378,7 +435,7 @@ def snapshot():
                               "top_pick": int(i == top), "jumper": s["jumper"], "logged_at": ts})
         rows += game_rows
         today.append({"event_id": g["event_id"], "tip": tip_s, "away": g["away"], "home": g["home"], "p_tip_home": round(float(S["p_tip"]), 3),
-                      "top_pick": game_rows[top]["player"], "top_team": game_rows[top]["team"], "top_p": game_rows[top]["p_first_basket"],
+                      "top_pick": game_rows[top]["player"], "top_team": game_rows[top]["team"], "top_p": game_rows[top]["p_first_basket"], "why": why_lines(G, S, K, top, shooters),
                       "starters": [{k: r[k] for k in ("team", "home", "player", "pos", "p_first_basket", "p_first_attempt", "top_pick", "jumper")} for r in game_rows]})
     new_file = not LOG.exists()
     with open(LOG, "a", newline="", encoding="utf-8") as f:
