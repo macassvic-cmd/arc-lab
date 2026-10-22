@@ -97,6 +97,8 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <p class="sub"><b>Hit rate measures accuracy, not profit. Edge requires comparing to prices.</b></p>
     <p class="foot" id="fbOverride"></p>
     <p class="foot">Tonight's projections are on the <a href="index.html#firstbasket">main page's First Basket tab</a>. This section is the graded record only.</p>
+    <h3>Today's picks <span class="foot" id="fbPicksNote"></span></h3>
+    <div class="scroll"><table id="fbPicks"></table></div>
     <h3>Graded results <span class="foot">top pick per game, graded the morning after</span></h3>
     <div class="stats" id="fbCards"></div>
     <div class="stats" id="fbCards2"></div>
@@ -119,10 +121,17 @@ const card = (v,l,cls="") => `<div class="stat ${cls}"><b>${v}</b><span>${l}</sp
 const rec = b => b && b.n ? `${b.record} · ${pct(b.hit_rate)}` : "–";
 
 function renderFB(){
-  const F = R && R.first_basket, graded = F && F.overall && F.overall.n;
-  if(!F || !(graded || F.pending_games || F.void_games)) return;
+  const F = R && R.first_basket, graded = F && F.overall && F.overall.n, T = F && F.today;
+  if(!F || !(graded || F.pending_games || F.void_games || (T && T.picks && T.picks.length))) return;
   $("fbSec").hidden = false;
   $("fbOverride").textContent = (F.method && F.method[F.method.length-1]) || "";
+  if(T && T.picks && T.picks.length){
+    $("fbPicksNote").textContent = `${T.date}: ${T.picks.length} games logged, ${T.pending} pending, ${T.graded} graded${T.void?`, ${T.void} void`:""}`;
+    const st = p => p.status==="pending" ? (p.tipped ? '<span class="thin">tipped, awaiting label</span>' : "pending") : p.status==="void" ? `void (${p.result.reason})` : `<span class="${p.result.hit?"pos":"neg"}">${p.result.hit?"HIT":"MISS"}</span> \u2013 ${p.result.scorer}${p.result.scorer_logged?"":" (not logged)"}${!p.result.hit&&p.result.top3?" (top 3)":""}`;
+    $("fbPicks").innerHTML = `<thead><tr><th>Tip (UTC)</th><th>Game</th><th>Top candidate</th><th>P</th><th>Status</th></tr></thead><tbody>${T.picks.map(p=>`<tr><td>${p.tip.slice(11,16)}</td><td>${p.away} @ ${p.home}</td><td>${p.top_pick} <span class="foot">${p.top_team}</span></td><td>${pct(p.top_p)}</td><td>${st(p)}</td></tr>`).join("")}</tbody>`;
+  } else {
+    $("fbPicksNote").textContent = ""; $("fbPicks").innerHTML = `<tbody><tr><td class="empty">No picks logged for today yet.</td></tr></tbody>`;
+  }
   if(graded){
     $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded"), card(F.pending_games,"logged, not yet graded"), card(F.void_games,"void (no clean label)")].join("");
     $("fbCards2").innerHTML = [card(pct(F.top3_rate),"scorer in the top 3"), card(F.log_loss_v2==null?"\u2013":F.log_loss_v2.toFixed(3),`log loss (uniform 1/10: ${F.log_loss_uniform==null?"\u2013":F.log_loss_uniform.toFixed(3)})`), card(pct(F.starter_match_rate),"projected starters who actually started"), card(pct(F.scorer_among_logged_share),"first scorer was among the ten logged")].join("");

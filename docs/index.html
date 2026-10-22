@@ -90,6 +90,7 @@ tr:last-child td{border-bottom:0}
 .fbGame{margin:0 0 26px}.fbGame h2{margin:22px 0 4px}.fbMeta{color:var(--muted);font:500 14px var(--body)}
 .fbTop{margin:4px 0 6px;font-size:16px}.fbWhy{margin:0 0 10px;padding-left:20px;color:var(--muted);font-size:14px;max-width:80ch}
 .fbTable{max-width:760px}tr.fbPick td{font-weight:700}
+.fbBadge{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:1px 8px;font:600 12px var(--body);vertical-align:middle}
 /* Results tab */
 h2{font:700 26px var(--display);margin:28px 0 8px}
 .verdict{background:var(--surface);border-left:4px solid var(--rim);padding:10px 14px;margin:0 0 14px;max-width:80ch}
@@ -394,11 +395,16 @@ function renderFirstBasket(){
   if(!FB || !FB.games){ $("fbNote").textContent = "No pre-tip snapshot for tonight yet. The first-basket log is written before tip by the update workflow."; $("fbGames").innerHTML = ""; $("fbOverride").textContent = ""; return; }
   const ptTime = iso => new Date(iso).toLocaleTimeString("en-US",{timeZone:"America/Los_Angeles",hour:"numeric",minute:"2-digit"}) + " PT";
   const d = new Date(FB.date+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
-  $("fbNote").textContent = `${d}: ${FB.games.length} game${FB.games.length===1?"":"s"} logged before tip, ten projected starters each. P(first basket) = chance the player scores the game's first made field goal. Snapshot ${ago(FB.generated)}${FB.skipped&&FB.skipped.length?`; ${FB.skipped.length} game${FB.skipped.length===1?"":"s"} not logged`:""}.`;
+  const tippedN = FB.games.filter(g=>g.tipped).length;
+  $("fbNote").textContent = `${d}: ${FB.games.length} game${FB.games.length===1?"":"s"} logged before tip, ten projected starters each${tippedN?`; ${tippedN} tipped, ${FB.games.filter(g=>g.status==="graded").length} graded`:""}. Each game shows its last snapshot before tip; games stay here until the date rolls over. P(first basket) = chance the player scores the game's first made field goal. Rebuilt ${ago(FB.generated)}${FB.skipped&&FB.skipped.length?`; ${FB.skipped.length} game${FB.skipped.length===1?"":"s"} not logged`:""}.`;
   $("fbOverride").textContent = FB.override || "";
   const games = FB.games.filter(g => S.game==="all" || [g.home,g.away].sort().join("-")===S.game);
-  const block = g => `<div class="fbGame"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)} &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}</span></h2>
+  const resultLine = g => { const r = g.result; if(!g.tipped) return ""; if(!r) return `<p class="fbTop fbMeta">Tipped &middot; first scorer not labelled yet.</p>`;
+    if(r.void) return `<p class="fbTop fbMeta">Tipped &middot; void: ${r.reason}.</p>`;
+    return `<p class="fbTop">First scorer: <b>${r.scorer}</b>${r.scorer_logged?` <span class="fbMeta">model P ${(100*r.scorer_p).toFixed(1)}%</span>`:' <span class="fbMeta">(not among the ten logged)</span>'} &middot; <span class="${r.hit?"pos":"neg"}">${r.hit?"HIT":"MISS"}</span>${!r.hit&&r.top3?' <span class="fbMeta">(in the top 3)</span>':""}</p>`; };
+  const block = g => `<div class="fbGame${g.tipped?" fbTipped":""}"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)}${g.tipped?' &middot; <span class="fbBadge">tipped</span>':""}${g.p_tip_home!=null?` &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}`:""}${g.snapshots>1?` &middot; snapshot ${g.snapshots} of ${g.snapshots}, logged ${ago(g.logged_at)}`:""}</span></h2>
     <p class="fbTop">Top candidate: <b>${g.top_pick}</b> <span class="fbMeta">${g.top_team}</span> &middot; P(first basket) <b>${(100*g.top_p).toFixed(1)}%</b></p>
+    ${resultLine(g)}
     ${g.why && g.why.length ? `<ul class="fbWhy">${g.why.map(w=>`<li>${w}</li>`).join("")}</ul>` : ""}
     <div class="scroll"><table class="fbTable"><thead><tr><th style="text-align:left">Team</th><th style="text-align:left">Player</th><th>Pos</th><th>P(first basket)</th><th>P(first attempt)</th></tr></thead><tbody>${g.starters.slice().sort((a,b)=>b.p_first_basket-a.p_first_basket).map(r=>`<tr class="${r.top_pick?"fbPick":""}"><td style="text-align:left">${r.team}</td><td style="text-align:left">${r.player}${r.jumper?' <span class="fbMeta">jumper</span>':""}</td><td>${r.pos}</td><td>${(100*r.p_first_basket).toFixed(1)}%</td><td>${(100*r.p_first_attempt).toFixed(1)}%</td></tr>`).join("")}</tbody></table></div></div>`;
   $("fbGames").innerHTML = games.map(block).join("") + (FB.skipped && FB.skipped.length ? `<p class="foot">Not logged: ${FB.skipped.map(x=>`${x.away} @ ${x.home} (${x.reason})`).join("; ")}.</p>` : "");

@@ -7,6 +7,8 @@
   python first_basket_model.py snapshot   append tonight's ten projected starters per untipped game to data/first_basket_log.csv
                                           and write docs/data/first_basket_today.json (tonight's projections for the Performance page)
   python first_basket_model.py grade      grade the last pre-tip snapshot of every logged game -> docs/data/first_basket_performance.json
+  python first_basket_model.py today      rebuild docs/data/first_basket_today.json from the log (last pre-tip snapshot per game of the
+                                          latest logged date); no new rows
 
 Target: the game's first made field goal (free throws excluded). Inputs are the committed label tables from first_shot.py; no raw
 play store is needed here. Every quantity for a game uses only games dated before it (walk-forward); the live model is the same
@@ -32,6 +34,7 @@ PARAMS = DATA_DIR / "first_basket_params.json"
 GATE = SITE_DATA / "first_basket_gate.json"
 PERF = SITE_DATA / "first_basket_performance.json"
 TODAY = SITE_DATA / "first_basket_today.json"
+WHY = DATA_DIR / "first_basket_why.jsonl"   # append-only sidecar: the why-lines and tip probability of every snapshot (not log columns)
 OVERRIDE = ("Shipped 2026-10-21 by CEO override after the locked gate FAILED (docs/data/first_basket_gate.json, Backtest page). "
             "Constants are the gate's published 2024-25 fit, unchanged; the gate verdict is unchanged.")
 RULE = "backtests/first_basket_v2_rule.md"
@@ -499,12 +502,100 @@ def snapshot():
         if new_file:
             w.writeheader()
         w.writerows(rows)
-    write_json(TODAY, {"date": P["date"], "generated": ts, "slate_updated": P.get("updated"), "games": today, "skipped": skipped, "rows_appended": len(rows),
-                       "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.", "override": OVERRIDE, "params_frozen": params.get("frozen"), "K": K, "constants": C})
+    with open(WHY, "a", encoding="utf-8") as f:
+        for g in today:
+            f.write(json.dumps({"date": P["date"], "event_id": g["event_id"], "logged_at": ts, "why": g["why"], "p_tip_home": g["p_tip_home"]}) + "\n")
+    build_today(P["date"], slate=P, skipped=skipped)
     print(f"[first-basket] appended {len(rows)} rows for {P['date']} ({len(today)} games logged, {len(skipped)} skipped)")
     for x in skipped:
         print(f"[first-basket]   skipped {x['away']}@{x['home']} ({x['tip']}): {x['reason']}")
     return len(rows)
+
+
+def last_pretip(log, date=None):
+    """Per (date, game): the rows of the last snapshot logged before tip (rule 5). The log is never edited; this only reads it."""
+    d = log if date is None else log[log.date == date]
+    d = d[pd.to_datetime(d.logged_at, utc=True) < pd.to_datetime(d.tip, utc=True)]
+    return d[d.logged_at == d.groupby(["date", "event_id"]).logged_at.transform("max")]
+
+
+def labels_by_event():
+    if not HIST.exists():
+        return {}
+    h = pd.read_csv(HIST, dtype={"event_id": str, "first_fg_id": str})
+    return {r.event_id: r for r in h.itertuples()}
+
+
+def game_result(h, g):
+    """h: history row or None; g: the game's snapshot rows sorted by P desc. None until the label exists."""
+    if h is None:
+        return None
+    if h.label_clean != 1:
+        return {"void": True, "reason": h.reason if isinstance(h.reason, str) else "no clean label"}
+    ids = list(g.player_id); j = ids.index(h.first_fg_id) if h.first_fg_id in ids else None
+    return {"void": False, "scorer": h.first_fg_player, "scorer_id": h.first_fg_id, "scorer_logged": int(j is not None), "scorer_p": round(float(g.p_first_basket.iloc[j]), 4) if j is not None else None,
+            "hit": int(j == 0), "top3": int(j is not None and j < 3)}
+
+
+def picks_for(d, hist, t):
+    """One entry per game in d (last pre-tip rows): matchup, top candidate, tipped flag, result when labelled."""
+    out = []
+    for e, g in d.groupby("event_id"):
+        g = g.sort_values(["top_pick", "p_first_basket"], ascending=[False, False]); top = g.iloc[0]
+        tip = g.tip.iloc[0]; tipped = t >= dt.datetime.fromisoformat(tip.replace("Z", "+00:00"))
+        res = game_result(hist.get(e), g)
+        out.append({"date": g.date.iloc[0], "event_id": e, "tip": tip, "home": g[g.home == 1].team.iloc[0], "away": g[g.home == 0].team.iloc[0], "logged_at": g.logged_at.iloc[0],
+                    "top_pick": top.player, "top_team": top.team, "top_p": round(float(top.p_first_basket), 4), "tipped": bool(tipped),
+                    "status": "pending" if res is None else ("void" if res["void"] else "graded"), "result": res, "rows": g})
+    return sorted(out, key=lambda x: (x["tip"], x["event_id"]))
+
+
+def build_today(date=None, slate=None, skipped=None):
+    """docs/data/first_basket_today.json from the log: every game logged on `date` (default: the latest logged date) with its last
+    pre-tip snapshot. Games are never removed within the day; tipped games stay, with the actual first scorer once labelled."""
+    params = read_json(PARAMS, None)
+    if not params or not LOG.exists():
+        return
+    log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
+    date = date or (str(log.date.max()) if len(log) else None)
+    if not date:
+        return
+    d = last_pretip(log, date)
+    why = {}
+    if WHY.exists():
+        for line in open(WHY, encoding="utf-8"):
+            e = json.loads(line)
+            if e["date"] == date:
+                why[(e["event_id"], e["logged_at"])] = e
+    prev = read_json(TODAY, {}) or {}
+    prev_games = {g["event_id"]: g for g in prev.get("games", [])} if prev.get("date") == date else {}
+    hist = labels_by_event(); t = now(); games = []
+    for pk in picks_for(d, hist, t):
+        g = pk.pop("rows").sort_values("p_first_basket", ascending=False)
+        w = why.get((pk["event_id"], pk["logged_at"]))
+        if w is None and pk["event_id"] in prev_games and prev_games[pk["event_id"]].get("why"):
+            pg = prev_games[pk["event_id"]]; w = {"why": pg["why"], "p_tip_home": pg.get("p_tip_home")}
+            with open(WHY, "a", encoding="utf-8") as f:   # carry the explanation into the sidecar so later rebuilds keep it
+                f.write(json.dumps({"date": date, "event_id": pk["event_id"], "logged_at": pk["logged_at"], **w}) + "\n")
+        pk.update({"p_tip_home": (w or {}).get("p_tip_home"), "why": (w or {}).get("why") or [], "snapshots": int(log[(log.date == date) & (log.event_id == pk["event_id"])].logged_at.nunique()),
+                   "starters": [{"team": r.team, "home": int(r.home), "player": r.player, "pos": r.pos, "p_first_basket": float(r.p_first_basket), "p_first_attempt": float(r.p_first_attempt),
+                                 "top_pick": int(r.top_pick), "jumper": int(r.jumper)} for r in g.itertuples()]})
+        games.append(pk)
+    logged = {g["event_id"] for g in games}; skipped = list(skipped or [])
+    if slate and slate.get("date") == date:
+        seen = {x["event_id"] for x in skipped}
+        for sg in slate["games"]:
+            if sg["event_id"] not in logged and sg["event_id"] not in seen:
+                skipped.append({"event_id": sg["event_id"], "away": sg["away"], "home": sg["home"], "tip": sg["start"], "reason": "not in the log"})
+        skipped = [x for x in skipped if x["event_id"] not in logged]
+    elif not slate:
+        skipped = [x for x in prev.get("skipped", []) if x["event_id"] not in logged]
+    write_json(TODAY, {"date": date, "generated": t.strftime("%Y-%m-%dT%H:%M:%SZ"), "slate_updated": (slate or prev).get("updated") if slate else prev.get("slate_updated"),
+                       "source": "data/first_basket_log.csv: every game logged on this date, its last pre-tip snapshot; the tab empties only when the date rolls over",
+                       "games": games, "skipped": skipped, "tipped": sum(g["tipped"] for g in games), "graded": sum(g["status"] == "graded" for g in games),
+                       "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.", "override": OVERRIDE, "params_frozen": params.get("frozen"), "K": params["K"], "constants": params["constants"]})
+    print(f"[first-basket] today {date}: {len(games)} games from the log ({sum(g['tipped'] for g in games)} tipped, {sum(g['status'] == 'graded' for g in games)} graded), {len(skipped)} skipped")
+    return games
 
 
 def bucket_table(d):
@@ -547,6 +638,8 @@ def grade():
                          "loss_v2": -np.log(max(float(d.p.iloc[j]), P_FLOOR)) if in_ten else -np.log(max(eps, P_FLOOR)), "loss_uniform": -np.log((1 - eps) / 10) if in_ten else -np.log(max(eps, P_FLOOR))})
     pg = pd.DataFrame(per_game)
     n = int(len(pg)); hits = int(pg.hit.sum()) if n else 0
+    latest = str(log.date.max()); hist_by = labels_by_event(); t = now()
+    picks = [{k: v for k, v in pk.items() if k != "rows"} for pk in picks_for(last_pretip(log, latest), hist_by, t)]
     doc = {"header": "Every pick graded against real results. Nothing filtered, nothing hidden.", "generated": now().strftime("%Y-%m-%dT%H:%M:%SZ"), "rule_file": RULE,
            "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.",
            "games": n, "overall": {"n": n, "hits": hits, "misses": n - hits, "hit_rate": round(hits / n, 4) if n else None, "record": f"{hits}-{n - hits}", "mean_p": round(float(pg.top_p.mean()), 4) if n else None},
@@ -554,14 +647,16 @@ def grade():
            "scorer_among_logged_share": round(float(pg.scorer_logged.mean()), 4) if n else None, "starter_match_rate": round(float(g.started.mean()), 4) if len(g) else None,
            "buckets": bucket_table(g) if len(g) else [], "rows_in_file": int(len(log)), "keys": int(len(snap)), "pending_games": int(snap[snap.status == "pending"].event_id.nunique()), "void_games": int(snap[snap.status == "void"].event_id.nunique()),
            "recent": pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60).to_dict("records") if n else [],
+           "today": {"date": latest, "picks": picks, "pending": sum(p["status"] == "pending" for p in picks), "graded": sum(p["status"] == "graded" for p in picks), "void": sum(p["status"] == "void" for p in picks)},
            "method": ["Ten projected starters per game logged before tip; the graded snapshot is the last row before tip. Append-only log (data/first_basket_log.csv).",
                       "Hit = the player scored the game's first made field goal (free throws excluded). A game without a clean label is void (shown, not hidden).",
                       f"Calibration cells with n < {THIN} are flagged thin. No tuning on these results, ever; constants frozen from the gate's 2024-25 fit ({RULE}).",
                       OVERRIDE]}
     write_json(PERF, doc)
     print(f"[first-basket] graded {n} games ({doc['overall']['record']}), {doc['pending_games']} pending, {doc['void_games']} void")
+    build_today()
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "gate"
-    {"gate": gate, "freeze": freeze, "snapshot": snapshot, "grade": grade}[cmd]()
+    {"gate": gate, "freeze": freeze, "snapshot": snapshot, "grade": grade, "today": build_today}[cmd]()
