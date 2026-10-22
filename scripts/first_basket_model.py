@@ -581,6 +581,11 @@ def build_today(date=None, slate=None, skipped=None):
                    "starters": [{"team": r.team, "home": int(r.home), "player": r.player, "pos": r.pos, "p_first_basket": float(r.p_first_basket), "p_first_attempt": float(r.p_first_attempt),
                                  "top_pick": int(r.top_pick), "jumper": int(r.jumper)} for r in g.itertuples()]})
         games.append(pk)
+    try:
+        from first_basket_odds import attach   # display layer only; the record stays accuracy-only
+        attach(games, date)
+    except Exception as ex:
+        print(f"[first-basket] odds attach skipped: {ex}")
     logged = {g["event_id"] for g in games}; skipped = list(skipped or [])
     if slate and slate.get("date") == date:
         seen = {x["event_id"] for x in skipped}
@@ -593,7 +598,8 @@ def build_today(date=None, slate=None, skipped=None):
     write_json(TODAY, {"date": date, "generated": t.strftime("%Y-%m-%dT%H:%M:%SZ"), "slate_updated": (slate or prev).get("updated") if slate else prev.get("slate_updated"),
                        "source": "data/first_basket_log.csv: every game logged on this date, its last pre-tip snapshot; the tab empties only when the date rolls over",
                        "games": games, "skipped": skipped, "tipped": sum(g["tipped"] for g in games), "graded": sum(g["status"] == "graded" for g in games),
-                       "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.", "override": OVERRIDE, "params_frozen": params.get("frozen"), "K": params["K"], "constants": params["constants"]})
+                       "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.", "override": OVERRIDE, "params_frozen": params.get("frozen"), "K": params["K"], "constants": params["constants"],
+                       "odds_note": "Book prices are a display layer from The Odds API (market player_first_basket), pulled before tip only; the Performance record is accuracy-only."})
     print(f"[first-basket] today {date}: {len(games)} games from the log ({sum(g['tipped'] for g in games)} tipped, {sum(g['status'] == 'graded' for g in games)} graded), {len(skipped)} skipped")
     return games
 

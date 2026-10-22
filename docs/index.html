@@ -89,7 +89,7 @@ tr:last-child td{border-bottom:0}
 /* First Basket tab */
 .fbGame{margin:0 0 26px}.fbGame h2{margin:22px 0 4px}.fbMeta{color:var(--muted);font:500 14px var(--body)}
 .fbTop{margin:4px 0 6px;font-size:16px}.fbWhy{margin:0 0 10px;padding-left:20px;color:var(--muted);font-size:14px;max-width:80ch}
-.fbTable{max-width:760px}tr.fbPick td{font-weight:700}
+.fbTable{max-width:760px}.fbTable.fbWide{max-width:1040px}tr.fbPick td{font-weight:700}tr.fbEdge td{background:var(--chip)}
 .fbBadge{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:1px 8px;font:600 12px var(--body);vertical-align:middle}
 /* Results tab */
 h2{font:700 26px var(--display);margin:28px 0 8px}
@@ -402,11 +402,23 @@ function renderFirstBasket(){
   const resultLine = g => { const r = g.result; if(!g.tipped) return ""; if(!r) return `<p class="fbTop fbMeta">Tipped &middot; first scorer not labelled yet.</p>`;
     if(r.void) return `<p class="fbTop fbMeta">Tipped &middot; void: ${r.reason}.</p>`;
     return `<p class="fbTop">First scorer: <b>${r.scorer}</b>${r.scorer_logged?` <span class="fbMeta">model P ${(100*r.scorer_p).toFixed(1)}%</span>`:' <span class="fbMeta">(not among the ten logged)</span>'} &middot; <span class="${r.hit?"pos":"neg"}">${r.hit?"HIT":"MISS"}</span>${!r.hit&&r.top3?' <span class="fbMeta">(in the top 3)</span>':""}</p>`; };
+  const amer = x => x==null ? "\u2013" : (x>0?"+":"")+x;
+  const oddsTable = g => {
+    const rows = g.starters.slice().sort((a,b)=>b.p_first_basket-a.p_first_basket);
+    const has = !!g.odds, gaps = rows.map(r=>r.gap).filter(x=>x!=null && x>0), maxGap = gaps.length ? Math.max(...gaps) : null;
+    const bk = (r,b) => r.odds && r.odds[b] ? `${amer(r.odds[b].price)} <span class="fbMeta">${(100*r.odds[b].implied).toFixed(1)}%</span>` : "\u2013";
+    const gapCell = r => r.gap==null ? "\u2013" : `<span class="${r.gap>0?"pos":"neg"}">${r.gap>0?"+":""}${(100*r.gap).toFixed(1)}</span>`;
+    const head = `<tr><th style="text-align:left">Team</th><th style="text-align:left">Player</th><th>Pos</th><th>Our P</th><th>P(first attempt)</th>${has?`<th>DK <span class="fbMeta">implied</span></th><th>FD <span class="fbMeta">implied</span></th><th>Gap (pts)</th>`:""}</tr>`;
+    const body = rows.map(r=>`<tr class="${r.top_pick?"fbPick":""}${has && r.gap!=null && r.gap>0 && (r.gap===maxGap || r.gap>=0.05)?" fbEdge":""}"><td style="text-align:left">${r.team}</td><td style="text-align:left">${r.player}${r.jumper?' <span class="fbMeta">jumper</span>':""}</td><td>${r.pos}</td><td>${(100*r.p_first_basket).toFixed(1)}%</td><td>${(100*r.p_first_attempt).toFixed(1)}%</td>${has?`<td>${bk(r,"draftkings")}</td><td>${bk(r,"fanduel")}</td><td>${gapCell(r)}</td>`:""}</tr>`).join("");
+    const note = has ? `<p class="foot">Prices: DraftKings and FanDuel "Yes" on the first basket scorer, last pulled before tip ${ago(g.odds.pulled_at)} (The Odds API). Implied is raw from the price, vig included. Gap = our P minus the lower implied of the two books, in points; the largest positive gap and any gap of 5+ points are highlighted. Display only: the Performance record is accuracy-only.</p>`
+                     : `<p class="foot">No pre-tip book prices logged for this game.</p>`;
+    return `<div class="scroll"><table class="fbTable${has?" fbWide":""}"><thead>${head}</thead><tbody>${body}</tbody></table></div>${note}`;
+  };
   const block = g => `<div class="fbGame${g.tipped?" fbTipped":""}"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)}${g.tipped?' &middot; <span class="fbBadge">tipped</span>':""}${g.p_tip_home!=null?` &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}`:""}${g.snapshots>1?` &middot; snapshot ${g.snapshots} of ${g.snapshots}, logged ${ago(g.logged_at)}`:""}</span></h2>
     <p class="fbTop">Top candidate: <b>${g.top_pick}</b> <span class="fbMeta">${g.top_team}</span> &middot; P(first basket) <b>${(100*g.top_p).toFixed(1)}%</b></p>
     ${resultLine(g)}
     ${g.why && g.why.length ? `<ul class="fbWhy">${g.why.map(w=>`<li>${w}</li>`).join("")}</ul>` : ""}
-    <div class="scroll"><table class="fbTable"><thead><tr><th style="text-align:left">Team</th><th style="text-align:left">Player</th><th>Pos</th><th>P(first basket)</th><th>P(first attempt)</th></tr></thead><tbody>${g.starters.slice().sort((a,b)=>b.p_first_basket-a.p_first_basket).map(r=>`<tr class="${r.top_pick?"fbPick":""}"><td style="text-align:left">${r.team}</td><td style="text-align:left">${r.player}${r.jumper?' <span class="fbMeta">jumper</span>':""}</td><td>${r.pos}</td><td>${(100*r.p_first_basket).toFixed(1)}%</td><td>${(100*r.p_first_attempt).toFixed(1)}%</td></tr>`).join("")}</tbody></table></div></div>`;
+    ${oddsTable(g)}</div>`;
   $("fbGames").innerHTML = games.map(block).join("") + (FB.skipped && FB.skipped.length ? `<p class="foot">Not logged: ${FB.skipped.map(x=>`${x.away} @ ${x.home} (${x.reason})`).join("; ")}.</p>` : "");
 }
 

@@ -74,6 +74,11 @@ jobs:
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         working-directory: scripts
         run: python first_basket_model.py snapshot
+      - name: First-basket market odds (The Odds API player_first_basket, 1 credit per untipped game; display layer, logged pre-tip)
+        working-directory: scripts
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python first_basket_odds.py pull
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"
