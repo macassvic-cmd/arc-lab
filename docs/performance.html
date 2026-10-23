@@ -102,7 +102,8 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <h3>Graded results <span class="foot">top pick per game, graded the morning after</span></h3>
     <div class="stats" id="fbCards"></div>
     <div class="stats" id="fbCards2"></div>
-    <h3>Calibration <span class="foot">every logged starter row, model P vs share who scored first</span></h3>
+    <p class="foot" id="fbNightly"></p>
+    <h3>Calibration <span class="foot">every graded starter row (void rows excluded), model P vs share who scored first</span></h3>
     <div class="scroll"><table id="fbCal"></table></div>
     <h3>Recent games <span class="foot">top pick vs the actual first scorer</span></h3>
     <div class="scroll"><table id="fbRecent"></table></div>
@@ -127,16 +128,20 @@ function renderFB(){
   $("fbOverride").textContent = (F.method && F.method[F.method.length-1]) || "";
   if(T && T.picks && T.picks.length){
     $("fbPicksNote").textContent = `${T.date}: ${T.picks.length} games logged, ${T.pending} pending, ${T.graded} graded${T.void?`, ${T.void} void`:""}`;
-    const st = p => p.status==="pending" ? (p.tipped ? '<span class="thin">tipped, awaiting label</span>' : "pending") : p.status==="void" ? `void (${p.result.reason})` : `<span class="${p.result.hit?"pos":"neg"}">${p.result.hit?"HIT":"MISS"}</span> \u2013 ${p.result.scorer}${p.result.scorer_logged?"":" (not logged)"}${!p.result.hit&&p.result.top3?" (top 3)":""}`;
+    const np = r => r.non_projected ? ` <span class="thin">(not projected${r.scorer_logged?", came off the bench":""}: every row a miss)</span>` : "";
+    const st = p => p.status==="pending" ? (p.tipped ? '<span class="thin">tipped, awaiting label</span>' : "pending") : p.status==="void" ? `void (${p.result.reason})` : p.result.hit==null ? `<span class="thin">didn't start (void row)</span> \u2013 ${p.result.scorer}${np(p.result)}` : `<span class="${p.result.hit?"pos":"neg"}">${p.result.hit?"HIT":"MISS"}</span> \u2013 ${p.result.scorer}${np(p.result)}${!p.result.hit&&p.result.top3?" (top 3)":""}`;
     $("fbPicks").innerHTML = `<thead><tr><th>Tip (UTC)</th><th>Game</th><th>Top candidate</th><th>P</th><th>Status</th></tr></thead><tbody>${T.picks.map(p=>`<tr><td>${p.tip.slice(11,16)}</td><td>${p.away} @ ${p.home}</td><td>${p.top_pick} <span class="foot">${p.top_team}</span></td><td>${pct(p.top_p)}</td><td>${st(p)}</td></tr>`).join("")}</tbody>`;
   } else {
     $("fbPicksNote").textContent = ""; $("fbPicks").innerHTML = `<tbody><tr><td class="empty">No picks logged for today yet.</td></tr></tbody>`;
   }
   if(graded){
     $("fbCards").innerHTML = [card(F.overall.record,"record (top pick per game)"), card(pct(F.overall.hit_rate),"hit rate"), card(pct(F.overall.mean_p),"mean P of the top pick"), card(F.games,"games graded"), card(F.pending_games,"logged, not yet graded"), card(F.void_games,"void (no clean label)")].join("");
-    $("fbCards2").innerHTML = [card(pct(F.top3_rate),"scorer in the top 3"), card(F.log_loss_v2==null?"\u2013":F.log_loss_v2.toFixed(3),`log loss (uniform 1/10: ${F.log_loss_uniform==null?"\u2013":F.log_loss_uniform.toFixed(3)})`), card(pct(F.starter_match_rate),"projected starters who actually started"), card(pct(F.scorer_among_logged_share),"first scorer was among the ten logged")].join("");
+    $("fbCards2").innerHTML = [card(pct(F.top3_rate),"scorer in the top 3"), card(F.log_loss_v2==null?"\u2013":F.log_loss_v2.toFixed(3),`log loss (uniform 1/10: ${F.log_loss_uniform==null?"\u2013":F.log_loss_uniform.toFixed(3)})`), card(pct(F.starter_match_rate),"projected starters who actually started"), card(pct(F.scorer_among_logged_share),"first scorer was among the ten logged"),
+      card(F.rows_void==null?"\u2013":F.rows_void,"starter rows void (didn't start)"), card(F.top_picks_void==null?"\u2013":F.top_picks_void,"top picks void (didn't start)"), card(F.non_projected_games==null?"\u2013":F.non_projected_games,"games won by a non-projected scorer")].join("");
+    const N = F.nightly;
+    $("fbNightly").textContent = N ? `Nightly report ${N.date}: ${N.games_graded} games graded (${N.games_counted} with a top-pick observation), ${N.rows_voided} rows voided (didn't start), ${N.top_picks_didnt_start} top picks voided, non-projected first scorers: ${N.non_projected_scorers.length ? N.non_projected_scorers.map(x=>`${x.scorer} (${x.game}${x.started===0?", off the bench":""})`).join("; ") : "none"}. Void rows are excluded from the hit rates, calibration and log loss; surviving rows are never renormalized.` : "";
     $("fbCal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Scored first</th></tr></thead><tbody>${F.buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td></tr>`).join("")}</tbody>`;
-    $("fbRecent").innerHTML = `<thead><tr><th>Date</th><th>Game</th><th>Top pick</th><th>P</th><th>First scorer</th><th>Hit</th><th>Top 3</th></tr></thead><tbody>${(F.recent||[]).map(r=>`<tr><td>${r.date}</td><td>${r.away} @ ${r.home}</td><td>${r.top_pick}</td><td>${pct(r.top_p)}</td><td>${r.scorer}${r.scorer_logged?"":" (not logged)"}</td><td class="${r.hit?"pos":"neg"}">${r.hit?"hit":"miss"}</td><td>${r.top3?"yes":"no"}</td></tr>`).join("")}</tbody>`;
+    $("fbRecent").innerHTML = `<thead><tr><th>Date</th><th>Game</th><th>Top pick</th><th>P</th><th>First scorer</th><th>Hit</th><th>Top 3</th></tr></thead><tbody>${(F.recent||[]).map(r=>`<tr><td>${r.date}</td><td>${r.away} @ ${r.home}</td><td>${r.top_pick}</td><td>${pct(r.top_p)}</td><td>${r.scorer}${r.non_projected?` <span class="thin">(not projected${r.scorer_logged?", bench":""})</span>`:""}</td><td class="${r.hit==null?"thin":r.hit?"pos":"neg"}">${r.hit==null?"didn't start":r.hit?"hit":"miss"}</td><td>${r.hit==null?"\u2013":r.top3?"yes":"no"}</td></tr>`).join("")}</tbody>`;
   } else {
     $("fbCards").innerHTML = card(F.pending_games || 0, "games logged, graded the morning after");
     $("fbCards2").innerHTML = ""; $("fbCal").innerHTML = `<tbody><tr><td class="empty">Nothing graded yet.</td></tr></tbody>`; $("fbRecent").innerHTML = `<tbody><tr><td class="empty">Nothing graded yet.</td></tr></tbody>`;
