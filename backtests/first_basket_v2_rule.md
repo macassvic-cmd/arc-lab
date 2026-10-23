@@ -119,3 +119,21 @@ section. The CEO overruled that outcome on 2026-10-21 and ordered the model live
   "two complete seasons for the live model" re-estimation was not run, on the same order.
 - Sections 5 and 6 run as written from the first pre-tip snapshot of 2026-10-21. 2026-10-20 stays blank.
 - Every page that shows live first-basket output carries the override note and the accuracy-not-profit line.
+
+## Addendum, 2026-10-22: late scratches (grading only; sections 0-6 and the model unchanged)
+
+Ordered 2026-10-22, applied to every graded date including 2026-10-21 and the games of 2026-10-22 onward. Grading reads the
+box-score starters already labelled in `data/first_shot_starters.csv`; no row of the log is edited.
+
+- A projected starter who does not start (not in the box-score five for his team) is a VOID row: shown as "didn't start",
+  excluded from the hit rates, the calibration buckets and the log loss. If the game's top pick didn't start, the game has no
+  top-pick observation (excluded from the record and hit rate, listed as "didn't start").
+- A first scorer who was not among the ten projected starters, or who was projected but did not start, still grades the game:
+  every surviving row is a miss, the game is flagged with his name, and the game's log loss uses the bench share eps (2f) for
+  both the model and the uniform comparator, as in section 4.
+- NO renormalization of the surviving rows: every P is graded exactly as logged, whatever was voided beside it.
+- Nightly report (Performance page, `docs/data/first_basket_performance.json` `nightly`, and the Actions log): games graded,
+  rows voided (didn't start), top picks voided, non-projected first scorers by name. The row-level grades are written to
+  `data/first_basket_grades.csv` (derived from the log and the labels, regenerated on every grade; the log stays the record).
+- The graded snapshot is the game's last pre-tip snapshot (rule 5) for every row: a player who appeared only in an earlier
+  snapshot of the same game is not graded.
