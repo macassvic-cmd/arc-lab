@@ -96,3 +96,21 @@ Main page, "Fantasy Points" tab: tonight's projection per player (minutes, FP me
 the Underdog FP line when the capture carries one, P(higher), break-even, edge, and the capture's market list when it does
 not. Labeled "Pricing study, paper only" and "Hit rate measures accuracy, not profit." The Performance page shows the graded
 record from `docs/data/fp_performance.json`.
+
+## Addendum, 2026-10-23: pricing corrections (CEO "FANTASY POINTS: CORRECTIONS TO THE SHIPPED BUILD"; sections 0-7 and the model untouched)
+
+1. **Break-even convention per line.** A line is *book-style* when the capture carries a decimal price for the priced side
+   and that side's payout multiplier is 1.0: break-even = `1 / decimal`. Every other line is a *pick'em leg*: break-even =
+   `0.55 / mult` exactly as section 4 (ratified 2026-10-23). Each row of `data/fp_prices.csv` and `data/ud_prices.csv`
+   logs `convention` (`book` | `pickem`), `decimal` (the price when the capture carries one) and `mult`. A capture without
+   price fields prices every line as a pick'em leg (the normalized board carried no prices before 2026-10-23).
+2. **Source and freshness.** The scraper's Arc Lab hook copies each capture's NBA entries into the repo as
+   `data/board_latest.json` (`captured_at`, `source_updated_at`, `stored_at`, `entries`); `fantasy_points.py price` runs in
+   the update workflow against that file. The capture's `captured_at`, read as a US/Eastern date, must be on the slate date
+   or later, and the capture must be at most 12 hours old at pricing time; otherwise nothing is priced and the refusal
+   (capture time, slate date, reason) is reported in `docs/data/fp_pricing.json`. Every price row carries `captured_at`.
+3. **Display wording.** When the capture carries no NBA Fantasy Points entry the tab says "No Fantasy Points lines on the
+   latest board capture (captured <time>). Underdog posts this market intermittently." It never claims the market does not
+   exist. Our projections (mean, 10th-90th, STL/BLK/TOV) are shown for every slate player straight from the model build
+   regardless of the board; the line columns fill only when the capture carries the market.
+4. Section 6 gates and the pick'em `0.55 / mult` convention are unchanged.
