@@ -16,6 +16,7 @@ Library (what the pirate-bets scraper hook calls):
 """
 import argparse
 import datetime as dt
+import hashlib
 import json
 import logging
 import os
@@ -24,11 +25,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import SITE_DATA, norm_name, write_json  # noqa: E402
+from collections import Counter  # noqa: E402
+from common import DATA_DIR, SITE_DATA, norm_name, write_json  # noqa: E402
 from odds import OddsBlaze, devig, team_abbr  # noqa: E402
 
 log = logging.getLogger("arc.lines")
 DEFAULT_OUT = SITE_DATA / "lines.json"
+BOARD_LATEST = DATA_DIR / "board_latest.json"   # repo copy of the capture's NBA entries (fantasy_points rule addendum 2026-10-23)
+BOARD_REFRESH_SECONDS = 3600                     # an unchanged board is re-stamped at most hourly, so pushes stay quiet
 
 # Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22: only 3PM and Fantasy Points are priced;
 # points / rebounds / assists / PRA and season-long markets fall through and are ignored.
@@ -118,19 +122,46 @@ def build(snapshot, odds=True, client=None):
     }, hits
 
 
-def git_push(path):
-    """Commit docs/data/lines.json to the arc-lab repo and push, so Pages picks it up.
+def write_board(snapshot, out_path=BOARD_LATEST):
+    """Copy the capture's NBA entries (every market, prices and multipliers included) into the repo as
+    data/board_latest.json with the capture time, so the Actions pricing step can check freshness and price against it.
+    Rewritten when the NBA board content changed or the stored copy's capture is over BOARD_REFRESH_SECONDS old."""
+    nba = [e for e in snapshot.get("entries") or [] if (e.get("league") or "").upper() == "NBA"]
+    digest = hashlib.sha1(json.dumps(nba, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    now = dt.datetime.now(dt.timezone.utc)
+    try:
+        with open(out_path, encoding="utf-8") as f:
+            old = json.load(f)
+        old_cap = dt.datetime.fromisoformat(str(old.get("captured_at")).replace("Z", "+00:00"))
+        if old.get("board_sha1") == digest and (now - old_cap).total_seconds() < BOARD_REFRESH_SECONDS:
+            return False
+    except Exception:  # noqa: BLE001  (no copy yet, or unreadable: write it)
+        pass
+    markets = Counter((e.get("market") or "").strip() for e in nba)
+    write_json(Path(out_path), {
+        "platform": snapshot.get("platform") or "underdog", "league": "NBA",
+        "captured_at": snapshot.get("captured_at"), "source_updated_at": snapshot.get("source_updated_at"),
+        "stored_at": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "nba_entries": len(nba), "markets": dict(markets.most_common()), "board_sha1": digest, "entries": nba,
+    })
+    return True
+
+
+def git_push(paths):
+    """Commit the given files to the arc-lab repo and push, so Pages and Actions pick them up.
     Quiet no-op when nothing changed. Returns True on push."""
-    repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(path))))
-    rel = os.path.relpath(path, repo)
+    paths = [paths] if isinstance(paths, (str, os.PathLike)) else list(paths)
+    repo = str(Path(__file__).resolve().parent.parent)
 
     def git(*a, check=True):
         return subprocess.run(["git", "-C", repo, *a], capture_output=True, text=True, timeout=120, check=check)
 
-    git("add", rel)
+    for path in paths:
+        if os.path.exists(path):
+            git("add", os.path.relpath(os.path.abspath(path), repo))
     if git("diff", "--cached", "--quiet", check=False).returncode == 0:
         return False
-    git("commit", "-q", "-m", f"lines: {dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%MZ}")
+    git("commit", "-q", "-m", f"board: {dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%MZ} (lines.json, data/board_latest.json)")
     for _ in range(3):
         if git("pull", "--rebase", "-q", check=False).returncode == 0 and git("push", "-q", check=False).returncode == 0:
             return True
@@ -140,9 +171,10 @@ def git_push(path):
 def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=None):
     doc, hits = build(snapshot, odds=odds, client=client)
     write_json(Path(out_path), doc)
-    pushed = git_push(str(out_path)) if push else False
-    summary = {"lines": len(doc["lines"]), "sharp": hits, "sharp_book": doc["sharp_book"], "pushed": pushed, "path": str(out_path)}
-    log.info("lines.json: %(lines)d NBA lines, %(sharp)d with sharp odds (%(sharp_book)s), pushed=%(pushed)s", summary)
+    board = write_board(snapshot)
+    pushed = git_push([str(out_path), str(BOARD_LATEST)]) if push else False
+    summary = {"lines": len(doc["lines"]), "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pushed": pushed, "path": str(out_path)}
+    log.info("lines.json: %(lines)d NBA lines, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pushed=%(pushed)s", summary)
     return summary
 
 

@@ -46,11 +46,17 @@ FP_MARKETS = {"fantasy points", "fantasy score", "fantasy pts"}
 THREES_MARKETS = {"3-pointers made", "3 pointers made", "three pointers made", "three-pointers made", "threes made", "3pm", "3-pt made", "3 pt made", "3pt made"}
 PMF_TOP = {"stl": 10, "blk": 10, "tov": 12}
 THIN, MIN_DECILE, GATE_N = 30, 20, 200
+MAX_CAPTURE_AGE_H = 12                                          # addendum 2026-10-23: never price a capture older than this (or than the slate)
+try:
+    from zoneinfo import ZoneInfo
+    ET = ZoneInfo("America/New_York")
+except Exception:  # noqa: BLE001  (no tz database: fall back to fixed EST)
+    ET = dt.timezone(dt.timedelta(hours=-5))
 LABEL = "Hit rate measures accuracy, not profit. Pricing study, paper only."
 LOG_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min", "fp_mean", "fp_sd", "fp_q", "stl_mean", "blk_mean", "tov_mean",
               "stl_pmf", "blk_pmf", "tov_pmf", "logged_at"]
-FP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "mult", "p_model", "breakeven", "edge", "fp_logged_at", "source_id"]
-UD_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "line", "side", "mult", "p_model", "p_source", "breakeven", "edge", "source_id"]
+FP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "mult", "decimal", "convention", "p_model", "breakeven", "edge", "fp_logged_at", "source_id"]
+UD_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "line", "side", "mult", "decimal", "convention", "p_model", "p_source", "breakeven", "edge", "source_id"]
 GRADE_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min_proj", "min_actual", "fp_mean", "fp_actual", "pit", "stl_actual", "blk_actual",
                 "tov_actual", "void", "line_source", "market", "line", "side", "mult", "p_model", "breakeven", "hit", "logged_at", "captured_at"]
 
@@ -259,6 +265,38 @@ def leg_mult(e, side):
         return 1.0
 
 
+def leg_price(e, side):
+    """(mult, decimal, convention, break-even) per the 2026-10-23 addendum: a side is book-style when the capture carries a
+    decimal price for it and its payout multiplier is 1.0 (break-even 1/decimal); every other side is a pick'em leg (0.55/mult)."""
+    m = leg_mult(e, side)
+    pr = ((e.get("platform_ids") or {}).get("prices") or {}).get(side) or {}
+    try:
+        dec = float(pr.get("decimal")) if pr.get("decimal") not in (None, "") else None
+    except (TypeError, ValueError):
+        dec = None
+    if dec is not None and dec > 1.0 and abs(m - 1.0) < 1e-9:
+        return m, dec, "book", 1.0 / dec
+    return m, dec, "pickem", (BE_STD / m if m > 0 else None)
+
+
+def capture_check(cap, slate_date, t):
+    """Addendum 2026-10-23 item 2: the capture's US/Eastern date must be on the slate date or later and the capture at most
+    MAX_CAPTURE_AGE_H hours old at pricing time. Returns (ok, reason)."""
+    try:
+        c = dt.datetime.fromisoformat(str(cap).replace("Z", "+00:00"))
+        if c.tzinfo is None:
+            c = c.replace(tzinfo=dt.timezone.utc)
+    except Exception:  # noqa: BLE001
+        return False, "capture has no parseable captured_at"
+    cap_et = c.astimezone(ET).date().isoformat()
+    if slate_date and cap_et < str(slate_date):
+        return False, f"capture dated {cap_et} ET is older than the slate {slate_date}"
+    age_h = (t - c).total_seconds() / 3600
+    if age_h > MAX_CAPTURE_AGE_H:
+        return False, f"capture is {age_h:.1f} h old (limit {MAX_CAPTURE_AGE_H} h)"
+    return True, f"capture {age_h * 60:.0f} min old, dated {cap_et} ET, slate {slate_date}"
+
+
 def price(snapshot_path):
     snap = json.load(open(snapshot_path, encoding="utf-8"))
     cap = snap.get("captured_at") or ts(now())
@@ -269,9 +307,10 @@ def price(snapshot_path):
     for g in P["games"]:
         games.append(g)
     def match_game(e):
+        # canonicalize BOTH sides through odds.team_abbr: Underdog's and ESPN's abbreviations differ (NYK/NY, GSW/GS, ...)
         a, b = team_abbr(e.get("team")), team_abbr(e.get("opponent"))
         for g in games:
-            if {g["home"], g["away"]} == {a, b}:
+            if {team_abbr(g["home"]), team_abbr(g["away"])} == {a, b}:
                 try:
                     if abs((parse_ts(e["scheduled_at"]) - parse_ts(g["start"])).total_seconds()) <= 12 * 3600:
                         return g
@@ -282,9 +321,10 @@ def price(snapshot_path):
     log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str}) if LOG.exists() else None
     fp_rows, ud_rows, unmatched, tipped = [], [], 0, 0
     t = now()
+    ok, why = capture_check(cap, P.get("date"), t)
     fp_entries = [e for e in nba if (e.get("market") or "").strip().lower() in FP_MARKETS]
     th_entries = [e for e in nba if (e.get("market") or "").strip().lower() in THREES_MARKETS]
-    for e in fp_entries + th_entries:
+    for e in (fp_entries + th_entries) if ok else []:
         g = match_game(e)
         if g is None:
             unmatched += 1; continue
@@ -296,8 +336,10 @@ def price(snapshot_path):
             continue
         key = norm_name(e.get("player"))
         is_fp = e in fp_entries
+        tm = g["home"] if team_abbr(e.get("team")) == team_abbr(g["home"]) else g["away"]   # site (ESPN) abbreviations in the output
+        op = g["away"] if tm == g["home"] else g["home"]
         for side in e.get("available_directions") or ["higher", "lower"]:
-            m = leg_mult(e, side); be = BE_STD / m if m > 0 else None
+            m, dec, conv, be = leg_price(e, side)
             if is_fp:
                 if log is None:
                     continue
@@ -307,8 +349,8 @@ def price(snapshot_path):
                     continue
                 row = d.sort_values("logged_at").iloc[-1]
                 c = cdf_from_q(json.loads(row.fp_q), line); p_m = (1 - c) if side == "higher" else c
-                fp_rows.append({"captured_at": cap, "date": P["date"], "event_id": g["event_id"], "player": e["player"], "team": team_abbr(e.get("team")), "opp": team_abbr(e.get("opponent")),
-                                "market": e["market"], "line": line, "side": side, "mult": m, "p_model": round(p_m, 4), "breakeven": round(be, 4) if be else None,
+                fp_rows.append({"captured_at": cap, "date": P["date"], "event_id": g["event_id"], "player": e["player"], "team": tm, "opp": op,
+                                "market": e["market"], "line": line, "side": side, "mult": m, "decimal": dec, "convention": conv, "p_model": round(p_m, 4), "breakeven": round(be, 4) if be else None,
                                 "edge": round(p_m - be, 4) if be else None, "fp_logged_at": row.logged_at, "source_id": e.get("source_id")})
             else:
                 p = players.get(key)
@@ -319,8 +361,8 @@ def price(snapshot_path):
                 p_hi = float(lad["p"]) if lad else float(sum(p["tpm"]["pmf"][k:]))
                 src = "ladder" if lad else "pmf"
                 p_m = p_hi if side == "higher" else 1 - p_hi
-                ud_rows.append({"captured_at": cap, "date": P["date"], "event_id": g["event_id"], "player": e["player"], "team": team_abbr(e.get("team")), "opp": team_abbr(e.get("opponent")),
-                                "line": line, "side": side, "mult": m, "p_model": round(p_m, 4), "p_source": src, "breakeven": round(be, 4) if be else None,
+                ud_rows.append({"captured_at": cap, "date": P["date"], "event_id": g["event_id"], "player": e["player"], "team": tm, "opp": op,
+                                "line": line, "side": side, "mult": m, "decimal": dec, "convention": conv, "p_model": round(p_m, 4), "p_source": src, "breakeven": round(be, 4) if be else None,
                                 "edge": round(p_m - be, 4) if be else None, "source_id": e.get("source_id")})
     def fresh(path, rows):
         if not rows:
@@ -331,16 +373,20 @@ def price(snapshot_path):
                 return 0   # this capture is already logged
         append(path, FP_PRICE_FIELDS if path is FP_PRICES else UD_PRICE_FIELDS, rows); return len(rows)
     n_fp, n_ud = fresh(FP_PRICES, fp_rows), fresh(UD_PRICES, ud_rows)
-    doc = {"captured_at": cap, "priced_at": ts(t), "slate_date": P.get("date"), "nba_entries": len(nba), "markets": dict(markets.most_common()),
+    conv = Counter(r["convention"] for r in fp_rows + ud_rows)
+    doc = {"captured_at": cap, "source_updated_at": snap.get("source_updated_at"), "stored_at": snap.get("stored_at"), "priced_at": ts(t), "slate_date": P.get("date"),
+           "capture_ok": ok, "capture_check": why, "max_capture_age_h": MAX_CAPTURE_AGE_H, "nba_entries": len(nba), "markets": dict(markets.most_common()),
            "fp_market_strings_checked": sorted(FP_MARKETS), "fp_market_present": bool(fp_entries), "fp_entries": len(fp_entries),
            "fp_lines_priced": len(fp_rows), "threes_entries": len(th_entries), "threes_priced": len(ud_rows), "unmatched_entries": unmatched, "tipped_entries": tipped,
-           "note": ("Underdog's NBA board carries no Fantasy Points market in this capture; nothing is priced and no other source is used (rule section 4)."
+           "conventions": dict(conv),
+           "note": (f"Not priced: {why}. Pricing never runs against a capture older than the slate it prices (addendum 2026-10-23)." if not ok else
+                    f"No Fantasy Points lines on the latest board capture (captured {cap}). Underdog posts this market intermittently; nothing is priced and no other source is used (rule section 4)."
                     if not fp_entries else "Fantasy Points lines priced against the last pre-tip FP log row."),
-           "breakeven_rule": f"{BE_STD} / leg multiplier (standard balanced leg = 1.0)", "label": LABEL, "rule_file": RULE,
+           "breakeven_rule": f"book-style side (decimal price posted, multiplier 1.0): 1 / decimal; pick'em leg: {BE_STD} / leg multiplier", "label": LABEL, "rule_file": RULE,
            "fp_lines": sorted(fp_rows, key=lambda r: -(r["edge"] or -9))[:400], "threes": sorted(ud_rows, key=lambda r: -(r["edge"] or -9))[:400]}
     write_json(PRICING, doc)
-    print(f"[fp] board {cap}: {len(nba)} NBA entries, markets {dict(markets.most_common(6))}...; FP market present: {bool(fp_entries)} ({len(fp_entries)} entries, {n_fp} new price rows); "
-          f"3PM {len(th_entries)} entries -> {n_ud} new rows; {unmatched} entries not on tonight's slate, {tipped} tipped")
+    print(f"[fp] board {cap} ({'ok' if ok else 'REFUSED'}: {why}): {len(nba)} NBA entries, markets {dict(markets.most_common(6))}...; FP market present: {bool(fp_entries)} "
+          f"({len(fp_entries)} entries, {n_fp} new price rows); 3PM {len(th_entries)} entries -> {n_ud} new rows; conventions {dict(conv)}; {unmatched} entries not on tonight's slate, {tipped} tipped")
     return doc
 
 

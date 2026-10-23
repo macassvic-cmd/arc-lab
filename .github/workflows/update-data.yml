@@ -77,6 +77,10 @@ jobs:
       - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
         working-directory: scripts
         run: python fantasy_points.py snapshot
+      - name: Fantasy-points pricing study (repo board copy data/board_latest.json; refuses a capture older than the slate or 12 h)
+        working-directory: scripts
+        run: |
+          if [ -f ../data/board_latest.json ]; then python fantasy_points.py price ../data/board_latest.json; else echo "no data/board_latest.json yet: the scraper hook has not delivered a capture"; fi
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         working-directory: scripts
         run: python first_basket_model.py snapshot
