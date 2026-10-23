@@ -57349,7 +57349,7 @@
  ],
  "first_basket": {
   "header": "Every pick graded against real results. Nothing filtered, nothing hidden.",
-  "generated": "2026-10-23T06:17:39Z",
+  "generated": "2026-10-23T06:19:36Z",
   "rule_file": "backtests/first_basket_v2_rule.md",
   "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.",
   "games": 11,

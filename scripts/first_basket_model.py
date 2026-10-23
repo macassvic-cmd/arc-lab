@@ -676,7 +676,7 @@ def grade():
                          "hit": res["hit"], "top3": res["top3"], "scorer": res["scorer"], "scorer_logged": res["scorer_logged"], "scorer_started": res["scorer_started"],
                          "non_projected": res["non_projected"], "rows_void": n_void,
                          "loss_v2": -np.log(max(float(p_sc), P_FLOOR)) if surv else -np.log(max(eps, P_FLOOR)), "loss_uniform": -np.log((1 - eps) / 10) if surv else -np.log(max(eps, P_FLOOR))})
-    R = pd.DataFrame(rows, columns=GRADE_FIELDS)
+    R = pd.DataFrame(rows, columns=GRADE_FIELDS); R["started"] = R.started.astype("Int64")   # 1 / 0 / blank until the box score exists
     R.to_csv(GRADES, index=False)
     pg = pd.DataFrame(per_game)
     counted = pg[pg.top_started != 0] if len(pg) else pg          # games with a top-pick observation (top pick started, or box score unknown)
