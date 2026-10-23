@@ -24,7 +24,7 @@ ODDS_URL = "https://odds.oddsblaze.com/"
 TIMEOUT = 30
 MIN_SPACING = 1.3            # OddsBlaze 429s bursts even under the 30/min cap
 SHARP_BOOKS = [b.strip() for b in os.environ.get("ODDSBLAZE_SHARP_BOOKS", "pinnacle,circa,draftkings,fanduel").split(",") if b.strip()]
-STATS = ["3PM", "PTS", "REB", "AST", "PRA"]
+STATS = ["3PM"]   # scope reset 2026-10-22: sharp prices are attached to 3PM lines only
 
 # ESPN's abbreviations are the canonical ones everywhere in Arc Lab.
 ESPN_TEAMS = {

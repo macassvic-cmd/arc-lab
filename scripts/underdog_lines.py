@@ -30,13 +30,10 @@ from odds import OddsBlaze, devig, team_abbr  # noqa: E402
 log = logging.getLogger("arc.lines")
 DEFAULT_OUT = SITE_DATA / "lines.json"
 
-# Underdog display_stat -> Arc Lab stat code. Season-long markets ("Regular Season
-# Points Per Game", "Triple Doubles") and anything else fall through and are ignored.
+# Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22: only 3PM and Fantasy Points are priced;
+# points / rebounds / assists / PRA and season-long markets fall through and are ignored.
 MARKETS = {
-    "points": "PTS", "pts": "PTS",
-    "rebounds": "REB", "rebs": "REB",
-    "assists": "AST", "asts": "AST",
-    "pts + rebs + asts": "PRA", "points + rebounds + assists": "PRA", "pts+rebs+asts": "PRA", "pra": "PRA",
+    "fantasy points": "FP", "fantasy score": "FP", "fantasy pts": "FP",
     "3-pointers made": "3PM", "3 pointers made": "3PM", "3-pt made": "3PM", "3 pt made": "3PM",
     "three pointers made": "3PM", "three-pointers made": "3PM", "threes made": "3PM", "3pm": "3PM", "3pt made": "3PM",
 }

@@ -140,6 +140,9 @@ def grade():
     fb = SITE_DATA / "first_basket_performance.json"
     if fb.exists():
         doc["first_basket"] = read_json(fb, None)
+    fpp = SITE_DATA / "fp_performance.json"
+    if fpp.exists():
+        doc["fantasy_points"] = read_json(fpp, None)
     write_json(SITE_DATA / "performance.json", doc)
     print(f"[ladder-log] graded {len(g)} rungs ({doc['overall']['record']}, {doc['overall']['hit_rate']}), {doc['log']['pending']} pending, {len(void)} void")
 

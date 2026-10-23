@@ -82,7 +82,7 @@ ul.notes li{margin:4px 0}
   <div class="scroll"><table id="kCal"></table></div>
   <p class="foot">Each row groups player-games by what the model said. A calibrated model's "actually hit" matches "model said" in every row. Brier score is the mean squared error of the probability (lower is better); the base-rate Brier is what you'd get by always predicting the season-wide hit rate.</p>
 
-  <h2>Points, rebounds, assists, PRA <span>calibration at the fair line</span></h2>
+  <h2>Points, rebounds, assists <span>calibration at the fair line</span></h2>
   <div class="controls" id="sChips"></div>
   <p class="meta" id="sSummary"></p>
   <div class="scroll"><table id="sOff"></table></div>
@@ -139,7 +139,7 @@ ul.notes li{margin:4px 0}
 const $ = id => document.getElementById(id);
 const pct = v => v==null || isNaN(v) ? "–" : Math.round(v*100) + "%";
 const num = (v, d=2) => v==null || isNaN(v) ? "–" : (+v).toFixed(d);
-const NAMES = {min:"Minutes", tpm:"3PM", pts:"Points", reb:"Rebounds", ast:"Assists", pra:"PRA"};
+const NAMES = {min:"Minutes", tpm:"3PM", pts:"Points", reb:"Rebounds", ast:"Assists"};
 const S = {k:"1", s:"pts"};
 let B = null;
 
@@ -178,7 +178,7 @@ function render(){
   $("kSummary").textContent = `${k.n.toLocaleString()} player-games. Model said ${pct(k.pred)} on average, ${pct(k.actual)} actually hit. Brier ${num(k.brier,4)} (base rate ${num(k.brier_base,4)}).`;
   $("kCal").innerHTML = calTable(k.buckets, "Model said", "Actually hit");
 
-  chips($("sChips"), ["pts","reb","ast","pra"].map(s=>[s, NAMES[s]]), S.s, v=>{S.s=v; render();});
+  chips($("sChips"), ["pts","reb","ast"].map(s=>[s, NAMES[s]]), S.s, v=>{S.s=v; render();});
   const l = B.lines[S.s];
   $("sSummary").textContent = `At the fair line: model P(over) ${pct(l.at_fair.pred)}, actual over rate ${pct(l.at_fair.over)} on ${l.at_fair.n.toLocaleString()} player-games. Across ${l.alt_n.toLocaleString()} alt lines: Brier ${num(l.brier,4)} vs ${num(l.brier_base,4)} for a coin flip.`;
   $("sOff").innerHTML = `<thead><tr><th>Line</th><th>Player-games</th><th>Model P(over)</th><th>Actually over</th><th>Gap</th></tr></thead><tbody>${

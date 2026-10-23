@@ -109,6 +109,20 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <div class="scroll"><table id="fbRecent"></table></div>
   </section>
 
+  <section id="fpSec" hidden>
+    <h2>Fantasy points <span>Underdog scoring, 10,000-sim joint distribution logged before tip, graded against box-score FP</span></h2>
+    <p class="sub"><b>Hit rate measures accuracy, not profit. Pricing study, paper only.</b></p>
+    <p class="foot">Rule: backtests/fantasy_points_v1_rule.md. No conclusion until 200 graded Underdog FP lines; the verdict is calibration by decile. Tonight's projections are on the <a href="index.html#fantasy">main page's Fantasy Points tab</a>.</p>
+    <div class="stats" id="fpCards"></div>
+    <h3>Distribution calibration <span class="foot">PIT = where the actual FP fell in the logged distribution; a calibrated model puts 10% of player-games in each decile</span></h3>
+    <div class="scroll"><table id="fpPit"></table></div>
+    <h3>Underdog FP lines by decile <span class="foot">the gate's verdict table</span></h3>
+    <div class="scroll"><table id="fpLines"></table></div>
+    <h3>STL / BLK / TO marginals <span class="foot">own calibration read at n &ge; 200</span></h3>
+    <div class="scroll"><table id="fpMarg"></table></div>
+    <ul class="foot" id="fpMethod"></ul>
+  </section>
+
   <h2>Method</h2>
   <ul class="notes" id="method"></ul>
 </main>
@@ -148,8 +162,19 @@ function renderFB(){
   }
 }
 
+function renderFP(){
+  const F = R && R.fantasy_points; if(!F) return;
+  $("fpSec").hidden = false;
+  const G = F.lines.gate;
+  $("fpCards").innerHTML = [card(F.player_games,"player-games graded"), card(F.void,"void (no minutes)"), card(F.lines.n,"Underdog FP lines graded"), card(G.status,`gate: ${G.graded} of ${G.needed} lines`), card(F.lines.hit_rate==null?"\u2013":pct(F.lines.hit_rate),"line hit rate (reported, not the verdict)"), card(F.pit.mean==null?"\u2013":F.pit.mean.toFixed(3),"mean PIT (0.5 when centred)")].join("");
+  $("fpPit").innerHTML = `<thead><tr><th>PIT decile</th><th>n</th><th>Share</th><th>Expected</th></tr></thead><tbody>${F.pit.deciles.map(d=>`<tr><td>${Math.round(d.lo*100)}\u2013${Math.round(d.hi*100)}%</td><td>${d.n}</td><td>${F.pit.n?pct(d.n/F.pit.n):"\u2013"}</td><td>10%</td></tr>`).join("")}</tbody>`;
+  $("fpLines").innerHTML = F.lines.n ? `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${F.lines.by_decile.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td><td>${b.gap==null?"\u2013":(b.gap>0?"+":"")+(100*b.gap).toFixed(1)}</td></tr>`).join("")}</tbody>` : `<tbody><tr><td class="empty">No Underdog Fantasy Points lines graded yet (the board has carried no NBA FP market so far).</td></tr></tbody>`;
+  $("fpMarg").innerHTML = `<thead><tr><th>Marginal</th><th>n</th><th>Status</th><th>Weighted |gap|</th></tr></thead><tbody>${Object.entries(F.marginals).flatMap(([s,ks])=>Object.entries(ks).map(([k,v])=>`<tr><td>${s.toUpperCase()} ${k.replace("at_least_","\u2265 ")}</td><td>${v.n}</td><td>${v.verdict.status}</td><td>${v.verdict.weighted_mean_abs_gap==null?"\u2013":v.verdict.weighted_mean_abs_gap}</td></tr>`)).join("")}</tbody>`;
+  $("fpMethod").innerHTML = F.method.map(m=>`<li>${m}</li>`).join("");
+}
+
 function render(){
-  renderFB();
+  renderFB(); renderFP();
   if(!R || R.empty || !R.overall || !R.overall.n){
     $("status").textContent = R && R.generated ? `No graded rungs yet (updated ${R.generated}). Projections are logged before tip and graded the morning after.` : "No performance data yet.";
     return;

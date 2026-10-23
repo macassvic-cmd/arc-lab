@@ -13,6 +13,7 @@ import pandas as pd
 from common import DATA_DIR, NBA_TEAMS, POSITIONS, SITE_DATA, norm_name, norm_pos, read_json, write_json
 from odds import OddsBlaze
 from positions import position_map
+import fantasy_points as fp
 from health import STATE as HEALTH_STATE, notify
 
 N_SIM = 8000
@@ -147,8 +148,7 @@ def profile(g, cur, lg_pct, prior_cutoff=None):
         "starter_rate": float(g.head(5).starter.mean()), "last_team": g.iloc[0].team,
         "last_season": int(g.iloc[0].season),
         "last10": {s: last10[s].astype(int).tolist() for s in ["tpm", "reb", "ast", "pts"]}
-                  | {"min": last10["min"].round().astype(int).tolist(),
-                     "pra": (last10.pts + last10.reb + last10.ast).astype(int).tolist()},
+                  | {"min": last10["min"].round().astype(int).tolist()},
     }
 
 
@@ -440,10 +440,9 @@ def simulate(p, opp, dvp, absent_starters=0):
     reb = RNG.poisson(mins * r["reb"] * f["reb"] * u["reb"])
     ast = RNG.poisson(mins * r["ast"] * f["ast"] * u["ast"])
     pts = 3 * tpm + 2 * RNG.poisson(np.maximum(mins * r["non3"] * f["pts"] * u["pts"], 0) / 2)
-    pra = pts + reb + ast
     out = {}
     for name, arr, top in [("tpm", tpm, 12), ("tpa", tpa, 25), ("reb", reb, 30),
-                           ("ast", ast, 25), ("pts", pts, 70), ("pra", pra, 90)]:
+                           ("ast", ast, 25), ("pts", pts, 70)]:
         out[name] = {"mean": round(float(arr.mean()), 2), "pmf": pmf(arr, top)}
     out["make_p"] = round(float(make_p), 3)
     return out
@@ -519,6 +518,10 @@ def main():
     by_id = {pid: g for pid, g in df[df.season >= cur - 1].groupby("player_id")}
     pos_map = position_map()
     pos_rates = pos_tpa_rates(df, cur)
+    fp_pri = fp.load_priors()                      # frozen constants (backtests/fantasy_points_v1_rule.md); None = no FP block
+    fp_rng = np.random.default_rng(fp.SEED)
+    if fp_pri is None:
+        print("[model] data/fp_priors.json missing: no fantasy-points simulation this run")
     out_players, games_out = [], []
     for game in slate["games"]:
         mk = spreads.get((game["away"], game["home"]))
@@ -541,6 +544,7 @@ def main():
                          "pos": pos_map.get(str(ath["id"])) or (norm_pos(ath.get("pos")) if ath.get("pos") else g.iloc[-1].pos),
                          "status": status, "flags": [], **prof}
                 entry["rates"] = {**prof["rates"], "tpa": tpa_rate_v2(g.sort_values("date", ascending=False), cur, entry["pos"], pos_rates)}
+                entry["fp_prof"] = fp.profile_fp(g, cur, entry["pos"], fp_pri) if fp_pri else None
                 if status in ("OUT", "DOUBTFUL"):
                     outs.append(entry)
                     continue
@@ -576,6 +580,7 @@ def main():
                 if absent_starters:
                     p["flags"].append(f"Usage +{100 * USAGE_BUMP['pts'] * min(absent_starters, USAGE_MAX_ABSENT):.0f}% pts")
                 sim = simulate(p, opp, dvp, absent_starters)
+                fpsim = fp.simulate_fp(p, p["fp_prof"], opp, dvp, absent_starters, fp_pri, fp_rng) if p.get("fp_prof") else {}
                 out_players.append({
                     "id": p["id"], "name": p["name"], "team": team, "opp": opp, "home": home,
                     "pos": p["pos"], "min": round(p["min"], 1), "base_min": round(p["pre_min"], 1),
@@ -583,7 +588,7 @@ def main():
                     "min_gain": p.get("min_gain"),
                     "dvp_rank": {s: dvp.get(opp, {}).get(p["pos"], {}).get(s, {}).get("rk") for s in STATS},
                     "ladder": ladders(sim),
-                    **sim,
+                    **sim, **fpsim,
                 })
             for o in outs:
                 out_players.append({"id": o["id"], "name": o["name"], "team": team, "opp": opp,

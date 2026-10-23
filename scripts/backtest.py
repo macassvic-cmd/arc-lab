@@ -42,9 +42,9 @@ ROWS = DATA_DIR / "backtest_rows.csv.gz"
 REPORT = SITE_DATA / "backtest.json"
 ROSTER_DAYS = 21
 DEFAULT_START = "2025-11-01"
-SCORED = ["min", "tpm", "pts", "reb", "ast", "pra"]
+SCORED = ["min", "tpm", "pts", "reb", "ast"]
 THREES_K = [1, 2, 3, 4, 5, 6, 7, 8]   # closing lines run up to 7.5 for the top shooters
-LINE_STATS = ["pts", "reb", "ast", "pra"]
+LINE_STATS = ["pts", "reb", "ast"]
 OFFSETS = [-3, -2, -1, 0, 1, 2, 3]   # alt lines around the fair line used for the calibration buckets
 BUCKETS = [(i / 10, (i + 1) / 10) for i in range(10)]
 # Checked 2026-10-08 (docs.oddsblaze.com, the-odds-api.com). OddsBlaze's site is script-rendered, so its prices
@@ -89,7 +89,7 @@ def trailing_means(df):
     d = df.sort_values(["player_id", "date"])
     out = {}
     for s in SCORED:
-        col = (d.pts + d.reb + d.ast) if s == "pra" else d[s]
+        col = d[s]
         out[s] = col.groupby(d.player_id).transform(lambda x: x.shift(1).rolling(10, min_periods=1).mean())
     t = pd.DataFrame(out, index=d.index)
     t.columns = [f"naive_{s}" for s in SCORED]
@@ -125,7 +125,7 @@ def project_team(team, opp, home, hist_by_id, played, recent_ids, pos_map, cur, 
         row = {"player_id": p["id"], "player": p["name"], "team": team, "opp": opp, "home": home, "pos": p["pos"],
                "proj_min": round(p["min"], 2), "absent_starters": absent_starters, "n_cur": p["n_cur"],
                "baseline": p["baseline"]}
-        for s in ["tpm", "pts", "reb", "ast", "pra"]:
+        for s in ["tpm", "pts", "reb", "ast"]:
             row[f"proj_{s}"] = sim[s]["mean"]
         row["proj_tpa"] = sim["tpa"]["mean"]; row["make_p"] = sim.get("make_p")   # expected attempts and the make probability the sim used (headroom audit)
         for k in THREES_K:
@@ -149,7 +149,6 @@ def run(start, end=None, season=None, out_path=ROWS, positions_path=None):
     if season is not None:                       # historical season: nothing after it exists; the season before it is the prior
         df = df[df.season <= int(season)].copy()
     cur = int(season) if season is not None else int(df.season.max())
-    df["pra"] = df.pts + df.reb + df.ast
     pos_map = position_map(positions_path) if positions_path is not None else position_map()
     naive = trailing_means(df)
     dates = sorted(d for d in df.date.unique() if d >= pd.Timestamp(start) and (end is None or d <= pd.Timestamp(end)))

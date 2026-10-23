@@ -1,6 +1,6 @@
 # Arc Lab
 
-NBA prop research site. Threes first, plus points, rebounds, assists and PRA, defense vs position, and injury news forwarded from your phone.
+NBA prop research site. Products after the 2026-10-22 scope reset: Fantasy Point lines, threes, first basket, and PTS / AST / REB ladders. Defense vs position stays as context; the phone injury feed stays as infrastructure (no tab).
 
 Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 
@@ -10,9 +10,10 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 |---|---|---|
 | `scripts/fetch_games.py` | GitHub Actions, 10am and 5:30pm ET | Pulls box scores, tonight's slate, rosters and ESPN injury tags |
 | `scripts/positions.py` | Same workflow | Assigns PG/SG/SF/PF/C from play style into `data/positions.csv` (ESPN only gives G/F/C) |
-| `scripts/build_model.py` | Same workflow | Defense vs position, minutes, and 8,000 simulated games per player |
+| `scripts/build_model.py` | Same workflow | Defense vs position, minutes, and 8,000 simulated games per player (plus the 10,000-sim fantasy-points joint draw from `fantasy_points.py`) |
+| `scripts/fantasy_points.py` | Update workflow (snapshot, grade); `priors` once; `price` locally against the Underdog board capture | Fantasy Points v1 under `backtests/fantasy_points_v1_rule.md`: STL/BLK/TOV marginals, Gaussian-copula joint sim, immutable `data/fp_log.csv`, grading to `data/fp_grade.csv` / `docs/data/fp_performance.json`, pricing study to `data/fp_prices.csv` (FP) and `data/ud_prices.csv` (3PM) with `docs/data/fp_pricing.json` for the tab |
 | `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
-| `scripts/paper_log.py` | All three workflows | Logs every prop with an Underdog line, freezes the close at tip, grades it, writes `results.json` for the Results tab |
+| `scripts/paper_log.py` | All three workflows | Logs every 3PM prop with an Underdog line (3PM only since the scope reset), freezes the close at tip, grades it, writes `results.json` for the Results tab |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
 | `scripts/ladder_log.py` | Both data workflows | v2 ladders: appends every pre-tip P(k+) to the immutable `data/ladder_log.csv`, grades the last pre-tip snapshot hit/miss, writes `performance.json` |
 | `scripts/ladder_calibrate.py` | Manual | Isotonic recalibration of the ladders under `backtests/ladder_v2_rule.md` (fit 2023-24, gate 2024-25); adopted maps in `data/ladder_calibration.json` |
@@ -75,7 +76,7 @@ One-off, from this repo:
 python scripts/underdog_lines.py --snapshot ..\..\pirate-bets-pc\reader\board_snapshots\underdog.json --push
 ```
 
-Stats kept: `3PM`, `PTS`, `REB`, `AST`, `PRA`, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and, when an OddsBlaze key is present, `sharp`: the first book in `ODDSBLAZE_SHARP_BOOKS` (default Pinnacle, Circa, DraftKings, FanDuel) with its `line`, `over`/`under` American prices, devigged `fair_over`, and `exact` (false when the book's nearest line differs from Underdog's). The site reads `player`, `stat`, `line` (the shape of `lines.example.json`); the rest is for you and your validation agent.
+Stats kept: `3PM` and `FP` (Fantasy Points) only since the 2026-10-22 scope reset, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and, when an OddsBlaze key is present, `sharp`: the first book in `ODDSBLAZE_SHARP_BOOKS` (default Pinnacle, Circa, DraftKings, FanDuel) with its `line`, `over`/`under` American prices, devigged `fair_over`, and `exact` (false when the book's nearest line differs from Underdog's). The site reads `player`, `stat`, `line` (the shape of `lines.example.json`); the rest is for you and your validation agent.
 
 ## Paper log and Results tab
 
@@ -100,7 +101,8 @@ What the replay knows at tip-off: the roster is whoever played for the team in t
 - **Usage bump:** per absent regular starter (capped at two), remaining players' rates rise 5.5% points, 3.5% 3PA, 4.5% assists, 1.5% rebounds, measured on the backfill.
 - **Threes:** attempts per minute (half-life 12 games) × minutes × opponent's attempt rate allowed to that position, then makes = binomial on attempts at the shooter's 3P%, blended with 150 attempts of league average.
 - **Defense vs position:** per-minute stats allowed to each position vs league average, with last season at 35% weight and 600 minutes of league average blended in so early-season numbers don't swing wildly. It already reflects pace, so pace isn't applied twice. Validation (2026-10-08) found position adds nothing predictive beyond the team, so the simulation clamps the factor to 0.98–1.02 (`DVP_CLAMP`); the DvP tab keeps the full numbers, labeled descriptive.
-- **Points, rebounds, assists, PRA** come from the same simulated minutes, so they're correlated the way real games are.
+- **Points, rebounds, assists** come from the same simulated minutes, so they're correlated the way real games are. PRA was cut on 2026-10-22.
+- **Fantasy points** (`fantasy_points.py`): STL / BLK / TOV negative-binomial marginals (rates EB-shrunk to position, dispersion frozen from 2024-25) joined to the engine's 3PA / twos / REB / AST through a Gaussian copula whose correlation blends the player's own residual rate correlations with the position prior; minutes is the shared driver. 10,000 sims; the 99 percentiles are logged pre-tip.
 - **Blowout risk:** game spreads from OddsBlaze. Final margins run about N(spread, 13.5); starters sit roughly the last 8 minutes of a 20+ point game. The extra blowout chance a spread adds over a pick'em, times those 8 minutes, comes off each regular starter (scaled by their minutes) and goes to the bench, on both teams. A 7.5-point spread shaves about 0.9 minutes, 14.5 about 2.2. Those players get a `Blowout risk (-12.5)` flag and a wider minutes range; `spread`, `total` and `odds_book` sit on each game in `projections.json`.
 
 ## Known limits to fix next

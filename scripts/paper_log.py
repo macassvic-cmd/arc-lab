@@ -16,8 +16,7 @@ from common import DATA_DIR, SITE_DATA, norm_name, read_json, write_json
 LOG = DATA_DIR / "paper_log.csv"
 BREAKEVEN = 0.55   # 3-pick at 6x; change to match how you actually play
 MIN_EDGE = 0.03
-STAT_KEYS = {"3PM": "tpm", "3PT": "tpm", "PTS": "pts", "POINTS": "pts", "REB": "reb", "REBOUNDS": "reb",
-             "AST": "ast", "ASSISTS": "ast", "PRA": "pra", "PTS+REB+AST": "pra"}
+STAT_KEYS = {"3PM": "tpm", "3PT": "tpm"}   # scope reset 2026-10-22: Underdog pricing is 3PM (here) and Fantasy Points (fantasy_points.py) only
 FIELDS = ["date", "tip", "player_id", "player", "team", "opp", "stat",
           "first_ts", "first_line", "first_p", "mean",
           "pick", "entry_ts", "entry_line", "entry_p", "entry_odds_p",
@@ -134,7 +133,6 @@ def settle():
         return
     import pandas as pd  # only settle needs pandas; the game-window snapshot runs on a requests-only runner
     games = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"player_id": str})
-    games["pra"] = games.pts + games.reb + games.ast
     actual = {(r.date, r.player_id): r for r in games.itertuples()}
     today = (now() - dt.timedelta(hours=5)).date().isoformat()
     graded = 0

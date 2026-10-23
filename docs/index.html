@@ -74,8 +74,6 @@ tr:last-child td{border-bottom:0}
 .rk.hot{color:var(--rim)}
 .heat td{font:600 15px var(--display)}
 .heat td small{display:block;font:400 11px var(--body);color:var(--muted)}
-.news{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.news li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
 .tag{font:700 14px var(--display);padding:2px 8px;border-radius:4px;align-self:start;color:#fff;background:var(--muted)}
 .tag.OUT,.tag.DOUBTFUL{background:var(--miss)}
 .tag.QUESTIONABLE,.tag.MIN{background:var(--rim)}
@@ -114,8 +112,8 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <button role="tab" data-tab="threes" aria-selected="true">Threes</button>
     <button role="tab" data-tab="props" aria-selected="false">Props</button>
     <button role="tab" data-tab="firstbasket" aria-selected="false">First Basket</button>
+    <button role="tab" data-tab="fantasy" aria-selected="false">Fantasy Points</button>
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
-    <button role="tab" data-tab="news" aria-selected="false">Injury news</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
     <a class="navlink" href="performance.html">Performance</a>
     <a class="navlink" href="backtest.html" style="margin-left:0">Backtest</a>
@@ -129,6 +127,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <div class="controls">
       <input type="search" id="q3" placeholder="Search player" aria-label="Search player">
       <span id="posChips3"></span>
+      <label class="inline">Break-even % <input type="number" id="be" min="50" max="70" step="0.1"></label>
     </div>
     <div id="outs3"></div>
     <div class="scroll"><table id="t3"></table></div>
@@ -139,14 +138,13 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <div class="controls">
       <select id="stat" aria-label="Stat">
         <option value="pts">Points</option><option value="reb">Rebounds</option>
-        <option value="ast">Assists</option><option value="pra">Pts + Reb + Ast</option>
+        <option value="ast">Assists</option>
         <option value="tpm">3-pointers made</option>
       </select>
       <input type="search" id="qp" placeholder="Search player" aria-label="Search player">
-      <label class="inline">Break-even % <input type="number" id="be" min="50" max="70" step="0.1"></label>
     </div>
     <div class="scroll"><table id="tp"></table></div>
-    <p class="foot">Lines fill in from your Underdog board when <code>data/lines.json</code> is present; otherwise they start at the model's fair line. Edit any line to see the chance of going over. Edge is the over chance minus your break-even (55% matches a 3-pick at 6x).</p>
+    <p class="foot">Lines start at the model's fair line (the x.5 where P(over) is nearest 50%). Edit any line to see the chance of going over. Since the 2026-10-22 scope reset no Underdog line or edge is shown here: Underdog pricing lives on the Threes and Fantasy Points tabs only.</p>
   </section>
 
   <section id="defense" hidden>
@@ -162,9 +160,14 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <p class="foot">Tap a position to sort teams by who gives up the most to it.</p>
   </section>
 
-  <section id="news" hidden>
-    <div class="controls" id="newsChips"></div>
-    <ul class="news" id="newsList"></ul>
+  <section id="fantasy" hidden>
+    <div class="controls">
+      <input type="search" id="qf" placeholder="Search player" aria-label="Search player">
+    </div>
+    <p class="foot"><b>Hit rate measures accuracy, not profit. Pricing study, paper only.</b> Underdog scoring: PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK &minus; TO. Rule: <code>backtests/fantasy_points_v1_rule.md</code>; graded record on the <a href="performance.html#fpSec">Performance page</a>.</p>
+    <p class="foot" id="fpxNote"></p>
+    <div class="scroll"><table id="tf"></table></div>
+    <p class="foot">Proj FP is the mean of 10,000 joint simulations (one minutes draw shared by every stat, Gaussian copula over the per-minute rates). 10th&ndash;90th is the simulated range. P(model) is the chance of the shown side; break-even is 0.55 divided by Underdog's leg multiplier; edge is the difference in points. No conclusion until 200 graded Underdog FP lines; the verdict is calibration by decile, not hit rate.</p>
   </section>
 
   <section id="firstbasket" hidden>
@@ -191,15 +194,14 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 </main>
 
 <script>
-const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", newsTag:"all",
-           sort3:"p2", sortP:"auto", lines:{}, edits:{}, be:55};
+const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", sortF:"edge",
+           sort3:"p2", sortP:"mean", lines:{}, edits:{}, be:55};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
-if(["threes","props","firstbasket","defense","news","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","defense","news","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
+if(["threes","props","firstbasket","fantasy","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
-const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","POINTS":"pts","REB":"reb","REBOUNDS":"reb",
-                  "AST":"ast","ASSISTS":"ast","PRA":"pra","PTS+REB+AST":"pra"};
-let P = null, D = null, N = [], R = null, FB = null;
+const LINE_KEY = {"3PM":"tpm","3PT":"tpm"};   // scope reset 2026-10-22: Underdog lines feed 3PM only (Fantasy Points via fp_pricing.json)
+let P = null, D = null, N = [], R = null, FB = null, FPX = null;
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -288,25 +290,22 @@ function renderProps(){
   let rows = active().filter(p=>!q||norm(p.name).includes(q)).map(p=>{
     const L = lineFor(p, st), po = over(p[st].pmf, L);
     const hits = p.last10[st].filter(v=>v>L).length;
-    return {p, L, po, edge: po - S.be/100, mean:p[st].mean, hit: hits/Math.max(p.last10[st].length,1), hits,
-            fromUD: S.lines[`${norm(p.name)}:${st}`]!==undefined, rk:p.dvp_rank?.[st==="pra"?"pts":st]??99};
+    return {p, L, po, mean:p[st].mean, hit: hits/Math.max(p.last10[st].length,1), hits, rk:p.dvp_rank?.[st]??99};
   });
   const k = S.sortP;
-  rows.sort((a,b)=> k==="auto" ? (b.fromUD-a.fromUD) || (a.fromUD ? b.edge-a.edge : b.mean-a.mean)
-                  : k==="rk" ? a.rk-b.rk : b[k]-a[k]);
+  rows.sort((a,b)=> k==="rk" ? a.rk-b.rk : b[k]-a[k]);
   const RUNGS = {tpm:[3,4,5,6,7], pts:[10,15,20,25,30], ast:[4,6,8,10], reb:[6,8,10,12]};
   const head = `<thead><tr><th>Player</th><th data-k="mean">Min</th><th data-k="mean">Proj</th>${RUNGS[st]?`<th>Ladder ${RUNGS[st][0]}+ to ${RUNGS[st][RUNGS[st].length-1]}+</th>`:""}<th>Line</th>
-    <th data-k="po">Over</th><th data-k="edge">Edge</th><th data-k="hit">L10 over</th><th data-k="rk">Opp rank</th><th>Last 10</th></tr></thead>`;
-  const body = rows.map(({p,L,po,edge,mean,hits,fromUD,rk})=>`<tr>
+    <th data-k="po">Over</th><th data-k="hit">L10 over</th><th data-k="rk">Opp rank</th><th>Last 10</th></tr></thead>`;
+  const body = rows.map(({p,L,po,mean,hits,rk})=>`<tr>
     <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td>
     <td>${p.min.toFixed(0)}</td><td class="big">${mean.toFixed(1)}</td>
     ${RUNGS[st]?`<td><span class="ladder">${RUNGS[st].map(n=>{const e=p.ladder?.[st]?.[n]; const v=e?e.p:(st==="tpm"?atLeast(p.tpm.pmf,n):null); return v==null?"":`<span style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ ${st.toUpperCase()}">${pct(v)}</span>`;}).join("")}</span></td>`:""}
     <td><input type="number" step="0.5" value="${L}" data-id="${p.id}" aria-label="Line for ${p.name}">
-      <div class="meta">${fromUD?"Underdog":"Fair"}</div></td>
+      <div class="meta">${S.edits[`${p.id}:${st}`]!==undefined?"Edited":"Fair"}</div></td>
     <td class="big">${pct(po)}</td>
-    <td class="${edge>=.03?"pos":edge<0?"neg":""}">${edge>=0?"+":""}${(100*edge).toFixed(1)}</td>
     <td>${hits}/${p.last10[S.stat].length}</td>
-    <td><span class="rk ${rk<=5?"hot":""}">${st==="pra"||rk===99?"–":rk}</span></td>
+    <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>
     <td>${spark(p.last10[st], L)}</td></tr>`).join("");
   $("tp").innerHTML = head + `<tbody>${body}</tbody>`;
   sortable($("tp"), null, null, v=>S.sortP=v);
@@ -370,7 +369,7 @@ function renderResults(){
     R.calibration.map(c=>`<tr><td>${pct(c.lo)}–${pct(c.hi)}</td><td>${c.n}</td>
       <td>${pct(c.pred)} <span class="bar" style="width:${c.pred*80}px"></span></td>
       <td>${pct(c.actual)} <span class="bar act" style="width:${c.actual*80}px"></span></td></tr>`).join("")}</tbody>`;
-  const names = {tpm:"3PM",pts:"Points",reb:"Rebounds",ast:"Assists",pra:"PRA"};
+  const names = {tpm:"3PM",pts:"Points",reb:"Rebounds",ast:"Assists"};
   $("rstat").innerHTML = `<thead><tr><th>Stat</th><th>Picks</th><th>Hit rate</th><th>Units</th><th>Close odds</th><th>Proj. error</th></tr></thead><tbody>${
     Object.entries(R.by_stat).map(([k,v])=>`<tr><td>${names[k]||k}</td><td>${v.decided}</td><td>${fmtP(v.hit_rate)}</td>
       <td>${v.units}</td><td>${fmtP(v.market_close_p)}</td><td>${R.mae[k]?.mae ?? "–"}</td></tr>`).join("")}</tbody>`;
@@ -382,13 +381,27 @@ function renderResults(){
   $("rnote").textContent = `Picks are props where the model's chance beat break-even by ${Math.round(R.min_edge*100)}+ points. Entry is the first time that happened; close is the last line captured before tip. Updated ${ago(R.updated)}.`;
 }
 
-function renderNews(){
-  const tags = ["all","OUT","QUESTIONABLE","STARTING","AVAILABLE"];
-  chips($("newsChips"), tags.map(t=>[t, t==="all"?"All":t[0]+t.slice(1).toLowerCase()]), S.newsTag, v=>{S.newsTag=v; render();});
-  const items = N.filter(n=>S.newsTag==="all"||n.tag===S.newsTag).slice().reverse();
-  $("newsList").innerHTML = items.length ? items.map(n=>`<li><span class="tag ${n.tag.split(" ")[0]}">${n.tag}</span>
-     <span>${n.text.replace(/</g,"&lt;")}</span><span></span><span class="meta">${ago(n.received||n.ts)}</span></li>`).join("")
-    : `<li class="empty" style="display:block">No news yet. Items appear here as your phone forwards Underdog NBA alerts.</li>`;
+function renderFantasy(){
+  const q = norm($("qf").value);
+  const pr = FPX && P && FPX.slate_date===P.date ? FPX : null;
+  const lines = {};
+  for(const r of (pr?.fp_lines||[])){ const k = norm(r.player); if(!lines[k] || (r.edge??-9) > (lines[k].edge??-9)) lines[k] = r; }
+  let rows = active().filter(p=>p.fp && (!q||norm(p.name).includes(q))).map(p=>{ const l = lines[norm(p.name)]; return {p, l, fp:p.fp.mean, edge: l ? l.edge : null}; });
+  const k = S.sortF;
+  rows.sort((a,b)=> k==="edge" ? ((b.edge??-9)-(a.edge??-9)) || (b.fp-a.fp) : k==="min" ? b.p.min-a.p.min : b.fp-a.fp);
+  const hasLines = rows.some(r=>r.l);
+  const mk = FPX ? Object.entries(FPX.markets||{}).map(([m,n])=>`${m} (${n})`).join(", ") : "";
+  $("fpxNote").innerHTML = !FPX ? "No Underdog board capture priced yet. Pricing runs against the pirate-bets board capture (<code>fantasy_points.py price</code>); the app is never scraped by this site." :
+    FPX.fp_market_present ? `Underdog board captured ${ago(FPX.captured_at)}: ${FPX.fp_entries} Fantasy Points entries, ${FPX.fp_lines_priced} priced${pr?"":" (for another slate date)"}. Break-even = ${FPX.breakeven_rule}.` :
+    `Underdog board captured ${ago(FPX.captured_at)} carries <b>no NBA Fantasy Points market</b> (strings checked: ${FPX.fp_market_strings_checked.join(", ")}). Nothing is priced and no other source is used. NBA markets on that board: ${mk}.`;
+  const head = `<thead><tr><th>Player</th><th data-k="min">Min</th><th data-k="fp">Proj FP</th><th>10th&ndash;90th</th><th>STL &middot; BLK &middot; TO</th>${hasLines?`<th>UD line</th><th>Side</th><th>P(model)</th><th>Break-even</th><th data-k="edge">Edge</th>`:""}</tr></thead>`;
+  const body = rows.map(({p,l,fp,edge})=>`<tr>
+    <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td>
+    <td>${p.min.toFixed(0)}</td><td class="big">${fp.toFixed(1)}</td><td>${p.fp.p10}&ndash;${p.fp.p90}<div class="meta">sd ${p.fp.sd}</div></td>
+    <td>${p.stl.mean.toFixed(1)} &middot; ${p.blk.mean.toFixed(1)} &middot; ${p.tov.mean.toFixed(1)}</td>
+    ${hasLines?(l?`<td>${l.line}</td><td>${l.side}</td><td class="big">${pct(l.p_model)}</td><td>${l.breakeven==null?"\u2013":pct(l.breakeven)}</td><td class="${edge>=.03?"pos":edge<0?"neg":""}">${edge==null?"\u2013":(edge>=0?"+":"")+(100*edge).toFixed(1)}</td>`:`<td colspan="5" class="meta">no line</td>`):""}</tr>`).join("");
+  $("tf").innerHTML = rows.length ? head + `<tbody>${body}</tbody>` : `<tbody><tr><td class="empty">${P?.players?.some(p=>p.fp) ? "No players match." : "No fantasy-points projections yet: they ship with the next model build."}</td></tr></tbody>`;
+  sortable($("tf"), null, null, v=>S.sortF=v);
 }
 
 function renderFirstBasket(){
@@ -427,14 +440,14 @@ function renderFirstBasket(){
 function render(){
   const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
   chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
-  $("gameChips").hidden = S.tab==="defense"||S.tab==="news"||S.tab==="results";
+  $("gameChips").hidden = S.tab==="defense"||S.tab==="results";
   chips($("posChips3"), [["all","All"], ...POS.map(p=>[p,p])], S.pos3, v=>{S.pos3=v; render();});
   chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
   if(S.tab==="threes") renderThrees();
   if(S.tab==="props") renderProps();
   if(S.tab==="firstbasket") renderFirstBasket();
   if(S.tab==="defense") renderDefense();
-  if(S.tab==="news") renderNews();
+  if(S.tab==="fantasy") renderFantasy();
   if(S.tab==="results") renderResults();
 }
 
@@ -442,10 +455,10 @@ document.querySelector("nav").onclick = e => {
   const b = e.target.closest("button"); if(!b) return;
   S.tab = b.dataset.tab;
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
-  ["threes","props","firstbasket","defense","news","results"].forEach(id=>$(id).hidden = id!==S.tab);
+  ["threes","props","firstbasket","fantasy","defense","results"].forEach(id=>$(id).hidden = id!==S.tab);
   render();
 };
-$("q3").oninput = render; $("qp").oninput = render;
+$("q3").oninput = render; $("qp").oninput = render; $("qf").oninput = render;
 $("stat").onchange = e => { S.stat = e.target.value; render(); };
 $("dstat").onchange = e => { S.dstat = e.target.value; render(); };
 $("be").value = S.be;
@@ -464,7 +477,7 @@ function freshness(L){
 
 async function boot(){
   [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
-  const L = await load("data/lines.json", null);
+  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null);
   S.lines = {};
   freshness(L);
   for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
@@ -477,7 +490,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); render(); }, 60000);
 </script>
 </body>
 </html>

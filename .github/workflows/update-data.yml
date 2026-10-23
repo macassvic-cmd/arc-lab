@@ -56,6 +56,9 @@ jobs:
       - name: Grade the ladder log (last pre-tip snapshot vs box scores)
         working-directory: scripts
         run: python ladder_log.py grade
+      - name: Grade the fantasy-points log (last pre-tip FP distribution vs box-score FP; priced lines from data/fp_prices.csv)
+        working-directory: scripts
+        run: python fantasy_points.py grade
       - name: Assign positions
         working-directory: scripts
         run: python positions.py
@@ -71,6 +74,9 @@ jobs:
       - name: Ladder log snapshot (append-only, pre-tip rows only)
         working-directory: scripts
         run: python ladder_log.py snapshot
+      - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
+        working-directory: scripts
+        run: python fantasy_points.py snapshot
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         working-directory: scripts
         run: python first_basket_model.py snapshot
