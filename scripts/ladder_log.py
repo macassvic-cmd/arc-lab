@@ -19,6 +19,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA_DIR, SITE_DATA, read_json, write_json
 
 LOG = DATA_DIR / "ladder_log.csv"
+FP_LOG = DATA_DIR / "fp_log.csv"          # projected minutes logged pre-tip by fantasy_points.py snapshot (same build as the ladder snapshot)
+BAND = (0.55, 0.80)                       # backtests/live_recalibration_rule.md section 0
+BOOT_ITERS, BOOT_SEED, BOOT_CHUNK = 2000, 20261023, 100
+TRIGGER_DAY, VALIDATION_END = 21, 35
+MIN_ERR_EDGES = [(-np.inf, -10), (-10, -5), (-5, -2), (-2, 2), (2, 5), (5, 10), (10, np.inf)]
+RECAL_RULE = "backtests/live_recalibration_rule.md"
 FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "stat", "rung", "p_raw", "p", "logged_at"]
 TIERS = [0.55, 0.60, 0.65, 0.70]
 THIN = 30
@@ -73,19 +79,95 @@ def graded_snapshot(log):
     return d
 
 
+def cluster_ids(d):
+    """Player-game cluster per row: rungs of one player-game are correlated (rule section 0)."""
+    return pd.factorize(d.date.astype(str) + "|" + d.event_id.astype(str) + "|" + d.player_id.astype(str))[0]
+
+
+def player_games(d):
+    return int(cluster_ids(d).max() + 1) if len(d) else 0
+
+
+def boot_ci(d, kind="rate", iters=BOOT_ITERS, seed=BOOT_SEED):
+    """95% cluster-bootstrap CI by player-game (resample clusters with replacement, percentile 2.5/97.5).
+    kind = "rate": hit rate; "gap": mean p minus hit rate. Returns [lo, hi] or None when fewer than 2 clusters."""
+    if len(d) == 0:
+        return None
+    cid = cluster_ids(d); C = int(cid.max() + 1)
+    if C < 2:
+        return None
+    cn = np.bincount(cid, minlength=C).astype(float)
+    ch = np.bincount(cid, weights=d.hit.to_numpy(dtype=float), minlength=C)
+    cp = np.bincount(cid, weights=d.p.to_numpy(dtype=float), minlength=C)
+    rng = np.random.default_rng(seed); vals = []
+    for start in range(0, iters, BOOT_CHUNK):
+        idx = rng.integers(0, C, size=(min(BOOT_CHUNK, iters - start), C))
+        n = cn[idx].sum(axis=1); h = ch[idx].sum(axis=1)
+        vals.append(h / n if kind == "rate" else (cp[idx].sum(axis=1) - h) / n)
+    v = np.concatenate(vals)
+    return [round(float(np.percentile(v, 2.5)), 4), round(float(np.percentile(v, 97.5)), 4)]
+
+
 def block(d):
     n = int(len(d)); h = int(d.hit.sum())
-    return {"n": n, "hits": h, "misses": n - h, "hit_rate": round(h / n, 4) if n else None, "record": f"{h}-{n - h}"}
+    return {"n": n, "hits": h, "misses": n - h, "hit_rate": round(h / n, 4) if n else None, "record": f"{h}-{n - h}",
+            "mean_p": round(float(d.p.mean()), 4) if n else None, "player_games": player_games(d)}
 
 
-def bucket_table(d):
+def bucket_table(d, ci=False):
     out = []
     for i in range(10):
         lo, hi = i / 10, (i + 1) / 10
         m = (d.p >= lo) & (d.p < hi) if i < 9 else (d.p >= lo)
         g = d[m]; n = int(len(g))
-        out.append({"lo": lo, "hi": hi, "n": n, "pred": round(float(g.p.mean()), 4) if n else None, "actual": round(float(g.hit.mean()), 4) if n else None, "thin": n < THIN})
+        row = {"lo": lo, "hi": hi, "n": n, "pred": round(float(g.p.mean()), 4) if n else None, "actual": round(float(g.hit.mean()), 4) if n else None, "thin": n < THIN}
+        if ci:
+            row["player_games"] = player_games(g); row["ci"] = boot_ci(g, "rate")
+        out.append(row)
     return out
+
+
+def gap_block(d):
+    b = block(d)
+    b["gap"] = round(b["mean_p"] - b["hit_rate"], 4) if b["n"] else None
+    b["gap_ci"] = boot_ci(d, "gap")
+    return b
+
+
+def diagnostic(g):
+    """CEO directive 2026-10-23 part 2, report-only: the 55-80% band's calibration gap by stat and by minutes error
+    (projected minus actual minutes). Projected minutes come from data/fp_log.csv (pre-tip, same build as the ladder
+    snapshot); rows without a logged minutes projection are counted but excluded from the minutes-error buckets."""
+    band = g[(g.p >= BAND[0]) & (g.p < BAND[1])].copy()
+    band["min_proj"] = np.nan
+    if FP_LOG.exists() and len(band):
+        f = pd.read_csv(FP_LOG, dtype={"event_id": str, "player_id": str}, usecols=["date", "event_id", "player_id", "tip", "min", "logged_at"])
+        f = f[pd.to_datetime(f.logged_at, utc=True) < pd.to_datetime(f.tip, utc=True)].sort_values("logged_at").drop_duplicates(["date", "event_id", "player_id"], keep="last")
+        band = band.drop(columns=["min_proj"]).merge(f[["date", "event_id", "player_id", "min"]].rename(columns={"min": "min_proj"}), on=["date", "event_id", "player_id"], how="left")
+    band["min_err"] = band.min_proj.astype(float) - band.minutes.astype(float)
+    cov = band[band.min_err.notna()]
+    def stat_cells(d):
+        return {st: {k: v for k, v in gap_block(d[d.stat == st]).items() if k in ("n", "player_games", "mean_p", "hit_rate", "gap")} for st in STAT_ACT}
+    buckets = []
+    for lo, hi in MIN_ERR_EDGES:
+        d = cov[(cov.min_err >= lo) & (cov.min_err < hi)]
+        label = f"< {hi:+.0f}" if lo == -np.inf else f">= {lo:+.0f}" if hi == np.inf else f"{lo:+.0f} to {hi:+.0f}"
+        buckets.append({"lo": None if lo == -np.inf else lo, "hi": None if hi == np.inf else hi, "label": label, **gap_block(d),
+                        "mean_min_err": round(float(d.min_err.mean()), 2) if len(d) else None, "by_stat": stat_cells(d)})
+    days = int(g.date.nunique())
+    return {"label": "DIAGNOSTIC: report-only, no model change", "band": list(BAND), "rule": RECAL_RULE,
+            "days_graded": days, "trigger_day": TRIGGER_DAY, "validation_end": VALIDATION_END,
+            "clock": (f"day {days} of the rule's clock: the trigger is evaluated once, when day {TRIGGER_DAY} is graded; nothing is refit before then"
+                      if days < TRIGGER_DAY else f"day {days}: trigger day reached; the section 1 read and any refit are published here"),
+            "all": gap_block(band), "by_stat": {st: gap_block(band[band.stat == st]) for st in STAT_ACT},
+            "minutes": {"rows_in_band": int(len(band)), "rows_with_projected_minutes": int(len(cov)), "player_games_with_projected_minutes": player_games(cov),
+                        "mean_min_err": round(float(cov.min_err.mean()), 2) if len(cov) else None, "share_projected_high": round(float((cov.min_err > 0).mean()), 4) if len(cov) else None,
+                        "source": "projected minutes = the pre-tip row of data/fp_log.csv for the same player-game (logged by fantasy_points.py snapshot from the same build as the ladder snapshot, available from 2026-10-23); actual minutes = the box score the grader uses"},
+            "min_err_buckets": buckets,
+            "method": ["Band = graded rungs with shipped P in [0.55, 0.80). Gap = mean P minus hit rate; positive means the model said more than it delivered.",
+                       "Minutes error = projected minus actual minutes for the player-game; buckets are fixed a priori. Rows whose player-game has no logged minutes projection are counted in the band totals but not in the buckets.",
+                       "95% CIs are cluster bootstraps by player-game (2,000 resamples, seed 20261023): rungs from the same player-game are correlated and are never treated as independent.",
+                       "If the gap concentrates where minutes ran high, the cause is early-season rotations, not the probability layer. Report-only: nothing here changes the model; the only permitted live change is the pre-committed rule."]}
 
 
 def grade():
@@ -112,6 +194,11 @@ def grade():
     for t in TIERS:
         s = g[g.p >= t]
         tiers.append({"min_p": t, **block(s), "by_stat": {st: block(s[s.stat == st]) for st in STAT_ACT}})
+    calibration = {"all": bucket_table(g, ci=True), "by_stat": {st: bucket_table(g[g.stat == st], ci=True) for st in STAT_ACT},
+                   "n": int(len(g)), "player_games": player_games(g),
+                   "note": "Buckets of shipped P x hit rate x n, computed by this grader from the graded record (no thresholds or filters in display code). "
+                           "95% CIs are cluster bootstraps by player-game: rungs from the same player-game are correlated."}
+    diag = diagnostic(g)
     by_stat = {}
     for st in STAT_ACT:
         s = g[g.stat == st]
@@ -128,14 +215,16 @@ def grade():
                    for r in recent.head(4000).itertuples()]
     void = snap[snap.status == "void"]
     doc = {"header": HEADER, "generated": now().strftime("%Y-%m-%dT%H:%M:%SZ"), "season": "2026-27",
-           "log": {"rows_in_file": int(len(log)), "keys": int(len(snap)), "graded": int(len(g)), "pending": int((snap.status == "pending").sum()), "void": int(len(void)),
+           "log": {"rows_in_file": int(len(log)), "keys": int(len(snap)), "graded": int(len(g)), "player_games": player_games(g), "pending": int((snap.status == "pending").sum()), "void": int(len(void)),
                    "dates": int(g.date.nunique()), "first_date": str(g.date.min()) if len(g) else None, "last_date": str(g.date.max()) if len(g) else None,
                    "void_by_stat": {st: int((void.stat == st).sum()) for st in STAT_ACT}},
-           "overall": block(g), "tiers": tiers, "by_stat": by_stat, "by_pos": by_pos, "players": players, "recent": recent_rows, "recent_dates": [str(x) for x in recent_dates],
+           "overall": block(g), "tiers": tiers, "calibration": calibration, "diagnostic": diag, "by_stat": by_stat, "by_pos": by_pos, "players": players, "recent": recent_rows, "recent_dates": [str(x) for x in recent_dates],
            "calibration_adopted": read_json(DATA_DIR / "ladder_calibration.json", {}).get("adopted", []),
            "method": ["Graded snapshot = the last projection logged before tip; every earlier row stays in data/ladder_log.csv, which is append-only.",
                       "Hit = actual >= rung, from the ESPN box score. Void = the player logged no minutes; counted here, excluded from hit rates.",
                       f"Calibration cells with n < {THIN} are flagged thin. Nothing is filtered or re-run after tip; no tuning on these results, ever.",
+                      "Sample sizes are shown in player-games as well as rungs: the rungs of one player-game (3PM 3+, 4+, 5+ ...) are correlated, so rung counts overstate the evidence. Every 95% CI is a cluster bootstrap by player-game.",
+                      f"The only permitted live change to the probability layer is the pre-committed {RECAL_RULE} (trigger evaluated at graded day {TRIGGER_DAY}, validation through day {VALIDATION_END}).",
                       "Shipped P is the raw engine probability except for stats whose isotonic maps passed the 2024-25 gate (backtests/ladder_v2_rule.md); those are listed."]}
     fb = SITE_DATA / "first_basket_performance.json"
     if fb.exists():
@@ -144,7 +233,8 @@ def grade():
     if fpp.exists():
         doc["fantasy_points"] = read_json(fpp, None)
     write_json(SITE_DATA / "performance.json", doc)
-    print(f"[ladder-log] graded {len(g)} rungs ({doc['overall']['record']}, {doc['overall']['hit_rate']}), {doc['log']['pending']} pending, {len(void)} void")
+    print(f"[ladder-log] graded {len(g)} rungs / {doc['log']['player_games']} player-games ({doc['overall']['record']}, {doc['overall']['hit_rate']}), {doc['log']['pending']} pending, {len(void)} void; "
+          f"band 55-80%: n {diag['all']['n']}, gap {diag['all']['gap']} CI {diag['all']['gap_ci']}; {diag['clock']}")
 
 
 if __name__ == "__main__":

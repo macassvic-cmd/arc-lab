@@ -46,3 +46,9 @@ trigger fails, nothing is refit and the report says so.
 - Diagnostics (for example the minutes-error breakdown of the band's gap) are report-only and never trigger a change.
 - A refit that ships is itself a model change: its own dated entry in `data/ladder_calibration.json`, and any further
   recalibration needs a new rule file with a new clock.
+
+## Addendum, 2026-10-24: count correction (sections 0-4 untouched)
+
+At commit the log held 3 graded game dates (2026-10-20 to 2026-10-22); 2026-10-23 was logged but not yet graded. Day 1 =
+2026-10-20 as written; the clock and every rule above are unchanged. First read at day 3 (report-only, published on the
+Backtest page): band gap +15.2 pts, cluster CI [+9.2, +21.0]; the trigger is still evaluated only when day 21 is graded.

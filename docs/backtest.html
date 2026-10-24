@@ -122,6 +122,9 @@ ul.notes li{margin:4px 0}
   <h2 id="v2gateh">v2 ladder engine: recalibration gate <span>isotonic maps fit on 2023-24, gated per stat on 2024-25 &middot; locked rule &middot; no prices</span></h2>
   <div id="v2gate"><div class="empty">Not run yet. Rule: backtests/ladder_v2_rule.md; script: scripts/ladder_calibrate.py.</div></div>
 
+  <h2 id="diagh">DIAGNOSTIC: live calibration gap, 55&ndash;80% band, by minutes error <span>report-only, no model change &middot; graded live rungs, projected minus actual minutes &middot; clock: backtests/live_recalibration_rule.md</span></h2>
+  <div id="diag"><div class="empty">Not generated yet. Produced by scripts/ladder_log.py grade (the same code path that grades the live record).</div></div>
+
   <h2 id="fbgateh">First basket v2: attempt-based model gate <span>fit 2024-25, graded 2025-26 against uniform 1/10 and the v1 makes-only model &middot; locked rule &middot; no prices</span></h2>
   <div id="fbgate"><div class="empty">Not run yet. Rule: backtests/first_basket_v2_rule.md; script: scripts/first_basket_model.py.</div></div>
 
@@ -293,6 +296,20 @@ function renderLadder(R){
     <ul>${R.notes.map(x=>`<li>${x}</li>`).join("")}</ul><p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"–"}. Generated ${R.generated}.</p>`;
 }
 fetch("data/ladder_shape_diagnostic.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderLadder).catch(()=>{});
+function renderDiag(P){
+  const D = P && P.diagnostic; if(!D) return;
+  const SN = {tpm:"3PM", pts:"PTS", ast:"AST", reb:"REB"};
+  const p1 = v => v==null ? "–" : (100*v).toFixed(1)+"%";
+  const gap = b => b && b.n ? `<span class="${b.gap>0.05?"neg":b.gap<-0.05?"pos":""}">${b.gap>=0?"+":""}${(100*b.gap).toFixed(1)} pts</span>` : "–";
+  const gci = b => b && b.gap_ci ? `${(100*b.gap_ci[0]).toFixed(1)} to ${(100*b.gap_ci[1]).toFixed(1)}` : "–";
+  const A = D.all, M = D.minutes;
+  const cards = `<div class="stats">${[[A.n+" / "+A.player_games,"band rungs / player-games"],[p1(A.mean_p),"mean predicted"],[p1(A.hit_rate),"hit rate"],[gap(A),"gap (predicted − hit)"],[gci(A),"95% CI, clustered by player-game"],[D.days_graded+" of "+D.trigger_day,"graded days on the rule's clock"]].map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`;
+  const byStat = `<div class="scroll"><table><thead><tr><th>Stat</th><th>Rungs</th><th>Player-games</th><th>Mean P</th><th>Hit</th><th>Gap</th><th>95% CI</th></tr></thead><tbody>${Object.keys(SN).map(st=>{const b=D.by_stat[st]; return `<tr><td>${SN[st]}</td><td>${b.n}</td><td>${b.player_games}</td><td>${p1(b.mean_p)}</td><td>${p1(b.hit_rate)}</td><td>${gap(b)}</td><td>${gci(b)}</td></tr>`;}).join("")}</tbody></table></div>`;
+  const cov = `<p class="meta">Minutes error available for ${M.rows_with_projected_minutes} of ${M.rows_in_band} band rungs (${M.player_games_with_projected_minutes} player-games)${M.mean_min_err!=null?`; mean projected − actual minutes ${M.mean_min_err>=0?"+":""}${M.mean_min_err}, projected high in ${p1(M.share_projected_high)} of rungs`:""}. ${M.source}.</p>`;
+  const mins = `<div class="scroll"><table><thead><tr><th>Minutes error (proj − actual)</th><th>Rungs</th><th>Player-games</th><th>Mean P</th><th>Hit</th><th>Gap</th><th>95% CI</th>${Object.values(SN).map(n=>`<th>${n} gap (n)</th>`).join("")}</tr></thead><tbody>${D.min_err_buckets.map(b=>`<tr><td>${b.label}</td><td>${b.n}</td><td>${b.player_games}</td><td>${p1(b.mean_p)}</td><td>${p1(b.hit_rate)}</td><td>${gap(b)}</td><td>${gci(b)}</td>${Object.keys(SN).map(st=>{const c=b.by_stat[st]; return `<td>${c.n?`${c.gap>=0?"+":""}${(100*c.gap).toFixed(1)} (${c.n})`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody></table></div>`;
+  $("diag").innerHTML = `<p class="verdict">${D.label}. ${D.clock}.</p>${cards}${byStat}${cov}${mins}<ul class="notes">${D.method.map(m=>`<li>${m}</li>`).join("")}</ul>`;
+}
+fetch("data/performance.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderDiag).catch(()=>{});
 function renderShape3(R){
   if(!R) return;
   const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, G=R.gate, U=G.universe, pp=x=>x==null?"–":((x>=0?"+":"")+(x*100).toFixed(2)+" pts"), ci=c=>c?` [${pp(c[0])}, ${pp(c[1])}]`:"";
