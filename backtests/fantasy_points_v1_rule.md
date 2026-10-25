@@ -114,3 +114,25 @@ record from `docs/data/fp_performance.json`.
    exist. Our projections (mean, 10th-90th, STL/BLK/TOV) are shown for every slate player straight from the model build
    regardless of the board; the line columns fill only when the capture carries the market.
 4. Section 6 gates and the pick'em `0.55 / mult` convention are unchanged.
+
+## Amendment 2026-10-25 (CEO): PrizePicks Fantasy Score lines join the FP gate
+
+Amendment 2026-10-25 (CEO): PrizePicks standard Fantasy Score lines join the FP gate. Every graded FP line is source-tagged
+(UD or PP). The gate counter and the decile verdict (weighted mean |gap| <= 0.05, no decile > 0.10) apply to the COMBINED
+record at 200 lines; per-source decile tables are displayed alongside so neither book's record hides in the merge. All other
+rule terms unchanged.
+
+Implementation notes (committed before any PrizePicks line is priced; the 110 Underdog lines already graded keep
+`source = UD` and nothing about their grading changes):
+
+- PrizePicks scoring is identical to Underdog's (PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK - TO, no bonuses), so one box-score
+  actual grades both books' lines. A player with a UD line and a PP line grades both (two lines, one actual).
+- Source: `pirate-bets/reader/board_snapshots/pp_fantasy_lines.jsonl` (refreshed 09:38 and 15:05 PT). The scraper's Arc Lab
+  hook copies it into the repo as `data/pp_fantasy_lines.json` with the file's capture time. `odds_type == "standard"` only.
+  A line counts only when its capture precedes `scheduled_at`; per player and game the LAST pre-tip capture's line is graded
+  (the Underdog rule). A copy that is missing or older than 26 hours means "no PP lines today" and never fails the build.
+- P(over) comes from the player's last pre-tip FP distribution in `data/fp_log.csv` through the same percentile interpolation
+  the Underdog pricing uses; rows go to `data/pp_prices.csv` with `source = PP`. Grading runs through the same code path as
+  the Underdog lines (`fantasy_points.py grade`), writing `source` on every graded line.
+- Seed: the 2026-10-25 15:05 PT extract is the first PP slate and is ingested whenever this build lands, even after tip; it was
+  captured pre-tip and archived.
