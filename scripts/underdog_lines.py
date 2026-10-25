@@ -33,6 +33,8 @@ log = logging.getLogger("arc.lines")
 DEFAULT_OUT = SITE_DATA / "lines.json"
 BOARD_LATEST = DATA_DIR / "board_latest.json"   # repo copy of the capture's NBA entries (fantasy_points rule addendum 2026-10-23)
 BOARD_REFRESH_SECONDS = 3600                     # an unchanged board is re-stamped at most hourly, so pushes stay quiet
+PP_LATEST = DATA_DIR / "pp_fantasy_lines.json"   # repo copy of pirate-bets' PrizePicks Fantasy Score extract (fantasy_points rule amendment 2026-10-25)
+PP_FILE_ENV = "ARC_LAB_PP_FILE"                  # optional explicit path to pp_fantasy_lines.jsonl
 
 # Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22: only 3PM and Fantasy Points are priced;
 # points / rebounds / assists / PRA and season-long markets fall through and are ignored.
@@ -147,6 +149,53 @@ def write_board(snapshot, out_path=BOARD_LATEST):
     return True
 
 
+def pp_candidates(snapshot_path):
+    """Where pirate-bets' PrizePicks pull writes pp_fantasy_lines.jsonl: an explicit ARC_LAB_PP_FILE, the board_snapshots
+    folder of the Underdog snapshot we were handed, and the Desktop pirate-bets checkout."""
+    out = []
+    if os.environ.get(PP_FILE_ENV):
+        out.append(Path(os.environ[PP_FILE_ENV]))
+    if snapshot_path:
+        out.append(Path(snapshot_path).resolve().parent / "pp_fantasy_lines.jsonl")
+    out.append(Path.home() / "Desktop" / "pirate-bets" / "reader" / "board_snapshots" / "pp_fantasy_lines.jsonl")
+    return out
+
+
+def write_pp(snapshot_path=None, out_path=PP_LATEST):
+    """Copy the PrizePicks Fantasy Score extract (one JSON object per line) into the repo as data/pp_fantasy_lines.json with
+    its capture time (the file's modification time, UTC). The newest existing candidate wins; rewritten only when the
+    content changed. Returns True when written."""
+    found = [p for p in pp_candidates(snapshot_path) if p.is_file()]
+    if not found:
+        return False
+    src = max(found, key=lambda p: p.stat().st_mtime)
+    raw = src.read_bytes()
+    digest = hashlib.sha1(raw).hexdigest()
+    try:
+        with open(out_path, encoding="utf-8") as f:
+            if json.load(f).get("sha1") == digest:
+                return False
+    except Exception:  # noqa: BLE001  (no copy yet, or unreadable: write it)
+        pass
+    lines, bad = [], 0
+    for ln in raw.decode("utf-8", "replace").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            lines.append(json.loads(ln))
+        except ValueError:
+            bad += 1
+    iso = lambda d: d.replace(microsecond=0).isoformat().replace("+00:00", "Z")  # noqa: E731
+    write_json(Path(out_path), {
+        "platform": "prizepicks", "source_path": str(src),
+        "captured_at": iso(dt.datetime.fromtimestamp(src.stat().st_mtime, dt.timezone.utc)),
+        "stored_at": iso(dt.datetime.now(dt.timezone.utc)), "n_lines": len(lines), "bad_lines": bad, "sha1": digest, "lines": lines,
+    })
+    log.info("pp_fantasy_lines.json: %d lines copied from %s (%d unparseable)", len(lines), src, bad)
+    return True
+
+
 def git_push(paths):
     """Commit the given files to the arc-lab repo and push, so Pages and Actions pick them up.
     Quiet no-op when nothing changed. Returns True on push."""
@@ -161,20 +210,25 @@ def git_push(paths):
             git("add", os.path.relpath(os.path.abspath(path), repo))
     if git("diff", "--cached", "--quiet", check=False).returncode == 0:
         return False
-    git("commit", "-q", "-m", f"board: {dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%MZ} (lines.json, data/board_latest.json)")
+    staged = git("diff", "--cached", "--name-only", check=False).stdout.split()
+    git("commit", "-q", "-m", f"board: {dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%MZ} ({', '.join(staged) or 'lines'})")
     for _ in range(3):
         if git("pull", "--rebase", "-q", check=False).returncode == 0 and git("push", "-q", check=False).returncode == 0:
             return True
     raise RuntimeError("git push failed after 3 attempts")
 
 
-def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=None):
+def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=None, snapshot_path=None):
     doc, hits = build(snapshot, odds=odds, client=client)
     write_json(Path(out_path), doc)
     board = write_board(snapshot)
-    pushed = git_push([str(out_path), str(BOARD_LATEST)]) if push else False
-    summary = {"lines": len(doc["lines"]), "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pushed": pushed, "path": str(out_path)}
-    log.info("lines.json: %(lines)d NBA lines, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pushed=%(pushed)s", summary)
+    try:
+        pp = write_pp(snapshot_path)
+    except Exception as e:  # noqa: BLE001  (never let the PrizePicks copy break the Underdog hook)
+        log.warning("pp_fantasy_lines.json not written: %s", e); pp = False
+    pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST)]) if push else False
+    summary = {"lines": len(doc["lines"]), "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pp_written": pp, "pushed": pushed, "path": str(out_path)}
+    log.info("lines.json: %(lines)d NBA lines, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pp copy written=%(pp_written)s, pushed=%(pushed)s", summary)
     return summary
 
 
@@ -188,7 +242,7 @@ def main():
     args = ap.parse_args()
     with open(args.snapshot, encoding="utf-8") as f:
         snapshot = json.load(f)
-    s = write_lines(snapshot, out_path=Path(args.out), push=args.push, odds=not args.no_odds)
+    s = write_lines(snapshot, out_path=Path(args.out), push=args.push, odds=not args.no_odds, snapshot_path=args.snapshot)
     print(json.dumps(s))
 
 

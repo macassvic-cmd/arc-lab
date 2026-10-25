@@ -34,6 +34,10 @@ FP_PRICES = DATA_DIR / "fp_prices.csv"
 UD_PRICES = DATA_DIR / "ud_prices.csv"
 PERF = SITE_DATA / "fp_performance.json"
 PRICING = SITE_DATA / "fp_pricing.json"
+PP_FILE = DATA_DIR / "pp_fantasy_lines.json"      # repo copy of pirate-bets/reader/board_snapshots/pp_fantasy_lines.jsonl (scraper hook)
+PP_PRICES = DATA_DIR / "pp_prices.csv"            # PrizePicks standard Fantasy Score lines priced from the FP log (amendment 2026-10-25)
+PP_PRICING = SITE_DATA / "pp_pricing.json"
+PP_MAX_AGE_H = 26                                 # a copy older than this (or missing) = "no PP lines today"; never fails the build
 
 WEIGHTS = {"pts": 1.0, "reb": 1.2, "ast": 1.5, "stl": 3.0, "blk": 3.0, "tov": -1.0}
 COMP = ["tpa", "two", "reb", "ast", "stl", "blk", "tov"]       # copula components (section 2)
@@ -58,7 +62,8 @@ LOG_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "
 FP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "mult", "decimal", "convention", "p_model", "breakeven", "edge", "fp_logged_at", "source_id"]
 UD_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "line", "side", "mult", "decimal", "convention", "p_model", "p_source", "breakeven", "edge", "source_id"]
 GRADE_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min_proj", "min_actual", "fp_mean", "fp_actual", "pit", "stl_actual", "blk_actual",
-                "tov_actual", "void", "line_source", "market", "line", "side", "mult", "p_model", "breakeven", "hit", "logged_at", "captured_at"]
+                "tov_actual", "void", "line_source", "market", "line", "side", "mult", "p_model", "breakeven", "hit", "logged_at", "captured_at", "source"]
+PP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "p_model", "scheduled_at", "game_status", "source_id", "fp_logged_at"]
 
 
 def now():
@@ -391,6 +396,105 @@ def price(snapshot_path):
 
 
 # ---------------- grading ----------------
+def price_pp(path):
+    """Amendment 2026-10-25: price PrizePicks standard Fantasy Score lines from the repo copy written by the scraper hook.
+    Standard lines only; a line counts only when its capture precedes scheduled_at; per player and game the last entry in the
+    file wins; P(over) = 1 - CDF(line) from the player's last pre-tip FP log row (the Underdog interpolation). Both sides are
+    logged like the Underdog rows. A missing, unreadable or stale (> PP_MAX_AGE_H) copy means "no PP lines today"."""
+    t = now()
+    doc = {"generated": ts(t), "platform": "prizepicks", "source_file": None, "captured_at": None, "stored_at": None, "ok": False, "reason": None,
+           "max_age_h": PP_MAX_AGE_H, "file_lines": 0, "standard": 0, "non_standard_excluded": 0, "not_fantasy_score": 0, "captured_after_tip": 0, "pre_tip": 0,
+           "matched": 0, "priced_rows": 0, "new_rows": 0, "unmatched": [], "lines": [], "label": LABEL, "rule_file": RULE,
+           "note": "PrizePicks standard Fantasy Score lines (rule amendment 2026-10-25). P(over) from the last pre-tip FP log row, same interpolation as the Underdog pricing. "
+                   "Graded with source = PP; the 200-line gate counts UD + PP combined."}
+
+    def finish(reason=None):
+        if reason:
+            doc["reason"] = reason
+        write_json(PP_PRICING, doc)
+        print(f"[fp] prizepicks: {'ok' if doc['ok'] else 'no lines'}: {doc['reason'] or ''} file_lines={doc['file_lines']} standard={doc['standard']} "
+              f"non_standard_excluded={doc['non_standard_excluded']} pre_tip={doc['pre_tip']} matched={doc['matched']} priced_rows={doc['priced_rows']} new_rows={doc['new_rows']} "
+              f"unmatched={len(doc['unmatched'])}")
+        return doc
+
+    p = Path(path)
+    if not p.exists():
+        return finish("no data/pp_fantasy_lines.json yet: the scraper hook has not delivered a PrizePicks copy")
+    try:
+        cp = json.load(open(p, encoding="utf-8"))
+    except Exception as e:  # noqa: BLE001
+        return finish(f"unreadable copy: {e}")
+    cap = cp.get("captured_at")
+    doc.update({"source_file": cp.get("source_path"), "captured_at": cap, "stored_at": cp.get("stored_at")})
+    try:
+        age_h = (t - parse_ts(cap)).total_seconds() / 3600
+    except Exception:  # noqa: BLE001
+        return finish("copy carries no capture time")
+    if age_h > PP_MAX_AGE_H:
+        return finish(f"copy captured {age_h:.1f} h ago, over the {PP_MAX_AGE_H} h limit: no PP lines today")
+    raw = cp.get("lines") or []
+    doc["file_lines"] = len(raw)
+    std = [r for r in raw if str(r.get("odds_type") or "").strip().lower() == "standard"]
+    doc["standard"], doc["non_standard_excluded"] = len(std), len(raw) - len(std)
+    if doc["non_standard_excluded"]:
+        print(f"[fp] prizepicks WARNING: {doc['non_standard_excluded']} non-standard (demon/goblin) rows in the copy; excluded here, upstream filter expected them gone")
+    fs = [r for r in std if str(r.get("stat_type") or "").strip().lower() in FP_MARKETS]
+    doc["not_fantasy_score"] = len(std) - len(fs)
+    if not LOG.exists():
+        return finish("no FP log yet")
+    snap = last_pretip(pd.read_csv(LOG, dtype={"event_id": str, "player_id": str}))
+    idx = {(r.date, norm_name(r.player)): r for r in snap.itertuples()}
+    last = {}   # per player + game date, the last entry in the file (file order = pull order)
+    for r in fs:
+        try:
+            sched = parse_ts(r["scheduled_at"])
+        except Exception:  # noqa: BLE001
+            doc["unmatched"].append({"player": r.get("player"), "team": r.get("team"), "why": "no scheduled_at"}); continue
+        last[(norm_name(r.get("player")), sched.astimezone(ET).date().isoformat())] = (r, sched)
+    rows, out = [], []
+    for (key, date), (r, sched) in last.items():
+        lcap = r.get("captured_at") or r.get("pulled_at") or r.get("snapshot_at") or r.get("extracted_at") or cap
+        try:
+            lcap_dt = parse_ts(lcap)
+        except Exception:  # noqa: BLE001
+            lcap_dt = parse_ts(cap)
+        if lcap_dt >= sched:
+            doc["captured_after_tip"] += 1; continue
+        doc["pre_tip"] += 1
+        row = idx.get((date, key))
+        if row is None:
+            doc["unmatched"].append({"player": r.get("player"), "team": r.get("team"), "date": date, "why": "no pre-tip FP log row for that slate"}); continue
+        ta = team_abbr(r.get("team"))
+        if ta and ta != team_abbr(row.team):
+            doc["unmatched"].append({"player": r.get("player"), "team": r.get("team"), "date": date, "why": f"team mismatch (log says {row.team})"}); continue
+        try:
+            line = float(r["line"])
+        except (KeyError, TypeError, ValueError):
+            doc["unmatched"].append({"player": r.get("player"), "team": r.get("team"), "date": date, "why": "no numeric line"}); continue
+        doc["matched"] += 1
+        c = cdf_from_q(json.loads(row.fp_q), line); p_over = 1 - c
+        for side, p_m in (("higher", p_over), ("lower", c)):
+            rows.append({"captured_at": ts(lcap_dt), "date": date, "event_id": row.event_id, "player": r.get("player"), "team": row.team, "opp": row.opp,
+                         "market": r.get("stat_type"), "line": line, "side": side, "p_model": round(p_m, 4), "scheduled_at": ts(sched),
+                         "game_status": r.get("game_status"), "source_id": r.get("source_id"), "fp_logged_at": row.logged_at})
+        out.append({"date": date, "event_id": row.event_id, "player": r.get("player"), "team": row.team, "opp": row.opp, "line": line, "p_over": round(p_over, 4),
+                    "scheduled_at": ts(sched), "captured_at": ts(lcap_dt), "source_id": r.get("source_id")})
+    doc["priced_rows"] = len(rows)
+    if rows:
+        seen = set()
+        if PP_PRICES.exists():
+            old = pd.read_csv(PP_PRICES, dtype=str, usecols=["captured_at", "source_id", "side", "player", "date"])
+            seen = set(zip(old.captured_at, old.source_id.fillna(""), old.side, old.player, old.date))
+        new = [x for x in rows if (x["captured_at"], str(x["source_id"] or ""), x["side"], x["player"], x["date"]) not in seen]
+        if new:
+            append(PP_PRICES, PP_PRICE_FIELDS, new)
+        doc["new_rows"] = len(new)
+    doc["ok"] = True
+    doc["lines"] = sorted(out, key=lambda x: (x["date"], -x["line"]), reverse=True)[:400]
+    return finish()
+
+
+# ---------------- grading ----------------
 def buckets(p, h, thin=THIN):
     out = []
     for i in range(10):
@@ -423,6 +527,7 @@ def grade():
     box = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"event_id": str, "player_id": str})
     box = box.set_index(["event_id", "player_id"])
     prices = pd.read_csv(FP_PRICES, dtype={"event_id": str}) if FP_PRICES.exists() else pd.DataFrame(columns=FP_PRICE_FIELDS)
+    pp_prices = pd.read_csv(PP_PRICES, dtype={"event_id": str}) if PP_PRICES.exists() else pd.DataFrame(columns=PP_PRICE_FIELDS)
     rows, pit, marg = [], [], {s: {k: ([], []) for k in ((1, 2) if s != "tov" else (2, 3))} for s in NEW}
     for r in snap.itertuples():
         if (r.event_id, r.player_id) not in box.index:
@@ -441,18 +546,39 @@ def grade():
                     pp.append(float(sum(pmf[k:]))); hh.append(int(int(b[s]) >= k))
         pr = prices[(prices.date == r.date) & (prices.event_id == r.event_id) & (prices.player.map(norm_name) == norm_name(r.player)) & (prices.captured_at < r.tip)]
         pr = pr.sort_values("captured_at").drop_duplicates(["line", "side"], keep="last")
+        ppr = pp_prices[(pp_prices.date == r.date) & (pp_prices.event_id == r.event_id) & (pp_prices.player.map(norm_name) == norm_name(r.player)) & (pp_prices.captured_at < r.tip)]
+        if len(ppr):
+            ppr = ppr[ppr.captured_at == ppr.captured_at.max()].drop_duplicates(["line", "side"], keep="last")   # the LAST pre-tip capture's line (amendment 2026-10-25)
+        graded = False
         if len(pr) and not void:
             for x in pr.itertuples():
                 hit = None if actual == x.line else int(actual > x.line if x.side == "higher" else actual < x.line)
-                rows.append({**base, "line_source": "underdog", "market": x.market, "line": x.line, "side": x.side, "mult": x.mult, "p_model": x.p_model, "breakeven": x.breakeven, "hit": hit, "captured_at": x.captured_at})
-        else:
+                rows.append({**base, "line_source": "underdog", "market": x.market, "line": x.line, "side": x.side, "mult": x.mult, "p_model": x.p_model, "breakeven": x.breakeven, "hit": hit, "captured_at": x.captured_at, "source": "UD"})
+            graded = True
+        if len(ppr) and not void:   # a player with both a UD and a PP line grades both: two lines, one actual
+            for x in ppr.itertuples():
+                hit = None if actual == x.line else int(actual > x.line if x.side == "higher" else actual < x.line)
+                rows.append({**base, "line_source": "prizepicks", "market": x.market, "line": x.line, "side": x.side, "mult": "", "p_model": x.p_model, "breakeven": "", "hit": hit, "captured_at": x.captured_at, "source": "PP"})
+            graded = True
+        if not graded:
             med = float(q[49]); p_hi = 1 - cdf_from_q(q, med)
             rows.append({**base, "line_source": "model_median", "market": "", "line": round(med, 1), "side": "higher", "mult": "", "p_model": round(p_hi, 4), "breakeven": "",
-                         "hit": None if void or actual == med else int(actual > med), "captured_at": ""})
+                         "hit": None if void or actual == med else int(actual > med), "captured_at": "", "source": ""})
     R = pd.DataFrame(rows, columns=GRADE_FIELDS); R.to_csv(GRADE, index=False)
-    ud = R[(R.line_source == "underdog") & R.hit.notna()]
-    p_ud, h_ud = ud.p_model.astype(float).values, ud.hit.astype(int).values
-    bk = buckets(p_ud, h_ud) if len(ud) else buckets(np.array([]), np.array([]))
+    gl = R[R.line_source.isin(["underdog", "prizepicks"]) & R.hit.notna()]   # the gate record: UD + PP combined (amendment 2026-10-25)
+
+    def line_stats(d, gate=True):
+        pp_, hh_ = d.p_model.astype(float).values, d.hit.astype(int).values
+        bk_ = buckets(pp_, hh_) if len(d) else buckets(np.array([]), np.array([]))
+        o = {"n": int(len(d)), "hits": int(hh_.sum()) if len(d) else 0, "hit_rate": round(float(hh_.mean()), 4) if len(d) else None,
+             "mean_p": round(float(pp_.mean()), 4) if len(d) else None, "by_decile": bk_}
+        o["gate" if gate else "decile_read"] = decile_verdict(bk_, len(d))
+        return o
+    lines_doc = line_stats(gl)
+    lines_doc["scope"] = "combined UD + PP: the gate counter and verdict (rule amendment 2026-10-25)"
+    lines_doc["sources"] = {s: int((gl.source == s).sum()) for s in ("UD", "PP")}
+    by_source = {s: {**line_stats(gl[gl.source == s], gate=False), "label": {"UD": "Underdog", "PP": "PrizePicks"}[s],
+                     "note": "same grading code path and format as the combined table; shown alongside so neither book's record hides in the merge; not the gate"} for s in ("UD", "PP")}
     pit_arr = np.array(pit)
     pit_tab = [{"lo": i / 10, "hi": (i + 1) / 10, "n": int(((pit_arr >= i / 10) & ((pit_arr < (i + 1) / 10) if i < 9 else True)).sum()) if len(pit_arr) else 0, "expected_share": 0.1} for i in range(10)]
     pg = R.drop_duplicates(["date", "event_id", "player_id"])
@@ -464,8 +590,7 @@ def grade():
             marg_doc[s][f"at_least_{k}"] = {"n": int(len(pp)), "buckets": buckets(pp, hh) if len(pp) else [], "verdict": decile_verdict(buckets(pp, hh) if len(pp) else [], len(pp))}
     doc = {"generated": ts(now()), "rule_file": RULE, "label": LABEL,
            "player_games": int(len(pg)), "void": int(pg.void.sum()), "pending_in_log": int(len(snap) - len(pg)),
-           "lines": {"n": int(len(ud)), "hits": int(h_ud.sum()) if len(ud) else 0, "hit_rate": round(float(h_ud.mean()), 4) if len(ud) else None, "mean_p": round(float(p_ud.mean()), 4) if len(ud) else None,
-                     "by_decile": bk, "gate": decile_verdict(bk, len(ud))},
+           "lines": lines_doc, "by_source": by_source,
            "model_median_lines": {"n": int((R.line_source == "model_median").sum()), "note": "graded against the model's own median for calibration only; never count toward the 200"},
            "pit": {"n": int(len(pit_arr)), "deciles": pit_tab, "mean": round(float(pit_arr.mean()), 4) if len(pit_arr) else None,
                    "note": "PIT = CDF(actual FP) from the logged percentiles; a calibrated distribution puts 10% of player-games in every decile"},
@@ -473,14 +598,17 @@ def grade():
            "recent": pg.sort_values(["date", "fp_mean"], ascending=[False, False]).head(60)[["date", "player", "team", "opp", "min_proj", "min_actual", "fp_mean", "fp_actual", "pit", "void"]].to_dict("records"),
            "method": ["FP = PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK - TOV (Underdog). Graded snapshot = the last FP distribution logged before tip (data/fp_log.csv, append-only).",
                       "Underdog FP lines are graded from data/fp_prices.csv (last pre-tip capture per line and side); a push is void. The verdict at 200 graded lines is calibration by decile, not hit rate.",
+                      "Amendment 2026-10-25: PrizePicks standard Fantasy Score lines (data/pp_prices.csv, last pre-tip capture per player and game, both sides) are graded through the same code path against the same box-score FP, tagged source = PP. The 200-line counter and the decile verdict apply to UD + PP combined; UD-only and PP-only tables are shown alongside. PrizePicks scoring is identical to Underdog's.",
                       "A player with no box-score minutes is void (shown, excluded). No tuning on these results, ever (backtests/fantasy_points_v1_rule.md)."]}
     write_json(PERF, doc)
-    print(f"[fp] graded {len(pg)} player-games ({int(pg.void.sum())} void), {len(ud)} Underdog FP lines ({doc['lines']['gate']['status']}), PIT mean {doc['pit']['mean']}")
+    print(f"[fp] graded {len(pg)} player-games ({int(pg.void.sum())} void), {len(gl)} FP lines (UD {lines_doc['sources']['UD']}, PP {lines_doc['sources']['PP']}; gate {doc['lines']['gate']['status']}), PIT mean {doc['pit']['mean']}")
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "snapshot"
     if cmd == "price":
         price(sys.argv[2])
+    elif cmd == "price_pp":
+        price_pp(sys.argv[2] if len(sys.argv) > 2 else PP_FILE)
     else:
         {"priors": priors, "snapshot": snapshot, "grade": grade}[cmd]()

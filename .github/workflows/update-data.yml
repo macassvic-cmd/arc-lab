@@ -56,7 +56,11 @@ jobs:
       - name: Grade the ladder log (last pre-tip snapshot vs box scores)
         working-directory: scripts
         run: python ladder_log.py grade
-      - name: Grade the fantasy-points log (last pre-tip FP distribution vs box-score FP; priced lines from data/fp_prices.csv)
+      - name: PrizePicks FP pricing (repo copy data/pp_fantasy_lines.json; standard lines, pre-tip captures only; a copy older than 26 h = no PP lines)
+        working-directory: scripts
+        run: |
+          if [ -f ../data/pp_fantasy_lines.json ]; then python fantasy_points.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet: the scraper hook has not delivered a PrizePicks copy"; fi
+      - name: Grade the fantasy-points log (last pre-tip FP distribution vs box-score FP; UD lines from data/fp_prices.csv, PP lines from data/pp_prices.csv)
         working-directory: scripts
         run: python fantasy_points.py grade
       - name: Assign positions
@@ -81,6 +85,10 @@ jobs:
         working-directory: scripts
         run: |
           if [ -f ../data/board_latest.json ]; then python fantasy_points.py price ../data/board_latest.json; else echo "no data/board_latest.json yet: the scraper hook has not delivered a capture"; fi
+      - name: PrizePicks FP pricing, second pass (lines whose FP log row was written by this run's snapshot; idempotent)
+        working-directory: scripts
+        run: |
+          if [ -f ../data/pp_fantasy_lines.json ]; then python fantasy_points.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         working-directory: scripts
         run: python first_basket_model.py snapshot

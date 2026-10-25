@@ -11,7 +11,7 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | `scripts/fetch_games.py` | GitHub Actions, 10am and 5:30pm ET | Pulls box scores, tonight's slate, rosters and ESPN injury tags |
 | `scripts/positions.py` | Same workflow | Assigns PG/SG/SF/PF/C from play style into `data/positions.csv` (ESPN only gives G/F/C) |
 | `scripts/build_model.py` | Same workflow | Defense vs position, minutes, and 8,000 simulated games per player (plus the 10,000-sim fantasy-points joint draw from `fantasy_points.py`) |
-| `scripts/fantasy_points.py` | Update workflow (snapshot, grade, `price` against `data/board_latest.json`); `priors` once | Fantasy Points v1 under `backtests/fantasy_points_v1_rule.md`: STL/BLK/TOV marginals, Gaussian-copula joint sim, immutable `data/fp_log.csv`, grading to `data/fp_grade.csv` / `docs/data/fp_performance.json`, pricing study to `data/fp_prices.csv` (FP) and `data/ud_prices.csv` (3PM) with `docs/data/fp_pricing.json` for the tab |
+| `scripts/fantasy_points.py` | Update workflow (snapshot, grade, `price` against `data/board_latest.json`, `price_pp` against `data/pp_fantasy_lines.json`); `priors` once | Fantasy Points v1 under `backtests/fantasy_points_v1_rule.md`: STL/BLK/TOV marginals, Gaussian-copula joint sim, immutable `data/fp_log.csv`, grading to `data/fp_grade.csv` / `docs/data/fp_performance.json`, pricing study to `data/fp_prices.csv` (FP) and `data/ud_prices.csv` (3PM) with `docs/data/fp_pricing.json` for the tab |
 | `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
 | `scripts/paper_log.py` | All three workflows | Logs every 3PM prop with an Underdog line (3PM only since the scope reset), freezes the close at tip, grades it, writes `results.json` for the Results tab |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
@@ -62,7 +62,7 @@ Timing: Discord gets the alert in a second or two, which is what you bet off. Th
 
 ## Underdog lines
 
-Lines come from the Underdog board scraper in `pirate-bets-pc` (`python -m reader.underdog_scraper`). Set these in that repo's `.env` and the scraper hands every fresh board to `scripts/underdog_lines.py` here, which writes `docs/data/lines.json` and pushes it:
+PrizePicks standard Fantasy Score lines (rule amendment 2026-10-25) arrive the same way: the hook copies `pirate-bets/reader/board_snapshots/pp_fantasy_lines.jsonl` (set `ARC_LAB_PP_FILE` to point elsewhere) into the repo as `data/pp_fantasy_lines.json`, and `fantasy_points.py price_pp` prices it in the update workflow (`data/pp_prices.csv`, `docs/data/pp_pricing.json`); the FP grade tags every line UD or PP and the 200-line gate counts both. Lines come from the Underdog board scraper in `pirate-bets-pc` (`python -m reader.underdog_scraper`). Set these in that repo's `.env` and the scraper hands every fresh board to `scripts/underdog_lines.py` here, which writes `docs/data/lines.json` and pushes it:
 
 ```
 ARC_LAB_DIR=C:\Users\vmora\Downloads\arc-lab\arc-lab
