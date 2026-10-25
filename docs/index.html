@@ -70,6 +70,26 @@ tr:last-child td{border-bottom:0}
 .flag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;background:var(--rim-soft);color:var(--ink);margin-left:4px}
 .flag.q{background:var(--chip)}
 .pos{color:var(--make);font-weight:600}.neg{color:var(--miss)}
+.fpwrap{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+#tf{table-layout:fixed;width:100%}
+#tf th,#tf td{padding:7px 8px;overflow:hidden;text-overflow:ellipsis}
+#tf th:first-child,#tf td:first-child{position:static}
+#tf .pn{display:flex;align-items:center;gap:6px;min-width:0}
+#tf .pn .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#tf .meta{display:flex;align-items:center;gap:4px;min-width:0;white-space:nowrap}
+#tf .meta span.mt{overflow:hidden;text-overflow:ellipsis;min-width:0}
+#tf .meta .flag{flex:none;font-size:11px;padding:0 6px;margin-left:0}
+#tf col.c1{width:38px}#tf col.c2{width:56px}#tf col.c3{width:58px}#tf col.c4{width:48px}#tf col.c5{width:58px}#tf col.c6{width:52px}
+#tf td.dash{color:var(--muted)}
+.fn{font-size:12px;margin-top:8px}
+@media (max-width:480px){
+  #tf{font-size:13px}
+  #tf th,#tf td{padding:6px 4px}
+  #tf th{font-size:12px}
+  #tf .big{font-size:17px}
+  #tf .meta{font-size:11px}
+  #tf col.c1{width:26px}#tf col.c2{width:44px}#tf col.c3{width:44px}#tf col.c4{width:34px}#tf col.c5{width:44px}#tf col.c6{width:42px}
+}
 .rk{font:600 15px var(--display)}
 .rk.hot{color:var(--rim)}
 .heat td{font:600 15px var(--display)}
@@ -164,10 +184,10 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <div class="controls">
       <input type="search" id="qf" placeholder="Search player" aria-label="Search player">
     </div>
-    <p class="foot"><b>Hit rate measures accuracy, not profit. Pricing study, paper only.</b> Underdog scoring: PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK &minus; TO. Rule: <code>backtests/fantasy_points_v1_rule.md</code>; graded record on the <a href="performance.html#fpSec">Performance page</a>.</p>
     <p class="foot" id="fpxNote"></p>
-    <div class="scroll"><table id="tf"></table></div>
-    <p class="foot">Proj FP is the mean of 10,000 joint simulations (one minutes draw shared by every stat, Gaussian copula over the per-minute rates). 10th&ndash;90th is the simulated range. P(model) is the chance of the shown side. Break-even: 1 / decimal price for a book-style side (decimal price posted, multiplier 1.0), 0.55 divided by the leg multiplier for a pick'em leg; each priced row logs which convention applied. Edge is the difference in points. No conclusion until 200 graded Underdog FP lines; the verdict is calibration by decile, not hit rate.</p>
+    <div class="fpwrap"><table id="tf"></table></div>
+    <p class="foot fn">Underdog scoring: PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK &minus; TO.</p>
+    <p class="foot fn"><b>Hit rate measures accuracy, not profit. Pricing study, paper only.</b> Proj FP is the mean of 10,000 joint simulations. P(over) is the model's chance the player clears the Underdog line; Edge is P(over) minus the price's break-even, in points. Rule: <code>backtests/fantasy_points_v1_rule.md</code>; graded record on the <a href="performance.html#fpSec">Performance page</a>.</p>
   </section>
 
   <section id="firstbasket" hidden>
@@ -194,7 +214,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 </main>
 
 <script>
-const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", sortF:"edge",
+const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", sortF:"fp",
            sort3:"p2", sortP:"mean", lines:{}, edits:{}, be:55};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
 if(["threes","props","firstbasket","fantasy","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
@@ -384,24 +404,23 @@ function renderResults(){
 function renderFantasy(){
   const q = norm($("qf").value);
   const pr = FPX && P && FPX.slate_date===P.date ? FPX : null;
-  const lines = {};
-  for(const r of (pr?.fp_lines||[])){ const k = norm(r.player); if(!lines[k] || (r.edge??-9) > (lines[k].edge??-9)) lines[k] = r; }
+  const lines = {};   // one priced row per player: the over (higher) side, as the grid reads P(over) / Edge for the over
+  for(const r of (pr?.fp_lines||[])){ if(r.side!=="higher") continue; const k = norm(r.player); if(!lines[k] || (r.edge??-9) > (lines[k].edge??-9)) lines[k] = r; }
   let rows = active().filter(p=>p.fp && (!q||norm(p.name).includes(q))).map(p=>{ const l = lines[norm(p.name)]; return {p, l, fp:p.fp.mean, edge: l ? l.edge : null}; });
   const k = S.sortF;
   rows.sort((a,b)=> k==="edge" ? ((b.edge??-9)-(a.edge??-9)) || (b.fp-a.fp) : k==="min" ? b.p.min-a.p.min : b.fp-a.fp);
-  const hasLines = rows.some(r=>r.l);
-  const mk = FPX ? Object.entries(FPX.markets||{}).map(([m,n])=>`${m} (${n})`).join(", ") : "";
   const capAt = FPX ? new Date(FPX.captured_at).toLocaleString("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) + " ET" : "";
-  $("fpxNote").innerHTML = !FPX ? "Projections come straight from the model build and never wait on the board. No Underdog board capture priced yet; the line columns fill in once the repo's board copy carries a Fantasy Points market." :
-    FPX.capture_ok===false ? `Board capture ${ago(FPX.captured_at)} not priced: ${FPX.capture_check}. Projections come straight from the model build and never wait on the board.` :
-    FPX.fp_market_present ? `Underdog board captured ${capAt} (${ago(FPX.captured_at)}): ${FPX.fp_entries} Fantasy Points entries, ${FPX.fp_lines_priced} priced${pr?"":" (for another slate date)"}. Break-even: ${FPX.breakeven_rule}.` :
-    `No Fantasy Points lines on the latest board capture (captured ${capAt}, ${ago(FPX.captured_at)}). Underdog posts this market intermittently. Projections come straight from the model build and never wait on the board. NBA markets on that capture: ${mk}.`;
-  const head = `<thead><tr><th>Player</th><th data-k="min">Min</th><th data-k="fp">Proj FP</th><th>10th&ndash;90th</th><th>STL &middot; BLK &middot; TO</th>${hasLines?`<th>UD line</th><th>Side</th><th>P(model)</th><th>Break-even</th><th data-k="edge">Edge</th>`:""}</tr></thead>`;
+  const priced = !FPX ? "0 priced" : FPX.capture_ok===false ? `not priced (${FPX.capture_check})` : `${FPX.fp_lines_priced} priced${pr?"":" (another slate date)"}`;
+  $("fpxNote").textContent = !FPX ? "Underdog board captured: none yet \u00b7 0 FP entries \u00b7 0 priced"
+    : `Underdog board captured ${capAt} (${ago(FPX.captured_at)}) \u00b7 ${FPX.fp_entries} FP entries \u00b7 ${priced}`;
+  const price = l => l.convention==="book" && l.decimal!=null ? Number(l.decimal).toFixed(2) : `${l.mult}\u00d7`;
+  const head = `<colgroup><col><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"></colgroup>
+    <thead><tr><th>Player</th><th data-k="min">Min</th><th data-k="fp">Proj FP</th><th>UD line</th><th>Price</th><th>P(over)</th><th data-k="edge">Edge</th></tr></thead>`;
   const body = rows.map(({p,l,fp,edge})=>`<tr>
-    <td><span class="name">${p.name}</span>${flags(p)}<div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td>
-    <td>${p.min.toFixed(0)}</td><td class="big">${fp.toFixed(1)}</td><td>${p.fp.p10}&ndash;${p.fp.p90}<div class="meta">sd ${p.fp.sd}</div></td>
-    <td>${p.stl.mean.toFixed(1)} &middot; ${p.blk.mean.toFixed(1)} &middot; ${p.tov.mean.toFixed(1)}</td>
-    ${hasLines?(l?`<td>${l.line}</td><td>${l.side}</td><td class="big">${pct(l.p_model)}</td><td>${l.breakeven==null?"\u2013":pct(l.breakeven)}<div class="meta">${l.convention==="book"?`book ${l.decimal}`:`pick'em ${l.mult}x`}</div></td><td class="${edge>=.03?"pos":edge<0?"neg":""}">${edge==null?"\u2013":(edge>=0?"+":"")+(100*edge).toFixed(1)}</td>`:`<td colspan="5" class="meta">no line</td>`):""}</tr>`).join("");
+    <td><div class="pn"><span class="name">${p.name}</span></div><div class="meta"><span class="mt">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</span>${(p.flags||[]).includes("B2B")?'<span class="flag">B2B</span>':""}</div></td>
+    <td>${p.min.toFixed(0)}</td><td class="big">${fp.toFixed(1)}</td>
+    ${l?`<td>${l.line}</td><td>${price(l)}</td><td class="big">${pct(l.p_model)}</td><td class="${edge>=.03?"pos":edge<0?"neg":""}">${edge==null?"\u2013":(edge>=0?"+":"")+(100*edge).toFixed(1)}</td>`
+       :`<td class="dash">\u2013</td><td class="dash">\u2013</td><td class="dash">\u2013</td><td class="dash">\u2013</td>`}</tr>`).join("");
   $("tf").innerHTML = rows.length ? head + `<tbody>${body}</tbody>` : `<tbody><tr><td class="empty">${P?.players?.some(p=>p.fp) ? "No players match." : "No fantasy-points projections yet: they ship with the next model build."}</td></tr></tbody>`;
   sortable($("tf"), null, null, v=>S.sortF=v);
 }
