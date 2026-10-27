@@ -70,6 +70,20 @@ tr:last-child td{border-bottom:0}
 .flag{display:inline-block;font-size:12px;padding:1px 7px;border-radius:999px;background:var(--rim-soft);color:var(--ink);margin-left:4px}
 .flag.q{background:var(--chip)}
 .pos{color:var(--make);font-weight:600}.neg{color:var(--miss)}
+.strip{margin:0 0 14px}
+.stripHead{font:700 20px var(--display);margin:0 0 6px}
+.stripHead span{color:var(--muted);font:500 13px var(--body);margin-left:8px}
+.stripRow{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.lc{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--make);border-radius:8px;padding:8px 10px;min-width:0}
+.lc .name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc .nums{display:flex;gap:10px;margin:4px 0 6px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.lc .nums b{font:700 17px var(--display);color:var(--ink);margin-left:3px}
+.lc .nums .pos b{color:var(--make)}
+.lc .ladder{flex-wrap:wrap}
+.lc .ladder span{font-size:13px;line-height:1.1;padding:2px 0}
+.lc .ladder span small{display:block;font-size:10px;font-weight:500;opacity:.85}
+.lc .ladder span.tgt{outline:2px solid var(--ink);outline-offset:-2px}
+.stripEmpty{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;color:var(--muted);font-size:14px;margin:0}
 .fpwrap{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 #tf{table-layout:fixed;width:100%}
 #tf th,#tf td{padding:7px 8px;overflow:hidden;text-overflow:ellipsis}
@@ -147,6 +161,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
   <div class="controls" id="gameChips"></div>
 
   <section id="threes">
+    <div class="strip" id="ls3"></div>
     <div class="controls">
       <input type="search" id="q3" placeholder="Search player" aria-label="Search player">
       <span id="posChips3"></span>
@@ -158,6 +173,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
   </section>
 
   <section id="props" hidden>
+    <div class="strip" id="lsP"></div>
     <div class="controls">
       <select id="stat" aria-label="Stat">
         <option value="pts">Points</option><option value="reb">Rebounds</option>
@@ -279,7 +295,27 @@ function sortable(table, cols, key, set){
   };
 }
 
+const LADDER_RUNGS = {tpm:[3,4,5,6,7], pts:[10,15,20,25,30], ast:[4,6,8,10], reb:[6,8,10,12]};
+const STAT_LABEL = {tpm:"3PM", pts:"PTS", reb:"REB", ast:"AST"};
+function ladderStrip(el, stat, rungs){
+  // Display only. Same inputs the grid below uses: the main Underdog line (S.lines), P(over) = over(pmf, line), edge = P(over) minus the
+  // break-even % from the Threes tab's input (S.be, the only price field these tabs read), rung values = the grid's ladder cells.
+  const be = S.be/100, label = STAT_LABEL[stat] || stat.toUpperCase();
+  const priced = active().filter(p => p[stat] && p[stat].pmf && S.lines[`${norm(p.name)}:${stat}`]!==undefined);
+  const rows = priced.map(p => { const ud = S.lines[`${norm(p.name)}:${stat}`], po = over(p[stat].pmf, ud); return {p, ud, po, edge: po - be}; })
+    .filter(r => r.edge >= 0.05 && r.po >= 0.55).sort((a,b)=> b.edge-a.edge || b.po-a.po).slice(0,8);
+  const rung = (p,n) => p.ladder?.[stat]?.[n] ? p.ladder[stat][n].p : (stat==="tpm" ? atLeast(p.tpm.pmf,n) : null);
+  const head = `<div class="stripHead">Ladder tonight <span>${label} \u00b7 edge \u2265 +5 pts and model \u2265 55% at the main Underdog line vs the ${S.be}% break-even \u00b7 top ${rows.length?rows.length:8} by edge</span></div>`;
+  if(!priced.length){ el.innerHTML = head + `<p class="stripEmpty">No Underdog ${label} lines on tonight's board capture, so there is no edge to rank.</p>`; return; }
+  if(!rows.length){ el.innerHTML = head + `<p class="stripEmpty">No ladder edges clear the bar tonight.</p>`; return; }
+  el.innerHTML = head + `<div class="stripRow">${rows.map(({p,ud,po,edge})=>`<div class="lc" data-player="${p.name}" data-line="${ud}" data-po="${po.toFixed(4)}" data-edge="${edge.toFixed(4)}">
+    <span class="name">${p.name}</span><div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp} \u00b7 ${label}</div>
+    <div class="nums"><span>Line<b>${ud}</b></span><span>Model<b>${pct(po)}</b></span><span class="pos">Edge<b>+${(100*edge).toFixed(1)}</b></span></div>
+    <span class="ladder">${rungs.map(n=>{ const v = rung(p,n); return v==null ? "" : `<span class="${n===Math.ceil(ud)?"tgt":""}" style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ ${label}"><small>${n}+</small>${pct(v)}</span>`; }).join("")}</span></div>`).join("")}</div>`;
+}
+
 function renderThrees(){
+  ladderStrip($("ls3"), "tpm", [1,2,3,4,5,6,7]);
   const q = norm($("q3").value);
   let rows = active().filter(p => (S.pos3==="all"||p.pos===S.pos3) && (!q||norm(p.name).includes(q)));
   rows = rows.map(p => { const L = lineFor(p,"tpm"); const ud = S.lines[`${norm(p.name)}:tpm`];
@@ -310,6 +346,7 @@ function renderThrees(){
 
 function renderProps(){
   const st = S.stat, q = norm($("qp").value);
+  ladderStrip($("lsP"), st, LADDER_RUNGS[st] || []);
   let rows = active().filter(p=>!q||norm(p.name).includes(q)).map(p=>{
     const L = lineFor(p, st), po = over(p[st].pmf, L);
     const hits = p.last10[st].filter(v=>v>L).length;
@@ -317,7 +354,7 @@ function renderProps(){
   });
   const k = S.sortP;
   rows.sort((a,b)=> k==="rk" ? a.rk-b.rk : b[k]-a[k]);
-  const RUNGS = {tpm:[3,4,5,6,7], pts:[10,15,20,25,30], ast:[4,6,8,10], reb:[6,8,10,12]};
+  const RUNGS = LADDER_RUNGS;
   const head = `<thead><tr><th>Player</th><th data-k="mean">Min</th><th data-k="mean">Proj</th>${RUNGS[st]?`<th>Ladder ${RUNGS[st][0]}+ to ${RUNGS[st][RUNGS[st].length-1]}+</th>`:""}<th>Line</th>
     <th data-k="po">Over</th><th data-k="hit">L10 over</th><th data-k="rk">Opp rank</th><th>Last 10</th></tr></thead>`;
   const body = rows.map(({p,L,po,mean,hits,rk})=>`<tr>

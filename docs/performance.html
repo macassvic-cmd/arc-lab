@@ -44,6 +44,25 @@ select,input[type=search]{font:500 15px var(--body);padding:7px 10px;border:1px 
 .stat b{display:block;font:700 32px/1.1 var(--display)}
 .stat span{color:var(--muted);font-size:13px}
 .stat.tier{border-top:4px solid var(--rim)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.tier{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--rim);border-radius:8px;padding:12px 14px}
+.tier .tl{font:600 15px var(--display);color:var(--muted);letter-spacing:.02em}
+.tier b{display:block;font:700 40px/1.05 var(--display);margin:2px 0 0}
+.tier .rec{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tier .bar{position:relative;height:10px;background:var(--chip);border-radius:5px;margin:10px 0 4px;overflow:visible}
+.tier .bar i{display:block;height:100%;border-radius:5px;background:var(--make)}
+.tier .bar.under i{background:var(--miss)}
+.tier .bar s{position:absolute;top:-4px;width:2px;height:18px;background:var(--ink);text-decoration:none;margin-left:-1px}
+.tier .legend{font-size:11px;color:var(--muted)}
+.calline{font:600 20px/1.3 var(--display);margin:16px 0 4px}
+.calline small{display:block;font:400 13px var(--body);color:var(--muted)}
+details.more{margin-top:28px;border-top:1px solid var(--line);padding-top:6px}
+details.more>summary{cursor:pointer;font:700 24px var(--display);padding:8px 0;list-style:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"\25B8";display:inline-block;width:22px;color:var(--rim)}
+details.more[open]>summary::before{content:"\25BE"}
+details.more>summary span{color:var(--muted);font:500 15px var(--body);margin-left:8px}
+.secErr{background:var(--warn);color:var(--warn-ink);border-radius:8px;padding:10px 12px;font-size:14px;margin:8px 0}
 .scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th{font:600 15px var(--display);color:var(--muted);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -68,15 +87,20 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   <p class="sub" id="status">Loading…</p>
 </header>
 <main>
+  <h2>Shipped tiers <span>all stats combined: hit rate when the model said at least this much</span></h2>
+  <div class="tiers" id="tierCards"></div>
+  <p class="calline" id="calLine"></p>
+  <p class="sub">Hit rate measures accuracy, not profit. Edge requires comparing to prices.</p>
+
+  <details class="more" id="more">
+  <summary>Details <span>calibration tables, tiers by stat, overall record, by position, by stat and rung, players, recent picks</span></summary>
   <h2>Calibration <span>shipped probability buckets &times; hit rate &times; n, from the grader itself</span></h2>
   <div class="stats" id="calCards"></div>
   <div class="scroll"><table id="calAll"></table></div>
   <div class="scroll"><table id="calStat"></table></div>
   <p class="foot" id="calNote"></p>
 
-  <h2>Tiers <span>predicted vs hit when the model said at least this much</span></h2>
-  <div class="stats" id="tiers"></div>
-  <p class="sub">Hit rate measures accuracy, not profit. Edge requires comparing to prices.</p>
+  <h2>Tiers by stat <span>predicted vs hit when the model said at least this much</span></h2>
   <div class="scroll"><table id="tierStat"></table></div>
 
   <h2>Overall record <span>all rungs, including long shots</span></h2>
@@ -99,6 +123,7 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   <div class="scroll"><table id="players"></table></div>
   <h3>Recent picks <span class="foot" id="recentNote"></span></h3>
   <div class="scroll"><table id="recent"></table></div>
+  </details>
 
   <section id="fbSec" hidden>
     <h2>First basket <span>P(player scores the game's first made field goal), ten projected starters per game, graded binary</span></h2>
@@ -192,14 +217,46 @@ function renderFP(){
   $("fpMethod").innerHTML = F.method.map(m=>`<li>${m}</li>`).join("");
 }
 
+function renderTiers(){
+  // Four shipped tiers, all stats combined: the same tiers[] block the table below reads (min_p, hit_rate, record = hits-misses).
+  const T = (R.tiers||[]).filter(t=>t && t.n);
+  if(!T.length){ $("tierCards").innerHTML = `<div class="empty">No graded tiers yet.</div>`; return; }
+  $("tierCards").innerHTML = T.map(t=>{ const hr = t.hit_rate, floor = t.min_p, under = hr < floor;
+    return `<div class="tier"><div class="tl">\u2265 ${Math.round(floor*100)}% picks</div><b>${pct(hr)}</b><div class="rec">${t.record} \u00b7 ${t.hits} hits, ${t.misses} misses</div>
+      <div class="bar ${under?"under":""}" role="img" aria-label="hit rate ${pct(hr)}, tier floor ${Math.round(floor*100)}%"><i style="width:${(100*hr).toFixed(1)}%"></i><s style="left:${(100*floor).toFixed(1)}%"></s></div>
+      <div class="legend">tick = ${Math.round(floor*100)}% floor \u00b7 ${t.player_games} player-games</div></div>`; }).join("");
+}
+function renderCalLine(){
+  // One plain-language line from the shipped ≥55% tier: its mean shipped P against its hit rate, same fields as the card above it.
+  const t = (R.tiers||[]).find(t=>t && t.n && Math.abs(t.min_p-0.55)<1e-9) || (R.tiers||[]).find(t=>t && t.n);
+  const C = R.calibration;
+  if(!t){ $("calLine").textContent = "No graded picks yet."; return; }
+  $("calLine").innerHTML = `Model said ${pct(t.mean_p)} on average for its \u2265 ${Math.round(t.min_p*100)}% picks \u2192 actually hit ${pct(t.hit_rate)} across ${t.n.toLocaleString()} graded rungs (${t.player_games.toLocaleString()} player-games).`
+    + (C ? `<small>Full calibration by probability bucket, with clustered 95% CIs, is under Details: ${C.n.toLocaleString()} graded rungs over ${C.player_games.toLocaleString()} player-games.</small>` : "");
+}
+const FAILED = [];
+function section(name, ids, fn){
+  // Each section renders on its own: one throwing must not blank the rest of the page.
+  try { fn(); }
+  catch(e){ console.error(`[performance] render failed: ${name}`, e); FAILED.push(name);
+    const host = ids.map(id=>$(id)).find(Boolean); if(host){ const n = document.createElement("div"); n.className = "secErr"; n.textContent = `Could not render ${name}: ${e && e.message ? e.message : e}`; host.replaceChildren(n); } }
+}
 function render(){
-  renderFB(); renderFP();
+  FAILED.length = 0;
+  section("first basket", ["fbCards"], renderFB); section("fantasy points", ["fpCards"], renderFP);
   if(!R || R.empty || !R.overall || !R.overall.n){
     $("status").textContent = R && R.generated ? `No graded rungs yet (updated ${R.generated}). Projections are logged before tip and graded the morning after.` : "No performance data yet.";
     return;
   }
+  section("shipped tiers", ["tierCards"], renderTiers); section("calibration line", ["calLine"], renderCalLine);
+  section("details", ["calCards"], renderDetails);
+  section("method", ["method"], ()=>{ $("method").innerHTML = R.method.map(m=>`<li>${m}</li>`).join(""); });
+  const L = R.log;
+  $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · ${R.calibration_adopted.length? "shipped P is recalibrated for "+R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate) and raw elsewhere" : "shipped P is the raw engine probability for every stat (no stat passed the recalibration gate)"}.`
+    + (FAILED.length ? ` Could not render: ${FAILED.join(", ")} (render step failed; see console).` : "");
+}
+function renderDetails(){
   const L = R.log, O = R.overall;
-  $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · ${R.calibration_adopted.length? "shipped P is recalibrated for "+R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate) and raw elsewhere" : "shipped P is the raw engine probability for every stat (no stat passed the recalibration gate)"}.`;
   const C = R.calibration;
   if(C){
     $("calCards").innerHTML = [card(C.n.toLocaleString(),"graded rungs"), card(C.player_games.toLocaleString(),"player-games (the real sample size)"), card(L.dates,"game dates graded"), card(pct(O.mean_p),"mean shipped P, all rungs"), card(pct(O.hit_rate),"hit rate, all rungs")].join("");
@@ -207,13 +264,11 @@ function render(){
     $("calStat").innerHTML = `<thead><tr><th>Model said</th>${Object.values(NAMES).map(n=>`<th>${n}: hit (95% CI) · rungs / player-games</th>`).join("")}</tr></thead><tbody>${C.all.map((_,i)=>`<tr><td>${i*10}–${(i+1)*10}%</td>${Object.keys(NAMES).map(st=>{const b=C.by_stat[st][i]; return `<td class="${b.thin?"thin":""}">${b.n?`${pct(b.actual)} (${ci(b.ci)}) · ${b.n}/${b.player_games}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
     $("calNote").textContent = C.note;
   }
-  $("tiers").innerHTML = R.tiers.map(t=>card(`${pct(t.hit_rate)}`, `≥ ${Math.round(t.min_p*100)}%: predicted ${pct(t.mean_p)}, hit ${pct(t.hit_rate)} · ${t.record} · ${t.player_games} player-games`, "tier")).join("");
   $("tierStat").innerHTML = `<thead><tr><th>Stat</th><th>All</th>${R.tiers.map(t=>`<th>≥ ${Math.round(t.min_p*100)}%</th>`).join("")}</tr></thead><tbody>${Object.keys(NAMES).map(st=>`<tr><td>${NAMES[st]}</td><td>${rec(R.by_stat[st])}</td>${R.tiers.map(t=>{const b=t.by_stat[st]; return `<td>${b&&b.n?`pred ${pct(b.mean_p)}, hit ${pct(b.hit_rate)} · ${b.record}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody></table>`;
   $("cards").innerHTML = [card(O.record,"W-L, all rungs, including long shots"), card(pct(O.hit_rate),"hit rate, all rungs (not a quality measure on its own)"), card(pg(O),"sample"), card(L.pending.toLocaleString(),"logged, game not yet graded"), card(L.void.toLocaleString(),"void (player did not play)")].join("");
   const poss = ["PG","SG","SF","PF","C"].filter(p=>R.by_pos[p]);
   $("byPos").innerHTML = `<thead><tr><th>Position</th><th>Player-games</th><th>All rungs</th>${Object.values(NAMES).map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${poss.map(p=>`<tr><td>${p}</td><td>${R.by_pos[p].player_games}</td><td>${rec(R.by_pos[p])}</td>${Object.keys(NAMES).map(st=>`<td>${rec(R.by_pos[p].by_stat[st])}</td>`).join("")}</tr>`).join("")}</tbody>`;
   renderStat();
-  $("method").innerHTML = R.method.map(m=>`<li>${m}</li>`).join("");
 }
 
 function renderStat(){
@@ -236,10 +291,22 @@ function renderStat(){
   $("recentNote").textContent = `last ${R.recent_dates.length} graded date${R.recent_dates.length===1?"":"s"} (${R.recent_dates.join(", ")}), highest P first`;
   $("recent").innerHTML = rows.length ? `<thead><tr><th>Date</th><th>Player</th><th>Game</th><th>Pick</th><th>Model said</th><th>Actual</th><th>Result</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.date}</td><td>${r.player} <span class="foot">${r.pos}</span></td><td>${r.team} v ${r.opp}</td><td>${NAMES[r.stat]} ${r.rung}+</td><td>${pct(r.p)}</td><td>${r.actual}</td><td class="${r.hit?"pos":"neg"}">${r.hit?"HIT":"MISS"}</td></tr>`).join("")}</tbody>` : `<tbody><tr><td class="empty">Nothing graded for this filter yet.</td></tr></tbody>`;
 }
-$("fStat").onchange = e => { S.stat = e.target.value; S.rung="all"; renderStat(); };
-$("fRung").onchange = e => { S.rung = e.target.value; renderStat(); };
-$("fQ").oninput = e => { S.q = e.target.value; renderStat(); };
-fetch(`data/performance.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{ R=d; render(); }).catch(()=>{ $("status").textContent="Could not load performance.json."; });
+$("fStat").onchange = e => { S.stat = e.target.value; S.rung="all"; section("by stat and rung", ["cal"], renderStat); };
+$("fRung").onchange = e => { S.rung = e.target.value; section("by stat and rung", ["cal"], renderStat); };
+$("fQ").oninput = e => { S.q = e.target.value; section("by stat and rung", ["cal"], renderStat); };
+async function fetchPerf(){
+  // One retry, and a failure says which step: the HTTP fetch, the JSON parse, or (later) a render.
+  let last = null;
+  for(let attempt=1; attempt<=2; attempt++){
+    let text = null;
+    try { const r = await fetch(`data/performance.json?t=${Date.now()}`, {cache:"no-store"}); if(!r.ok) throw new Error(`HTTP ${r.status}`); text = await r.text(); }
+    catch(e){ last = `fetch failed (${e.message})`; continue; }
+    try { return JSON.parse(text); }
+    catch(e){ last = `parse failed (${e.message})`; continue; }
+  }
+  throw new Error(last);
+}
+fetchPerf().then(d=>{ R=d; render(); }).catch(e=>{ $("status").textContent = `Could not load performance.json: ${e.message} after 2 attempts.`; });
 </script>
 </body>
 </html>
