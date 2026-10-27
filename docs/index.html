@@ -183,7 +183,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
       <input type="search" id="qp" placeholder="Search player" aria-label="Search player">
     </div>
     <div class="scroll"><table id="tp"></table></div>
-    <p class="foot">Lines start at the model's fair line (the x.5 where P(over) is nearest 50%). Edit any line to see the chance of going over. Since the 2026-10-22 scope reset no Underdog line or edge is shown here: Underdog pricing lives on the Threes and Fantasy Points tabs only.</p>
+    <p class="foot">Line is the main Underdog line from the latest board capture when the player has one (labelled Underdog), otherwise the model's fair line (the x.5 where P(over) is nearest 50%, labelled Fair). Over is the model's chance of clearing that line. Edit any line to see the chance of going over. The Ladder tonight strip ranks the Underdog-lined rows by edge against the break-even % set on the Threes tab.</p>
   </section>
 
   <section id="defense" hidden>
@@ -239,7 +239,7 @@ try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
 if(["threes","props","firstbasket","fantasy","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
-const LINE_KEY = {"3PM":"tpm","3PT":"tpm"};   // scope reset 2026-10-22: Underdog lines feed 3PM only (Fantasy Points via fp_pricing.json)
+const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
 let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null;
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
@@ -362,7 +362,7 @@ function renderProps(){
     <td>${p.min.toFixed(0)}</td><td class="big">${mean.toFixed(1)}</td>
     ${RUNGS[st]?`<td><span class="ladder">${RUNGS[st].map(n=>{const e=p.ladder?.[st]?.[n]; const v=e?e.p:(st==="tpm"?atLeast(p.tpm.pmf,n):null); return v==null?"":`<span style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ ${st.toUpperCase()}">${pct(v)}</span>`;}).join("")}</span></td>`:""}
     <td><input type="number" step="0.5" value="${L}" data-id="${p.id}" aria-label="Line for ${p.name}">
-      <div class="meta">${S.edits[`${p.id}:${st}`]!==undefined?"Edited":"Fair"}</div></td>
+      <div class="meta">${S.edits[`${p.id}:${st}`]!==undefined?"Edited":S.lines[`${norm(p.name)}:${st}`]!==undefined?"Underdog":"Fair"}</div></td>
     <td class="big">${pct(po)}</td>
     <td>${hits}/${p.last10[S.stat].length}</td>
     <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>

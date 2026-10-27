@@ -36,13 +36,19 @@ BOARD_REFRESH_SECONDS = 3600                     # an unchanged board is re-stam
 PP_LATEST = DATA_DIR / "pp_fantasy_lines.json"   # repo copy of pirate-bets' PrizePicks Fantasy Score extract (fantasy_points rule amendment 2026-10-25)
 PP_FILE_ENV = "ARC_LAB_PP_FILE"                  # optional explicit path to pp_fantasy_lines.jsonl
 
-# Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22: only 3PM and Fantasy Points are priced;
-# points / rebounds / assists / PRA and season-long markets fall through and are ignored.
+# Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22 trimmed this to 3PM + Fantasy Points; CEO ruling
+# 2026-10-27 restores the main Points / Rebounds / Assists lines for LINE PUBLISHING only (Props tab, Ladder tonight strip).
+# Exact market names on purpose: "1Q Points", "Points + Rebounds", "Pts + Rebs + Asts" (PRA), "Rebounds + Assists",
+# double-double / triple-double and every other combo or period market fall through and are ignored. No PRA, ever.
 MARKETS = {
     "fantasy points": "FP", "fantasy score": "FP", "fantasy pts": "FP",
     "3-pointers made": "3PM", "3 pointers made": "3PM", "3-pt made": "3PM", "3 pt made": "3PM",
     "three pointers made": "3PM", "three-pointers made": "3PM", "threes made": "3PM", "3pm": "3PM", "3pt made": "3PM",
+    "points": "PTS", "pts": "PTS",
+    "rebounds": "REB", "rebs": "REB", "reb": "REB",
+    "assists": "AST", "asts": "AST", "ast": "AST",
 }
+PUBLISHED_STATS = ("3PM", "PTS", "REB", "AST", "FP")
 
 
 def stat_for(market):
@@ -227,8 +233,9 @@ def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=No
     except Exception as e:  # noqa: BLE001  (never let the PrizePicks copy break the Underdog hook)
         log.warning("pp_fantasy_lines.json not written: %s", e); pp = False
     pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST)]) if push else False
-    summary = {"lines": len(doc["lines"]), "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pp_written": pp, "pushed": pushed, "path": str(out_path)}
-    log.info("lines.json: %(lines)d NBA lines, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pp copy written=%(pp_written)s, pushed=%(pushed)s", summary)
+    by_stat = {s: sum(1 for l in doc["lines"] if l["stat"] == s) for s in PUBLISHED_STATS}
+    summary = {"lines": len(doc["lines"]), "by_stat": by_stat, "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pp_written": pp, "pushed": pushed, "path": str(out_path)}
+    log.info("lines.json: %(lines)d NBA lines %(by_stat)s, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pp copy written=%(pp_written)s, pushed=%(pushed)s", summary)
     return summary
 
 
