@@ -635,6 +635,16 @@ def bucket_table(d):
     return out
 
 
+def _records(df):
+    """DataFrame rows as plain dicts with null, never NaN: a top pick who did not start has no hit/top3 observation
+    (None in per_game), and pandas turns that None into NaN on the way through the frame (2026-10-27 outage:
+    "hit":NaN in two games broke browser JSON.parse for the whole performance page)."""
+    out = []
+    for rec in df.to_dict("records"):
+        out.append({k: (None if isinstance(v, float) and v != v else v) for k, v in rec.items()})
+    return out
+
+
 GRADE_FIELDS = ["date", "event_id", "tip", "away", "home", "team", "player_id", "player", "pos", "rank", "top_pick", "p_first_basket", "p_first_attempt", "started", "status",
                 "first_scorer", "scorer_logged", "non_projected_scorer", "logged_at"]
 
@@ -702,7 +712,7 @@ def grade():
            "top_picks_void": int((pg.top_started == 0).sum()) if len(pg) else 0, "rows_void": int((R.status == "didn't start").sum()), "rows_graded": int(len(gr)),
            "non_projected_games": int(pg.non_projected.sum()) if len(pg) else 0,
            "buckets": bucket_table(gr) if len(gr) else [], "rows_in_file": int(len(log)), "keys": int(len(snap)), "pending_games": int((gstat == "pending").sum()), "void_games": int((gstat == "void").sum()),
-           "recent": pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60).to_dict("records") if len(pg) else [],
+           "recent": _records(pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60)) if len(pg) else [],
            "nightly": nightly, "totals": report(pg, R) if len(pg) else None, "grades_file": "data/first_basket_grades.csv",
            "today": {"date": latest, "picks": picks, "pending": sum(p["status"] == "pending" for p in picks), "graded": sum(p["status"] == "graded" for p in picks), "void": sum(p["status"] == "void" for p in picks)},
            "method": ["Ten projected starters per game logged before tip; the graded snapshot is the game's last snapshot before tip. Append-only log (data/first_basket_log.csv); row grades in data/first_basket_grades.csv.",

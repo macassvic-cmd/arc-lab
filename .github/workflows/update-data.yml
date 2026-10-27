@@ -97,6 +97,9 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python first_basket_odds.py pull
+      - name: Validate published JSON (strict parse, no NaN/Infinity; a bad file fails the build instead of blanking a page)
+        working-directory: scripts
+        run: python validate_site_json.py
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"

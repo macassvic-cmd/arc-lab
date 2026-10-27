@@ -36,10 +36,49 @@ def read_json(path, default):
         return default
 
 
+def _reject_constant(name):
+    raise ValueError(f"non-finite JSON token {name}")
+
+
+def sanitize_json(obj):
+    """Recursively replace NaN / +-Infinity floats with null (2026-10-27: four bare NaN tokens in performance.json made
+    browser JSON.parse reject the whole file; Python's json accepts them, browsers do not). Everything else passes through."""
+    if isinstance(obj, dict):
+        return {k: sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [sanitize_json(v) for v in obj]
+    if isinstance(obj, float) and (obj != obj or obj in (float("inf"), float("-inf"))):
+        return None
+    return obj
+
+
+def strict_loads(text):
+    """json.loads that refuses NaN / Infinity (what a browser's JSON.parse does)."""
+    return json.loads(text, parse_constant=_reject_constant)
+
+
+def check_json_file(path):
+    """Strict re-parse of a written file; raises ValueError naming the file when a browser would reject it."""
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    try:
+        strict_loads(text)
+    except ValueError as e:
+        raise ValueError(f"{path}: invalid for browsers ({e})") from e
+
+
 def write_json(path, obj):
+    """Sanitize, serialize with allow_nan=False, strict re-parse, then write: an invalid document never reaches disk
+    and the build fails loudly instead of the page silently rendering nothing."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w") as f:
-        json.dump(obj, f, separators=(",", ":"))
+    text = json.dumps(sanitize_json(obj), separators=(",", ":"), allow_nan=False)
+    try:
+        strict_loads(text)
+    except ValueError as e:
+        raise ValueError(f"refusing to write {path}: {e}") from e
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+    check_json_file(path)
 
 
 # ---- injury / lineup news classifier (first match = primary tag) ----
