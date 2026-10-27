@@ -97,6 +97,8 @@ tr:last-child td{border-bottom:0}
 #tf td .meta.d{display:block;font-size:11px}
 #tf td.dash{color:var(--muted)}
 .fn{font-size:12px;margin-top:8px}
+.v2h{font:600 19px var(--display);margin:22px 0 4px}
+#tf2 td .meta{display:block;font-size:11px}
 @media (max-width:480px){
   #tf{font-size:13px}
   #tf th,#tf td{padding:6px 4px}
@@ -207,6 +209,10 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <div class="fpwrap"><table id="tf"></table></div>
     <p class="foot fn">Underdog scoring: PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK &minus; TO.</p>
     <p class="foot fn"><b>Hit rate measures accuracy, not profit. Pricing study, paper only.</b> Proj FP is the mean of 10,000 joint simulations. P(over) is the model's chance the player clears the Underdog line; Edge is P(over) minus the price's break-even, in points. PP line is PrizePicks' standard Fantasy Score line (same scoring), shown with its difference from the UD line; both books' lines are graded on the Performance page. Rule: <code>backtests/fantasy_points_v1_rule.md</code>; graded record on the <a href="performance.html#fpSec">Performance page</a>.</p>
+    <h3 class="v2h">FP v2 - paper study</h3>
+    <p class="foot fn" id="fpv2Note"></p>
+    <div class="scroll"><table id="tf2"></table></div>
+    <p class="foot fn">v2 = the same joint sim with a wider minutes draw plus a short-night mixture, rates blended toward this season (w = GP/(GP+10)), and P(over) through a frozen isotonic map. Paper study until its calibration (200 lines) and market (800 lines) verdicts render. Rule: <code>backtests/fantasy_points_v2_rule.md</code>; record on the <a href="performance.html#fpV2Sec">Performance page</a>.</p>
   </section>
 
   <section id="firstbasket" hidden>
@@ -240,7 +246,7 @@ if(["threes","props","firstbasket","fantasy","defense","results"].includes(locat
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
-let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null;
+let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null;
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -468,6 +474,21 @@ function renderFantasy(){
        :`<td class="dash">\u2013</td><td class="dash">\u2013</td>`}</tr>`).join("");
   $("tf").innerHTML = rows.length ? head + `<tbody>${body}</tbody>` : `<tbody><tr><td class="empty">${P?.players?.some(p=>p.fp) ? "No players match." : "No fantasy-points projections yet: they ship with the next model build."}</td></tr></tbody>`;
   sortable($("tf"), null, null, v=>S.sortF=v);
+  renderFPv2(q);
+}
+
+function renderFPv2(q){
+  // Display only: v2 pricing JSON (frozen pair + frozen map) next to the v1 projection; the v1 grid above is untouched.
+  const v2 = FPV2 && P && FPV2.slate_date===P.date && FPV2.lines ? FPV2 : null;
+  const anyV2 = (P?.players||[]).some(p=>p.fp_v2);
+  if(!anyV2 && !v2){ $("fpv2Note").textContent = "FP v2 is not live yet: the pair and the map freeze after the backtest gate."; $("tf2").innerHTML = ""; return; }
+  $("fpv2Note").textContent = v2 ? `Pair: sd \u00d7 ${v2.pair?.sd_factor} \u00b7 q ${v2.pair?.q} \u00b7 map n ${v2.map?.n||"\u2013"} \u00b7 ${v2.lines_priced} UD lines priced from the ${ago(v2.captured_at)} capture` : "v2 distributions shipped; no Underdog FP lines priced for this slate yet.";
+  const byName = {}; for(const r of (v2?.lines||[])) byName[norm(r.player)] = r;
+  const rows = active().filter(p=>p.fp_v2 && (!q||norm(p.name).includes(q))).map(p=>({p, l: byName[norm(p.name)]})).sort((a,b)=>b.p.fp_v2.mean-a.p.fp_v2.mean);
+  const be = r => r.decimal_higher ? 1/Number(r.decimal_higher) : null;
+  $("tf2").innerHTML = `<thead><tr><th>Player</th><th>v2 FP</th><th>v1 FP</th><th>GP \u00b7 w</th><th>UD line</th><th>P(over) cal</th><th>Book</th><th>Edge</th></tr></thead><tbody>${rows.map(({p,l})=>{ const b = l ? be(l) : null, e = (l && b!=null) ? l.p_cal - b : null;
+    return `<tr><td><span class="name">${p.name}</span><div class="meta">${p.pos} ${p.team} ${p.home?"vs":"@"} ${p.opp}</div></td><td class="big">${p.fp_v2.mean.toFixed(1)}</td><td>${p.fp?p.fp.mean.toFixed(1):"\u2013"}</td><td>${p.fp_v2.gp} \u00b7 ${p.fp_v2.w.toFixed(2)}</td>
+      ${l?`<td>${l.line}</td><td class="big">${pct(l.p_cal)}<span class="meta">raw ${pct(l.p_raw)}</span></td><td>${l.p_book_novig==null?"\u2013":pct(l.p_book_novig)}</td><td class="${e!=null&&e>=.03?"pos":e!=null&&e<0?"neg":""}">${e==null?"\u2013":(e>=0?"+":"")+(100*e).toFixed(1)}</td>`:`<td class="dash">\u2013</td><td class="dash">\u2013</td><td class="dash">\u2013</td><td class="dash">\u2013</td>`}</tr>`; }).join("") || `<tr><td class="empty">No v2 projections for this filter.</td></tr>`}</tbody>`;
 }
 
 function renderFirstBasket(){
@@ -543,7 +564,7 @@ function freshness(L){
 
 async function boot(){
   [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
-  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null);
+  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null);
   S.lines = {};
   freshness(L);
   for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
@@ -556,7 +577,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); render(); }, 60000);
 </script>
 </body>
 </html>

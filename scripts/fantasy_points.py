@@ -177,11 +177,20 @@ def profile_fp(g, cur, pos, pri):
     return {"rates": rates, "R": R, "n_corr": n}
 
 
-def simulate_fp(p, prof, opp, dvp, absent_starters, pri, rng):
-    """Section 2: one minutes draw per sim, 7 copula components, FP per sim. p is the engine's player dict (min, sd_min, rates, pct, pos)."""
+SHORT_NIGHT = 0.55   # v2 rule 2a: the short-night mixture component is centred at this share of projected minutes
+
+
+def simulate_fp(p, prof, opp, dvp, absent_starters, pri, rng, sd_factor=1.0, q=0.0):
+    """Section 2: one minutes draw per sim, 7 copula components, FP per sim. p is the engine's player dict (min, sd_min, rates, pct, pos).
+    sd_factor / q (backtests/fantasy_points_v2_rule.md 2a) default to v1 behaviour: minutes sd x sd_factor, and with probability q
+    the draw comes from a component centred at SHORT_NIGHT x projected minutes (same widened sd); every draw is truncated at 0.
+    At the defaults no extra random draw is made, so v1 outputs are unchanged."""
     import build_model as bm
     N = N_SIM
-    mins = np.clip(rng.normal(p["min"], p["sd_min"], N), 0, 48)
+    mins = np.clip(rng.normal(p["min"], p["sd_min"] * sd_factor, N), 0, 48)
+    if q > 0:
+        short = rng.random(N) < q
+        mins[short] = np.clip(rng.normal(SHORT_NIGHT * p["min"], p["sd_min"] * sd_factor, int(short.sum())), 0, 48)
     f = {s: bm.dvp_factor(dvp, opp, p["pos"], s) for s in ("tpa", "tpm", "reb", "ast", "pts")}
     n_abs = min(absent_starters, bm.USAGE_MAX_ABSENT)
     u = {s: 1 + bm.USAGE_BUMP[s] * n_abs for s in bm.USAGE_BUMP}
@@ -525,19 +534,21 @@ def grade():
     log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
     snap = last_pretip(log)
     box = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"event_id": str, "player_id": str})
+    box_events = set(box.event_id)
     box = box.set_index(["event_id", "player_id"])
     prices = pd.read_csv(FP_PRICES, dtype={"event_id": str}) if FP_PRICES.exists() else pd.DataFrame(columns=FP_PRICE_FIELDS)
     pp_prices = pd.read_csv(PP_PRICES, dtype={"event_id": str}) if PP_PRICES.exists() else pd.DataFrame(columns=PP_PRICE_FIELDS)
     rows, pit, marg = [], [], {s: {k: ([], []) for k in ((1, 2) if s != "tov" else (2, 3))} for s in NEW}
     for r in snap.itertuples():
-        if (r.event_id, r.player_id) not in box.index:
+        in_box = (r.event_id, r.player_id) in box.index
+        if not in_box and r.event_id not in box_events:
             continue   # box score not in yet: pending
-        b = box.loc[(r.event_id, r.player_id)]
-        void = int(float(b["min"]) <= 0)
+        b = box.loc[(r.event_id, r.player_id)] if in_box else None
+        void = int((not in_box) or float(b["min"]) <= 0)   # fp v2 rule 2d (applies to both graders): 0 minutes, or absent from a box score that exists, is void
         actual = None if void else float(fp_of(b)); q = json.loads(r.fp_q)
         base = {"date": r.date, "event_id": r.event_id, "tip": r.tip, "player_id": r.player_id, "player": r.player, "team": r.team, "opp": r.opp, "pos": r.pos, "min_proj": r.min,
-                "min_actual": float(b["min"]), "fp_mean": r.fp_mean, "fp_actual": None if void else round(actual, 1), "pit": None if void else round(cdf_from_q(q, actual), 4),
-                "stl_actual": int(b.stl), "blk_actual": int(b.blk), "tov_actual": int(b.tov), "void": void, "logged_at": r.logged_at}
+                "min_actual": float(b["min"]) if in_box else 0.0, "fp_mean": r.fp_mean, "fp_actual": None if void else round(actual, 1), "pit": None if void else round(cdf_from_q(q, actual), 4),
+                "stl_actual": int(b.stl) if in_box else 0, "blk_actual": int(b.blk) if in_box else 0, "tov_actual": int(b.tov) if in_box else 0, "void": void, "logged_at": r.logged_at}
         if not void:
             pit.append(base["pit"])
             for s in NEW:
@@ -599,7 +610,7 @@ def grade():
            "method": ["FP = PTS + 1.2 REB + 1.5 AST + 3 STL + 3 BLK - TOV (Underdog). Graded snapshot = the last FP distribution logged before tip (data/fp_log.csv, append-only).",
                       "Underdog FP lines are graded from data/fp_prices.csv (last pre-tip capture per line and side); a push is void. The verdict at 200 graded lines is calibration by decile, not hit rate.",
                       "Amendment 2026-10-25: PrizePicks standard Fantasy Score lines (data/pp_prices.csv, last pre-tip capture per player and game, both sides) are graded through the same code path against the same box-score FP, tagged source = PP. The 200-line counter and the decile verdict apply to UD + PP combined; UD-only and PP-only tables are shown alongside. PrizePicks scoring is identical to Underdog's.",
-                      "A player with no box-score minutes is void (shown, excluded). No tuning on these results, ever (backtests/fantasy_points_v1_rule.md)."]}
+                      "A player with no box-score minutes, or absent from a box score that exists, is void (shown, excluded; fp v2 rule 2d, 2026-10-27). No tuning on these results, ever (backtests/fantasy_points_v1_rule.md)."]}
     write_json(PERF, doc)
     print(f"[fp] graded {len(pg)} player-games ({int(pg.void.sum())} void), {len(gl)} FP lines (UD {lines_doc['sources']['UD']}, PP {lines_doc['sources']['PP']}; gate {doc['lines']['gate']['status']}), PIT mean {doc['pit']['mean']}")
 

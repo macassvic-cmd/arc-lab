@@ -159,6 +159,23 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <ul class="foot" id="fpMethod"></ul>
   </section>
 
+  <section id="fpV2Sec" hidden>
+    <h2>Fantasy points v2 <span>paper study: v1's sim with the minutes mixture, the current-season rate blend and a frozen isotonic map on P(over)</span></h2>
+    <p class="sub"><b>FP v2 - paper study. Hit rate measures accuracy, not profit.</b></p>
+    <p class="foot" id="fpV2Note"></p>
+    <div class="stats" id="fpV2Cards"></div>
+    <h3>Calibrated P(over) by decile, combined UD + PP <span class="foot">the calibration verdict at 200 lines (one row per line, over side)</span></h3>
+    <div class="scroll"><table id="fpV2Lines"></table></div>
+    <h3>By source <span class="foot">same code path; not the verdict</span></h3>
+    <div class="scroll"><table id="fpV2UD"></table></div>
+    <div class="scroll" style="margin-top:8px"><table id="fpV2PP"></table></div>
+    <h3>Market test <span class="foot">paired log loss vs the book's baseline (UD no-vig, PP 0.5); verdict at 800 lines, player-game cluster CI must exclude 0 in v2's favour</span></h3>
+    <div class="scroll"><table id="fpV2Market"></table></div>
+    <h3>Raw distribution PIT <span class="foot">diagnostic only; never the verdict</span></h3>
+    <div class="scroll"><table id="fpV2Pit"></table></div>
+    <ul class="foot" id="fpV2Method"></ul>
+  </section>
+
   <h2>Method</h2>
   <ul class="notes" id="method"></ul>
 </main>
@@ -241,9 +258,25 @@ function section(name, ids, fn){
   catch(e){ console.error(`[performance] render failed: ${name}`, e); FAILED.push(name);
     const host = ids.map(id=>$(id)).find(Boolean); if(host){ const n = document.createElement("div"); n.className = "secErr"; n.textContent = `Could not render ${name}: ${e && e.message ? e.message : e}`; host.replaceChildren(n); } }
 }
+function renderFPV2(){
+  const F = R && R.fantasy_points_v2; if(!F) return;
+  $("fpV2Sec").hidden = false;
+  const G = F.lines.gate, M = F.market_test.combined, src = F.lines.sources || {UD:0, PP:0};
+  $("fpV2Note").textContent = `Frozen pair: minutes sd \u00d7 ${F.pair?F.pair.sd_factor:"\u2013"}, short-night q ${F.pair?F.pair.q:"\u2013"} \u00b7 map fitted ${F.map?F.map.fit_date:"\u2013"} on ${F.map?F.map.n:"\u2013"} replayed v1 lines \u00b7 rule backtests/fantasy_points_v2_rule.md`;
+  $("fpV2Cards").innerHTML = [card(F.player_games,"player-games graded"), card(F.void,`void (${Object.entries(F.void_reasons||{}).map(([k,v])=>`${v} ${k}`).join(", ")||"none"})`), card(F.lines.n,`lines graded, UD + PP (UD ${src.UD}, PP ${src.PP})`),
+    card(G.status,`calibration verdict: ${G.graded} of ${G.needed} lines`), card(M.status,`market test: ${M.n} of ${M.needed} lines`), card(F.pit.mean==null?"\u2013":F.pit.mean.toFixed(3),"mean raw PIT (0.5 when centred)")].join("");
+  const decTable = (L, label, empty) => L && L.n ? `<thead><tr><th>${label}: calibrated P said</th><th>n</th><th>Mean P (cal)</th><th>Mean P (raw)</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${L.by_decile.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>\u2013</td><td>${pct(b.actual)}</td><td>${b.gap==null?"\u2013":(b.gap>0?"+":"")+(100*b.gap).toFixed(1)}</td></tr>`).join("")}<tr><td>${label}: ${L.n} lines, hit ${pct(L.hit_rate)}, mean P cal ${pct(L.mean_p_cal)} (raw ${pct(L.mean_p_raw)})</td><td colspan="5">${(L.gate||L.decile_read).status}${(L.gate||L.decile_read).weighted_mean_abs_gap!=null?` \u00b7 weighted |gap| ${(L.gate||L.decile_read).weighted_mean_abs_gap} \u00b7 worst ${(L.gate||L.decile_read).worst_gap}`:""}${L.gate?" (the verdict)":" (read only)"}</td></tr></tbody>` : `<tbody><tr><td class="empty">${empty}</td></tr></tbody>`;
+  $("fpV2Lines").innerHTML = decTable(F.lines, "UD + PP", "No v2 lines graded yet.");
+  $("fpV2UD").innerHTML = decTable(F.by_source.UD, "Underdog", "No Underdog v2 lines graded yet.");
+  $("fpV2PP").innerHTML = decTable(F.by_source.PP, "PrizePicks", "No PrizePicks v2 lines graded yet.");
+  const mk = m => `<tr><td>${m.label}</td><td>${m.n} / ${m.needed}</td><td>${m.status}</td><td>${m.mean_logloss_v2==null?"\u2013":m.mean_logloss_v2.toFixed(4)}</td><td>${m.mean_logloss_book==null?"\u2013":m.mean_logloss_book.toFixed(4)}</td><td>${m.mean_diff_nats==null?"\u2013":(m.mean_diff_nats>0?"+":"")+m.mean_diff_nats.toFixed(4)}</td><td>${m.diff_ci_cluster?`${m.diff_ci_cluster[0]} to ${m.diff_ci_cluster[1]}`:"\u2013"}</td><td>${m.baseline||""}</td></tr>`;
+  $("fpV2Market").innerHTML = `<thead><tr><th>Scope</th><th>n</th><th>Status</th><th>Log loss v2</th><th>Log loss book</th><th>Diff (nats/line)</th><th>95% CI (clustered)</th><th>Baseline</th></tr></thead><tbody>${[M, F.market_test.by_source.UD, F.market_test.by_source.PP].map(mk).join("")}</tbody>`;
+  $("fpV2Pit").innerHTML = F.pit.n ? `<thead><tr><th>PIT decile</th><th>n</th><th>Share</th><th>Expected</th></tr></thead><tbody>${F.pit.deciles.map(d=>`<tr><td>${Math.round(d.lo*100)}\u2013${Math.round(d.hi*100)}%</td><td>${d.n}</td><td>${pct(d.share)}</td><td>10%</td></tr>`).join("")}<tr><td>${F.pit.n} player-games</td><td colspan="3">weighted |gap| ${F.pit.weighted_mean_abs_gap} \u00b7 worst ${F.pit.worst_decile_gap}</td></tr></tbody>` : `<tbody><tr><td class="empty">Nothing graded yet.</td></tr></tbody>`;
+  $("fpV2Method").innerHTML = F.method.map(m=>`<li>${m}</li>`).join("");
+}
 function render(){
   FAILED.length = 0;
-  section("first basket", ["fbCards"], renderFB); section("fantasy points", ["fpCards"], renderFP);
+  section("first basket", ["fbCards"], renderFB); section("fantasy points", ["fpCards"], renderFP); section("fantasy points v2", ["fpV2Cards"], renderFPV2);
   if(!R || R.empty || !R.overall || !R.overall.n){
     $("status").textContent = R && R.generated ? `No graded rungs yet (updated ${R.generated}). Projections are logged before tip and graded the morning after.` : "No performance data yet.";
     return;

@@ -63,6 +63,9 @@ jobs:
       - name: Grade the fantasy-points log (last pre-tip FP distribution vs box-score FP; UD lines from data/fp_prices.csv, PP lines from data/pp_prices.csv)
         working-directory: scripts
         run: python fantasy_points.py grade
+      - name: Grade the FP v2 log (one row per line, DNP void, calibration verdict at 200, market test at 800; backtests/fantasy_points_v2_rule.md)
+        working-directory: scripts
+        run: python fp_v2.py grade
       - name: Assign positions
         working-directory: scripts
         run: python positions.py
@@ -81,6 +84,9 @@ jobs:
       - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
         working-directory: scripts
         run: python fantasy_points.py snapshot
+      - name: FP v2 log snapshot (append-only, pre-tip rows only; frozen pair data/fp_v2_params.json, frozen map data/fp_v2_recal.json)
+        working-directory: scripts
+        run: python fp_v2.py snapshot
       - name: Fantasy-points pricing study (repo board copy data/board_latest.json; refuses a capture older than the slate or 12 h)
         working-directory: scripts
         run: |
@@ -89,6 +95,11 @@ jobs:
         working-directory: scripts
         run: |
           if [ -f ../data/pp_fantasy_lines.json ]; then python fantasy_points.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
+      - name: FP v2 pricing (UD standard FP lines with both sides' prices, PP standard lines; calibrated P(over) through the frozen map)
+        working-directory: scripts
+        run: |
+          if [ -f ../data/board_latest.json ]; then python fp_v2.py price ../data/board_latest.json; else echo "no data/board_latest.json yet"; fi
+          if [ -f ../data/pp_fantasy_lines.json ]; then python fp_v2.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         working-directory: scripts
         run: python first_basket_model.py snapshot

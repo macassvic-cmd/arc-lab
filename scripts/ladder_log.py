@@ -232,6 +232,9 @@ def grade():
     fpp = SITE_DATA / "fp_performance.json"
     if fpp.exists():
         doc["fantasy_points"] = read_json(fpp, None)
+    fpv2 = SITE_DATA / "fp_v2_performance.json"
+    if fpv2.exists():
+        doc["fantasy_points_v2"] = read_json(fpv2, None)
     write_json(SITE_DATA / "performance.json", doc)
     print(f"[ladder-log] graded {len(g)} rungs / {doc['log']['player_games']} player-games ({doc['overall']['record']}, {doc['overall']['hit_rate']}), {doc['log']['pending']} pending, {len(void)} void; "
           f"band 55-80%: n {diag['all']['n']}, gap {diag['all']['gap']} CI {diag['all']['gap_ci']}; {diag['clock']}")

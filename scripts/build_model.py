@@ -520,6 +520,11 @@ def main():
     pos_rates = pos_tpa_rates(df, cur)
     fp_pri = fp.load_priors()                      # frozen constants (backtests/fantasy_points_v1_rule.md); None = no FP block
     fp_rng = np.random.default_rng(fp.SEED)
+    import fp_v2                                   # v2 (backtests/fantasy_points_v2_rule.md): own generator, ships only once a pair is frozen
+    fp_v2_params = fp_v2.load_params() if fp_pri else None
+    fp_v2_rng = np.random.default_rng(fp_v2.SEED)
+    if fp_pri and not fp_v2_params:
+        print("[model] data/fp_v2_params.json not frozen: no fantasy-points v2 block this run")
     if fp_pri is None:
         print("[model] data/fp_priors.json missing: no fantasy-points simulation this run")
     out_players, games_out = [], []
@@ -545,6 +550,7 @@ def main():
                          "status": status, "flags": [], **prof}
                 entry["rates"] = {**prof["rates"], "tpa": tpa_rate_v2(g.sort_values("date", ascending=False), cur, entry["pos"], pos_rates)}
                 entry["fp_prof"] = fp.profile_fp(g, cur, entry["pos"], fp_pri) if fp_pri else None
+                entry["_g"] = g                     # the games behind the profile: fp_v2's rate blend reads GP and this season's rates from them
                 if status in ("OUT", "DOUBTFUL"):
                     outs.append(entry)
                     continue
@@ -581,6 +587,7 @@ def main():
                     p["flags"].append(f"Usage +{100 * USAGE_BUMP['pts'] * min(absent_starters, USAGE_MAX_ABSENT):.0f}% pts")
                 sim = simulate(p, opp, dvp, absent_starters)
                 fpsim = fp.simulate_fp(p, p["fp_prof"], opp, dvp, absent_starters, fp_pri, fp_rng) if p.get("fp_prof") else {}
+                fpsim2 = fp_v2.simulate_live(p, p["fp_prof"], p["_g"], cur, opp, dvp, absent_starters, fp_pri, fp_v2_rng, fp_v2_params) if (fp_v2_params and p.get("fp_prof")) else {}
                 out_players.append({
                     "id": p["id"], "name": p["name"], "team": team, "opp": opp, "home": home,
                     "pos": p["pos"], "min": round(p["min"], 1), "base_min": round(p["pre_min"], 1),
@@ -588,7 +595,7 @@ def main():
                     "min_gain": p.get("min_gain"),
                     "dvp_rank": {s: dvp.get(opp, {}).get(p["pos"], {}).get(s, {}).get("rk") for s in STATS},
                     "ladder": ladders(sim),
-                    **sim, **fpsim,
+                    **sim, **fpsim, **fpsim2,
                 })
             for o in outs:
                 out_players.append({"id": o["id"], "name": o["name"], "team": team, "opp": opp,
