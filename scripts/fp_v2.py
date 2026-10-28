@@ -640,10 +640,14 @@ def snapshot():
 
 
 def _pretip_log():
-    """Every pre-tip v2 log row (logged before its game's tip), with `_t` = logged_at as a UTC timestamp."""
+    """Every pre-tip v2 log row of the current gate epoch (gate = A1; pre-A1 rows never price a capture), with `_t` = logged_at
+    as a UTC timestamp."""
     if not LOG.exists():
         return None
     log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
+    if "gate" not in log.columns:
+        log["gate"] = PRE_GATE
+    log = log[log.gate == GATE_EPOCH]
     log["_t"] = pd.to_datetime(log.logged_at, utc=True)
     return log[log._t < pd.to_datetime(log.tip, utc=True)]
 
@@ -750,7 +754,7 @@ def price_pp(path=fp.PP_FILE):
         last[(norm_name(r.get("player")), sched.astimezone(ET).date().isoformat())] = (r, sched)
     rows = []
     for (key, date), (r, sched) in last.items():
-        lcap = r.get("captured_at") or cap
+        lcap = r.get("last_seen_at") or r.get("captured_at") or cap   # the latest capture still showing this line (pirate-bets extract, 2026-10-28)
         try:
             lcap_dt = fp.parse_ts(lcap)
         except Exception:  # noqa: BLE001
@@ -808,8 +812,12 @@ def grade():
     for df_ in (ud, pp):
         if "map_fit" not in df_.columns:
             df_["map_fit"] = PRE_GATE
-    pre_prices = {"UD": int((ud.map_fit != map_fit).sum()), "PP": int((pp.map_fit != map_fit).sum())}
-    ud = ud[ud.map_fit == map_fit]; pp = pp[pp.map_fit == map_fit]   # only prices through the frozen (refit) map count
+    a1_rows = set(zip(full.loc[full.gate == GATE_EPOCH, "date"], full.loc[full.gate == GATE_EPOCH, "event_id"], full.loc[full.gate == GATE_EPOCH, "player"].map(norm_name), full.loc[full.gate == GATE_EPOCH, "logged_at"]))
+    def a1_priced(df_):
+        return pd.Series([(d, e, norm_name(p), t) in a1_rows for d, e, p, t in zip(df_.date, df_.event_id, df_.player, df_.fp_logged_at)], index=df_.index, dtype=bool)
+    ok_ud = (ud.map_fit == map_fit) & a1_priced(ud); ok_pp = (pp.map_fit == map_fit) & a1_priced(pp)
+    pre_prices = {"UD": int((~ok_ud).sum()), "PP": int((~ok_pp).sum())}
+    ud = ud[ok_ud]; pp = pp[ok_pp]   # only prices through the frozen (refit) map AND from an A1 log row count
     rows, pit = [], []
     for r in snap.itertuples():
         in_box = (r.event_id, r.player_id) in box.index
