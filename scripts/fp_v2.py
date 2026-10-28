@@ -47,7 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_model as bm  # noqa: E402
 import fantasy_points as fp  # noqa: E402
 from common import DATA_DIR, SITE_DATA, norm_name, read_json, write_json  # noqa: E402
-from ladder_calibrate import apply_map, fit_map, logloss  # noqa: E402
+from ladder_calibrate import apply_map, fit_map, logloss  # noqa: E402  (fit_map/apply_map: the rule-5 recount keeps the house interpolating map for the v1 power slice)
 from positions import position_map  # noqa: E402
 
 RULE = "backtests/fantasy_points_v2_rule.md"
@@ -104,11 +104,39 @@ def load_recal():
     return read_json(RECAL, None)
 
 
+CLIP = (0.005, 0.995)
+
+
+def pav_step(x, y):
+    """Pool-adjacent-violators isotonic regression returning the fitted STEP function: blocks as (x_lo, x_hi, mean y, n).
+    The step over block ranges is the isotonic regression itself; interpolating between block means (the ladder maps' display
+    convention) can ramp through sparse tail blocks and is not used here."""
+    order = np.argsort(x, kind="stable"); x, y = np.asarray(x, float)[order], np.asarray(y, float)[order]
+    lo, hi, by, bn = [], [], [], []
+    for xi, yi in zip(x, y):
+        lo.append(xi); hi.append(xi); by.append(yi); bn.append(1)
+        while len(by) > 1 and by[-2] > by[-1]:
+            n = bn[-2] + bn[-1]
+            by[-2] = (by[-2] * bn[-2] + by[-1] * bn[-1]) / n; hi[-2] = hi[-1]; bn[-2] = n
+            by.pop(); lo.pop(); hi.pop(); bn.pop()
+    return {"x_lo": [round(float(v), 5) for v in lo], "x_hi": [round(float(v), 5) for v in hi], "y": [round(float(np.clip(v, *CLIP)), 5) for v in by], "n": [int(v) for v in bn]}
+
+
+def apply_step(m, p):
+    """Step map: a point inside a block takes the block's value; between two blocks the step sits at the midpoint of the gap;
+    beyond the ends the end block's value. Clipped to CLIP."""
+    p = np.asarray(p, dtype=float)
+    lo, hi, y = np.array(m["x_lo"]), np.array(m["x_hi"]), np.array(m["y"])
+    edges = (hi[:-1] + lo[1:]) / 2 if len(lo) > 1 else np.array([])
+    idx = np.searchsorted(edges, p, side="right")
+    return np.clip(y[idx], *CLIP)
+
+
 def cal(m, p_over):
     """Calibrated P(over) through the frozen map (identity when there is no map yet)."""
     if not m:
         return float(p_over)
-    return float(apply_map(m["map"], np.array([p_over], dtype=float))[0])
+    return float(apply_step(m["map"], np.array([p_over], dtype=float))[0])
 
 
 # ---------------- rule 2b: rate blend ----------------
@@ -444,15 +472,17 @@ def cluster_ci(values, clusters, iters=BOOT_ITERS, seed=SEED):
 
 
 def fit(retro_path=RETRO):
-    """Rule 2c: one combined isotonic map of hit on replayed v2 raw P(over), all graded v1 lines (UD + PP, both sides as
-    graded), frozen in data/fp_v2_recal.json with fit date and n. Per-source post-map calibration gap with a clustered CI."""
+    """Rule 2c: one combined isotonic map of hit on replayed v2 raw P(over), all graded v1 lines (UD + PP), ONE ROW PER LINE
+    (the over side: the under is its complement and would make every mean gap identically zero), frozen in
+    data/fp_v2_recal.json with fit date and n. Per-source post-map calibration gap with a clustered CI."""
     params = load_params()
     if not params:
         raise SystemExit("[fp-v2 fit] no frozen pair")
-    R = pd.read_csv(retro_path, dtype={"event_id": str, "player_id": str})
+    R_all = pd.read_csv(retro_path, dtype={"event_id": str, "player_id": str})
+    R = R_all[R_all.side == "higher"].drop_duplicates(["date", "event_id", "player_id", "source", "line"]).reset_index(drop=True)
     p, h = R.p_raw_v2.values.astype(float), R.hit.values.astype(int)
-    m = fit_map(p, h)
-    pc = apply_map(m, p)
+    m = pav_step(p, h)
+    pc = apply_step(m, p)
     pg = (R.date + ":" + R.event_id + ":" + R.player_id).values
     def block(mask, label):
         d = R[mask]; pcm, hm = pc[mask], h[mask]
@@ -464,9 +494,9 @@ def fit(retro_path=RETRO):
                 "logloss_raw": round(float(logloss(p[mask], hm).mean()), 4) if mask.sum() else None, "logloss_cal": round(float(logloss(pcm, hm).mean()), 4) if mask.sum() else None}
     pit = R.drop_duplicates(["date", "event_id", "player_id"])
     tab2, wm2, _, wo2, ok2 = pit_verdict(pit.pit_v2.dropna().values); tab1, wm1, _, wo1, ok1 = pit_verdict(pit.pit_v1_retro.dropna().values)
-    out = {"rule_file": RULE, "fit_date": ts(now()), "n": int(len(R)), "n_player_games": int(len(pit)), "pair": params["selected"],
+    out = {"rule_file": RULE, "fit_date": ts(now()), "n": int(len(R)), "n_rows_both_sides": int(len(R_all)), "n_player_games": int(len(pit)), "pair": params["selected"],
            "sources": {s: int((R.source == s).sum()) for s in ("UD", "PP")}, "dates": [str(R.date.min()), str(R.date.max())],
-           "map": m, "method": "pool-adjacent-violators isotonic regression of hit on replayed v2 raw P(over), linear interpolation between block means, clipped to [0.005, 0.995] (ladder_calibrate.fit_map)",
+           "map": m, "method": "pool-adjacent-violators isotonic regression of hit on replayed v2 raw P(over), one row per line (over side); applied as the fitted step function over block ranges (step at the midpoint between adjacent blocks, end blocks extended), clipped to [0.005, 0.995]",
            "inputs": "log-time only: v1 log minutes, projections.json flags at log time (absent starters, Q), box scores dated before each slate",
            "combined": block(np.ones(len(R), bool), "UD + PP"), "by_source": {s: block((R.source == s).values, {"UD": "Underdog", "PP": "PrizePicks"}[s]) for s in ("UD", "PP")},
            "sanity_slice": {"note": "rule 4: the v1 live record replayed with v2 (and v1) distributions; sanity only, never the verdict",
@@ -478,7 +508,7 @@ def fit(retro_path=RETRO):
            "frozen": "for the entire forward gate; no refits during collection (rule 2c)"}
     write_json(RECAL, out)
     c = out["combined"]
-    print(f"[fp-v2 fit] map frozen: n {out['n']} lines ({out['sources']}) over {out['n_player_games']} player-games, {len(m['x'])} blocks; "
+    print(f"[fp-v2 fit] map frozen: n {out['n']} lines ({out['sources']}) over {out['n_player_games']} player-games, {len(m['x_lo'])} blocks; "
           f"gap post-map combined {c['gap_post_map']} CI {c['gap_ci']}; UD {out['by_source']['UD']['gap_post_map']} CI {out['by_source']['UD']['gap_ci']}; "
           f"PP {out['by_source']['PP']['gap_post_map']} CI {out['by_source']['PP']['gap_ci']}; logloss raw {c['logloss_raw']} -> cal {c['logloss_cal']}")
     return out
