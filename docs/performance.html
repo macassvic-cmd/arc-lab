@@ -148,6 +148,9 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <div class="scroll"><table id="fbCal"></table></div>
     <h3>Recent games <span class="foot">top pick vs the actual first scorer</span></h3>
     <div class="scroll"><table id="fbRecent"></table></div>
+    <h3>Method layer <span class="foot">report-only: game-level log loss of the pre-tip method distribution (five book buckets) vs two baselines; no gate, no read before 200 games</span></h3>
+    <div class="stats" id="fbMethodCards"></div>
+    <p class="foot" id="fbMethodNote"></p>
   </section>
 
   <section id="fpSec" hidden>
@@ -399,6 +402,14 @@ async function fetchPerf(){
   }
   throw new Error(last);
 }
+function renderFBMethod(M){
+  if(!M){ return; }
+  const L = M.log_loss || {}, f = x => x==null ? "–" : x.toFixed(4);
+  $("fbMethodCards").innerHTML = [card(M.games, "games graded"), card(f(L.model), "log loss, method layer"), card(f(L.position_only), "log loss, who-model × position-only"), card(f(L.league_mix), "log loss, season-to-date league mix"),
+    card(L.gain_vs_league==null?"–":(L.gain_vs_league>0?"+":"")+L.gain_vs_league.toFixed(4), "gain vs league mix (nats/game)")].join("");
+  $("fbMethodNote").textContent = `${M.read}. ${M.label} Rule: ${M.rule_file}; grades in ${M.grades_file}.`;
+}
+fetch(`data/first_basket_method_perf.json?t=${Date.now()}`, {cache:"no-store"}).then(r=>r.ok?r.json():null).then(M=>section("first basket method", ["fbMethodCards"], ()=>renderFBMethod(M))).catch(()=>{});
 fetchPerf().then(d=>{ R=d; readView(); render(); }).catch(e=>{ $("status").textContent = `Could not load performance.json: ${e.message} after 2 attempts.`; });
 </script>
 </body>

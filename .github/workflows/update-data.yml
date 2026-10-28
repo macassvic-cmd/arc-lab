@@ -57,7 +57,9 @@ jobs:
         id: fb_grade
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
-        run: python first_basket_model.py grade   # live by CEO override 2026-10-21; the gate verdict (FAIL) stands in docs/data/first_basket_gate.json
+        run: |
+          python first_basket_model.py grade   # live by CEO override 2026-10-21; the gate verdict (FAIL) stands in docs/data/first_basket_gate.json
+          python first_basket_method.py grade  # METHOD layer, report-only (backtests/first_basket_method_rule.md section 5): no gate, no read before 200 games
       - name: Record Underdog main lines (sidecar data/main_lines.csv for the Performance page's playable-rungs view; display only)
         id: main_lines_pre
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
@@ -142,6 +144,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python first_basket_model.py snapshot
+      - name: First-basket METHOD layer (profiles rebuilt, tonight's games projected from the who-model's log; display + grading only)
+        id: fb_method
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python first_basket_method.py project
       - name: First-basket market odds (The Odds API player_first_basket, 1 credit per untipped game; display layer, logged pre-tip)
         id: fb_odds
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
