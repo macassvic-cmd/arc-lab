@@ -1,35 +1,49 @@
-"""Lines freshness watchdog.
+"""Lines freshness watchdog, projections-stale alarm and the morning self-heal.
 
-Runs from .github/workflows/health.yml every 15 minutes all day (and on demand); the window below decides
-whether a run acts. During the day's game window it checks docs/data/lines.json and posts to Discord (DISCORD_WEBHOOK_URL)
-when the file is missing, has no `updated` stamp, or is older than STALE_MINUTES.
+Runs from .github/workflows/health.yml every 15 minutes all day (and on demand). Three jobs, all throttled through
+data/health_state.json (committed by the workflow):
 
-Throttling is the same as mlb-fantasy's stale_lines_watchdog: alert once on the TRANSITION into
-stale, once more on recovery, never every 15 minutes for the same outage. The state lives in
-data/health_state.json, committed by the workflow. Outside the game window the state is cleared
-silently so each night starts clean.
+1. Lines (inside the game window only): docs/data/lines.json missing, without an `updated` stamp, or older than STALE_MINUTES
+   posts to Discord (DISCORD_WEBHOOK_URL). Same throttle as mlb-fantasy's stale_lines_watchdog: alert once on the TRANSITION
+   into stale, once more on recovery, never every 15 minutes for the same outage. Outside the window the lines state is
+   cleared silently so each night starts clean. Game window: 90 minutes before tonight's first tip to 3 hours after the last,
+   from data/slate.json; no games on the slate means no window and no lines alerts.
+2. Projections (every pass): docs/data/projections.json older than PROJ_STALE_HOURS posts once (and once on recovery).
+   Added 2026-10-28 after the morning update-data cron never fired and nothing said so.
+3. Self-heal (every pass): on a game day, after SELF_HEAL_AFTER (ET), if projections.json's date is not today's ET date, dispatch
+   the update-data workflow (`gh workflow run update-data.yml`, GH_TOKEN with actions: write) and say so on Discord. At most one
+   self-dispatch per SELF_HEAL_MIN_GAP. Game day = ESPN's scoreboard lists an NBA game today (free; unreachable = assume yes).
 
-Game window: from 90 minutes before tonight's first tip to 3 hours after the last tip, taken from
-data/slate.json. No games on the slate means no window and no alerts.
-
-  python health.py            # check once, print the verdict, exit 0
-  python health.py --force    # ignore the window (manual test; still respects the throttle)
+  python health.py            # one pass, print the verdict, exit 0
+  python health.py --force    # ignore the game window for the lines check (manual test; still respects the throttles)
+  HEALTH_DRY_RUN=1            # never dispatch or post; print what would happen (local tests)
 """
 import argparse
 import datetime as dt
 import os
+import subprocess
 import sys
+from zoneinfo import ZoneInfo
 
 import requests
 
 from common import DATA_DIR, SITE_DATA, read_json, write_json
 
 LINES = SITE_DATA / "lines.json"
+PROJ = SITE_DATA / "projections.json"
 SLATE = DATA_DIR / "slate.json"
 STATE = DATA_DIR / "health_state.json"
 STALE_MINUTES = 45
 WINDOW_BEFORE = dt.timedelta(minutes=90)
 WINDOW_AFTER = dt.timedelta(hours=3)
+PROJ_STALE_HOURS = 14
+SELF_HEAL_AFTER = dt.time(10, 30)                  # ET; the morning cron is 14:07Z = 10:07 ET
+SELF_HEAL_MIN_GAP = dt.timedelta(hours=1)
+ET = ZoneInfo("America/New_York")
+ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
+WORKFLOW = "update-data.yml"
+REPO = os.environ.get("GITHUB_REPOSITORY") or "macassvic-cmd/arc-lab"
+DRY_RUN = os.environ.get("HEALTH_DRY_RUN", "").strip() not in ("", "0")
 
 
 def utcnow():
@@ -67,47 +81,136 @@ def lines_status(now, path=LINES):
     return age > STALE_MINUTES, detail, age
 
 
+def projections_status(now, path=PROJ):
+    """(stale: bool, slate_date: str|None, age_hours: float|None, detail: str) for docs/data/projections.json."""
+    doc = read_json(path, None)
+    if doc is None:
+        return True, None, None, "projections.json is missing"
+    updated = parse_ts(doc.get("updated"))
+    if updated is None:
+        return True, doc.get("date"), None, "projections.json has no `updated` timestamp"
+    age = (now - updated).total_seconds() / 3600
+    n = len(doc.get("players") or [])
+    return age > PROJ_STALE_HOURS, doc.get("date"), age, f"slate {doc.get('date')}, {n} players, built {age:.1f} h ago ({updated:%Y-%m-%d %H:%M}Z)"
+
+
+def is_game_day(day, session=requests):
+    """True when ESPN's scoreboard lists an NBA game on `day` (ET date). None when ESPN cannot be reached."""
+    try:
+        r = session.get(ESPN_SCOREBOARD, params={"dates": day.strftime("%Y%m%d"), "limit": 50}, timeout=20)
+        r.raise_for_status()
+        events = r.json().get("events") or []
+        return any((e.get("competitions") or [{}])[0].get("competitors") for e in events)
+    except Exception as e:  # noqa: BLE001
+        print(f"[health] ESPN scoreboard unreachable ({e}); assuming a game day")
+        return None
+
+
+def dispatch_update(repo=REPO, workflow=WORKFLOW):
+    """`gh workflow run` with the job's GH_TOKEN. Returns (ok, detail)."""
+    if DRY_RUN:
+        return True, f"dry run: would dispatch {workflow} on {repo}"
+    if not os.environ.get("GH_TOKEN") and not os.environ.get("GITHUB_TOKEN"):
+        return False, "no GH_TOKEN in the environment"
+    try:
+        r = subprocess.run(["gh", "workflow", "run", workflow, "--repo", repo], capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return False, f"gh failed to run: {e}"
+    return r.returncode == 0, (r.stdout + r.stderr).strip() or f"exit {r.returncode}"
+
+
 def notify(text, webhook=None):
     webhook = webhook or os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    if not webhook:
-        print(f"[health] (no DISCORD_WEBHOOK_URL) would post: {text}")
+    if DRY_RUN or not webhook:
+        print(f"[health] ({'dry run' if DRY_RUN else 'no DISCORD_WEBHOOK_URL'}) would post: {text}")
         return False
     r = requests.post(webhook, json={"content": text}, timeout=20)
     print(f"[health] discord {r.status_code}: {text}")
     return r.ok
 
 
-def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, notify_fn=notify):
-    """One watchdog pass. Returns the action taken: "alert" | "recovered" | "quiet" | "outside"."""
-    now = now or utcnow()
-    state = read_json(state_path, {})
+def check_lines(now, state, force, lines_path, slate_path, notify_fn):
+    """Job 1. Mutates state. Returns "alert" | "recovered" | "quiet" | "outside"."""
     slate = read_json(slate_path, {})
     window = game_window(slate, now)
     in_window = force or (window is not None and window[0] <= now <= window[1])
-
     if not in_window:
         if state.get("already_alerted"):
-            write_json(state_path, {"already_alerted": False, "cleared": now.isoformat()})
-        print(f"[health] outside game window ({'no games on slate' if window is None else f'{window[0]:%H:%M}-{window[1]:%H:%M}Z'}), nothing to do")
+            state.update({"already_alerted": False, "cleared": now.isoformat()})
+        print(f"[health] outside game window ({'no games on slate' if window is None else f'{window[0]:%H:%M}-{window[1]:%H:%M}Z'}), lines check skipped")
         return "outside"
-
-    stale, detail, age = lines_status(now, lines_path)
+    stale, detail, _ = lines_status(now, lines_path)
     if stale and not state.get("already_alerted"):
         notify_fn(f"⚠️ Arc Lab lines stale: {detail}. Is the Underdog scraper (pirate-bets) running with ARC_LAB_DIR set?")
-        write_json(state_path, {"already_alerted": True, "since": now.isoformat(), "detail": detail})
+        state.update({"already_alerted": True, "since": now.isoformat(), "detail": detail})
         return "alert"
     if not stale and state.get("already_alerted"):
         notify_fn(f"✅ Arc Lab lines fresh again: {detail}.")
-        write_json(state_path, {"already_alerted": False, "recovered": now.isoformat()})
+        state.update({"already_alerted": False, "recovered": now.isoformat()})
         return "recovered"
-    print(f"[health] {'STALE (already alerted)' if stale else 'fresh'}: {detail}")
+    print(f"[health] lines {'STALE (already alerted)' if stale else 'fresh'}: {detail}")
     return "quiet"
+
+
+def check_projections(now, state, proj_path, notify_fn):
+    """Job 2. Mutates state. Returns "alert" | "recovered" | "quiet"."""
+    stale, _, _, detail = projections_status(now, proj_path)
+    if stale and not state.get("proj_alerted"):
+        notify_fn(f"⚠️ Arc Lab projections stale (> {PROJ_STALE_HOURS} h): {detail}. Did the update-data cron fire? The self-heal dispatches it after 10:30 ET on game days.")
+        state.update({"proj_alerted": True, "proj_since": now.isoformat(), "proj_detail": detail})
+        return "alert"
+    if not stale and state.get("proj_alerted"):
+        notify_fn(f"✅ Arc Lab projections fresh again: {detail}.")
+        state.update({"proj_alerted": False, "proj_recovered": now.isoformat()})
+        return "recovered"
+    print(f"[health] projections {'STALE (already alerted)' if stale else 'fresh'}: {detail}")
+    return "quiet"
+
+
+def self_heal(now, state, proj_path, notify_fn, game_day_fn=is_game_day, dispatch_fn=dispatch_update):
+    """Job 3. Mutates state. Returns "dispatched" | "dispatch_failed" | "throttled" | "not_needed" | "too_early" | "off_day"."""
+    local = now.astimezone(ET)
+    _, slate_date, age, detail = projections_status(now, proj_path)
+    today = local.date().isoformat()
+    if slate_date == today:
+        return "not_needed"
+    if local.time() < SELF_HEAL_AFTER:
+        print(f"[health] self-heal: projections show {slate_date}, not {today}, but it is {local:%H:%M} ET (< {SELF_HEAL_AFTER:%H:%M}); waiting for the cron")
+        return "too_early"
+    if game_day_fn(local.date()) is False:
+        print(f"[health] self-heal: {today} is not an NBA game day; nothing to build")
+        return "off_day"
+    last = parse_ts(state.get("self_dispatch_at"))
+    if last and now - last < SELF_HEAL_MIN_GAP:
+        print(f"[health] self-heal: projections still show {slate_date}; last self-dispatch {last:%H:%M}Z, within {SELF_HEAL_MIN_GAP}; not again yet")
+        return "throttled"
+    ok, how = dispatch_fn()
+    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today})
+    if ok:
+        notify_fn(f"🔁 Arc Lab self-heal: projections.json shows {slate_date} at {local:%H:%M} ET on game day {today} ({detail}). Dispatched update-data ({how}).")
+        return "dispatched"
+    notify_fn(f"❌ Arc Lab self-heal could not dispatch update-data for {today}: {how}. Run it by hand (Actions → Update data and projections → Run workflow).")
+    return "dispatch_failed"
+
+
+def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update):
+    """One watchdog pass. Returns {"lines": ..., "projections": ..., "self_heal": ...}; the state file is rewritten once."""
+    now = now or utcnow()
+    state = read_json(state_path, {}) or {}
+    before = dict(state)
+    out = {"lines": check_lines(now, state, force, lines_path, slate_path, notify_fn),
+           "projections": check_projections(now, state, proj_path, notify_fn),
+           "self_heal": self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)}
+    if state != before:
+        write_json(state_path, state)
+    print(f"[health] {out}")
+    return out
 
 
 if __name__ == "__main__":
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(errors="replace")  # Windows consoles choke on the alert emoji
     ap = argparse.ArgumentParser()
-    ap.add_argument("--force", action="store_true", help="check even outside the game window")
+    ap.add_argument("--force", action="store_true", help="check lines even outside the game window")
     args = ap.parse_args()
     check(force=args.force)

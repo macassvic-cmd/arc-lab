@@ -2,8 +2,9 @@ name: Update data and projections
 
 on:
   schedule:
-    - cron: "0 14 * * *"   # ~10am ET: overnight box scores + morning slate
-    - cron: "30 21 * * *"  # ~5:30pm ET: refreshed rosters/injury tags before tip
+    - cron: "7 14 * * *"   # ~10am ET: overnight box scores + morning slate. Off :00/:30 on purpose: GitHub delays or drops
+    - cron: "37 21 * * *"  # ~5:30pm ET: refreshed rosters/injury tags before tip. scheduled runs under load (2026-10-28 the 14:00Z
+                           # run never fired); health.py self-dispatches this workflow after 10:30 ET when the slate is missing
   workflow_dispatch:
     inputs:
       backfill_start:
@@ -42,6 +43,8 @@ jobs:
             python fetch_games.py
           fi
       - name: Settle paper log
+        id: paper_settle
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python paper_log.py settle
       - name: Play-by-play store + first-basket labels (ESPN, no credits)
@@ -51,19 +54,29 @@ jobs:
           python first_basket.py backfill
           python first_shot.py backfill   # first-shot labels (the first-basket model's grading target)
       - name: Grade the first-basket log (last pre-tip snapshot vs first-shot labels; merged into performance.json by the ladder grade)
+        id: fb_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python first_basket_model.py grade   # live by CEO override 2026-10-21; the gate verdict (FAIL) stands in docs/data/first_basket_gate.json
       - name: Grade the ladder log (last pre-tip snapshot vs box scores)
+        id: ladder_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py grade
       - name: PrizePicks FP pricing (repo copy data/pp_fantasy_lines.json; standard lines, pre-tip captures only; a copy older than 26 h = no PP lines)
+        id: fp_pp_price
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: |
           if [ -f ../data/pp_fantasy_lines.json ]; then python fantasy_points.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet: the scraper hook has not delivered a PrizePicks copy"; fi
       - name: Grade the fantasy-points log (last pre-tip FP distribution vs box-score FP; UD lines from data/fp_prices.csv, PP lines from data/pp_prices.csv)
+        id: fp_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python fantasy_points.py grade
-      - name: Grade the FP v2 log (one row per line, DNP void, calibration verdict at 200, market test at 800; backtests/fantasy_points_v2_rule.md)
+      - name: Grade the FP v2 log (one row per line, DNP void, checkpoint at 200, calibration verdict and market test at 800; backtests/fantasy_points_v2_rule.md Amendment 1)
+        id: fp2_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python fp_v2.py grade
       - name: Assign positions
@@ -76,34 +89,52 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python build_model.py
       - name: Snapshot paper log
+        id: paper_snap
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python paper_log.py snapshot
       - name: Ladder log snapshot (append-only, pre-tip rows only)
+        id: ladder_snap
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py snapshot
       - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
+        id: fp_snap
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python fantasy_points.py snapshot
       - name: FP v2 log snapshot (append-only, pre-tip rows only; frozen pair data/fp_v2_params.json, frozen map data/fp_v2_recal.json)
+        id: fp2_snap
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python fp_v2.py snapshot
       - name: Fantasy-points pricing study (repo board copy data/board_latest.json; refuses a capture older than the slate or 12 h)
+        id: fp_price
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: |
           if [ -f ../data/board_latest.json ]; then python fantasy_points.py price ../data/board_latest.json; else echo "no data/board_latest.json yet: the scraper hook has not delivered a capture"; fi
       - name: PrizePicks FP pricing, second pass (lines whose FP log row was written by this run's snapshot; idempotent)
+        id: fp_pp_price2
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: |
           if [ -f ../data/pp_fantasy_lines.json ]; then python fantasy_points.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
       - name: FP v2 pricing (UD standard FP lines with both sides' prices, PP standard lines; calibrated P(over) through the frozen map)
+        id: fp2_price
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: |
           if [ -f ../data/board_latest.json ]; then python fp_v2.py price ../data/board_latest.json; else echo "no data/board_latest.json yet"; fi
           if [ -f ../data/pp_fantasy_lines.json ]; then python fp_v2.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
+        id: fb_snap
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python first_basket_model.py snapshot
       - name: First-basket market odds (The Odds API player_first_basket, 1 credit per untipped game; display layer, logged pre-tip)
+        id: fb_odds
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -111,6 +142,14 @@ jobs:
       - name: Validate published JSON (strict parse, no NaN/Infinity; a bad file fails the build instead of blanking a page)
         working-directory: scripts
         run: python validate_site_json.py
+      - name: Report failed product steps to Discord (the run continued past them)
+        if: always()
+        continue-on-error: true
+        working-directory: scripts
+        env:
+          STEPS: ${{ toJSON(steps) }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python step_failures.py
       - name: Commit
         run: |
           git config user.name "arc-lab-bot"

@@ -1,16 +1,19 @@
 name: Lines watchdog
 
-# Every 15 minutes, all day: health.py only acts inside the slate-driven window (90 minutes before the day's earliest tip to
-# 3 hours after the latest tip, from data/slate.json), so afternoon tips are covered and quiet hours cost one no-op run.
-# The paper-log snapshot runs alongside so the last one before tip is the close.
+# Every 15 minutes, all day (off the top of the hour: GitHub delays :00 schedules most). health.py checks lines.json inside
+# the slate-driven window (90 minutes before the day's earliest tip to 3 hours after the latest, from data/slate.json),
+# projections.json staleness (> 14 h) on every pass, and after 10:30 ET on a game day self-dispatches update-data when
+# projections.json is not today's slate (at most once an hour; it says so on Discord). The paper-log snapshot runs alongside
+# so the last one before tip is the close.
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "3,18,33,48 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write   # health.py self-heal: gh workflow run update-data.yml
 
 concurrency:
   group: data-commit
@@ -26,10 +29,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install requests
-      - name: Check lines freshness
+      - name: Check lines + projections freshness, self-heal the missing slate
         working-directory: scripts
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
         run: python health.py
       - name: Snapshot paper log (closing lines)
         working-directory: scripts
