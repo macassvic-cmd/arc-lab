@@ -211,3 +211,54 @@ math are unchanged.
 ## 8. Amendments
 
 None at signing. Amendments append below this line with date and commit.
+
+### Amendment 1 (2026-10-28)
+
+Amendment 1 (2026-10-28). Section 2c, add: Minimum block size: after
+PAV, any block with n < 20 is merged into its nearest neighbor (repeat
+until all blocks have n >= 20), and the merged block takes the pooled
+hit rate. Calibrated P(over) is clipped to [0.05, 0.95], not
+[0.005, 0.995]. Justification (pre-existing data only): the fitted top
+block was 5 singleton lines mapped to 0.995 (5/5 has a 95% lower bound
+near 0.48); v1's 70-80% band said ~75% and hit ~41% (n=23); a single
+miss at 0.995 costs ~5.3 nats vs ~0.69 baseline, enough to decide the
+market test on ~12 tail lines. No forward-window data was used.
+
+Section 5, amended: the calibration verdict renders at 800 combined
+graded lines (same bars: weighted mean |gap| <= 0.05, no decile
+|gap| > 0.10). At 200 lines the decile table is reported as a
+checkpoint only and carries no verdict. Justification (pre-existing
+analysis only): with the amended discrete map only two P(over) decile
+bins populate, and simulation of a perfectly calibrated model against
+the 200-line bars gives a ~33% false-fail rate (vs ~1.2% at 800) - a
+verdict that fragile cannot carry the gate. Section 6 is unchanged in
+substance: the gate resolves when both verdicts render, now both at
+800. No forward-window data was used.
+
+Recorded with this amendment (CEO direction, 2026-10-28):
+
+- Retro replay inputs (section 2c, for the letter of the rule): GP and
+  absent starters for the retro replay were sourced from pre-slate box
+  scores and from projections.json as committed at log time, rather
+  than literally from the v1 log rows (which do not carry them).
+  Information-equivalent, no leakage. Harness fix before the refit: the
+  projections.json snapshot is the one whose own `updated` stamp is the
+  latest at or before the row's logged_at (the file written by the same
+  run), not the last commit before logged_at, which for a day's first
+  run was the previous slate's file and dropped the absent-starter and
+  Q flags. The retro file's SHA-256 is recorded in data/fp_v2_recal.json.
+- Refit scope: the map is refitted on the same replayed one-row-per-line
+  lines as the original fit (the graded v1 lines of the 2026-10-23 to
+  2026-10-26 slates, 325 lines at the original fit), re-run through the
+  fixed harness. If the v1 grader's rule-2d voiding changed any hit
+  among them, the refit uses the corrected retro file and the report
+  says so.
+- Pricing timing (section 5 logging): both pricers price a captured
+  line only from a v2 log row with logged_at <= captured_at (the latest
+  such row). A capture with no such row is not priced by that run.
+  Rows priced before this fix let a later snapshot's news into v2's
+  side of the market test.
+- Restart: every v2 log row and price row written before the refit
+  landed (the 2026-10-27 slate and the 2026-10-28 rows logged before
+  it) is marked pre-amendment and excluded from both verdicts. The
+  forward gate starts with the first slate priced by the refit map.
