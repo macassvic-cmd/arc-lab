@@ -58,6 +58,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python first_basket_model.py grade   # live by CEO override 2026-10-21; the gate verdict (FAIL) stands in docs/data/first_basket_gate.json
+      - name: Record Underdog main lines (sidecar data/main_lines.csv for the Performance page's playable-rungs view; display only)
+        id: main_lines_pre
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python main_lines.py   # same board capture (docs/data/lines.json) the ladder snapshot step below sees; backfills 3PM from data/ud_prices.csv
       - name: Grade the ladder log (last pre-tip snapshot vs box scores)
         id: ladder_grade
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
@@ -98,6 +103,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py snapshot
+      - name: Record Underdog main lines at ladder snapshot time (last pre-tip capture wins)
+        id: main_lines
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python main_lines.py
       - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
         id: fp_snap
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

@@ -20,6 +20,7 @@ from common import DATA_DIR, SITE_DATA, read_json, write_json
 
 LOG = DATA_DIR / "ladder_log.csv"
 FP_LOG = DATA_DIR / "fp_log.csv"          # projected minutes logged pre-tip by fantasy_points.py snapshot (same build as the ladder snapshot)
+MAIN_LINES = DATA_DIR / "main_lines.csv"  # Underdog main line per player-game-stat (main_lines.py; display-only playable-rungs view, 2026-10-28)
 BAND = (0.55, 0.80)                       # backtests/live_recalibration_rule.md section 0
 BOOT_ITERS, BOOT_SEED, BOOT_CHUNK = 2000, 20261023, 100
 TRIGGER_DAY, VALIDATION_END = 21, 35
@@ -170,6 +171,39 @@ def diagnostic(g):
                        "If the gap concentrates where minutes ran high, the cause is early-season rotations, not the probability layer. Report-only: nothing here changes the model; the only permitted live change is the pre-committed rule."]}
 
 
+def playable_view(g):
+    """Display-only slice (2026-10-28): the graded record restricted to PLAYABLE rungs, i.e. rung >= floor(main line) + 1 for
+    that player-game-stat (the Underdog main line's over plus the true alts above it; everything at or below the line is a
+    negative alt and is excluded). Player-game-stats with no recorded main line are excluded and counted. Main lines come from
+    data/main_lines.csv (main_lines.py: the board capture at snapshot time, 3PM backfilled from the pricing history; last pre-tip
+    capture wins). Same block / tier / bucket code as the full record; nothing here feeds the model or the recalibration rule."""
+    keys = ["date", "event_id", "player_id", "stat"]
+    if MAIN_LINES.exists():
+        ml = pd.read_csv(MAIN_LINES, dtype={"event_id": str, "player_id": str})
+    else:
+        ml = pd.DataFrame(columns=keys + ["line", "captured_at"])
+    ml = ml.drop_duplicates(keys, keep="last")
+    d = g.merge(ml[keys + ["line"]].rename(columns={"line": "main_line"}), on=keys, how="left")
+    has = d.main_line.notna()
+    d["playable"] = has & (d.rung >= np.floor(d.main_line.astype(float)) + 1)
+    p = d[d.playable].copy()
+    def counts(x):
+        return {"rungs": int(len(x)), "player_game_stats": int(x.groupby(keys).ngroups) if len(x) else 0, "player_games": player_games(x)}
+    def split(x):
+        return {**counts(x), "by_stat": {st: counts(x[x.stat == st]) for st in STAT_ACT}}
+    tiers = [{"min_p": t, **block(p[p.p >= t]), "by_stat": {st: block(p[(p.p >= t) & (p.stat == st)]) for st in STAT_ACT}} for t in TIERS]
+    calibration = {"all": bucket_table(p, ci=True), "by_stat": {st: bucket_table(p[p.stat == st], ci=True) for st in STAT_ACT},
+                   "n": int(len(p)), "player_games": player_games(p)}
+    return {"label": "Playable rungs only: rung >= floor(Underdog main line) + 1",
+            "definition": "A rung counts only if rung >= floor(main line) + 1 for that player-game-stat: the main line's over and the true alts above it. Rungs at or below the line are negative alts and are excluded. Player-game-stats with no recorded main line are excluded and counted below.",
+            "source": "data/main_lines.csv (main_lines.py): the Underdog board capture lines.json is built from, recorded at ladder snapshot time; 3PM history backfilled from data/ud_prices.csv; last pre-tip capture per player-game-stat wins.",
+            "overall": block(p), "by_stat": {st: block(p[p.stat == st]) for st in STAT_ACT}, "tiers": tiers, "calibration": calibration,
+            "with_line": split(d[has]), "dropped_missing_line": split(d[~has]), "excluded_below_line": split(d[has & ~d.playable]),
+            "lines_file": {"rows": int(len(ml)), "first_date": str(ml.date.min()) if len(ml) else None, "last_date": str(ml.date.max()) if len(ml) else None,
+                           "by_stat": {st: int((ml.stat == st).sum()) for st in STAT_ACT}},
+            "note": "Display and reporting only. The default view (all rungs, all stats) is the record as logged; the model, the ladder log and the recalibration rule's statistics (computed on the full log) do not change."}
+
+
 def grade():
     if not LOG.exists():
         write_json(SITE_DATA / "performance.json", {"header": HEADER, "empty": True, "generated": now().strftime("%Y-%m-%dT%H:%M:%SZ")}); print("[ladder-log] no log yet"); return
@@ -199,6 +233,7 @@ def grade():
                    "note": "Buckets of shipped P x hit rate x n, computed by this grader from the graded record (no thresholds or filters in display code). "
                            "95% CIs are cluster bootstraps by player-game: rungs from the same player-game are correlated."}
     diag = diagnostic(g)
+    play = playable_view(g)
     by_stat = {}
     for st in STAT_ACT:
         s = g[g.stat == st]
@@ -218,14 +253,15 @@ def grade():
            "log": {"rows_in_file": int(len(log)), "keys": int(len(snap)), "graded": int(len(g)), "player_games": player_games(g), "pending": int((snap.status == "pending").sum()), "void": int(len(void)),
                    "dates": int(g.date.nunique()), "first_date": str(g.date.min()) if len(g) else None, "last_date": str(g.date.max()) if len(g) else None,
                    "void_by_stat": {st: int((void.stat == st).sum()) for st in STAT_ACT}},
-           "overall": block(g), "tiers": tiers, "calibration": calibration, "diagnostic": diag, "by_stat": by_stat, "by_pos": by_pos, "players": players, "recent": recent_rows, "recent_dates": [str(x) for x in recent_dates],
+           "overall": block(g), "tiers": tiers, "calibration": calibration, "diagnostic": diag, "playable": play, "by_stat": by_stat, "by_pos": by_pos, "players": players, "recent": recent_rows, "recent_dates": [str(x) for x in recent_dates],
            "calibration_adopted": read_json(DATA_DIR / "ladder_calibration.json", {}).get("adopted", []),
            "method": ["Graded snapshot = the last projection logged before tip; every earlier row stays in data/ladder_log.csv, which is append-only.",
                       "Hit = actual >= rung, from the ESPN box score. Void = the player logged no minutes; counted here, excluded from hit rates.",
                       f"Calibration cells with n < {THIN} are flagged thin. Nothing is filtered or re-run after tip; no tuning on these results, ever.",
                       "Sample sizes are shown in player-games as well as rungs: the rungs of one player-game (3PM 3+, 4+, 5+ ...) are correlated, so rung counts overstate the evidence. Every 95% CI is a cluster bootstrap by player-game.",
                       f"The only permitted live change to the probability layer is the pre-committed {RECAL_RULE} (trigger evaluated at graded day {TRIGGER_DAY}, validation through day {VALIDATION_END}).",
-                      "Shipped P is the raw engine probability except for stats whose isotonic maps passed the 2024-25 gate (backtests/ladder_v2_rule.md); those are listed."]}
+                      "Shipped P is the raw engine probability except for stats whose isotonic maps passed the 2024-25 gate (backtests/ladder_v2_rule.md); those are listed.",
+                      "Playable rungs only (a display toggle, 2026-10-28): rung >= floor(Underdog main line) + 1 for that player-game-stat, from data/main_lines.csv (the board capture at snapshot time; 3PM backfilled from the pricing history). Player-games with no recorded main line are dropped from that view and counted. The default view is the full record."]}
     fb = SITE_DATA / "first_basket_performance.json"
     if fb.exists():
         doc["first_basket"] = read_json(fb, None)
@@ -238,6 +274,9 @@ def grade():
     write_json(SITE_DATA / "performance.json", doc)
     print(f"[ladder-log] graded {len(g)} rungs / {doc['log']['player_games']} player-games ({doc['overall']['record']}, {doc['overall']['hit_rate']}), {doc['log']['pending']} pending, {len(void)} void; "
           f"band 55-80%: n {diag['all']['n']}, gap {diag['all']['gap']} CI {diag['all']['gap_ci']}; {diag['clock']}")
+    pt = next((t for t in play["tiers"] if t["min_p"] == 0.55), None)
+    print(f"[ladder-log] playable view: {play['overall']['n']} rungs / {play['overall']['player_games']} player-games ({play['overall']['record']}); >=55%: {pt['record'] if pt else '-'}; "
+          f"{play['dropped_missing_line']['player_game_stats']} player-game-stats dropped for missing main lines, {play['excluded_below_line']['rungs']} rungs below the line excluded; main_lines.csv {play['lines_file']['rows']} rows")
 
 
 if __name__ == "__main__":

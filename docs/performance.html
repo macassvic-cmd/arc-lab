@@ -54,6 +54,8 @@ select,input[type=search]{font:500 15px var(--body);padding:7px 10px;border:1px 
 .tier .bar.under i{background:var(--miss)}
 .tier .bar s{position:absolute;top:-4px;width:2px;height:18px;background:var(--ink);text-decoration:none;margin-left:-1px}
 .tier .legend{font-size:11px;color:var(--muted)}
+.toggle{display:inline-flex;align-items:center;gap:6px;font:500 15px var(--body);padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer;user-select:none}
+.toggle input{accent-color:var(--rim);width:16px;height:16px;margin:0}
 .calline{font:600 20px/1.3 var(--display);margin:16px 0 4px}
 .calline small{display:block;font:400 13px var(--body);color:var(--muted)}
 details.more{margin-top:28px;border-top:1px solid var(--line);padding-top:6px}
@@ -87,20 +89,26 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   <p class="sub" id="status">Loading…</p>
 </header>
 <main>
-  <h2>Shipped tiers <span>all stats combined: hit rate when the model said at least this much</span></h2>
+  <h2>Shipped tiers <span id="tierSub">all rungs, all stats: hit rate when the model said at least this much</span></h2>
+  <div class="controls" id="viewCtl">
+    <select id="vStat" aria-label="Stat filter"><option value="all">All stats</option><option value="pts">PTS</option><option value="reb">REB</option><option value="ast">AST</option><option value="tpm">3PM</option></select>
+    <label class="toggle"><input type="checkbox" id="vPlay"> Playable rungs only</label>
+    <span class="foot">Filters the tier cards and the calibration sections; the link updates so a view can be shared. Default = every graded rung, every stat.</span>
+  </div>
   <div class="tiers" id="tierCards"></div>
+  <p class="foot" id="tierFoot"></p>
   <p class="calline" id="calLine"></p>
   <p class="sub">Hit rate measures accuracy, not profit. Edge requires comparing to prices.</p>
 
   <details class="more" id="more">
   <summary>Details <span>calibration tables, tiers by stat, overall record, by position, by stat and rung, players, recent picks</span></summary>
-  <h2>Calibration <span>shipped probability buckets &times; hit rate &times; n, from the grader itself</span></h2>
+  <h2>Calibration <span id="calSub">shipped probability buckets &times; hit rate &times; n, from the grader itself</span></h2>
   <div class="stats" id="calCards"></div>
   <div class="scroll"><table id="calAll"></table></div>
   <div class="scroll"><table id="calStat"></table></div>
   <p class="foot" id="calNote"></p>
 
-  <h2>Tiers by stat <span>predicted vs hit when the model said at least this much</span></h2>
+  <h2>Tiers by stat <span id="tierStatSub">predicted vs hit when the model said at least this much</span></h2>
   <div class="scroll"><table id="tierStat"></table></div>
 
   <h2>Overall record <span>all rungs, including long shots</span></h2>
@@ -234,23 +242,65 @@ function renderFP(){
   $("fpMethod").innerHTML = F.method.map(m=>`<li>${m}</li>`).join("");
 }
 
+const VIEW = {stat:"all", playable:false};   // tier cards + calibration sections; URL-driven (?stat=3PM&playable=1), default = the full record
+const STAT_ALIAS = {pts:"pts", reb:"reb", ast:"ast", tpm:"tpm", "3pm":"tpm", threes:"tpm"};
+function readView(){
+  const q = new URLSearchParams(location.search);
+  VIEW.stat = STAT_ALIAS[(q.get("stat")||"").toLowerCase()] || "all";
+  VIEW.playable = ["1","true","yes","on"].includes((q.get("playable")||"").toLowerCase());
+  $("vStat").value = VIEW.stat; $("vPlay").checked = VIEW.playable;
+}
+function writeView(){
+  const q = new URLSearchParams(location.search);
+  if(VIEW.stat==="all") q.delete("stat"); else q.set("stat", NAMES[VIEW.stat]);
+  if(VIEW.playable) q.set("playable","1"); else q.delete("playable");
+  const s = q.toString(); history.replaceState(null, "", location.pathname + (s ? "?"+s : "") + location.hash);
+}
+function view(){
+  // The slice the tier cards and calibration sections show. Playable = R.playable from the grader (rung ≥ floor(main line)+1,
+  // data/main_lines.csv); a stat filter picks the same blocks' by_stat cells. Nothing is recomputed here beyond picking blocks.
+  const P = R.playable, playable = !!(VIEW.playable && P && P.overall);
+  const base = playable ? P : R, st = VIEW.stat;
+  const tiers = (base.tiers||[]).map(t => st==="all" ? t : {...(t.by_stat && t.by_stat[st] || {n:0}), min_p:t.min_p, by_stat:t.by_stat});
+  const C = base.calibration || null;
+  const calAll = C ? (st==="all" ? C.all : C.by_stat[st]) : null;
+  const overall = st==="all" ? base.overall : (base.by_stat||{})[st];
+  const label = `${playable ? "playable rungs" : "all rungs"}, ${st==="all" ? "all stats" : NAMES[st]}`;
+  let foot = "";
+  if(playable){
+    const pick = o => st==="all" ? o : o.by_stat[st];
+    const w = pick(P.with_line), m = pick(P.dropped_missing_line), b = pick(P.excluded_below_line);
+    foot = `Playable rungs only: rung ≥ floor(Underdog main line) + 1, the line's over and the true alts above it. ${w.player_game_stats.toLocaleString()} ${st==='all'?'player-game-stats':'player-games'} had a recorded main line; ${m.player_game_stats.toLocaleString()} ${st==='all'?'player-game-stats':'player-games'} (${m.rungs.toLocaleString()} rungs) were dropped for missing main lines; ${b.rungs.toLocaleString()} rungs at or below the line were excluded as negative alts. Main lines recorded from ${P.lines_file.first_date||"–"} (3PM backfilled from the pricing history). Display only: the model and the recalibration rule read the full log.`;
+  } else if(VIEW.playable){ foot = "Playable-rungs view not available yet: the grader has not published main-line counts (data/main_lines.csv). Showing all rungs."; }
+  return {playable, base, st, tiers, C, calAll, overall, label, foot};
+}
 function renderTiers(){
-  // Four shipped tiers, all stats combined: the same tiers[] block the table below reads (min_p, hit_rate, record = hits-misses).
-  const T = (R.tiers||[]).filter(t=>t && t.n);
-  if(!T.length){ $("tierCards").innerHTML = `<div class="empty">No graded tiers yet.</div>`; return; }
+  // Four shipped tiers from the chosen view: the same tiers[] block the tables below read (min_p, hit_rate, record = hits-misses).
+  const v = view(); const T = v.tiers.filter(t=>t && t.n);
+  $("tierSub").textContent = `${v.label}: hit rate when the model said at least this much`;
+  $("tierFoot").textContent = v.foot;
+  if(!T.length){ $("tierCards").innerHTML = `<div class="empty">No graded rungs for this view yet.</div>`; return; }
   $("tierCards").innerHTML = T.map(t=>{ const hr = t.hit_rate, floor = t.min_p, under = hr < floor;
-    return `<div class="tier"><div class="tl">\u2265 ${Math.round(floor*100)}% picks</div><b>${pct(hr)}</b><div class="rec">${t.record} \u00b7 ${t.hits} hits, ${t.misses} misses</div>
+    return `<div class="tier"><div class="tl">≥ ${Math.round(floor*100)}% picks</div><b>${pct(hr)}</b><div class="rec">${t.record} · ${t.hits} hits, ${t.misses} misses</div>
       <div class="bar ${under?"under":""}" role="img" aria-label="hit rate ${pct(hr)}, tier floor ${Math.round(floor*100)}%"><i style="width:${(100*hr).toFixed(1)}%"></i><s style="left:${(100*floor).toFixed(1)}%"></s></div>
-      <div class="legend">tick = ${Math.round(floor*100)}% floor \u00b7 ${t.player_games} player-games</div></div>`; }).join("");
+      <div class="legend">tick = ${Math.round(floor*100)}% floor · ${t.player_games} player-games</div></div>`; }).join("");
 }
 function renderCalLine(){
-  // One plain-language line from the shipped ≥55% tier: its mean shipped P against its hit rate, same fields as the card above it.
-  const t = (R.tiers||[]).find(t=>t && t.n && Math.abs(t.min_p-0.55)<1e-9) || (R.tiers||[]).find(t=>t && t.n);
-  const C = R.calibration;
-  if(!t){ $("calLine").textContent = "No graded picks yet."; return; }
-  $("calLine").innerHTML = `Model said ${pct(t.mean_p)} on average for its \u2265 ${Math.round(t.min_p*100)}% picks \u2192 actually hit ${pct(t.hit_rate)} across ${t.n.toLocaleString()} graded rungs (${t.player_games.toLocaleString()} player-games).`
-    + (C ? `<small>Full calibration by probability bucket, with clustered 95% CIs, is under Details: ${C.n.toLocaleString()} graded rungs over ${C.player_games.toLocaleString()} player-games.</small>` : "");
+  // One plain-language line from the view's ≥55% tier: its mean shipped P against its hit rate, same fields as the card above it.
+  const v = view();
+  const t = v.tiers.find(t=>t && t.n && Math.abs(t.min_p-0.55)<1e-9) || v.tiers.find(t=>t && t.n);
+  const O = v.overall;
+  if(!t){ $("calLine").textContent = "No graded picks for this view yet."; return; }
+  $("calLine").innerHTML = `Model said ${pct(t.mean_p)} on average for its ≥ ${Math.round(t.min_p*100)}% picks → actually hit ${pct(t.hit_rate)} across ${t.n.toLocaleString()} graded rungs (${t.player_games.toLocaleString()} player-games)${v.label==="all rungs, all stats"?"":`, ${v.label}`}.`
+    + (O && O.n ? `<small>Full calibration by probability bucket, with clustered 95% CIs, is under Details: ${O.n.toLocaleString()} graded rungs over ${O.player_games.toLocaleString()} player-games in this view.</small>` : "");
 }
+function rerenderView(){
+  writeView();
+  section("shipped tiers", ["tierCards"], renderTiers); section("calibration line", ["calLine"], renderCalLine);
+  if(R && R.overall && R.overall.n) section("calibration", ["calCards"], renderCalSection);
+}
+$("vStat").onchange = e => { VIEW.stat = e.target.value; rerenderView(); };
+$("vPlay").onchange = e => { VIEW.playable = e.target.checked; rerenderView(); };
 const FAILED = [];
 function section(name, ids, fn){
   // Each section renders on its own: one throwing must not blank the rest of the page.
@@ -288,16 +338,26 @@ function render(){
   $("status").textContent = `${L.dates} game date${L.dates===1?"":"s"} graded (${L.first_date} → ${L.last_date}) · updated ${R.generated} · ${R.calibration_adopted.length? "shipped P is recalibrated for "+R.calibration_adopted.map(s=>NAMES[s]).join(", ")+" (isotonic maps that passed the 2024-25 gate) and raw elsewhere" : "shipped P is the raw engine probability for every stat (no stat passed the recalibration gate)"}.`
     + (FAILED.length ? ` Could not render: ${FAILED.join(", ")} (render step failed; see console).` : "");
 }
+function renderCalSection(){
+  // Calibration cards and tables plus the tiers-by-stat table, from the chosen view (all rungs or playable rungs; one stat or all).
+  const v = view(), L = R.log, C = v.C, O = v.overall || {n:0};
+  const statCols = Object.keys(NAMES);
+  $("calSub").textContent = `${v.label}: shipped probability buckets × hit rate × n, from the grader itself`;
+  if(C && v.calAll){
+    $("calCards").innerHTML = [card((O.n||0).toLocaleString(),"graded rungs"), card((O.player_games||0).toLocaleString(),"player-games (the real sample size)"), card(L.dates,"game dates graded"), card(pct(O.mean_p),"mean shipped P"), card(pct(O.hit_rate),"hit rate")].join("");
+    $("calAll").innerHTML = `<thead><tr><th>Model said${v.st==="all"?"":" ("+NAMES[v.st]+")"}</th><th>Rungs</th><th>Player-games</th><th>Mean P</th><th>Hit</th><th>95% CI (clustered)</th><th>Gap</th></tr></thead><tbody>${v.calAll.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${b.player_games}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td><td>${ci(b.ci)}</td>${gapCell(b.pred,b.actual,b.n)}</tr>`).join("")}</tbody>`;
+    $("calStat").innerHTML = `<thead><tr><th>Model said</th>${Object.values(NAMES).map(n=>`<th>${n}: hit (95% CI) · rungs / player-games</th>`).join("")}</tr></thead><tbody>${C.all.map((_,i)=>`<tr><td>${i*10}–${(i+1)*10}%</td>${statCols.map(st=>{const b=C.by_stat[st][i]; return `<td class="${b.thin?"thin":""}">${b.n?`${pct(b.actual)} (${ci(b.ci)}) · ${b.n}/${b.player_games}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
+    $("calNote").textContent = (R.calibration && R.calibration.note || "") + (v.foot ? " " + v.foot : "");
+  } else {
+    $("calCards").innerHTML = card("–","nothing graded for this view yet"); $("calAll").innerHTML = ""; $("calStat").innerHTML = ""; $("calNote").textContent = v.foot;
+  }
+  const B = v.base, TT = B.tiers||[];
+  $("tierStatSub").textContent = `${v.playable ? "playable rungs" : "all rungs"}: predicted vs hit when the model said at least this much`;
+  $("tierStat").innerHTML = `<thead><tr><th>Stat</th><th>All</th>${TT.map(t=>`<th>≥ ${Math.round(t.min_p*100)}%</th>`).join("")}</tr></thead><tbody>${statCols.map(st=>`<tr><td>${NAMES[st]}</td><td>${rec((B.by_stat||{})[st])}</td>${TT.map(t=>{const b=t.by_stat&&t.by_stat[st]; return `<td>${b&&b.n?`pred ${pct(b.mean_p)}, hit ${pct(b.hit_rate)} · ${b.record}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
+}
 function renderDetails(){
   const L = R.log, O = R.overall;
-  const C = R.calibration;
-  if(C){
-    $("calCards").innerHTML = [card(C.n.toLocaleString(),"graded rungs"), card(C.player_games.toLocaleString(),"player-games (the real sample size)"), card(L.dates,"game dates graded"), card(pct(O.mean_p),"mean shipped P, all rungs"), card(pct(O.hit_rate),"hit rate, all rungs")].join("");
-    $("calAll").innerHTML = `<thead><tr><th>Model said</th><th>Rungs</th><th>Player-games</th><th>Mean P</th><th>Hit</th><th>95% CI (clustered)</th><th>Gap</th></tr></thead><tbody>${C.all.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${b.player_games}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td><td>${ci(b.ci)}</td>${gapCell(b.pred,b.actual,b.n)}</tr>`).join("")}</tbody>`;
-    $("calStat").innerHTML = `<thead><tr><th>Model said</th>${Object.values(NAMES).map(n=>`<th>${n}: hit (95% CI) · rungs / player-games</th>`).join("")}</tr></thead><tbody>${C.all.map((_,i)=>`<tr><td>${i*10}–${(i+1)*10}%</td>${Object.keys(NAMES).map(st=>{const b=C.by_stat[st][i]; return `<td class="${b.thin?"thin":""}">${b.n?`${pct(b.actual)} (${ci(b.ci)}) · ${b.n}/${b.player_games}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
-    $("calNote").textContent = C.note;
-  }
-  $("tierStat").innerHTML = `<thead><tr><th>Stat</th><th>All</th>${R.tiers.map(t=>`<th>≥ ${Math.round(t.min_p*100)}%</th>`).join("")}</tr></thead><tbody>${Object.keys(NAMES).map(st=>`<tr><td>${NAMES[st]}</td><td>${rec(R.by_stat[st])}</td>${R.tiers.map(t=>{const b=t.by_stat[st]; return `<td>${b&&b.n?`pred ${pct(b.mean_p)}, hit ${pct(b.hit_rate)} · ${b.record}`:"–"}</td>`;}).join("")}</tr>`).join("")}</tbody></table>`;
+  renderCalSection();
   $("cards").innerHTML = [card(O.record,"W-L, all rungs, including long shots"), card(pct(O.hit_rate),"hit rate, all rungs (not a quality measure on its own)"), card(pg(O),"sample"), card(L.pending.toLocaleString(),"logged, game not yet graded"), card(L.void.toLocaleString(),"void (player did not play)")].join("");
   const poss = ["PG","SG","SF","PF","C"].filter(p=>R.by_pos[p]);
   $("byPos").innerHTML = `<thead><tr><th>Position</th><th>Player-games</th><th>All rungs</th>${Object.values(NAMES).map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${poss.map(p=>`<tr><td>${p}</td><td>${R.by_pos[p].player_games}</td><td>${rec(R.by_pos[p])}</td>${Object.keys(NAMES).map(st=>`<td>${rec(R.by_pos[p].by_stat[st])}</td>`).join("")}</tr>`).join("")}</tbody>`;
@@ -339,7 +399,7 @@ async function fetchPerf(){
   }
   throw new Error(last);
 }
-fetchPerf().then(d=>{ R=d; render(); }).catch(e=>{ $("status").textContent = `Could not load performance.json: ${e.message} after 2 attempts.`; });
+fetchPerf().then(d=>{ R=d; readView(); render(); }).catch(e=>{ $("status").textContent = `Could not load performance.json: ${e.message} after 2 attempts.`; });
 </script>
 </body>
 </html>

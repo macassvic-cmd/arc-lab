@@ -16,13 +16,14 @@ Live at `https://macassvic-cmd.github.io/arc-lab/` once Pages is on.
 | `scripts/health.py` | GitHub Actions, every 15 min 5pm-1am ET | Discord alert when `lines.json` goes stale during games |
 | `scripts/paper_log.py` | All three workflows | Logs every 3PM prop with an Underdog line (3PM only since the scope reset), freezes the close at tip, grades it, writes `results.json` for the Results tab |
 | `scripts/ingest_news.py` | GitHub Actions, on every phone alert | Tags the news, drops OUT players, moves their minutes, re-projects |
-| `scripts/ladder_log.py` | Both data workflows | v2 ladders: appends every pre-tip P(k+) to the immutable `data/ladder_log.csv`, grades the last pre-tip snapshot hit/miss, writes `performance.json` |
+| `scripts/ladder_log.py` | Both data workflows | v2 ladders: appends every pre-tip P(k+) to the immutable `data/ladder_log.csv`, grades the last pre-tip snapshot hit/miss, writes `performance.json` (with the display-only `playable` slice: rungs >= floor(main line) + 1) |
+| `scripts/main_lines.py` | Update workflow | Sidecar `data/main_lines.csv`: the Underdog main line per player-game-stat from the board capture at ladder snapshot time (3PM backfilled from `data/ud_prices.csv`; last pre-tip capture wins). Display only: feeds the Performance page's "Playable rungs only" toggle, nothing else |
 | `scripts/ladder_calibrate.py` | Manual | Isotonic recalibration of the ladders under `backtests/ladder_v2_rule.md` (fit 2023-24, gate 2024-25); adopted maps in `data/ladder_calibration.json` |
 | `scripts/pbp_store.py`, `scripts/first_basket.py` | Update workflow | ESPN play-by-play cache (`data/pbp_raw/`, not committed) and first-basket labels + coverage |
 | `scripts/first_shot.py`, `scripts/first_basket_model.py` | Update workflow (labels, snapshot, grade); gate and freeze manual | First-shot labels (`data/first_shot_*.csv`, regular season + postseason + preseason), the attempt-based first-basket model under `backtests/first_basket_v2_rule.md`, its gate (`docs/data/first_basket_gate.json`, FAILED; live since 2026-10-21 by CEO override, see the rule's addendum), frozen constants `data/first_basket_params.json`, the append-only `data/first_basket_log.csv`, tonight's projections `docs/data/first_basket_today.json` (main page, First Basket tab, with why-lines for the top pick) and its grading (Performance page; row grades in `data/first_basket_grades.csv`, late scratches void per the 2026-10-22 addendum) |
 | `scripts/first_basket_odds.py` | Update workflow (pre-tip run) | First-basket market prices from The Odds API (`player_first_basket`, 1 credit per untipped game) appended to `data/first_basket_odds.csv` with the credit cost in `data/first_basket_odds_credits.csv`; shown on the tab as DK / FD price, implied and gap. Display only; the record stays accuracy-only |
 | `docs/index.html` | GitHub Pages | The site |
-| `docs/performance.html` | GitHub Pages | Every logged ladder rung graded against the box score: tiers, positions, calibration per rung, live season only |
+| `docs/performance.html` | GitHub Pages | Every logged ladder rung graded against the box score: tiers, positions, calibration per rung, live season only. Stat filter (`?stat=3PM`) and playable-rungs toggle (`?playable=1`) on the tier cards and calibration sections; default = all rungs, all stats |
 
 ## Setup (about 15 minutes)
 
