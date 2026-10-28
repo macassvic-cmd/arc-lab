@@ -75,6 +75,7 @@ REPLAY_START, REPLAY_END, REPLAY_SEASON = "2025-11-01", "2026-04-12", 2026   # t
 SELECT_END = "2026-01-31"                                   # selection window Oct-Jan (replay starts Nov 1); verdict Feb-Apr
 WMAE_BAR, WORST_BAR = 0.05, 0.10                            # the bars v1 failed (rule 4)
 CHECKPOINT_N, GATE_N, MARKET_N, MIN_DECILE, THIN = 200, 800, 800, 20, 30   # rule 5 as amended (Amendment 1): checkpoint at 200, both verdicts at 800
+SECONDARY_N = 1059   # Amendment 2 (2026-10-28): secondary market test on the frozen map's low block; n from rule 5's formula with the low-block sd 0.2080 (cluster-adjusted)
 MIN_BLOCK = 20                                              # Amendment 1, 2c: minimum isotonic block size
 GATE_EPOCH, PRE_GATE = "A1", "pre-A1"                       # log rows: the forward gate that counts them; pre-A1 = before the Amendment 1 refit, excluded
 FIT_DATES = ("2026-10-23", "2026-10-26")                    # the graded v1 slates of the original map fit; the Amendment 1 refit uses the same lines
@@ -883,17 +884,26 @@ def grade():
         if not use:
             return {"status": "collecting", "graded": int(n_total), "needed": GATE_N, "note": "no decile with 20+ rows"}
         return {"status": "PASS" if stats["weighted_mean_abs_gap"] <= WMAE_BAR and stats["worst_gap"] <= WORST_BAR else "FAIL", "graded": int(n_total), "needed": GATE_N, **stats}
-    def market_block(d, label):
+    def market_block(d, label, needed=MARKET_N):
         m = d[d.ll_book.notna()]
         if not len(m):
-            return {"label": label, "n": 0, "status": "collecting", "needed": MARKET_N}
+            return {"label": label, "n": 0, "status": "collecting", "needed": needed}
         diff = (m.ll_v2.astype(float) - m.ll_book.astype(float)).values
         pg = (m.date + ":" + m.event_id + ":" + m.player_id).values
         ci = cluster_ci(diff, pg)
-        status = "collecting" if len(m) < MARKET_N else ("PASS" if ci[1] < 0 else "not shown")
-        return {"label": label, "n": int(len(m)), "needed": MARKET_N, "status": status, "mean_logloss_v2": round(float(m.ll_v2.astype(float).mean()), 4), "mean_logloss_book": round(float(m.ll_book.astype(float).mean()), 4),
-                "mean_diff_nats": round(float(diff.mean()), 4), "diff_ci_cluster": ci, "baseline": {"UD": "no-vig P(over) from both captured sides", "PP": "0.5"}.get(label, "per source"),
-                "note": "negative = v2 beats the book; PASS when the clustered 95% CI excludes 0 in v2's favour at n >= 800"}
+        status = "collecting" if len(m) < needed else ("PASS" if ci[1] < 0 else "not shown")
+        return {"label": label, "n": int(len(m)), "needed": needed, "status": status, "mean_logloss_v2": round(float(m.ll_v2.astype(float).mean()), 4), "mean_logloss_book": round(float(m.ll_book.astype(float).mean()), 4),
+                "mean_diff_nats": round(float(diff.mean()), 4), "diff_ci_cluster": ci, "baseline": {"UD": "no-vig P(over) from both captured sides", "PP": "0.5"}.get(label.split(" ")[0], "per source"),
+                "note": f"negative = v2 beats the book; PASS when the clustered 95% CI excludes 0 in v2's favour at n >= {needed}"}
+    # Amendment 2: the same test restricted to the frozen map's low block (raw P(over) in block 1 of data/fp_v2_recal.json); secondary, own n
+    blk = (recal or {}).get("map") or {}
+    low_lo, low_hi = (float(blk["x_lo"][0]), float(blk["x_hi"][0])) if blk.get("x_lo") else (None, None)
+    low = g[(g.p_raw.astype(float) >= low_lo) & (g.p_raw.astype(float) <= low_hi)] if low_lo is not None else g.iloc[0:0]
+    secondary = {"label": "low block (secondary)", "amendment": "Amendment 2 (2026-10-28)", "block": {"raw_lo": low_lo, "raw_hi": low_hi, "calibrated": (blk.get("y_cal") or [None])[0]},
+                 "needed": SECONDARY_N, "sizing": "rule 5 formula, delta 0.02 nats/line, low-block paired sd 0.2080 from the v1 record (53 replayed lines), design effect 1.25 -> 1,059 lines",
+                 "combined": market_block(low, "UD + PP low block", SECONDARY_N), "by_source": {s: market_block(low[low.source == s], f"{s} low block", SECONDARY_N) for s in ("UD", "PP")},
+                 "share_of_graded_lines": round(float(len(low) / len(g)), 4) if len(g) else None,
+                 "note": "Secondary, pre-registered before any A1 grade was viewed: renders at its own n independently of the primary's 800; it cannot by itself convert a primary FAIL to PASS."}
     pit_arr = np.array(pit); tab, wm, _, wo, _ = pit_verdict(pit_arr) if len(pit_arr) else ([], None, None, None, False)
     pg = R.drop_duplicates(["date", "event_id", "player_id"])
     doc = {"generated": ts(now()), "rule_file": RULE, "label": LABEL, "pair": (params or {}).get("selected"), "map": {"fit_date": recal.get("fit_date"), "n": recal.get("n")} if recal else None,
@@ -904,7 +914,7 @@ def grade():
            "player_games": int(len(pg)), "void": int(pg.void.sum()), "void_reasons": dict(Counter(pg[pg.void == 1].void_reason)), "pending_in_log": int(len(snap) - len(pg)),
            "lines": {**cal_block(g, True), "scope": "combined UD + PP, one row per line (over side), calibrated P(over): the calibration verdict (rule 5)", "sources": {s: int((g.source == s).sum()) for s in ("UD", "PP")}},
            "by_source": {s: {**cal_block(g[g.source == s], False), "label": {"UD": "Underdog", "PP": "PrizePicks"}[s]} for s in ("UD", "PP")},
-           "market_test": {"combined": market_block(g, "UD + PP"), "by_source": {s: market_block(g[g.source == s], s) for s in ("UD", "PP")}},
+           "market_test": {"combined": market_block(g, "UD + PP"), "by_source": {s: market_block(g[g.source == s], s) for s in ("UD", "PP")}, "secondary_low_block": secondary},
            "pit": {"n": int(len(pit_arr)), "deciles": tab, "weighted_mean_abs_gap": round(wm, 4) if wm is not None else None, "worst_decile_gap": round(wo, 4) if wo is not None else None,
                    "mean": round(float(pit_arr.mean()), 4) if len(pit_arr) else None, "note": "raw v2 distribution PIT, diagnostic only (rule 5)"},
            "recent": pg.sort_values(["date", "fp_mean"], ascending=[False, False]).head(60)[["date", "player", "team", "opp", "min_proj", "min_actual", "fp_mean", "fp_actual", "pit", "void", "void_reason"]].to_dict("records"),
@@ -913,10 +923,11 @@ def grade():
                       "Rule 2d: a logged player-game with 0 minutes, or absent from a box score that exists, is void and leaves the pending set.",
                       "Calibration verdict at 800 combined lines (weighted |gap| <= 0.05, no decile > 0.10) on calibrated P(over), with a no-verdict checkpoint table at 200 (Amendment 1, 2026-10-28); UD / PP splits displayed. Market test at 800 lines: paired log loss vs the book (UD no-vig, PP 0.5), player-game cluster bootstrap CI must exclude 0 in v2's favour.",
                       "Amendment 1 (2026-10-28): isotonic blocks with n < 20 merged into the nearest neighbour (pooled hit rate), calibrated P(over) clipped to [0.05, 0.95]; a captured line is priced only from a v2 row logged at or before the capture. Rows logged or priced before the refit are marked pre-A1 and excluded; the gate restarted with the first slate priced by the refit map.",
+                      "Amendment 2 (2026-10-28): a pre-registered secondary market test on the frozen map's low block (raw P(over) 0.1025-0.4190 -> 0.396), same paired test and baselines, its own n = 1,059 (rule 5 formula with the low-block sd 0.2080, cluster-adjusted); secondary only, it cannot convert a primary FAIL to PASS.",
                       "Paper study until both verdicts render. No tuning on these results, ever."]}
     write_json(PERF, doc)
     print(f"[fp-v2] graded {len(pg)} player-games ({int(pg.void.sum())} void {doc['void_reasons']}), {len(g)} lines (UD {doc['lines']['sources']['UD']}, PP {doc['lines']['sources']['PP']}; "
-          f"calibration {doc['lines']['gate']['status']}, market {doc['market_test']['combined']['status']}), PIT mean {doc['pit']['mean']}; "
+          f"calibration {doc['lines']['gate']['status']}, market {doc['market_test']['combined']['status']}, low-block secondary {secondary['combined']['n']}/{SECONDARY_N} {secondary['combined']['status']}), PIT mean {doc['pit']['mean']}; "
           f"excluded pre-amendment: {len(pre)} log rows, UD {pre_prices['UD']} / PP {pre_prices['PP']} price rows")
     return doc
 
