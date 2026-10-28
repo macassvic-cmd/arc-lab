@@ -262,3 +262,36 @@ Recorded with this amendment (CEO direction, 2026-10-28):
   landed (the 2026-10-27 slate and the 2026-10-28 rows logged before
   it) is marked pre-amendment and excluded from both verdicts. The
   forward gate starts with the first slate priced by the refit map.
+
+### Amendment 2 (2026-10-28): pre-registered SECONDARY market test on the frozen map's low block
+
+Committed before any A1-gated v2 grade output was viewed (the first A1 slate, 2026-10-28, grades on the morning of 2026-10-29).
+The primary calibration and market verdicts of section 5 (both at 800 combined lines) are unchanged.
+
+Secondary analysis, added to section 5: the market test restricted to lines in the frozen map's LOW BLOCK, raw P(over) in
+[0.1025, 0.4190] -> calibrated 0.396 (data/fp_v2_recal.json, map block 1 of 3, fitted 2026-10-28T19:06:35Z on 325 lines). A line
+belongs to the block by its logged raw P(over) at pricing time. Same paired log-loss test as the primary: v2's calibrated P(over)
+vs the per-source baseline (UD = the book's no-vig P(over) from both captured sides, PP = 0.5), player-game cluster bootstrap on
+the per-line log-loss difference, the 95% CI must exclude 0 in v2's favour. Reported combined and per source; the verdict is
+combined. The secondary result renders when its OWN n is reached, independently of the primary's 800.
+
+Sizing, by section 5's formula, from the low-block paired sd of the v1 record. Basis: the 325 replayed v1 lines of the refit
+(2026-10-23 .. 26, one row per line, over side), of which 53 fall in the low block (UD 21, PP 32; 46 player-games; hit rate
+0.396); each priced at the block's calibrated 0.396, exactly as the forward test prices them, against its book baseline.
+Per-line paired log-loss difference: mean -0.0217 nats (in-sample, the fit lines), **sd = 0.2080 nats** (the overall record's
+sd in section 5 was 0.116: a calibrated probability far from 0.5 swings the per-line loss more). Formula, as in section 5:
+n = ((z_{alpha/2} + z_beta) * sd / delta)^2, delta = 0.02 nats/line, alpha = 0.05 two-sided, power 0.80:
+n = ((1.96 + 0.8416) * 0.2080 / 0.02)^2 = **849 independent low-block lines**. Cluster adjustment, as in section 5: the
+cluster-robust SE of the mean on the same slice was 0.0319 vs 0.0286 unclustered (design effect 1.25), giving **n = 1,059
+low-block lines**, the figure the secondary test uses (rounded up from the cluster-adjusted formula; the CEO's prior expectation
+of ~240 assumed the overall sd, which does not hold inside the block). At the first A1 slate's low-block share (UD 9%, PP 23% of
+priced over rows) this is roughly a hundred slates of collection; the number is recorded as the formula gives it. Any change to
+delta or to n is a further dated amendment.
+
+Justification (pre-existing analysis, no forward data): ~84% of lines map to the 0.481-0.514 blocks, near the book, so the
+primary test's detectable edge (0.02 nats/line overall) corresponds to ~0.12 nats/line within the low block, about five times
+what a fully correct 0.396 block would deliver (~0.022 nats/line in-block, ~0.0035 overall). Without this secondary read a real
+low-block edge would most likely render "not shown".
+
+Reported as secondary: it cannot by itself convert a primary FAIL to PASS. Implemented in the grader as
+market_test.secondary_low_block (block bounds read from the frozen map, n = 1,059, status collecting / PASS / not shown).
