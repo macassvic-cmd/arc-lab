@@ -13,6 +13,11 @@ data/health_state.json (committed by the workflow):
 3. Self-heal (every pass): on a game day, after SELF_HEAL_AFTER (ET), if projections.json's date is not today's ET date, dispatch
    the update-data workflow (`gh workflow run update-data.yml`, GH_TOKEN with actions: write) and say so on Discord. At most one
    self-dispatch per SELF_HEAL_MIN_GAP. Game day = ESPN's scoreboard lists an NBA game today (free; unreachable = assume yes).
+4. Pre-tip self-heal (every pass, added 2026-10-28 evening): on a game day, inside the PRETIP_WINDOW before the day's earliest tip
+   (data/slate.json), if no update-data run has refreshed the build since that window opened (projections.json `updated`), dispatch
+   update-data and say so on Discord. Same SELF_HEAL_MIN_GAP throttle as job 3 (shared state key), skipped while an update-data run
+   is already queued or running. The pre-tip snapshots (ladders, FP v1 + v2, first basket) cannot be recovered after tip; the
+   evening cron has fired 1.8-6 h late all month. The PC's one-off dispatch timer is a backup, not the primary.
 
   python health.py            # one pass, print the verdict, exit 0
   python health.py --force    # ignore the game window for the lines check (manual test; still respects the throttles)
@@ -39,6 +44,7 @@ WINDOW_AFTER = dt.timedelta(hours=3)
 PROJ_STALE_HOURS = 14
 SELF_HEAL_AFTER = dt.time(10, 30)                  # ET; the morning cron is 14:07Z = 10:07 ET
 SELF_HEAL_MIN_GAP = dt.timedelta(hours=1)
+PRETIP_WINDOW = dt.timedelta(minutes=90)             # job 4: a build must land inside this window before the earliest tip
 ET = ZoneInfo("America/New_York")
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 WORKFLOW = "update-data.yml"
@@ -119,6 +125,18 @@ def dispatch_update(repo=REPO, workflow=WORKFLOW):
     return r.returncode == 0, (r.stdout + r.stderr).strip() or f"exit {r.returncode}"
 
 
+def update_running(repo=REPO, workflow=WORKFLOW):
+    """True when an update-data run is queued or in progress (so the pre-tip heal does not pile a second one on). None = unknown."""
+    if DRY_RUN or not (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")):
+        return None
+    try:
+        r = subprocess.run(["gh", "api", f"repos/{repo}/actions/workflows/{workflow}/runs", "-q", "[.workflow_runs[] | select(.status == \"queued\" or .status == \"in_progress\" or .status == \"waiting\")] | length",
+                            "-f", "per_page=10"], capture_output=True, text=True, timeout=60)
+        return int(r.stdout.strip() or 0) > 0 if r.returncode == 0 else None
+    except (OSError, subprocess.TimeoutExpired, ValueError):
+        return None
+
+
 def notify(text, webhook=None):
     webhook = webhook or os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
     if DRY_RUN or not webhook:
@@ -193,14 +211,50 @@ def self_heal(now, state, proj_path, notify_fn, game_day_fn=is_game_day, dispatc
     return "dispatch_failed"
 
 
-def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update):
-    """One watchdog pass. Returns {"lines": ..., "projections": ..., "self_heal": ...}; the state file is rewritten once."""
+def pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn=dispatch_update, running_fn=update_running):
+    """Job 4. Mutates state. Returns "dispatched" | "dispatch_failed" | "throttled" | "running" | "not_needed" | "outside_window" | "no_slate" | "wrong_day"."""
+    local = now.astimezone(ET); today = local.date().isoformat()
+    slate = read_json(slate_path, {}) or {}
+    tips = [parse_ts(g.get("start")) for g in slate.get("games") or []]
+    tips = [t for t in tips if t]
+    if not tips:
+        return "no_slate"
+    if slate.get("date") != today:
+        return "wrong_day"   # the slate is not today's (the morning heal, job 3, owns that case)
+    first = min(tips); window_open = first - PRETIP_WINDOW
+    if now < window_open or now >= first:
+        return "outside_window"
+    _, slate_date, _, detail = projections_status(now, proj_path)
+    doc = read_json(proj_path, None) or {}
+    built = parse_ts(doc.get("updated"))
+    if slate_date == today and built is not None and built >= window_open:
+        print(f"[health] pre-tip: build at {built:%H:%M}Z is inside the {PRETIP_WINDOW} window before the {first:%H:%M}Z tip; nothing to do")
+        return "not_needed"
+    last = parse_ts(state.get("self_dispatch_at"))
+    if last and now - last < SELF_HEAL_MIN_GAP:
+        print(f"[health] pre-tip: no build since {window_open:%H:%M}Z (first tip {first:%H:%M}Z) but a self-dispatch at {last:%H:%M}Z is within {SELF_HEAL_MIN_GAP}; not again yet")
+        return "throttled"
+    if running_fn() is True:
+        print(f"[health] pre-tip: no build since {window_open:%H:%M}Z but an update-data run is already queued or running; waiting for it")
+        return "running"
+    ok, how = dispatch_fn()
+    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": "pre-tip"})
+    if ok:
+        notify_fn(f"🔁 Arc Lab pre-tip self-heal: first tip {first:%H:%M}Z, no update-data build since {window_open:%H:%M}Z ({detail}). Dispatched update-data at {local:%H:%M} ET ({how}).")
+        return "dispatched"
+    notify_fn(f"❌ Arc Lab pre-tip self-heal could not dispatch update-data before the {first:%H:%M}Z tip: {how}. Run it by hand now (Actions → Update data and projections → Run workflow).")
+    return "dispatch_failed"
+
+
+def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update, running_fn=update_running):
+    """One watchdog pass. Returns {"lines": ..., "projections": ..., "self_heal": ..., "pretip": ...}; the state file is rewritten once."""
     now = now or utcnow()
     state = read_json(state_path, {}) or {}
     before = dict(state)
     out = {"lines": check_lines(now, state, force, lines_path, slate_path, notify_fn),
            "projections": check_projections(now, state, proj_path, notify_fn),
            "self_heal": self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)}
+    out["pretip"] = pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn, running_fn)
     if state != before:
         write_json(state_path, state)
     print(f"[health] {out}")
