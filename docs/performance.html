@@ -164,7 +164,7 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
     <p class="sub"><b>FP v2 - paper study. Hit rate measures accuracy, not profit.</b></p>
     <p class="foot" id="fpV2Note"></p>
     <div class="stats" id="fpV2Cards"></div>
-    <h3>Calibrated P(over) by decile, combined UD + PP <span class="foot">the calibration verdict at 200 lines (one row per line, over side)</span></h3>
+    <h3>Calibrated P(over) by decile, combined UD + PP <span class="foot">checkpoint table at 200 lines, the calibration verdict at 800 (Amendment 1, 2026-10-28; one row per line, over side)</span></h3>
     <div class="scroll"><table id="fpV2Lines"></table></div>
     <h3>By source <span class="foot">same code path; not the verdict</span></h3>
     <div class="scroll"><table id="fpV2UD"></table></div>
@@ -262,7 +262,7 @@ function renderFPV2(){
   const F = R && R.fantasy_points_v2; if(!F) return;
   $("fpV2Sec").hidden = false;
   const G = F.lines.gate, M = F.market_test.combined, src = F.lines.sources || {UD:0, PP:0};
-  $("fpV2Note").textContent = `Frozen pair: minutes sd \u00d7 ${F.pair?F.pair.sd_factor:"\u2013"}, short-night q ${F.pair?F.pair.q:"\u2013"} \u00b7 map fitted ${F.map?F.map.fit_date:"\u2013"} on ${F.map?F.map.n:"\u2013"} replayed v1 lines \u00b7 rule backtests/fantasy_points_v2_rule.md`;
+  $("fpV2Note").textContent = `Frozen pair: minutes sd \u00d7 ${F.pair?F.pair.sd_factor:"\u2013"}, short-night q ${F.pair?F.pair.q:"\u2013"} \u00b7 map fitted ${F.map?F.map.fit_date:"\u2013"} on ${F.map?F.map.n:"\u2013"} replayed v1 lines \u00b7 rule backtests/fantasy_points_v2_rule.md${F.excluded_pre_amendment && F.excluded_pre_amendment.log_rows ? ` \u00b7 ${F.excluded_pre_amendment.log_rows} pre-amendment log rows (${F.excluded_pre_amendment.slates.join(", ")}) excluded; gate restarted with the refit map` : ""}`;
   $("fpV2Cards").innerHTML = [card(F.player_games,"player-games graded"), card(F.void,`void (${Object.entries(F.void_reasons||{}).map(([k,v])=>`${v} ${k}`).join(", ")||"none"})`), card(F.lines.n,`lines graded, UD + PP (UD ${src.UD}, PP ${src.PP})`),
     card(G.status,`calibration verdict: ${G.graded} of ${G.needed} lines`), card(M.status,`market test: ${M.n} of ${M.needed} lines`), card(F.pit.mean==null?"\u2013":F.pit.mean.toFixed(3),"mean raw PIT (0.5 when centred)")].join("");
   const decTable = (L, label, empty) => L && L.n ? `<thead><tr><th>${label}: calibrated P said</th><th>n</th><th>Mean P (cal)</th><th>Mean P (raw)</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${L.by_decile.map(b=>`<tr><td>${Math.round(b.lo*100)}\u2013${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>\u2013</td><td>${pct(b.actual)}</td><td>${b.gap==null?"\u2013":(b.gap>0?"+":"")+(100*b.gap).toFixed(1)}</td></tr>`).join("")}<tr><td>${label}: ${L.n} lines, hit ${pct(L.hit_rate)}, mean P cal ${pct(L.mean_p_cal)} (raw ${pct(L.mean_p_raw)})</td><td colspan="5">${(L.gate||L.decile_read).status}${(L.gate||L.decile_read).weighted_mean_abs_gap!=null?` \u00b7 weighted |gap| ${(L.gate||L.decile_read).weighted_mean_abs_gap} \u00b7 worst ${(L.gate||L.decile_read).worst_gap}`:""}${L.gate?" (the verdict)":" (read only)"}</td></tr></tbody>` : `<tbody><tr><td class="empty">${empty}</td></tr></tbody>`;

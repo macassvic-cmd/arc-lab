@@ -32,6 +32,7 @@ import argparse
 import csv
 import datetime as dt
 import gzip
+import hashlib
 import json
 import math
 import subprocess
@@ -73,14 +74,17 @@ FP_COMPONENTS = ("stl", "blk", "tov")                       # rates the FP sim r
 REPLAY_START, REPLAY_END, REPLAY_SEASON = "2025-11-01", "2026-04-12", 2026   # the ladder backtests' 2025-26 replay window
 SELECT_END = "2026-01-31"                                   # selection window Oct-Jan (replay starts Nov 1); verdict Feb-Apr
 WMAE_BAR, WORST_BAR = 0.05, 0.10                            # the bars v1 failed (rule 4)
-GATE_N, MARKET_N, MIN_DECILE, THIN = 200, 800, 20, 30       # rule 5
+CHECKPOINT_N, GATE_N, MARKET_N, MIN_DECILE, THIN = 200, 800, 800, 20, 30   # rule 5 as amended (Amendment 1): checkpoint at 200, both verdicts at 800
+MIN_BLOCK = 20                                              # Amendment 1, 2c: minimum isotonic block size
+GATE_EPOCH, PRE_GATE = "A1", "pre-A1"                       # log rows: the forward gate that counts them; pre-A1 = before the Amendment 1 refit, excluded
+FIT_DATES = ("2026-10-23", "2026-10-26")                    # the graded v1 slates of the original map fit; the Amendment 1 refit uses the same lines
 BOOT_ITERS, SEED = 2000, 20261027
 USAGE_FLAG = {"Usage +6% pts": 1, "Usage +11% pts": 2}     # build_model's flag for 1 / 2 absent starters (USAGE_BUMP pts 5.5%)
 LABEL = "FP v2 - paper study. Hit rate measures accuracy, not profit."
-LOG_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min", "gp", "w", "sd_factor", "q", "fp_mean", "fp_sd", "fp_q", "logged_at"]
+LOG_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min", "gp", "w", "sd_factor", "q", "fp_mean", "fp_sd", "fp_q", "logged_at", "gate"]
 PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "mult", "decimal", "american", "convention", "breakeven",
-                "decimal_higher", "decimal_lower", "american_higher", "american_lower", "p_book_novig", "p_raw", "p_cal", "edge", "source", "source_id", "fp_logged_at"]
-PP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "p_book_novig", "p_raw", "p_cal", "scheduled_at", "game_status", "source", "source_id", "fp_logged_at"]
+                "decimal_higher", "decimal_lower", "american_higher", "american_lower", "p_book_novig", "p_raw", "p_cal", "edge", "source", "source_id", "fp_logged_at", "map_fit"]
+PP_PRICE_FIELDS = ["captured_at", "date", "event_id", "player", "team", "opp", "market", "line", "side", "p_book_novig", "p_raw", "p_cal", "scheduled_at", "game_status", "source", "source_id", "fp_logged_at", "map_fit"]
 GRADE_FIELDS = ["date", "event_id", "tip", "player_id", "player", "team", "opp", "pos", "min_proj", "min_actual", "fp_mean", "fp_actual", "pit", "void", "void_reason",
                 "source", "market", "line", "p_raw", "p_cal", "p_book", "hit", "ll_v2", "ll_book", "logged_at", "captured_at"]
 ET = fp.ET
@@ -104,13 +108,13 @@ def load_recal():
     return read_json(RECAL, None)
 
 
-CLIP = (0.005, 0.995)
+CLIP = (0.05, 0.95)   # Amendment 1 (2026-10-28): was (0.005, 0.995)
 
 
 def pav_step(x, y):
-    """Pool-adjacent-violators isotonic regression returning the fitted STEP function: blocks as (x_lo, x_hi, mean y, n).
-    The step over block ranges is the isotonic regression itself; interpolating between block means (the ladder maps' display
-    convention) can ramp through sparse tail blocks and is not used here."""
+    """Pool-adjacent-violators isotonic regression returning the fitted STEP function: blocks as (x_lo, x_hi, mean y, n), y
+    unclipped (the clip is applied where the map is used). The step over block ranges is the isotonic regression itself;
+    interpolating between block means (the ladder maps' display convention) can ramp through sparse tail blocks and is not used."""
     order = np.argsort(x, kind="stable"); x, y = np.asarray(x, float)[order], np.asarray(y, float)[order]
     lo, hi, by, bn = [], [], [], []
     for xi, yi in zip(x, y):
@@ -119,7 +123,31 @@ def pav_step(x, y):
             n = bn[-2] + bn[-1]
             by[-2] = (by[-2] * bn[-2] + by[-1] * bn[-1]) / n; hi[-2] = hi[-1]; bn[-2] = n
             by.pop(); lo.pop(); hi.pop(); bn.pop()
-    return {"x_lo": [round(float(v), 5) for v in lo], "x_hi": [round(float(v), 5) for v in hi], "y": [round(float(np.clip(v, *CLIP)), 5) for v in by], "n": [int(v) for v in bn]}
+    return {"x_lo": [round(float(v), 5) for v in lo], "x_hi": [round(float(v), 5) for v in hi], "y": [round(float(v), 5) for v in by], "n": [int(v) for v in bn]}
+
+
+def merge_small_blocks(m, min_n=MIN_BLOCK):
+    """Amendment 1, 2c: after PAV, any block with n < min_n is merged into its nearest neighbour (by the x gap between the block
+    ranges; an end block into its only neighbour; a tie toward the lower block), the merged block taking the pooled hit rate.
+    Repeated, smallest block first, until every block has n >= min_n (or one block remains). No re-pooling for monotonicity:
+    the amendment does not ask for it, and `monotone` records whether the result still is."""
+    lo, hi, y, n = list(m["x_lo"]), list(m["x_hi"]), [float(v) for v in m["y"]], [int(v) for v in m["n"]]
+    merges = 0
+    while len(n) > 1 and min(n) < min_n:
+        i = int(np.argmin(n))
+        if i == 0:
+            j = 1
+        elif i == len(n) - 1:
+            j = i - 1
+        else:
+            j = i - 1 if (lo[i] - hi[i - 1]) <= (lo[i + 1] - hi[i]) else i + 1
+        a, b = min(i, j), max(i, j)
+        tot = n[a] + n[b]
+        y[a] = (y[a] * n[a] + y[b] * n[b]) / tot; hi[a] = hi[b]; n[a] = tot
+        del lo[b], hi[b], y[b], n[b]
+        merges += 1
+    return {"x_lo": lo, "x_hi": hi, "y": [round(v, 5) for v in y], "n": n, "y_cal": [round(float(np.clip(v, *CLIP)), 5) for v in y],
+            "merges": merges, "min_block": min_n, "monotone": bool(all(y[k] <= y[k + 1] + 1e-12 for k in range(len(y) - 1)))}
 
 
 def apply_step(m, p):
@@ -383,9 +411,18 @@ def _projections_at(logged_at, cache):
     if key in cache:
         return cache[key]
     root = Path(__file__).resolve().parent.parent
+    t = pd.Timestamp(logged_at)
+    doc, sha = None, None
     try:
-        sha = subprocess.run(["git", "log", "--format=%h", "-1", f"--before={logged_at}", "--", "docs/data/projections.json"], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
-        doc = json.loads(subprocess.run(["git", "show", f"{sha}:docs/data/projections.json"], cwd=root, capture_output=True, text=True, check=True).stdout) if sha else None
+        # Amendment 1 harness fix: the snapshot is the file whose own `updated` stamp is the latest at or before logged_at (the
+        # file written by the same run, committed a minute later). The last COMMIT before logged_at is the previous run's file,
+        # which for a day's first run is the previous slate and carries no flags for tonight's players.
+        shas = subprocess.run(["git", "log", "--format=%h", f"--since={(t - pd.Timedelta(hours=36)).isoformat()}", f"--until={(t + pd.Timedelta(hours=3)).isoformat()}",
+                               "--", "docs/data/projections.json"], cwd=root, capture_output=True, text=True, check=True).stdout.split()
+        for s in shas:   # newest first
+            d = json.loads(subprocess.run(["git", "show", f"{s}:docs/data/projections.json"], cwd=root, capture_output=True, text=True, check=True).stdout)
+            if d.get("updated") and pd.Timestamp(d["updated"]) <= t:
+                doc, sha = d, s; break
     except (subprocess.CalledProcessError, ValueError):
         doc = None
     cache[key] = (sha, {str(p["id"]): p for p in (doc or {}).get("players", [])}) if doc else (None, {})
@@ -403,7 +440,7 @@ def retro(out_path=RETRO):
     sel = params["selected"]; sdf, q = float(sel["sd_factor"]), float(sel["q"])
     pri = fp.load_priors()
     grade = pd.read_csv(fp.GRADE, dtype={"event_id": str, "player_id": str})
-    gl = grade[grade.line_source.isin(["underdog", "prizepicks"]) & grade.hit.notna()].copy()
+    gl = grade[grade.line_source.isin(["underdog", "prizepicks"]) & grade.hit.notna() & (grade.date >= FIT_DATES[0]) & (grade.date <= FIT_DATES[1])].copy()
     log = fp.last_pretip(pd.read_csv(fp.LOG, dtype={"event_id": str, "player_id": str}))
     log = log.set_index(["date", "event_id", "player_id"])
     df = bm.load_games()
@@ -481,8 +518,10 @@ def fit(retro_path=RETRO):
     R_all = pd.read_csv(retro_path, dtype={"event_id": str, "player_id": str})
     R = R_all[R_all.side == "higher"].drop_duplicates(["date", "event_id", "player_id", "source", "line"]).reset_index(drop=True)
     p, h = R.p_raw_v2.values.astype(float), R.hit.values.astype(int)
-    m = pav_step(p, h)
+    m_pav = pav_step(p, h)
+    m = merge_small_blocks(m_pav)
     pc = apply_step(m, p)
+    retro_sha = hashlib.sha256(Path(retro_path).read_bytes()).hexdigest()
     pg = (R.date + ":" + R.event_id + ":" + R.player_id).values
     def block(mask, label):
         d = R[mask]; pcm, hm = pc[mask], h[mask]
@@ -496,7 +535,9 @@ def fit(retro_path=RETRO):
     tab2, wm2, _, wo2, ok2 = pit_verdict(pit.pit_v2.dropna().values); tab1, wm1, _, wo1, ok1 = pit_verdict(pit.pit_v1_retro.dropna().values)
     out = {"rule_file": RULE, "fit_date": ts(now()), "n": int(len(R)), "n_rows_both_sides": int(len(R_all)), "n_player_games": int(len(pit)), "pair": params["selected"],
            "sources": {s: int((R.source == s).sum()) for s in ("UD", "PP")}, "dates": [str(R.date.min()), str(R.date.max())],
-           "map": m, "method": "pool-adjacent-violators isotonic regression of hit on replayed v2 raw P(over), one row per line (over side); applied as the fitted step function over block ranges (step at the midpoint between adjacent blocks, end blocks extended), clipped to [0.005, 0.995]",
+           "map": m, "map_pav_unmerged": m_pav, "retro_file": str(Path(retro_path).name), "retro_sha256": retro_sha, "amendment": "Amendment 1 (2026-10-28): minimum block n >= 20, clip [0.05, 0.95]; calibration verdict at 800",
+           "clip": list(CLIP), "min_block": MIN_BLOCK, "fit_dates": list(FIT_DATES), "gate_start": "the first slate priced by this map; rows logged or priced earlier carry gate = pre-A1 and are excluded",
+           "method": f"pool-adjacent-violators isotonic regression of hit on replayed v2 raw P(over), one row per line (over side); blocks with n < {MIN_BLOCK} merged into the nearest neighbour with the pooled hit rate (Amendment 1); applied as the step function over block ranges (step at the midpoint between adjacent blocks, end blocks extended), clipped to [{CLIP[0]}, {CLIP[1]}]",
            "inputs": "log-time only: v1 log minutes, projections.json flags at log time (absent starters, Q), box scores dated before each slate",
            "combined": block(np.ones(len(R), bool), "UD + PP"), "by_source": {s: block((R.source == s).values, {"UD": "Underdog", "PP": "PrizePicks"}[s]) for s in ("UD", "PP")},
            "sanity_slice": {"note": "rule 4: the v1 live record replayed with v2 (and v1) distributions; sanity only, never the verdict",
@@ -508,6 +549,9 @@ def fit(retro_path=RETRO):
            "frozen": "for the entire forward gate; no refits during collection (rule 2c)"}
     write_json(RECAL, out)
     c = out["combined"]
+    print(f"[fp-v2 fit] retro {retro_path} sha256 {retro_sha}; PAV {len(m_pav['x_lo'])} blocks -> {len(m['x_lo'])} after {m['merges']} merges (monotone {m['monotone']})")
+    for lo_, hi_, y_, yc_, n_ in zip(m["x_lo"], m["x_hi"], m["y"], m["y_cal"], m["n"]):
+        print(f"    raw P(over) {lo_:.4f}-{hi_:.4f} -> {yc_:.4f} (pooled {y_:.4f}), n {n_}")
     print(f"[fp-v2 fit] map frozen: n {out['n']} lines ({out['sources']}) over {out['n_player_games']} player-games, {len(m['x_lo'])} blocks; "
           f"gap post-map combined {c['gap_post_map']} CI {c['gap_ci']}; UD {out['by_source']['UD']['gap_post_map']} CI {out['by_source']['UD']['gap_ci']}; "
           f"PP {out['by_source']['PP']['gap_post_map']} CI {out['by_source']['PP']['gap_ci']}; logloss raw {c['logloss_raw']} -> cal {c['logloss_cal']}")
@@ -588,17 +632,28 @@ def snapshot():
             skipped += 1; continue
         v = p["fp_v2"]
         rows.append({"date": P["date"], "event_id": g["event_id"], "tip": ts(tip), "player_id": p["id"], "player": p["name"], "team": p["team"], "opp": p["opp"], "pos": p["pos"],
-                     "min": p["min"], "gp": v["gp"], "w": v["w"], "sd_factor": v["sd_factor"], "q": v["q_mix"], "fp_mean": v["mean"], "fp_sd": v["sd"], "fp_q": json.dumps(v["q"]), "logged_at": ts(t)})
+                     "min": p["min"], "gp": v["gp"], "w": v["w"], "sd_factor": v["sd_factor"], "q": v["q_mix"], "fp_mean": v["mean"], "fp_sd": v["sd"], "fp_q": json.dumps(v["q"]), "logged_at": ts(t), "gate": GATE_EPOCH})
     if rows:
         fp.append(LOG, LOG_FIELDS, rows)
     print(f"[fp-v2] appended {len(rows)} rows for {P['date']} ({skipped} players skipped: game already tipped)")
     return len(rows)
 
 
-def _last_pretip_log():
+def _pretip_log():
+    """Every pre-tip v2 log row (logged before its game's tip), with `_t` = logged_at as a UTC timestamp."""
     if not LOG.exists():
         return None
-    return fp.last_pretip(pd.read_csv(LOG, dtype={"event_id": str, "player_id": str}))
+    log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
+    log["_t"] = pd.to_datetime(log.logged_at, utc=True)
+    return log[log._t < pd.to_datetime(log.tip, utc=True)]
+
+
+def _row_at_capture(d, captured_at):
+    """Amendment 1 pricing timing: the latest log row with logged_at <= captured_at, or None (a capture that precedes every row
+    for the player-game is not priced by this run; the next run prices the next capture)."""
+    t = captured_at if hasattr(captured_at, "tzinfo") else fp.parse_ts(captured_at)
+    d = d[d._t <= pd.Timestamp(t)]
+    return None if d.empty else d.sort_values("_t").iloc[-1]
 
 
 def price(snapshot_path):
@@ -610,14 +665,15 @@ def price(snapshot_path):
     nba = [e for e in snap.get("entries") or [] if (e.get("league") or "").upper() == "NBA"]
     P = read_json(SITE_DATA / "projections.json", None) or {"date": None, "games": [], "players": []}
     t = now(); ok, why = fp.capture_check(cap, P.get("date"), t)
-    log = _last_pretip_log()
+    log = _pretip_log()
+    map_fit = (recal or {}).get("fit_date")
     def match_game(e):
         a, b = fp.team_abbr(e.get("team")), fp.team_abbr(e.get("opponent"))
         for g in P["games"]:
             if {fp.team_abbr(g["home"]), fp.team_abbr(g["away"])} == {a, b}:
                 return g
         return None
-    rows, out, unmatched, tipped = [], [], 0, 0
+    rows, out, unmatched, tipped, awaiting = [], [], 0, 0, 0
     fp_entries = [e for e in nba if (e.get("market") or "").strip().lower() in fp.FP_MARKETS]
     for e in fp_entries if (ok and log is not None) else []:
         pid = e.get("platform_ids") or {}
@@ -636,7 +692,9 @@ def price(snapshot_path):
         d = log[(log.date == P["date"]) & (log.event_id == g["event_id"]) & (log.player.map(norm_name) == key)]
         if d.empty:
             continue
-        row = d.sort_values("logged_at").iloc[-1]
+        row = _row_at_capture(d, cap)
+        if row is None:
+            awaiting += 1; continue   # every v2 row for this player-game was logged after the capture (Amendment 1 timing)
         c = fp.cdf_from_q(json.loads(row.fp_q), line); p_over = 1 - c; p_over_cal = cal(recal, p_over)
         pr = pid.get("prices") or {}
         dec = {s: (pr.get(s) or {}).get("decimal") for s in ("higher", "lower")}; am = {s: (pr.get(s) or {}).get("american") for s in ("higher", "lower")}
@@ -649,7 +707,7 @@ def price(snapshot_path):
                          "mult": m, "decimal": decs, "american": am.get(side), "convention": conv, "breakeven": round(be, 4) if be else None,
                          "decimal_higher": dec["higher"], "decimal_lower": dec["lower"], "american_higher": am["higher"], "american_lower": am["lower"],
                          "p_book_novig": round(book if side == "higher" else 1 - book, 4) if book is not None else None,
-                         "p_raw": round(p_raw, 4), "p_cal": round(p_c, 4), "edge": round(p_c - be, 4) if be else None, "source": "UD", "source_id": e.get("source_id"), "fp_logged_at": row.logged_at})
+                         "p_raw": round(p_raw, 4), "p_cal": round(p_c, 4), "edge": round(p_c - be, 4) if be else None, "source": "UD", "source_id": e.get("source_id"), "fp_logged_at": row.logged_at, "map_fit": map_fit})
         out.append({"date": P["date"], "event_id": g["event_id"], "player": e["player"], "team": tm, "opp": op, "line": line, "p_raw": round(p_over, 4), "p_cal": round(p_over_cal, 4),
                     "p_book_novig": round(book, 4) if book is not None else None, "decimal_higher": dec["higher"], "decimal_lower": dec["lower"], "fp_mean_v2": float(row.fp_mean), "source_id": e.get("source_id")})
     n_new = 0
@@ -659,11 +717,12 @@ def price(snapshot_path):
         else:
             fp.append(PRICES, PRICE_FIELDS, rows); n_new = len(rows)
     doc = {"captured_at": cap, "priced_at": ts(t), "slate_date": P.get("date"), "capture_ok": ok, "capture_check": why, "fp_entries": len(fp_entries), "lines_priced": len(out), "new_rows": n_new,
-           "unmatched_entries": unmatched, "tipped_entries": tipped, "pair": (load_params() or {}).get("selected"), "map": {"fit_date": recal.get("fit_date"), "n": recal.get("n")} if recal else None,
+           "unmatched_entries": unmatched, "tipped_entries": tipped, "awaiting_capture_after_snapshot": awaiting, "pair": (load_params() or {}).get("selected"), "map": {"fit_date": recal.get("fit_date"), "n": recal.get("n")} if recal else None,
            "label": LABEL, "rule_file": RULE, "lines": sorted(out, key=lambda r: -(r["p_cal"] - (r["p_book_novig"] or 0.5)))[:400],
-           "note": "v2 raw P(over) from the last pre-tip v2 log row; calibrated through the frozen isotonic map (data/fp_v2_recal.json); both sides' prices recorded; the book's no-vig P(over) is the market-test baseline."}
+           "note": "v2 raw P(over) from the latest v2 log row logged at or before the board capture (Amendment 1 timing); calibrated through the frozen isotonic map (data/fp_v2_recal.json); both sides' prices recorded; the book's no-vig P(over) is the market-test baseline."}
     write_json(PRICING, doc)
-    print(f"[fp-v2] board {cap} ({'ok' if ok else 'REFUSED'}: {why}): {len(fp_entries)} FP entries -> {len(out)} lines priced, {n_new} new rows; {unmatched} not on the slate, {tipped} tipped")
+    print(f"[fp-v2] board {cap} ({'ok' if ok else 'REFUSED'}: {why}): {len(fp_entries)} FP entries -> {len(out)} lines priced, {n_new} new rows; {unmatched} not on the slate, {tipped} tipped, "
+          f"{awaiting} awaiting a capture after the v2 snapshot")
     return doc
 
 
@@ -671,8 +730,9 @@ def price_pp(path=fp.PP_FILE):
     """PrizePicks standard Fantasy Score lines (the scraper hook's repo copy), priced with v2; baseline 0.5 (rule 5)."""
     recal = load_recal(); t = now()
     p = Path(path)
-    if not p.exists() or _last_pretip_log() is None:
+    if not p.exists() or _pretip_log() is None:
         print("[fp-v2] prizepicks: no copy or no v2 log yet"); return 0
+    map_fit = (recal or {}).get("fit_date")
     cp = json.load(open(p, encoding="utf-8")); cap = cp.get("captured_at")
     try:
         if (t - fp.parse_ts(cap)).total_seconds() / 3600 > fp.PP_MAX_AGE_H:
@@ -680,8 +740,8 @@ def price_pp(path=fp.PP_FILE):
     except Exception:  # noqa: BLE001
         print("[fp-v2] prizepicks: copy carries no capture time"); return 0
     fs = [r for r in cp.get("lines") or [] if str(r.get("odds_type") or "").strip().lower() == "standard" and str(r.get("stat_type") or "").strip().lower() in fp.FP_MARKETS]
-    snap = _last_pretip_log(); idx = {(r.date, norm_name(r.player)): r for r in snap.itertuples()}
-    last = {}
+    snap = _pretip_log(); snap = snap.assign(_key=snap.player.map(norm_name))
+    last = {}; awaiting = 0
     for r in fs:
         try:
             sched = fp.parse_ts(r["scheduled_at"])
@@ -697,9 +757,12 @@ def price_pp(path=fp.PP_FILE):
             lcap_dt = fp.parse_ts(cap)
         if lcap_dt >= sched:
             continue
-        row = idx.get((date, key))
-        if row is None:
+        d = snap[(snap.date == date) & (snap._key == key)]
+        if d.empty:
             continue
+        row = _row_at_capture(d, lcap_dt)
+        if row is None:
+            awaiting += 1; continue   # Amendment 1 timing: no v2 row logged at or before this capture
         ta = fp.team_abbr(r.get("team"))
         if ta and ta != fp.team_abbr(row.team):
             continue
@@ -711,7 +774,7 @@ def price_pp(path=fp.PP_FILE):
         for side, p_raw, p_c in (("higher", p_over, p_over_cal), ("lower", c, 1 - p_over_cal)):
             rows.append({"captured_at": ts(lcap_dt), "date": date, "event_id": row.event_id, "player": r.get("player"), "team": row.team, "opp": row.opp, "market": r.get("stat_type"), "line": line,
                          "side": side, "p_book_novig": 0.5, "p_raw": round(p_raw, 4), "p_cal": round(p_c, 4), "scheduled_at": ts(sched), "game_status": r.get("game_status"), "source": "PP",
-                         "source_id": r.get("source_id"), "fp_logged_at": row.logged_at})
+                         "source_id": r.get("source_id"), "fp_logged_at": row.logged_at, "map_fit": map_fit})
     new = rows
     if rows and PP_PRICES.exists():
         old = pd.read_csv(PP_PRICES, dtype=str, usecols=["captured_at", "source_id", "side", "player", "date"])
@@ -719,7 +782,7 @@ def price_pp(path=fp.PP_FILE):
         new = [x for x in rows if (x["captured_at"], str(x["source_id"] or ""), x["side"], x["player"], x["date"]) not in seen]
     if new:
         fp.append(PP_PRICES, PP_PRICE_FIELDS, new)
-    print(f"[fp-v2] prizepicks: {len(fs)} standard FP rows in the copy -> {len(rows) // 2} lines priced, {len(new)} new rows")
+    print(f"[fp-v2] prizepicks: {len(fs)} standard FP rows in the copy -> {len(rows) // 2} lines priced, {len(new)} new rows, {awaiting} awaiting a capture after the v2 snapshot")
     return len(new)
 
 
@@ -727,16 +790,26 @@ def grade():
     """Rule 5: one row per line (player, game, source, line; the last pre-tip capture; over side graded, a push is void; asserted),
     rule 2d voids (0 minutes, or absent from a box score that exists), calibration verdict at 200 combined lines on calibrated
     P(over), market test at 800 lines (paired log loss vs the book, player-game cluster bootstrap CI), raw PIT as a diagnostic."""
-    snap = _last_pretip_log()
-    if snap is None:
+    if not LOG.exists():
         if PERF.exists():
             PERF.unlink()
         print("[fp-v2] no v2 log yet"); return
     recal = load_recal(); params = load_params()
+    map_fit = (recal or {}).get("fit_date")
+    full = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
+    if "gate" not in full.columns:
+        full["gate"] = PRE_GATE
+    pre = full[full.gate != GATE_EPOCH]          # Amendment 1 restart: rows logged before the refit, excluded from both verdicts
+    snap = fp.last_pretip(full[full.gate == GATE_EPOCH])
     box = pd.read_csv(DATA_DIR / "player_games.csv", dtype={"event_id": str, "player_id": str})
     box_events = set(box.event_id); box = box.set_index(["event_id", "player_id"])
     ud = pd.read_csv(PRICES, dtype={"event_id": str}) if PRICES.exists() else pd.DataFrame(columns=PRICE_FIELDS)
     pp = pd.read_csv(PP_PRICES, dtype={"event_id": str}) if PP_PRICES.exists() else pd.DataFrame(columns=PP_PRICE_FIELDS)
+    for df_ in (ud, pp):
+        if "map_fit" not in df_.columns:
+            df_["map_fit"] = PRE_GATE
+    pre_prices = {"UD": int((ud.map_fit != map_fit).sum()), "PP": int((pp.map_fit != map_fit).sum())}
+    ud = ud[ud.map_fit == map_fit]; pp = pp[pp.map_fit == map_fit]   # only prices through the frozen (refit) map count
     rows, pit = [], []
     for r in snap.itertuples():
         in_box = (r.event_id, r.player_id) in box.index
@@ -785,8 +858,23 @@ def grade():
         bk = fp.buckets(p_, h_) if len(d) else fp.buckets(np.array([]), np.array([]))
         o = {"n": int(len(d)), "hits": int(h_.sum()) if len(d) else 0, "hit_rate": round(float(h_.mean()), 4) if len(d) else None, "mean_p_cal": round(float(p_.mean()), 4) if len(d) else None,
              "mean_p_raw": round(float(d.p_raw.astype(float).mean()), 4) if len(d) else None, "by_decile": bk}
-        o["gate" if gate else "decile_read"] = fp.decile_verdict(bk, len(d))
+        o["gate" if gate else "decile_read"] = cal_verdict(bk, len(d))
         return o
+    def cal_verdict(bk, n_total):
+        """Rule 5 as amended (Amendment 1): the decile table is a checkpoint at CHECKPOINT_N lines (no verdict); the calibration
+        verdict renders at GATE_N = 800 on the same bars (weighted |gap| <= 0.05 over deciles with n >= MIN_DECILE, none > 0.10)."""
+        use = [b for b in bk if b["n"] >= MIN_DECILE]
+        stats = {}
+        if use:
+            wmae = sum(b["n"] * abs(b["gap"]) for b in use) / sum(b["n"] for b in use); worst = max(abs(b["gap"]) for b in use)
+            stats = {"weighted_mean_abs_gap": round(wmae, 4), "worst_gap": round(worst, 4)}
+        if n_total < CHECKPOINT_N:
+            return {"status": "collecting", "graded": int(n_total), "needed": GATE_N, "checkpoint_at": CHECKPOINT_N}
+        if n_total < GATE_N:
+            return {"status": "checkpoint", "graded": int(n_total), "needed": GATE_N, "checkpoint_at": CHECKPOINT_N, **stats, "note": "decile table reported at 200+ lines as a checkpoint only; no verdict until 800 (Amendment 1)"}
+        if not use:
+            return {"status": "collecting", "graded": int(n_total), "needed": GATE_N, "note": "no decile with 20+ rows"}
+        return {"status": "PASS" if stats["weighted_mean_abs_gap"] <= WMAE_BAR and stats["worst_gap"] <= WORST_BAR else "FAIL", "graded": int(n_total), "needed": GATE_N, **stats}
     def market_block(d, label):
         m = d[d.ll_book.notna()]
         if not len(m):
@@ -801,6 +889,10 @@ def grade():
     pit_arr = np.array(pit); tab, wm, _, wo, _ = pit_verdict(pit_arr) if len(pit_arr) else ([], None, None, None, False)
     pg = R.drop_duplicates(["date", "event_id", "player_id"])
     doc = {"generated": ts(now()), "rule_file": RULE, "label": LABEL, "pair": (params or {}).get("selected"), "map": {"fit_date": recal.get("fit_date"), "n": recal.get("n")} if recal else None,
+           "gate_epoch": GATE_EPOCH, "amendment": (recal or {}).get("amendment"),
+           "excluded_pre_amendment": {"log_rows": int(len(pre)), "player_games": int(pre.drop_duplicates(["date", "event_id", "player_id"]).shape[0]), "slates": sorted(set(pre.date)),
+                                      "ud_price_rows": pre_prices["UD"], "pp_price_rows": pre_prices["PP"],
+                                      "note": "logged or priced before the Amendment 1 refit (2026-10-28): excluded from both verdicts; the forward gate starts with the first slate priced by the refit map"},
            "player_games": int(len(pg)), "void": int(pg.void.sum()), "void_reasons": dict(Counter(pg[pg.void == 1].void_reason)), "pending_in_log": int(len(snap) - len(pg)),
            "lines": {**cal_block(g, True), "scope": "combined UD + PP, one row per line (over side), calibrated P(over): the calibration verdict (rule 5)", "sources": {s: int((g.source == s).sum()) for s in ("UD", "PP")}},
            "by_source": {s: {**cal_block(g[g.source == s], False), "label": {"UD": "Underdog", "PP": "PrizePicks"}[s]} for s in ("UD", "PP")},
@@ -811,11 +903,13 @@ def grade():
            "method": ["FP v2 = v1's joint sim with rule 2a (minutes sd x factor, short-night mixture) and 2b (rates blended toward the current season, w = GP/(GP+10)); P(over) through a frozen isotonic map fitted on the v2 replay of the graded v1 lines (2c).",
                       "One row per line: (player, game, source, line), the last pre-tip capture, over side graded; a push is void; the grader asserts uniqueness and fails loudly.",
                       "Rule 2d: a logged player-game with 0 minutes, or absent from a box score that exists, is void and leaves the pending set.",
-                      "Calibration verdict at 200 combined lines (weighted |gap| <= 0.05, no decile > 0.10) on calibrated P(over); UD / PP splits displayed. Market test at 800 lines: paired log loss vs the book (UD no-vig, PP 0.5), player-game cluster bootstrap CI must exclude 0 in v2's favour.",
+                      "Calibration verdict at 800 combined lines (weighted |gap| <= 0.05, no decile > 0.10) on calibrated P(over), with a no-verdict checkpoint table at 200 (Amendment 1, 2026-10-28); UD / PP splits displayed. Market test at 800 lines: paired log loss vs the book (UD no-vig, PP 0.5), player-game cluster bootstrap CI must exclude 0 in v2's favour.",
+                      "Amendment 1 (2026-10-28): isotonic blocks with n < 20 merged into the nearest neighbour (pooled hit rate), calibrated P(over) clipped to [0.05, 0.95]; a captured line is priced only from a v2 row logged at or before the capture. Rows logged or priced before the refit are marked pre-A1 and excluded; the gate restarted with the first slate priced by the refit map.",
                       "Paper study until both verdicts render. No tuning on these results, ever."]}
     write_json(PERF, doc)
     print(f"[fp-v2] graded {len(pg)} player-games ({int(pg.void.sum())} void {doc['void_reasons']}), {len(g)} lines (UD {doc['lines']['sources']['UD']}, PP {doc['lines']['sources']['PP']}; "
-          f"calibration {doc['lines']['gate']['status']}, market {doc['market_test']['combined']['status']}), PIT mean {doc['pit']['mean']}")
+          f"calibration {doc['lines']['gate']['status']}, market {doc['market_test']['combined']['status']}), PIT mean {doc['pit']['mean']}; "
+          f"excluded pre-amendment: {len(pre)} log rows, UD {pre_prices['UD']} / PP {pre_prices['PP']} price rows")
     return doc
 
 
