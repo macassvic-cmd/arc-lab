@@ -127,6 +127,8 @@ ul.notes li{margin:4px 0}
 
   <h2 id="fbgateh">First basket v2: attempt-based model gate <span>fit 2024-25, graded 2025-26 against uniform 1/10 and the v1 makes-only model &middot; locked rule &middot; no prices</span></h2>
   <div id="fbgate"><div class="empty">Not run yet. Rule: backtests/first_basket_v2_rule.md; script: scripts/first_basket_model.py.</div></div>
+  <h2 id="who2h">First basket WHO-model v2: offensive-rebound continuation, pre-ship check <span>fit 2024-25, evaluated 2025-26 paired per game against the live model (who-v1) &middot; locked rule &middot; no prices</span></h2>
+  <div id="who2"><div class="empty">Not run yet. Rule: backtests/first_basket_who_v2_rule.md; script: scripts/first_basket_who_v2.py.</div></div>
 
   <section id="v3cov-wrap">
     <h2>v3 data foundation: coverage</h2>
@@ -352,6 +354,19 @@ function renderFB(R){
     <p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"&ndash;"}. Generated ${R.generated}.</p>`;
 }
 fetch("data/first_basket_gate.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderFB).catch(()=>{});
+function renderWho2(R){
+  if(!R) return;
+  const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, ci=c=>c?` [${c[0]}, ${c[1]}]`:"", E=R.eval, L=E.log_loss, B1=R.bar1, B2=R.bar2, C=R.fit.continuation, pf=x=>x?'<span class="pos">PASS</span>':'<span class="neg">FAIL</span>';
+  const line=x=>x.starts?`<tr><td>${x.player}</td><td>${x.starts}</td><td>${x.first_fgs}</td><td>${pct(x.actual_rate)}</td><td>${pct(x.mean_p_who_v1)}</td><td>${pct(x.mean_p_who_v2)}</td><td>${pct(x.mean_p_makes_only)}</td><td>${num(x.abs_err_who_v1,4)}</td><td>${num(x.abs_err_who_v2,4)}</td></tr>`:`<tr><td>${x.player}</td><td colspan="8">no evaluation-set starts</td></tr>`;
+  const mix=m=>`rim ${pct(m.rim)} / mid ${pct(m.mid)} / 3 ${pct(m["3"])}`;
+  $("who2").innerHTML = `<div class="stats">${[card(R.decision,R.decision_text),card(num(L.who_v2,4),`who-v2 log loss, 2025-26 (${E.games.toLocaleString()} games)`),card(num(L.who_v1,4),"who-v1 (live) log loss, same games"),card(num(L.makes_only,4),"makes-only baseline"),card(pct(E.top1.who_v2),`top pick scored first (who-v1 ${pct(E.top1.who_v1)})`),card(pct(E.top3.who_v2),`scorer in the top 3 (who-v1 ${pct(E.top3.who_v1)})`)].join("")}</div>
+    <p class="sub"><b>BAR 1</b> ${pf(B1.pass)}: who-v2 &minus; who-v1 log-loss gain ${num(B1.gain_nats,4)} nats/game (needs &ge; ${B1.threshold}), game-bootstrap 95% CI${ci(B1.ci95_game_bootstrap)} (${B1.resamples.toLocaleString()} resamples, seed ${B1.seed}; must exclude 0).</p>
+    <p class="sub"><b>BAR 2</b> ${pf(B2.pass)}: putback class (${B2.class_definition}) mean |mean P &minus; actual rate per start| who-v1 ${num(B2.mean_abs_err_who_v1,4)} vs who-v2 ${num(B2.mean_abs_err_who_v2,4)} (who-v2 must be strictly smaller).</p>
+    <table><thead><tr><th>Player (class, then report-only)</th><th>Starts</th><th>First FGs</th><th>Actual rate</th><th>Mean P who-v1</th><th>Mean P who-v2</th><th>Mean P makes-only</th><th>|err| who-v1</th><th>|err| who-v2</th></tr></thead><tbody>${B2.class.map(line).join("")}${R.report_only.map(line).join("")}</tbody></table>
+    <p class="sub">Continuation tables fitted on 2024-25 (${C.n_games.toLocaleString()} games): p_cont = ${C.p_cont} (${C.n_cont} of ${C.n_later} attempts after the first stayed with the same team; who-v1's o is the same quantity), continuation mix ${mix(C.mix_league)} (${C.n_cont_starters} starter attempts; by position C ${mix(C.mix_pos.C)}, SF ${mix(C.mix_pos.SF)}, SG ${mix(C.mix_pos.SG)}), continuation make rates rim ${pct(C.M_cont.rim)} / mid ${pct(C.M_cont.mid)} / 3 ${pct(C.M_cont["3"])} (overall ${pct(C.make_cont_overall)}); shooter prior ${C.prior} pseudo-attempts. The top pick changed in ${E.top_pick_changed_games.toLocaleString()} of ${E.games.toLocaleString()} games.</p>
+    <p class="sub">Rule ${R.rule_file} committed ${R.rule_commit||"&ndash;"}. Generated ${R.generated}. ${R.fit.note}</p>`;
+}
+fetch("data/first_basket_who_v2_preship.json", {cache:"no-store"}).then(r=>r.ok?r.json():null).then(renderWho2).catch(()=>{});
 function renderV3(R){
   if(!R) return;
   const card=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`, n=x=>x==null?"–":Number(x).toLocaleString(), sh=x=>x==null?"–":(100*x).toFixed(1)+"%";
