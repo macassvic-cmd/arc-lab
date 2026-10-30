@@ -70,6 +70,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py grade
+      - name: Ladder Tonight graded overlay (display only; docs/data/ladder_graded.json from the grader's published rows + data/strip_log.csv + data/main_lines.csv)
+        id: ladder_graded
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python ladder_graded.py
       - name: PrizePicks FP pricing (repo copy data/pp_fantasy_lines.json; standard lines, pre-tip captures only; a copy older than 26 h = no PP lines)
         id: fp_pp_price
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
@@ -110,6 +115,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python main_lines.py
+      - name: Ladder Tonight strip sidecar (display only; data/strip_log.csv: each lined card's pre-tip P(over), same board capture)
+        id: strip_log
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python strip_log.py
       - name: Fantasy-points log snapshot (append-only, pre-tip rows only; frozen data/fp_priors.json)
         id: fp_snap
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

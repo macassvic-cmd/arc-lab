@@ -84,6 +84,17 @@ tr:last-child td{border-bottom:0}
 .lc .ladder span small{display:block;font-size:10px;font-weight:500;opacity:.85}
 .lc .ladder span.tgt{outline:2px solid var(--ink);outline-offset:-2px}
 .stripEmpty{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;color:var(--muted);font-size:14px;margin:0}
+.stripHead .fin{color:var(--ink);font-weight:700}
+.lc.graded{border-left-color:var(--line)}
+.lc.graded.over{border-left-color:var(--make)}.lc.graded.under{border-left-color:var(--miss)}
+.lc .final{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:4px 0 6px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.lc .final b{font:700 16px var(--display);color:var(--ink);margin-left:2px}
+.lc .vd{font:700 12px var(--body);border-radius:999px;padding:2px 9px;color:#fff;white-space:nowrap}
+.lc .vd.over{background:var(--make)}.lc .vd.under{background:var(--miss)}.lc .vd.push{background:var(--ink);color:var(--bg)}.lc .vd.void{background:var(--muted)}
+.lc .ladder span.hit{background:var(--make)!important;color:#fff!important}
+.lc .ladder span.miss{background:var(--chip)!important;color:var(--muted)!important;opacity:.55;text-decoration:line-through}
+.lc .ladder span.nog{background:var(--chip)!important;color:var(--muted)!important;opacity:.5}
+.lc.void{opacity:.8;border-left-color:var(--muted)}.lc.void .name{color:var(--muted)}
 .fpwrap{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 #tf{table-layout:fixed;width:100%}
 #tf th,#tf td{padding:7px 8px;overflow:hidden;text-overflow:ellipsis}
@@ -246,7 +257,7 @@ if(["threes","props","firstbasket","fantasy","defense","results"].includes(locat
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
-let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null;   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
+let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null;   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -303,7 +314,47 @@ function sortable(table, cols, key, set){
 
 const LADDER_RUNGS = {tpm:[3,4,5,6,7], pts:[10,15,20,25,30], ast:[4,6,8,10], reb:[6,8,10,12]};
 const STAT_LABEL = {tpm:"3PM", pts:"PTS", reb:"REB", ast:"AST"};
+function gradedSlate(){
+  // Display only (2026-10-30). The graded overlay replaces the pre-tip strip when the slate it shows is final and graded: tonight's own
+  // slate, or the previous one until the new slate has a pre-tip strip (an Underdog-lined ladder row). ?graded=YYYY-MM-DD forces a date.
+  if(!LG || !LG.dates) return null;
+  const q = new URLSearchParams(location.search).get("graded");
+  if(q && LG.dates[q] && LG.dates[q].final) return LG.dates[q];
+  const dates = Object.keys(LG.dates).filter(d => LG.dates[d].final).sort();
+  if(!dates.length || !P) return null;
+  const last = dates[dates.length-1];
+  if(P.date === last) return LG.dates[last];
+  const anyPriced = active().some(p => Object.keys(STAT_LABEL).some(st => S.lines[`${norm(p.name)}:${st}`]!==undefined));
+  return (P.date > last && !anyPriced) ? LG.dates[last] : null;
+}
+function stripCards(G, stat){
+  // The pre-tip ranking, applied to the recorded pre-tip P(over): edge >= +5 pts and model >= 55% vs the break-even, top 8 by edge.
+  const be = S.be/100;
+  return (G.cards||[]).filter(c => c.stat===stat && c.p_over - be >= 0.05 && c.p_over >= 0.55).sort((a,b)=> b.p_over-a.p_over).slice(0,8);
+}
+function stripRecord(cards){
+  const g = cards.filter(c => c.status==="graded");
+  return {w: g.filter(c => c.main==="OVER").length, l: g.filter(c => c.main==="UNDER").length, push: g.filter(c => c.main==="PUSH").length,
+          rh: g.reduce((a,c)=> a + c.rungs.filter(r=>r.hit).length, 0), rn: g.reduce((a,c)=> a + c.rungs.length, 0), v: cards.length - g.length};
+}
+function gradedStrip(el, stat, G){
+  const be = S.be/100, label = STAT_LABEL[stat] || stat.toUpperCase();
+  const rows = stripCards(G, stat), R = stripRecord(rows);
+  const T = Object.keys(STAT_LABEL).map(st => stripRecord(stripCards(G, st))).reduce((a,r)=> ({w:a.w+r.w, l:a.l+r.l, rh:a.rh+r.rh, rn:a.rn+r.rn, v:a.v+r.v}), {w:0,l:0,rh:0,rn:0,v:0});
+  const day = new Date(G.date+"T12:00:00").toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+  const fmtN = x => x==null ? "–" : (Number.isInteger(x) ? String(x) : x.toFixed(1));
+  const head = `<div class="stripHead">Ladder tonight <span><span class="fin">FINAL · ${day}</span> · ${label}: main lines ${R.w}-${R.l}${R.push?`-${R.push}`:""}, rungs ${R.rh}/${R.rn}${R.v?`, ${R.v} void`:""} · all stats: main lines ${T.w}-${T.l}, rungs ${T.rh}/${T.rn}${T.v?`, ${T.v} void`:""} · graded from the ladder log; cards ranked as before tip (edge ≥ +5 pts, model ≥ 55% vs the ${S.be}% break-even)</span></div>`;
+  if(!rows.length){ el.innerHTML = head + `<p class="stripEmpty">No ${label} cards cleared the bar on this slate.</p>`; return; }
+  el.innerHTML = head + `<div class="stripRow">${rows.map(c=>{
+    const edge = c.p_over - be, v = c.status!=="graded", cls = v ? "void" : c.main.toLowerCase();
+    const verdict = v ? `<span class="vd void">VOID</span>` : `<span class="vd ${cls}">${c.main==="OVER"?"✓ OVER":c.main==="UNDER"?"✗ UNDER":"PUSH"}</span>`;
+    return `<div class="lc graded ${cls}" data-player="${c.player}" data-line="${c.line}" data-po="${c.p_over.toFixed(4)}" data-edge="${edge.toFixed(4)}" data-status="${c.status}">
+    <span class="name">${c.player}</span><div class="meta">${c.pos} ${c.team} ${c.home?"vs":"@"} ${c.opp} · ${label} · pre-tip model ${pct(c.p_over)}, edge +${(100*edge).toFixed(1)}</div>
+    <div class="final"><span>${label} — Actual <b>${v?"DNP":fmtN(c.actual)}</b> · Line <b>${c.line}</b></span>${verdict}</div>
+    <span class="ladder">${v ? `<span class="nog" title="void: no minutes, not graded"><small>void</small>–</span>` : c.rungs.map(r=>`<span class="${r.hit?"hit":"miss"}${r.rung===Math.ceil(c.line)?" tgt":""}" title="${r.rung}+ ${label}: ${r.hit?"hit":"miss"} (actual ${fmtN(c.actual)})"><small>${r.rung}+ ${r.hit?"✓":"✗"}</small>${pct(r.p)}</span>`).join("")}</span></div>`;}).join("")}</div>`;
+}
 function ladderStrip(el, stat, rungs){
+  const G = gradedSlate(); if(G){ gradedStrip(el, stat, G); return; }
   // Display only. Same inputs the grid below uses: the main Underdog line (S.lines), P(over) = over(pmf, line), edge = P(over) minus the
   // break-even % from the Threes tab's input (S.be, the only price field these tabs read), rung values = the grid's ladder cells.
   const be = S.be/100, label = STAT_LABEL[stat] || stat.toUpperCase();
@@ -570,7 +621,7 @@ function freshness(L){
 
 async function boot(){
   [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
-  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null);
+  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null);
   S.lines = {};
   freshness(L);
   for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
@@ -583,7 +634,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); LG = await load("data/ladder_graded.json", LG); render(); }, 60000);
 </script>
 </body>
 </html>
