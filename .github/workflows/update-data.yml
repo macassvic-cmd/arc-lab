@@ -184,4 +184,31 @@ jobs:
           git add data docs/data
           git diff --cached --quiet && exit 0
           git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          # A data commit that does not land must never let this run report success (2026-10-30: run 41108710651 graded the slate,
+          # hit "CONFLICT (content): Merge conflict in data/health_state.json" on `git pull --rebase`, left the commit unpushed and
+          # exited 0; the page served the previous day's slate with every light green). Bounded: 3 attempts, then the job FAILS.
+          # Conflicts are between generated files: data/health_state.json belongs to the health workflow (keep upstream = --ours in a
+          # rebase); every other conflicted file is this run's own output (keep this commit = --theirs).
+          for i in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              for f in $(git diff --name-only --diff-filter=U); do
+                if [ "$f" = "data/health_state.json" ]; then git checkout --ours -- "$f"; else git checkout --theirs -- "$f"; fi
+                git add -- "$f"
+              done
+              if ! GIT_EDITOR=true git rebase --continue; then
+                echo "::warning::rebase could not be resolved on attempt $i; aborting and retrying"
+                git rebase --abort || true
+                sleep 5
+                continue
+              fi
+            fi
+            if git push origin HEAD:main; then
+              echo "data commit landed on attempt $i: $(git rev-parse --short HEAD)"
+              exit 0
+            fi
+            echo "::warning::push rejected on attempt $i"
+            sleep 5
+          done
+          echo "::error::data commit did not land after 3 attempts; this run must not report success"
+          exit 1

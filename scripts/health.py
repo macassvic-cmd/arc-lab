@@ -19,13 +19,24 @@ data/health_state.json (committed by the workflow):
    is already queued or running. The pre-tip snapshots (ladders, FP v1 + v2, first basket) cannot be recovered after tip; the
    evening cron has fired 1.8-6 h late all month. The PC's one-off dispatch timer is a backup, not the primary.
 
+5. Flip-check (every pass, added 2026-10-30): a self-heal dispatch (job 3 or 4) is not trusted on its run's conclusion. The state
+   records `heal_pending` (kind, dispatch time, expected slate date = today's ET date on the game day already detected, the gh
+   output). On later passes the PUBLISHED docs/data/projections.json is read: flipped to the expected date (pre-tip kind: and
+   built after the dispatch, and docs/data/first_basket_today.json carries the date) -> cleared, no message; still stale after
+   FLIP_GRACE -> update-data is re-dispatched ONCE with a Discord alarm that names this exact failure ("dispatched ... reported
+   success but the slate did not flip ... re-dispatched"); still stale FLIP_GRACE after that -> the alarm repeats on every pass,
+   no third dispatch, until it flips or the day's first tip passes. While a heal is pending, jobs 3 and 4 do not dispatch.
+   Cause (2026-10-30, run 41108710651): a dispatched run concluded SUCCESS but its data commit died on a rebase conflict.
+
   python health.py            # one pass, print the verdict, exit 0
   python health.py --force    # ignore the game window for the lines check (manual test; still respects the throttles)
   HEALTH_DRY_RUN=1            # never dispatch or post; print what would happen (local tests)
 """
 import argparse
 import datetime as dt
+import json
 import os
+import re
 import subprocess
 import sys
 from zoneinfo import ZoneInfo
@@ -45,6 +56,8 @@ PROJ_STALE_HOURS = 14
 SELF_HEAL_AFTER = dt.time(10, 30)                  # ET; the morning cron is 14:07Z = 10:07 ET
 SELF_HEAL_MIN_GAP = dt.timedelta(hours=1)
 PRETIP_WINDOW = dt.timedelta(minutes=90)             # job 4: a build must land inside this window before the earliest tip
+FLIP_GRACE = dt.timedelta(minutes=45)                # job 5: a dispatched run gets this long to flip the published slate
+FB_TODAY = SITE_DATA / "first_basket_today.json"
 ET = ZoneInfo("America/New_York")
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 WORKFLOW = "update-data.yml"
@@ -137,6 +150,83 @@ def update_running(repo=REPO, workflow=WORKFLOW):
         return None
 
 
+def run_conclusion(detail, repo=REPO):
+    """'status conclusion' of the dispatched run named in the gh output (its URL), or None when unknown (dry run, no token, no URL)."""
+    m = re.search(r"/actions/runs/(\d+)", str(detail or ""))
+    if DRY_RUN or not m or not (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")):
+        return None
+    try:
+        r = subprocess.run(["gh", "run", "view", m.group(1), "--repo", repo, "--json", "status,conclusion", "-q", r'"\(.status) \(.conclusion)"'], capture_output=True, text=True, timeout=60)
+        if r.returncode != 0 or not r.stdout.strip():
+            return None
+        status, _, conclusion = r.stdout.strip().partition(" ")
+        return conclusion if status == "completed" else f"status {status}"
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def mark_pending(state, now, kind, expected, how):
+    """Job 5 state: the dispatch to verify. One pending heal at a time (jobs 3 and 4 do not dispatch while it is set)."""
+    state["heal_pending"] = {"kind": kind, "dispatched_at": now.isoformat(), "expected_date": expected, "dispatch_detail": how, "redispatched_at": None, "redispatch_detail": None, "alarms": 0}
+
+
+def slate_flipped(pending, proj_path, fb_path):
+    """(flipped, what the published files show). Morning kind: projections.json `date` == expected. Pre-tip kind: that, and the
+    build is newer than the dispatch, and first_basket_today.json carries the date (the pre-tip products must have landed)."""
+    doc = read_json(proj_path, None) or {}
+    seen = doc.get("date")
+    if seen != pending["expected_date"]:
+        return False, f"projections still {seen}"
+    if pending["kind"] == "pre-tip":
+        built = parse_ts(doc.get("updated")); fb = (read_json(fb_path, None) or {}).get("date")
+        if built is None or built < parse_ts(pending["dispatched_at"]):
+            return False, f"projections {seen} but built {doc.get('updated')}, before the dispatch"
+        if fb != pending["expected_date"]:
+            return False, f"projections {seen} but first_basket_today still {fb}"
+    return True, f"projections {seen}"
+
+
+def flip_check(now, state, proj_path, fb_path, slate_path, notify_fn, dispatch_fn=dispatch_update, status_fn=run_conclusion):
+    """Job 5. Mutates state. Returns "none" | "flipped" | "waiting" | "redispatched" | "redispatch_failed" | "alarmed" | "expired"."""
+    pend = state.get("heal_pending")
+    if not pend:
+        return "none"
+    ok, seen = slate_flipped(pend, proj_path, fb_path)
+    if ok:
+        state.pop("heal_pending"); state["heal_last_flipped"] = {**pend, "flipped_at": now.isoformat()}
+        print(f"[health] flip-check: {pend['kind']} dispatch at {pend['dispatched_at']} flipped the slate to {pend['expected_date']}; cleared")
+        return "flipped"
+    slate = read_json(slate_path, {}) or {}
+    tips = [t for t in (parse_ts(g.get("start")) for g in slate.get("games") or []) if t]
+    if tips and slate.get("date") == pend["expected_date"] and now >= min(tips):
+        state.pop("heal_pending"); state["heal_last_expired"] = {**pend, "expired_at": now.isoformat(), "seen": seen}
+        print(f"[health] flip-check: first tip {min(tips):%H:%M}Z passed without the slate flipping ({seen}); no further dispatch, cleared")
+        return "expired"
+    d0 = parse_ts(pend["dispatched_at"]); d0_local = d0.astimezone(ET)
+    if pend.get("redispatched_at") is None:
+        if now - d0 < FLIP_GRACE:
+            print(f"[health] flip-check: {pend['kind']} dispatch at {d0:%H:%M}Z, {seen}; {FLIP_GRACE - (now - d0)} of grace left")
+            return "waiting"
+        concl = status_fn(pend.get("dispatch_detail")) or "success"
+        ok2, how2 = dispatch_fn()
+        pend.update({"redispatched_at": now.isoformat(), "redispatch_detail": how2, "redispatch_ok": ok2, "alarms": pend.get("alarms", 0) + 1})
+        state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok2, "self_dispatch_detail": how2, "self_dispatch_kind": f"{pend['kind']} re-dispatch"})
+        if ok2:
+            notify_fn(f"🚨 Arc Lab self-heal did not flip: update-data dispatched at {d0_local:%H:%M} ET ({d0:%H:%M}Z, {pend['kind']}) reported {concl} but the slate did not flip "
+                      f"({seen}, expected {pend['expected_date']}); re-dispatched ({how2}). Check that run's Commit step.")
+            return "redispatched"
+        notify_fn(f"🚨 Arc Lab self-heal did not flip: update-data dispatched at {d0_local:%H:%M} ET reported {concl} but the slate did not flip ({seen}); re-dispatch FAILED: {how2}. Run it by hand now.")
+        return "redispatch_failed"
+    r0 = parse_ts(pend["redispatched_at"])
+    if now - r0 < FLIP_GRACE:
+        print(f"[health] flip-check: re-dispatched at {r0:%H:%M}Z, {seen}; {FLIP_GRACE - (now - r0)} of grace left")
+        return "waiting"
+    pend["alarms"] = pend.get("alarms", 0) + 1
+    notify_fn(f"🚨 Arc Lab self-heal still not flipped: update-data dispatched at {d0_local:%H:%M} ET and re-dispatched at {r0.astimezone(ET):%H:%M} ET, and the slate has still not flipped "
+              f"({seen}, expected {pend['expected_date']}). No third dispatch: run it by hand and read both runs' Commit steps.")
+    return "alarmed"
+
+
 def notify(text, webhook=None):
     webhook = webhook or os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
     if DRY_RUN or not webhook:
@@ -198,13 +288,17 @@ def self_heal(now, state, proj_path, notify_fn, game_day_fn=is_game_day, dispatc
     if game_day_fn(local.date()) is False:
         print(f"[health] self-heal: {today} is not an NBA game day; nothing to build")
         return "off_day"
+    if state.get("heal_pending"):
+        print(f"[health] self-heal: a {state['heal_pending']['kind']} dispatch from {state['heal_pending']['dispatched_at']} is pending verification (job 5 owns the re-dispatch)")
+        return "flip_pending"
     last = parse_ts(state.get("self_dispatch_at"))
     if last and now - last < SELF_HEAL_MIN_GAP:
         print(f"[health] self-heal: projections still show {slate_date}; last self-dispatch {last:%H:%M}Z, within {SELF_HEAL_MIN_GAP}; not again yet")
         return "throttled"
     ok, how = dispatch_fn()
-    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today})
+    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": "morning"})
     if ok:
+        mark_pending(state, now, "morning", today, how)
         notify_fn(f"🔁 Arc Lab self-heal: projections.json shows {slate_date} at {local:%H:%M} ET on game day {today} ({detail}). Dispatched update-data ({how}).")
         return "dispatched"
     notify_fn(f"❌ Arc Lab self-heal could not dispatch update-data for {today}: {how}. Run it by hand (Actions → Update data and projections → Run workflow).")
@@ -230,6 +324,9 @@ def pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn=dispat
     if slate_date == today and built is not None and built >= window_open:
         print(f"[health] pre-tip: build at {built:%H:%M}Z is inside the {PRETIP_WINDOW} window before the {first:%H:%M}Z tip; nothing to do")
         return "not_needed"
+    if state.get("heal_pending"):
+        print(f"[health] pre-tip: a {state['heal_pending']['kind']} dispatch from {state['heal_pending']['dispatched_at']} is pending verification (job 5 owns the re-dispatch)")
+        return "flip_pending"
     last = parse_ts(state.get("self_dispatch_at"))
     if last and now - last < SELF_HEAL_MIN_GAP:
         print(f"[health] pre-tip: no build since {window_open:%H:%M}Z (first tip {first:%H:%M}Z) but a self-dispatch at {last:%H:%M}Z is within {SELF_HEAL_MIN_GAP}; not again yet")
@@ -240,22 +337,25 @@ def pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn=dispat
     ok, how = dispatch_fn()
     state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": "pre-tip"})
     if ok:
+        mark_pending(state, now, "pre-tip", today, how)
         notify_fn(f"🔁 Arc Lab pre-tip self-heal: first tip {first:%H:%M}Z, no update-data build since {window_open:%H:%M}Z ({detail}). Dispatched update-data at {local:%H:%M} ET ({how}).")
         return "dispatched"
     notify_fn(f"❌ Arc Lab pre-tip self-heal could not dispatch update-data before the {first:%H:%M}Z tip: {how}. Run it by hand now (Actions → Update data and projections → Run workflow).")
     return "dispatch_failed"
 
 
-def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update, running_fn=update_running):
-    """One watchdog pass. Returns {"lines": ..., "projections": ..., "self_heal": ..., "pretip": ...}; the state file is rewritten once."""
+def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update, running_fn=update_running,
+          fb_path=FB_TODAY, status_fn=run_conclusion):
+    """One watchdog pass. Returns {"lines", "projections", "flip", "self_heal", "pretip"}; the state file is rewritten once."""
     now = now or utcnow()
     state = read_json(state_path, {}) or {}
-    before = dict(state)
+    before = json.dumps(state, sort_keys=True)
     out = {"lines": check_lines(now, state, force, lines_path, slate_path, notify_fn),
            "projections": check_projections(now, state, proj_path, notify_fn),
-           "self_heal": self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)}
+           "flip": flip_check(now, state, proj_path, fb_path, slate_path, notify_fn, dispatch_fn, status_fn)}
+    out["self_heal"] = self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)
     out["pretip"] = pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn, running_fn)
-    if state != before:
+    if json.dumps(state, sort_keys=True) != before:
         write_json(state_path, state)
     print(f"[health] {out}")
     return out
