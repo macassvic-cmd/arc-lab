@@ -138,7 +138,7 @@ tr:last-child td{border-bottom:0}
 .fbGame{margin:0 0 26px}.fbGame h2{margin:22px 0 4px}.fbMeta{color:var(--muted);font:500 14px var(--body)}
 .fbTop{margin:4px 0 6px;font-size:16px}.fbWhy{margin:0 0 10px;padding-left:20px;color:var(--muted);font-size:14px;max-width:80ch}
 .fbTable{max-width:760px}.fbTable.fbWide{max-width:1040px}tr.fbPick td{font-weight:700}tr.fbEdge td{background:var(--chip)}tr.fbVoid td{color:var(--muted);text-decoration:line-through}tr.fbVoid td .fbBadge{text-decoration:none}
-.fbBadge{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:1px 8px;font:600 12px var(--body);vertical-align:middle}
+.fbBadge{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:1px 8px;font:600 12px var(--body);vertical-align:middle}.fbBadge.fbConf{background:var(--make);color:#fff}
 /* Results tab */
 h2{font:700 26px var(--display);margin:28px 0 8px}
 .verdict{background:var(--surface);border-left:4px solid var(--rim);padding:10px 14px;margin:0 0 14px;max-width:80ch}
@@ -257,7 +257,7 @@ if(["threes","props","firstbasket","fantasy","defense","results"].includes(locat
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
-let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null;   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
+let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null, FBL = null;   // FBL = first-basket confirmed-lineup marker (docs/data/first_basket_lineups.json, health workflow)   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -572,7 +572,14 @@ function renderFirstBasket(){
   const fmtTop = t => t.map(x=>`${x.bucket} ${Math.round(100*x.p)}%`).join(" &middot; ");
   const methodLine = g => { const m = M[g.event_id]; if(!m || !m.top3_fg) return ""; return `<p class="fbTop fbMeta">Method (first FG, ${FBM.mode==="full"?"blend":"position profiles"}): ${fmtTop(m.top3_fg)}</p>`; };
   const methodWhy = g => { const m = M[g.event_id]; const pk = m && m.picks && m.picks[0]; if(!pk || !pk.top3_fg) return []; return [`${pk.player}'s method split (first FG): ${fmtTop(pk.top3_fg)}. Profile: ${pk.profile_source}. ${FBM.label}`]; };
-  const block = g => `<div class="fbGame${g.tipped?" fbTipped":""}"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)}${g.tipped?' &middot; <span class="fbBadge">tipped</span>':""}${g.p_tip_home!=null?` &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}`:""}${g.snapshots>1?` &middot; snapshot ${g.snapshots} of ${g.snapshots}, logged ${ago(g.logged_at)}`:""}</span></h2>
+  // Confirmed-lineup marker (display only, 2026-10-31): the table is the log's last pre-tip snapshot either way; "repriced" means that snapshot came from ESPN's confirmed ten.
+  const L = FBL && FBL.date===FB.date && FBL.games ? FBL.games : {};
+  const lineupMark = g => { const m = L[g.event_id]; if(!m || m.status==="pending") return "";
+    if(m.status==="identical") return ` &middot; <span class="fbBadge fbConf">lineups confirmed</span> <span class="fbMeta">as projected (${ptTime(m.confirmed_at)})</span>`;
+    const ch = Object.entries(m.diff||{}).map(([t,d])=>`${t}: out ${d.out.join(", ")||"\u2013"}, in ${d.in.join(", ")||"\u2013"}`).join("; ");
+    const fresh = g.logged_at===m.refreshed_logged_at;
+    return ` &middot; <span class="fbBadge fbConf">lineups confirmed</span> <span class="fbMeta">${fresh?"repriced from the confirmed ten":`refresh logged ${ptTime(m.refreshed_logged_at)}, table not rebuilt yet`} (${ptTime(m.confirmed_at)}; ${ch}${m.top_before!==m.top_after?`; top pick ${m.top_before} \u2192 ${m.top_after}`:""})</span>`; };
+  const block = g => `<div class="fbGame${g.tipped?" fbTipped":""}"><h2>${g.away} @ ${g.home} <span class="fbMeta">tip ${ptTime(g.tip)}${g.tipped?' &middot; <span class="fbBadge">tipped</span>':""}${g.p_tip_home!=null?` &middot; ${g.home} wins the tip ${pct(g.p_tip_home)}`:""}${g.snapshots>1?` &middot; snapshot ${g.snapshots} of ${g.snapshots}, logged ${ago(g.logged_at)}`:""}${lineupMark(g)}</span></h2>
     <p class="fbTop">Top candidate: <b>${g.top_pick}</b> <span class="fbMeta">${g.top_team}</span> &middot; P(first basket) <b>${(100*g.top_p).toFixed(1)}%</b></p>
     ${methodLine(g)}
     ${resultLine(g)}
@@ -621,7 +628,7 @@ function freshness(L){
 
 async function boot(){
   [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
-  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null);
+  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null); FBL = await load("data/first_basket_lineups.json", null);
   S.lines = {};
   freshness(L);
   for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
@@ -634,7 +641,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); LG = await load("data/ladder_graded.json", LG); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); LG = await load("data/ladder_graded.json", LG); FBL = await load("data/first_basket_lineups.json", FBL); render(); }, 60000);
 </script>
 </body>
 </html>

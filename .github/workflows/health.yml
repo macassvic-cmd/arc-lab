@@ -4,7 +4,9 @@ name: Lines watchdog
 # the slate-driven window (90 minutes before the day's earliest tip to 3 hours after the latest, from data/slate.json),
 # projections.json staleness (> 14 h) on every pass, and after 10:30 ET on a game day self-dispatches update-data when
 # projections.json is not today's slate (at most once an hour; it says so on Discord). The paper-log snapshot runs alongside
-# so the last one before tip is the close.
+# so the last one before tip is the close. Since 2026-10-31 the same pass runs the first-basket confirmed-lineup refresh
+# (scripts/first_basket_lineups.py: inside 45 minutes of each tip, ESPN's listed starting five vs the last snapshot; a changed
+# game is repriced from the confirmed ten and published by the commit step below).
 
 on:
   schedule:
@@ -28,22 +30,57 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install requests
-      - name: Check lines + projections freshness, self-heal the missing slate
+      - run: pip install requests pandas numpy   # pandas + numpy: the first-basket lineup refresh (job 6) reprices through first_basket_model
+      - name: Check lines + projections freshness, self-heal the missing slate, first-basket confirmed-lineup refresh
         working-directory: scripts
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GH_TOKEN: ${{ github.token }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}   # job 6 re-pulls a repriced game's first-basket odds (1 credit per refreshed game)
         run: python health.py
       - name: Snapshot paper log (closing lines)
         working-directory: scripts
         run: python paper_log.py snapshot
-      - name: Commit state
+      - name: Commit state + first-basket lineup refresh outputs (retry after rebase; a commit that does not land FAILS this run)
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           git config user.name "arc-lab-bot"
           git config user.email "actions@users.noreply.github.com"
-          [ -f data/health_state.json ] && git add data/health_state.json
-          [ -f data/paper_log.csv ] && git add data/paper_log.csv
+          for f in data/health_state.json data/paper_log.csv \
+                   data/first_basket_lineups.csv data/first_basket_log.csv data/first_basket_why.jsonl data/first_basket_method_log.csv data/first_basket_method_profiles.json \
+                   data/first_basket_odds.csv data/first_basket_odds_credits.csv docs/data/first_basket_lineups.json docs/data/first_basket_today.json docs/data/first_basket_method.json; do
+            [ -f "$f" ] && git add -- "$f"
+          done
           git diff --cached --quiet && exit 0
           git commit -m "health: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          # Same discipline as update-data's Commit step (2026-10-30): bounded retry after rebase, and the job FAILS when the commit does
+          # not land, so a pre-tip lineup refresh is never silently unpublished. The append-only first-basket records merge by union
+          # (.gitattributes); anything still conflicted is this run's own output (keep this commit = --theirs in a rebase).
+          for i in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              for f in $(git diff --name-only --diff-filter=U); do
+                git checkout --theirs -- "$f"
+                git add -- "$f"
+              done
+              if ! GIT_EDITOR=true git rebase --continue; then
+                echo "::warning::rebase could not be resolved on attempt $i; aborting and retrying"
+                git rebase --abort || true
+                sleep 5
+                continue
+              fi
+            fi
+            if git push origin HEAD:main; then
+              echo "health commit landed on attempt $i: $(git rev-parse --short HEAD)"
+              exit 0
+            fi
+            echo "::warning::push rejected on attempt $i"
+            sleep 5
+          done
+          echo "::error::health commit did not land after 3 attempts (health state and any first-basket lineup refresh unpublished); this run must not report success"
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            curl -s -o /dev/null -X POST -H "Content-Type: application/json" \
+              -d "{\"content\":\"🚨 Arc Lab health run ${GITHUB_RUN_ID}: the commit did not land after 3 rebase-and-push attempts. Any first-basket lineup refresh from this pass is unpublished; read the Commit step.\"}" "$DISCORD_WEBHOOK_URL"
+          fi
+          exit 1

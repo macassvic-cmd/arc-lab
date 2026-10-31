@@ -28,6 +28,12 @@ data/health_state.json (committed by the workflow):
    no third dispatch, until it flips or the day's first tip passes. While a heal is pending, jobs 3 and 4 do not dispatch.
    Cause (2026-10-30, run 41108710651): a dispatched run concluded SUCCESS but its data commit died on a rebase conflict.
 
+6. First-basket confirmed-lineup refresh (every pass, added 2026-10-31; scripts/first_basket_lineups.py): for every logged game
+   tipping within 45 minutes without a confirmed-lineup check yet, poll ESPN's summary until it lists a starting five per team;
+   identical to the last pre-tip snapshot -> the check is logged; different -> that game is repriced from the confirmed ten
+   through the unchanged snapshot machinery (new snapshot appended, METHOD layer re-projected, that game's odds re-pulled,
+   first_basket_today.json rebuilt) and the workflow's commit step publishes it. After tip: nothing. First-basket product only.
+
   python health.py            # one pass, print the verdict, exit 0
   python health.py --force    # ignore the game window for the lines check (manual test; still respects the throttles)
   HEALTH_DRY_RUN=1            # never dispatch or post; print what would happen (local tests)
@@ -344,9 +350,33 @@ def pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn=dispat
     return "dispatch_failed"
 
 
+def lineup_refresh(now, notify_fn, watch_fn=None):
+    """Job 6. Runs scripts/first_basket_lineups.py's pass (watch_fn injected in tests). Never raises into the watchdog: a failure is
+    printed and posted; a refreshed game is announced. Returns the pass status."""
+    if watch_fn is None:
+        if DRY_RUN:
+            print("[health] lineup refresh: dry run, not polling ESPN or writing files"); return "dry_run"
+        try:
+            import first_basket_lineups as fbl
+            watch_fn = lambda t: fbl.watch(now=t)  # noqa: E731
+        except Exception as e:  # noqa: BLE001
+            print(f"[health] lineup refresh unavailable: {e!r}"); return "unavailable"
+    try:
+        r = watch_fn(now) or {}
+    except Exception as e:  # noqa: BLE001
+        print(f"[health] lineup refresh failed: {e!r}")
+        notify_fn(f"⚠️ Arc Lab first-basket lineup refresh failed at {now:%H:%M}Z: {str(e)[:160]}. The projected snapshots stand; read this health run's log.")
+        return "error"
+    for e in r.get("refreshed") or []:
+        d = (r.get("details") or {}).get(e) or {}
+        notify_fn(f"🔁 Arc Lab first basket: lineups confirmed for {d.get('matchup')} with changes ({d.get('diff_text')}). Repriced from the confirmed ten: "
+                  f"top pick {d.get('top_before')} → {d.get('top_after')} ({100 * float(d.get('top_p_after') or 0):.1f}%); new snapshot logged {d.get('logged_at')} ({r.get('date')}).")
+    return r.get("status", "none")
+
+
 def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update, running_fn=update_running,
-          fb_path=FB_TODAY, status_fn=run_conclusion):
-    """One watchdog pass. Returns {"lines", "projections", "flip", "self_heal", "pretip"}; the state file is rewritten once."""
+          fb_path=FB_TODAY, status_fn=run_conclusion, lineups_fn=None):
+    """One watchdog pass. Returns {"lines", "projections", "flip", "self_heal", "pretip", "lineups"}; the state file is rewritten once."""
     now = now or utcnow()
     state = read_json(state_path, {}) or {}
     before = json.dumps(state, sort_keys=True)
@@ -355,6 +385,7 @@ def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=
            "flip": flip_check(now, state, proj_path, fb_path, slate_path, notify_fn, dispatch_fn, status_fn)}
     out["self_heal"] = self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)
     out["pretip"] = pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn, running_fn)
+    out["lineups"] = lineup_refresh(now, notify_fn, lineups_fn)
     if json.dumps(state, sort_keys=True) != before:
         write_json(state_path, state)
     print(f"[health] {out}")

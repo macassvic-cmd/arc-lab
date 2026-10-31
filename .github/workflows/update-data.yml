@@ -115,7 +115,7 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python main_lines.py
-      - name: Ladder Tonight strip sidecar (display only; data/strip_log.csv: each lined card's pre-tip P(over), same board capture)
+      - name: Ladder Tonight strip sidecar (display only; data/strip_log.csv = each lined card's pre-tip P(over), same board capture)
         id: strip_log
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts

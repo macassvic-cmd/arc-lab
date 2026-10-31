@@ -1,0 +1,8 @@
+# Append-only first-basket records: the update-data and health workflows both append to them, so a rebase conflict between
+# two appends keeps both sides (2026-10-31, confirmed-lineup refresh). Nothing else merges by union.
+data/first_basket_log.csv merge=union
+data/first_basket_why.jsonl merge=union
+data/first_basket_lineups.csv merge=union
+data/first_basket_method_log.csv merge=union
+data/first_basket_odds.csv merge=union
+data/first_basket_odds_credits.csv merge=union

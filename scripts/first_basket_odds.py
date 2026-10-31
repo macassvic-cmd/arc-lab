@@ -9,6 +9,8 @@ written. Nothing is scraped from any book's site.
   python first_basket_odds.py pull   for every game on tonight's slate that has NOT tipped: pull the market, append every book's
                                      Yes price to data/first_basket_odds.csv (timestamped, append-only) and the credit cost to
                                      data/first_basket_odds_credits.csv, then rebuild docs/data/first_basket_today.json
+  python first_basket_odds.py pull <event_id> ...   the same for those untipped games only (the confirmed-lineup refresh, 2026-10-31:
+                                     one credit for the repriced game, not the slate)
 
 A price seen after tip is worthless as a record: tipped games are never requested. The tab shows, per starter, the last pre-tip
 DraftKings and FanDuel prices, their raw implied probability (vig included, nothing removed) and the gap = model P minus the
@@ -72,7 +74,8 @@ def append(path, fields, rows):
         w.writerows(rows)
 
 
-def pull():
+def pull(events=None):
+    """events: restrict the pull to these slate event_ids (still untipped only); None = every untipped game."""
     key = (os.environ.get("ODDS_API_KEY") or "").strip()
     if not key:
         print("[first-basket-odds] ODDS_API_KEY not set: no pull"); return 0
@@ -86,6 +89,10 @@ def pull():
             untipped.append(g)
         else:
             tipped += 1
+    if events is not None:
+        want = {str(e) for e in events}; untipped = [g for g in untipped if str(g["event_id"]) in want]
+        if not untipped:
+            print(f"[first-basket-odds] none of {sorted(want)} is an untipped slate game: no pull, no credits"); return 0
     if not untipped:
         print(f"[first-basket-odds] every game has tipped ({tipped}): no pull, no credits"); return 0
     ev = get("events", {"dateFormat": "iso"}, key)   # free (0 credits)
@@ -154,4 +161,4 @@ def attach(games, date):
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "pull"
-    {"pull": pull}[cmd]()
+    {"pull": pull}[cmd](events=sys.argv[2:] or None)
