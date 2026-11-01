@@ -13,6 +13,8 @@ data/health_state.json (committed by the workflow):
 3. Self-heal (every pass): on a game day, after SELF_HEAL_AFTER (ET), if projections.json's date is not today's ET date, dispatch
    the update-data workflow (`gh workflow run update-data.yml`, GH_TOKEN with actions: write) and say so on Discord. At most one
    self-dispatch per SELF_HEAL_MIN_GAP. Game day = ESPN's scoreboard lists an NBA game today (free; unreachable = assume yes).
+   A dispatch that FAILS (gh error) does not consume the throttle: the next pass tries again, and the ❌ alarm posts once per
+   failure streak, not every pass (2026-11-01; on 2026-10-30 the one pre-tip attempt died on HTTP 422 and was never retried).
 4. Pre-tip self-heal (every pass, added 2026-10-28 evening): on a game day, inside the PRETIP_WINDOW before the day's earliest tip
    (data/slate.json), if no update-data run has refreshed the build since that window opened (projections.json `updated`), dispatch
    update-data and say so on Discord. Same SELF_HEAL_MIN_GAP throttle as job 3 (shared state key), skipped while an update-data run
@@ -171,6 +173,31 @@ def run_conclusion(detail, repo=REPO):
         return None
 
 
+def explain_dispatch_failure(how):
+    """HTTP 422 'Workflow does not have workflow_dispatch trigger' = the workflow file on main does not parse (GitHub drops its
+    triggers), so a hand run fails too; it happened 2026-10-30 after a step name containing ': ' was committed."""
+    if "422" in how and "workflow_dispatch" in how:
+        return (" This 422 means .github/workflows/update-data.yml on main does not parse (GitHub drops its triggers); running it by hand"
+                " fails the same way until a push fixes the YAML (yaml.safe_load it; a step name containing ': ' did this on 2026-10-30).")
+    return ""
+
+
+def record_dispatch(state, now, kind, today, ok, how):
+    """Jobs 3/4 bookkeeping. A dispatch that landed starts the SELF_HEAL_MIN_GAP throttle and the flip-check (job 5). One that failed
+    leaves the throttle alone so the next pass tries again; returns True when the failure should be alarmed (first of a streak)."""
+    if ok:
+        state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": True, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": kind})
+        state.pop("dispatch_failure", None)
+        mark_pending(state, now, kind, today, how)
+        return True
+    prev = state.get("dispatch_failure") or {}
+    streak = prev.get("count", 0) + 1 if prev.get("for") == today else 1
+    state["dispatch_failure"] = {"at": now.isoformat(), "kind": kind, "for": today, "detail": how, "count": streak}
+    if streak > 1:
+        print(f"[health] {kind} dispatch failed again ({streak} in a row today, alarmed once): {how}")
+    return streak == 1
+
+
 def mark_pending(state, now, kind, expected, how):
     """Job 5 state: the dispatch to verify. One pending heal at a time (jobs 3 and 4 do not dispatch while it is set)."""
     state["heal_pending"] = {"kind": kind, "dispatched_at": now.isoformat(), "expected_date": expected, "dispatch_detail": how, "redispatched_at": None, "redispatch_detail": None, "alarms": 0}
@@ -302,12 +329,12 @@ def self_heal(now, state, proj_path, notify_fn, game_day_fn=is_game_day, dispatc
         print(f"[health] self-heal: projections still show {slate_date}; last self-dispatch {last:%H:%M}Z, within {SELF_HEAL_MIN_GAP}; not again yet")
         return "throttled"
     ok, how = dispatch_fn()
-    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": "morning"})
+    alarm = record_dispatch(state, now, "morning", today, ok, how)
     if ok:
-        mark_pending(state, now, "morning", today, how)
         notify_fn(f"🔁 Arc Lab self-heal: projections.json shows {slate_date} at {local:%H:%M} ET on game day {today} ({detail}). Dispatched update-data ({how}).")
         return "dispatched"
-    notify_fn(f"❌ Arc Lab self-heal could not dispatch update-data for {today}: {how}. Run it by hand (Actions → Update data and projections → Run workflow).")
+    if alarm:
+        notify_fn(f"❌ Arc Lab self-heal could not dispatch update-data for {today}: {how}. Health retries on its next pass; run it by hand meanwhile (Actions → Update data and projections → Run workflow).{explain_dispatch_failure(how)}")
     return "dispatch_failed"
 
 
@@ -341,12 +368,12 @@ def pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn=dispat
         print(f"[health] pre-tip: no build since {window_open:%H:%M}Z but an update-data run is already queued or running; waiting for it")
         return "running"
     ok, how = dispatch_fn()
-    state.update({"self_dispatch_at": now.isoformat(), "self_dispatch_ok": ok, "self_dispatch_detail": how, "self_dispatch_for": today, "self_dispatch_kind": "pre-tip"})
+    alarm = record_dispatch(state, now, "pre-tip", today, ok, how)
     if ok:
-        mark_pending(state, now, "pre-tip", today, how)
         notify_fn(f"🔁 Arc Lab pre-tip self-heal: first tip {first:%H:%M}Z, no update-data build since {window_open:%H:%M}Z ({detail}). Dispatched update-data at {local:%H:%M} ET ({how}).")
         return "dispatched"
-    notify_fn(f"❌ Arc Lab pre-tip self-heal could not dispatch update-data before the {first:%H:%M}Z tip: {how}. Run it by hand now (Actions → Update data and projections → Run workflow).")
+    if alarm:
+        notify_fn(f"❌ Arc Lab pre-tip self-heal could not dispatch update-data before the {first:%H:%M}Z tip: {how}. Health retries on its next pass; run it by hand now (Actions → Update data and projections → Run workflow).{explain_dispatch_failure(how)}")
     return "dispatch_failed"
 
 
