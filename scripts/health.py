@@ -30,11 +30,13 @@ data/health_state.json (committed by the workflow):
    no third dispatch, until it flips or the day's first tip passes. While a heal is pending, jobs 3 and 4 do not dispatch.
    Cause (2026-10-30, run 41108710651): a dispatched run concluded SUCCESS but its data commit died on a rebase conflict.
 
-6. First-basket confirmed-lineup refresh (every pass, added 2026-10-31; scripts/first_basket_lineups.py): for every logged game
-   tipping within 45 minutes without a confirmed-lineup check yet, poll ESPN's summary until it lists a starting five per team;
-   identical to the last pre-tip snapshot -> the check is logged; different -> that game is repriced from the confirmed ten
-   through the unchanged snapshot machinery (new snapshot appended, METHOD layer re-projected, that game's odds re-pulled,
-   first_basket_today.json rebuilt) and the workflow's commit step publishes it. After tip: nothing. First-basket product only.
+6. First-basket confirmed-lineup refresh (every pass, added 2026-10-31, source switched to NBA.com 2026-11-02;
+   scripts/first_basket_lineups.py): for every logged game tipping within 150 minutes without a final lineup check yet, read
+   NBA.com's daily lineups file; a team's five counts only when stamped Confirmed. Identical to the last pre-tip snapshot -> the
+   check is logged; different -> that game is repriced from the confirmed ten through the unchanged snapshot machinery (new
+   snapshot appended, METHOD layer re-projected, that game's odds re-pulled, first_basket_today.json rebuilt) and the workflow's
+   commit step publishes it. A starter the id crosswalk (data/nbacom_player_ids.csv) cannot resolve -> that game is skipped
+   entirely and alarmed (🚨). At/after tip: nothing (no ESPN fallback). First-basket product only.
 
   python health.py            # one pass, print the verdict, exit 0
   python health.py --force    # ignore the game window for the lines check (manual test; still respects the throttles)
@@ -382,7 +384,7 @@ def lineup_refresh(now, notify_fn, watch_fn=None):
     printed and posted; a refreshed game is announced. Returns the pass status."""
     if watch_fn is None:
         if DRY_RUN:
-            print("[health] lineup refresh: dry run, not polling ESPN or writing files"); return "dry_run"
+            print("[health] lineup refresh: dry run, not reading NBA.com or writing files"); return "dry_run"
         try:
             import first_basket_lineups as fbl
             watch_fn = lambda t: fbl.watch(now=t)  # noqa: E731
@@ -396,8 +398,10 @@ def lineup_refresh(now, notify_fn, watch_fn=None):
         return "error"
     for e in r.get("refreshed") or []:
         d = (r.get("details") or {}).get(e) or {}
-        notify_fn(f"🔁 Arc Lab first basket: lineups confirmed for {d.get('matchup')} with changes ({d.get('diff_text')}). Repriced from the confirmed ten: "
+        notify_fn(f"🔁 Arc Lab first basket: lineups confirmed (NBA.com) for {d.get('matchup')} with changes ({d.get('diff_text')}). Repriced from the confirmed ten: "
                   f"top pick {d.get('top_before')} → {d.get('top_after')} ({100 * float(d.get('top_p_after') or 0):.1f}%); new snapshot logged {d.get('logged_at')} ({r.get('date')}).")
+    for a in r.get("alarms") or []:
+        notify_fn(f"🚨 Arc Lab first basket lineup refresh skipped: {a}")
     return r.get("status", "none")
 
 

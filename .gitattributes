@@ -6,3 +6,5 @@ data/first_basket_lineups.csv merge=union
 data/first_basket_method_log.csv merge=union
 data/first_basket_odds.csv merge=union
 data/first_basket_odds_credits.csv merge=union
+data/nbacom_player_ids.csv merge=union
+data/first_basket_lineup_audit.csv merge=union

@@ -572,9 +572,10 @@ function renderFirstBasket(){
   const fmtTop = t => t.map(x=>`${x.bucket} ${Math.round(100*x.p)}%`).join(" &middot; ");
   const methodLine = g => { const m = M[g.event_id]; if(!m || !m.top3_fg) return ""; return `<p class="fbTop fbMeta">Method (first FG, ${FBM.mode==="full"?"blend":"position profiles"}): ${fmtTop(m.top3_fg)}</p>`; };
   const methodWhy = g => { const m = M[g.event_id]; const pk = m && m.picks && m.picks[0]; if(!pk || !pk.top3_fg) return []; return [`${pk.player}'s method split (first FG): ${fmtTop(pk.top3_fg)}. Profile: ${pk.profile_source}. ${FBM.label}`]; };
-  // Confirmed-lineup marker (display only, 2026-10-31): the table is the log's last pre-tip snapshot either way; "repriced" means that snapshot came from ESPN's confirmed ten.
+  // Confirmed-lineup marker (display only, 2026-10-31; NBA.com source 2026-11-02): the table is the log's last pre-tip snapshot either way; "repriced" means that snapshot came from NBA.com's Confirmed-stamped ten.
   const L = FBL && FBL.date===FB.date && FBL.games ? FBL.games : {};
   const lineupMark = g => { const m = L[g.event_id]; if(!m || m.status==="pending") return "";
+    if(m.status==="unresolved") return ` &middot; <span class="fbBadge">lineups confirmed, not repriced</span> <span class="fbMeta">(${ptTime(m.confirmed_at)}; a starter could not be matched to the pipeline's ids; projected table stands)</span>`;
     if(m.status==="identical") return ` &middot; <span class="fbBadge fbConf">lineups confirmed</span> <span class="fbMeta">as projected (${ptTime(m.confirmed_at)})</span>`;
     const ch = Object.entries(m.diff||{}).map(([t,d])=>`${t}: out ${d.out.join(", ")||"\u2013"}, in ${d.in.join(", ")||"\u2013"}`).join("; ");
     const fresh = g.logged_at===m.refreshed_logged_at;

@@ -48,7 +48,7 @@ jobs:
           git config user.name "arc-lab-bot"
           git config user.email "actions@users.noreply.github.com"
           for f in data/health_state.json data/paper_log.csv \
-                   data/first_basket_lineups.csv data/first_basket_log.csv data/first_basket_why.jsonl data/first_basket_method_log.csv data/first_basket_method_profiles.json \
+                   data/first_basket_lineups.csv data/nbacom_player_ids.csv data/first_basket_lineup_audit.csv data/first_basket_log.csv data/first_basket_why.jsonl data/first_basket_method_log.csv data/first_basket_method_profiles.json \
                    data/first_basket_odds.csv data/first_basket_odds_credits.csv docs/data/first_basket_lineups.json docs/data/first_basket_today.json docs/data/first_basket_method.json; do
             [ -f "$f" ] && git add -- "$f"
           done
