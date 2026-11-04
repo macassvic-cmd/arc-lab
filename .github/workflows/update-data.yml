@@ -149,6 +149,11 @@ jobs:
         run: |
           if [ -f ../data/board_latest.json ]; then python fp_v2.py price ../data/board_latest.json; else echo "no data/board_latest.json yet"; fi
           if [ -f ../data/pp_fantasy_lines.json ]; then python fp_v2.py price_pp ../data/pp_fantasy_lines.json; else echo "no data/pp_fantasy_lines.json yet"; fi
+      - name: Slips tonight (selection, display and logging only; three nested Underdog slips from data/strip_log.csv legs and FP v2 distributions at the board's FP lines; append-only data/slips_log.jsonl, frozen at the slate's earliest tip)
+        id: slips
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python slips.py
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         id: fb_snap
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

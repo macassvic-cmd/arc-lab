@@ -1,0 +1,17 @@
+{
+ "date": "2026-11-04",
+ "now": "2026-11-04T21:40:00Z",
+ "inputs": "data/strip_log.csv (snapshot 2026-11-04T20:32Z) and data/fp_v2_log.csv (20:45Z) at a85bdcd; FP lines from docs/data/lines.json at be7c5a5 (captured 21:32Z)",
+ "expected_8_leg": [
+  "Domantas Sabonis PTS More 13.5",
+  "Isaiah Collier PTS More 7.5",
+  "Zaccharie Risacher REB More 3.5",
+  "Dennis Schroder PTS More 7.5",
+  "Derrick White PTS Less 16.5",
+  "DeMar DeRozan PTS More 10.5",
+  "LeBron James 3PM More 0.5",
+  "Jarrett Allen PTS More 13.5"
+ ],
+ "nested": "3-leg = first 3, 6-leg = first 6",
+ "excluded_by_minutes_top": "Malik Monk"
+}

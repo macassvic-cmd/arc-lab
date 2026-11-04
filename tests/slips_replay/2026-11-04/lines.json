@@ -1,0 +1,649 @@
+{
+"updated": "2026-11-04T21:32:52Z",
+"book": "Underdog",
+"captured_at": "2026-11-04T21:32:48.984202+00:00",
+"sharp_book": null,
+"lines": [
+{
+"player": "Shai Gilgeous-Alexander",
+"stat": "FP",
+"line": 48.35,
+"team": "OKC",
+"opp": "CLE",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "b0dc10fa-2e6e-4db3-8019-22324ece7504",
+"sharp": null
+},
+{
+"player": "Giannis Antetokounmpo",
+"stat": "FP",
+"line": 55.35,
+"team": "MIA",
+"opp": "LAC",
+"start": "2026-11-05T03:30:00Z",
+"ud_id": "317c6f4e-2ebf-43d3-b605-9f1481f1ee89",
+"sharp": null
+},
+{
+"player": "Victor Wembanyama",
+"stat": "FP",
+"line": 55.25,
+"team": "SA",
+"opp": "DAL",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "dadac790-3c00-4492-9aeb-2a7141a6301d",
+"sharp": null
+},
+{
+"player": "Luka Doncic",
+"stat": "FP",
+"line": 56.75,
+"team": "LAL",
+"opp": "SAC",
+"start": "2026-11-05T03:00:00Z",
+"ud_id": "a87c493d-71f9-4556-b80f-51dfe3fc8eff",
+"sharp": null
+},
+{
+"player": "Scottie Barnes",
+"stat": "FP",
+"line": 45.25,
+"team": "TOR",
+"opp": "DEN",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "23fa0736-685f-4d36-87b4-01b6ce1fac07",
+"sharp": null
+},
+{
+"player": "Nikola Jokic",
+"stat": "FP",
+"line": 59.35,
+"team": "DEN",
+"opp": "TOR",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "a2fd0972-e384-4fab-a95e-3cf3d867c1c1",
+"sharp": null
+},
+{
+"player": "LeBron James",
+"stat": "FP",
+"line": 33.85,
+"team": "PHI",
+"opp": "DET",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "c4bcfc1d-b5e8-4d41-b586-54b52fd666b5",
+"sharp": null
+},
+{
+"player": "Jaylen Brown",
+"stat": "FP",
+"line": 32.85,
+"team": "PHI",
+"opp": "DET",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "2938e6f3-9ae8-4244-afc5-09406274db37",
+"sharp": null
+},
+{
+"player": "Cooper Flagg",
+"stat": "FP",
+"line": 43.25,
+"team": "DAL",
+"opp": "SA",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "e2ee438a-8dad-4229-8717-02f9c3073c56",
+"sharp": null
+},
+{
+"player": "LaMelo Ball",
+"stat": "FP",
+"line": 34.85,
+"team": "MIN",
+"opp": "HOU",
+"start": "2026-11-05T01:30:00Z",
+"ud_id": "b4e14ce9-4191-4829-a371-58898323e8b4",
+"sharp": null
+},
+{
+"player": "Karl-Anthony Towns",
+"stat": "FP",
+"line": 44.45,
+"team": "NY",
+"opp": "CHI",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "d8c57358-65f3-483c-9d48-8ce46bba264e",
+"sharp": null
+},
+{
+"player": "Zion Williamson",
+"stat": "FP",
+"line": 35.05,
+"team": "NO",
+"opp": "UTAH",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "2a9d3d27-8bb3-4a57-abda-90ca264b012e",
+"sharp": null
+},
+{
+"player": "Joel Embiid",
+"stat": "FP",
+"line": 35.35,
+"team": "PHI",
+"opp": "DET",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "d7ef4380-0a2d-42ca-b73f-3222607205b2",
+"sharp": null
+},
+{
+"player": "Kevin Durant",
+"stat": "FP",
+"line": 36.15,
+"team": "HOU",
+"opp": "MIN",
+"start": "2026-11-05T01:30:00Z",
+"ud_id": "0d191b89-96d5-44d5-aaca-356ce5ef8f6e",
+"sharp": null
+},
+{
+"player": "Jalen Brunson",
+"stat": "FP",
+"line": 42.45,
+"team": "NY",
+"opp": "CHI",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "9acaba9d-a7a2-4f1a-9ef7-1a99c604f38c",
+"sharp": null
+},
+{
+"player": "Devin Booker",
+"stat": "FP",
+"line": 37.15,
+"team": "PHX",
+"opp": "POR",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "518fda07-6878-49f5-b52e-536e78e54db6",
+"sharp": null
+},
+{
+"player": "Paul George",
+"stat": "FP",
+"line": 42.35,
+"team": "BOS",
+"opp": "MIL",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "417164fa-270f-4cce-85ce-d16b734bd6a3",
+"sharp": null
+},
+{
+"player": "James Harden",
+"stat": "FP",
+"line": 33.35,
+"team": "CLE",
+"opp": "OKC",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "c33e0249-084d-4a0a-ab7e-6d86c236ec44",
+"sharp": null
+},
+{
+"player": "Pascal Siakam",
+"stat": "FP",
+"line": 37.45,
+"team": "IND",
+"opp": "MEM",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "481ea736-eeb5-4a4b-b1da-c590a3d631f7",
+"sharp": null
+},
+{
+"player": "Donovan Mitchell",
+"stat": "FP",
+"line": 36.45,
+"team": "CLE",
+"opp": "OKC",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "ff50eb2b-22c6-4078-b7f5-073833d51074",
+"sharp": null
+},
+{
+"player": "Damian Lillard",
+"stat": "FP",
+"line": 32.85,
+"team": "POR",
+"opp": "PHX",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "2708514d-1545-4240-a643-b4653b02ea48",
+"sharp": null
+},
+{
+"player": "Kyrie Irving",
+"stat": "FP",
+"line": 32.35,
+"team": "DAL",
+"opp": "SA",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "6f1db114-c3d5-4416-891a-618d7af0182a",
+"sharp": null
+},
+{
+"player": "Austin Reaves",
+"stat": "FP",
+"line": 35.85,
+"team": "LAL",
+"opp": "SAC",
+"start": "2026-11-05T03:00:00Z",
+"ud_id": "e4017291-45ae-4cb0-8770-eaa96ebf873b",
+"sharp": null
+},
+{
+"player": "Trae Young",
+"stat": "FP",
+"line": 39.65,
+"team": "WSH",
+"opp": "ATL",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "5ff4b35c-06fe-44bd-8ccc-2c2425623d03",
+"sharp": null
+},
+{
+"player": "Keyonte George",
+"stat": "FP",
+"line": 34.25,
+"team": "UTAH",
+"opp": "NO",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "b52a992c-4f67-4c14-8df3-bc64ba59550e",
+"sharp": null
+},
+{
+"player": "Anthony Davis",
+"stat": "FP",
+"line": 43.85,
+"team": "WSH",
+"opp": "ATL",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "71857f37-ab89-4b6a-a65d-328fcd32813d",
+"sharp": null
+},
+{
+"player": "De'Aaron Fox",
+"stat": "FP",
+"line": 31.45,
+"team": "SA",
+"opp": "DAL",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "13f43e84-4040-473e-b158-e0424822a991",
+"sharp": null
+},
+{
+"player": "Domantas Sabonis",
+"stat": "FP",
+"line": 38.45,
+"team": "SAC",
+"opp": "LAL",
+"start": "2026-11-05T03:00:00Z",
+"ud_id": "63faaa9e-a19c-4805-b2b0-a7d6792044de",
+"sharp": null
+},
+{
+"player": "Darius Garland",
+"stat": "FP",
+"line": 34.25,
+"team": "LAC",
+"opp": "MIA",
+"start": "2026-11-05T03:30:00Z",
+"ud_id": "8d755efe-5368-4087-bffd-77dcfa557859",
+"sharp": null
+},
+{
+"player": "Cade Cunningham",
+"stat": "FP",
+"line": 42.85,
+"team": "DET",
+"opp": "PHI",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "b7b37e0e-f6fb-46cf-baf7-c9a5095cfdc6",
+"sharp": null
+},
+{
+"player": "Lauri Markkanen",
+"stat": "FP",
+"line": 33.85,
+"team": "UTAH",
+"opp": "NO",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "056fa08f-1f62-441e-81c7-709f39a64026",
+"sharp": null
+},
+{
+"player": "Zach LaVine",
+"stat": "FP",
+"line": 28.55,
+"team": "SAC",
+"opp": "LAL",
+"start": "2026-11-05T03:00:00Z",
+"ud_id": "1e2e5582-6b48-41fc-92a8-865b865b28d0",
+"sharp": null
+},
+{
+"player": "Jamal Murray",
+"stat": "FP",
+"line": 40.85,
+"team": "DEN",
+"opp": "TOR",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "65ed83d7-d054-4743-abce-05124a0eb94f",
+"sharp": null
+},
+{
+"player": "Bam Adebayo",
+"stat": "FP",
+"line": 38.25,
+"team": "MIA",
+"opp": "LAC",
+"start": "2026-11-05T03:30:00Z",
+"ud_id": "1f332fb7-76bd-4806-9faa-90fe70fb92ea",
+"sharp": null
+},
+{
+"player": "Julius Randle",
+"stat": "FP",
+"line": 34.15,
+"team": "BKN",
+"opp": "CHA",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "bfd98448-f585-43cb-b36f-11c2db4f7562",
+"sharp": null
+},
+{
+"player": "Derrick White",
+"stat": "FP",
+"line": 32.75,
+"team": "BOS",
+"opp": "MIL",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "7620a728-d33a-4713-bda6-5ca41494e102",
+"sharp": null
+},
+{
+"player": "Alperen Sengun",
+"stat": "FP",
+"line": 43.35,
+"team": "HOU",
+"opp": "MIN",
+"start": "2026-11-05T01:30:00Z",
+"ud_id": "408f69ee-f035-4fb4-acab-0d4deabdc01a",
+"sharp": null
+},
+{
+"player": "Brandon Miller",
+"stat": "FP",
+"line": 35.55,
+"team": "CHA",
+"opp": "BKN",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "b8ccffda-7192-46bb-9484-032e8fee59aa",
+"sharp": null
+},
+{
+"player": "Tyrese Maxey",
+"stat": "FP",
+"line": 38.25,
+"team": "PHI",
+"opp": "DET",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "41fe4116-4341-4b8a-8cb0-7a3d49309080",
+"sharp": null
+},
+{
+"player": "Ivica Zubac",
+"stat": "FP",
+"line": 30.05,
+"team": "IND",
+"opp": "MEM",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "312339bc-3d48-49ff-92ae-e1d111fe10b4",
+"sharp": null
+},
+{
+"player": "Miles Bridges",
+"stat": "FP",
+"line": 30.45,
+"team": "PHX",
+"opp": "POR",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "7050c1df-5f93-4f9b-a00c-0542115801dc",
+"sharp": null
+},
+{
+"player": "Evan Mobley",
+"stat": "FP",
+"line": 36.35,
+"team": "CLE",
+"opp": "OKC",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "730bb802-49ef-4576-acd3-8e4bd2438ffe",
+"sharp": null
+},
+{
+"player": "Tyler Herro",
+"stat": "FP",
+"line": 31.25,
+"team": "MIL",
+"opp": "BOS",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "d2428dac-2c9c-46ef-8164-10d82bbb48e5",
+"sharp": null
+},
+{
+"player": "OG Anunoby",
+"stat": "FP",
+"line": 34.55,
+"team": "NY",
+"opp": "CHI",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "a42cb7dd-5fc4-486f-b321-266198833cb7",
+"sharp": null
+},
+{
+"player": "RJ Barrett",
+"stat": "FP",
+"line": 34.45,
+"team": "TOR",
+"opp": "DEN",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "c3a505e3-c0b3-4458-a962-191f0874a9b4",
+"sharp": null
+},
+{
+"player": "Immanuel Quickley",
+"stat": "FP",
+"line": 31.75,
+"team": "TOR",
+"opp": "DEN",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "4941ef2c-6b9b-40d9-baa6-5835959a998a",
+"sharp": null
+},
+{
+"player": "Josh Giddey",
+"stat": "FP",
+"line": 31.75,
+"team": "CHI",
+"opp": "NY",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "d313d77f-1d3f-41df-857e-7896b678ed8d",
+"sharp": null
+},
+{
+"player": "Jalen Johnson",
+"stat": "FP",
+"line": 46.35,
+"team": "ATL",
+"opp": "WSH",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "3410429f-52e2-46e2-9801-4983d46830c6",
+"sharp": null
+},
+{
+"player": "Michael Porter Jr.",
+"stat": "FP",
+"line": 33.85,
+"team": "BKN",
+"opp": "CHA",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "1640969a-61db-40ac-88e4-12bffd8ea0a6",
+"sharp": null
+},
+{
+"player": "Andrew Nembhard",
+"stat": "FP",
+"line": 33.35,
+"team": "IND",
+"opp": "MEM",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "ef5d15c7-b9aa-4fdd-8de1-e494ea2b02a2",
+"sharp": null
+},
+{
+"player": "Dylan Harper",
+"stat": "FP",
+"line": 31.75,
+"team": "SA",
+"opp": "DAL",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "e1713da4-2c3a-4988-9918-be87fe8e908a",
+"sharp": null
+},
+{
+"player": "Dejounte Murray",
+"stat": "FP",
+"line": 35.65,
+"team": "NO",
+"opp": "UTAH",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "5372c179-a09e-4ab3-a1d1-5ff370b1ebff",
+"sharp": null
+},
+{
+"player": "Stephon Castle",
+"stat": "FP",
+"line": 30.65,
+"team": "SA",
+"opp": "DAL",
+"start": "2026-11-05T02:30:00Z",
+"ud_id": "32f47346-3d74-4972-b71f-501f57ed925a",
+"sharp": null
+},
+{
+"player": "Deni Avdija",
+"stat": "FP",
+"line": 40.95,
+"team": "POR",
+"opp": "PHX",
+"start": "2026-11-05T02:00:00Z",
+"ud_id": "0c84ffd2-af46-410f-b474-8a77886184a8",
+"sharp": null
+},
+{
+"player": "Amen Thompson",
+"stat": "FP",
+"line": 32.25,
+"team": "HOU",
+"opp": "MIN",
+"start": "2026-11-05T01:30:00Z",
+"ud_id": "3aacefbb-03e5-4c17-bdc5-1d7096252eb4",
+"sharp": null
+},
+{
+"player": "Payton Pritchard",
+"stat": "FP",
+"line": 32.25,
+"team": "BOS",
+"opp": "MIL",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "f1cdeb39-8b16-4f43-ae53-1802987648a0",
+"sharp": null
+},
+{
+"player": "Onyeka Okongwu",
+"stat": "FP",
+"line": 33.05,
+"team": "ATL",
+"opp": "WSH",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "5b027177-27b4-4f15-8ab3-c63ad4535a96",
+"sharp": null
+},
+{
+"player": "Nickeil Alexander-Walker",
+"stat": "FP",
+"line": 32.45,
+"team": "ATL",
+"opp": "WSH",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "37d65756-d512-43f9-aa2c-583771563d51",
+"sharp": null
+},
+{
+"player": "Cameron Boozer",
+"stat": "FP",
+"line": 38.15,
+"team": "MEM",
+"opp": "IND",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "a2537d3c-8141-4a5e-b3bf-fa772ab9a051",
+"sharp": null
+},
+{
+"player": "AJ Dybantsa",
+"stat": "FP",
+"line": 29.45,
+"team": "WSH",
+"opp": "ATL",
+"start": "2026-11-05T00:00:00Z",
+"ud_id": "b17ab8ae-680d-4c27-beb3-9621ffad9762",
+"sharp": null
+},
+{
+"player": "Darius Acuff Jr.",
+"stat": "FP",
+"line": 35.85,
+"team": "SAC",
+"opp": "LAL",
+"start": "2026-11-05T03:00:00Z",
+"ud_id": "6b7268f5-4c5a-4f22-a998-6b7886da7abd",
+"sharp": null
+},
+{
+"player": "Ajay Mitchell",
+"stat": "FP",
+"line": 32.55,
+"team": "OKC",
+"opp": "CLE",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "791d7edf-ff9c-4b41-b0a1-dd2e8973d95e",
+"sharp": null
+},
+{
+"player": "Caleb Wilson",
+"stat": "FP",
+"line": 33.15,
+"team": "CHI",
+"opp": "NY",
+"start": "2026-11-05T00:30:00Z",
+"ud_id": "cccdd8a4-6b6f-4778-8429-dc1edb0ce234",
+"sharp": null
+},
+{
+"player": "Ty Jerome",
+"stat": "FP",
+"line": 38.75,
+"team": "MEM",
+"opp": "IND",
+"start": "2026-11-05T01:00:00Z",
+"ud_id": "e8661894-01bc-4d5d-87b7-490db734335b",
+"sharp": null
+}
+],
+"note": "FP lines only (the slip builder reads no other stat from this file); other stats come from strip_log.csv"
+}

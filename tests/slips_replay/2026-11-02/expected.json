@@ -1,0 +1,17 @@
+{
+ "date": "2026-11-02",
+ "now": "2026-11-02T16:20:00Z",
+ "inputs": "data/strip_log.csv and data/fp_v2_log.csv at commit ce9ed8d (the 2026-11-02T16:15Z data build: strip snapshot 15:59Z, FP v2 log 16:15Z); FP lines from docs/data/lines.json at d0f2424 (captured 15:59Z; every capture through 19:01Z selects the same slips)",
+ "expected_8_leg": [
+  "Isaiah Collier PTS More 7.5",
+  "Bilal Coulibaly PTS More 7.5",
+  "Domantas Sabonis PTS More 15.5",
+  "Onyeka Okongwu FP Less 35.95",
+  "Sion James 3PM More 0.5",
+  "Christian Braun PTS More 11.5",
+  "LaMelo Ball PTS Less 20.5",
+  "Kris Dunn 3PM More 0.5"
+ ],
+ "nested": "3-leg = first 3, 6-leg = first 6",
+ "excluded_by_minutes_top": "Bennedict Mathurin"
+}
