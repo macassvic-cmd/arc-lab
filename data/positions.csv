@@ -1,9 +1,9 @@
 player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,override,pos
+4066261,Bam Adebayo,C,82,2657,3.52,10.95,5.8,0.75,False,C,,C
 4871144,Alperen Sengun,C,79,2647,6.83,9.57,1.97,1.16,False,C,,C
-4066261,Bam Adebayo,C,81,2624,3.57,10.95,5.84,0.74,False,C,,C
 3032976,Rudy Gobert,C,84,2622,1.92,13.28,0.11,1.81,False,C,,C
 3136195,Karl-Anthony Towns,C,84,2601,3.49,13.97,4.8,0.61,False,C,,C
-4277847,Wendell Carter Jr.,C,85,2517,2.3,9.14,3.49,0.74,False,C,,C
+4277847,Wendell Carter Jr.,C,86,2551,2.3,9.2,3.47,0.75,False,C,,C
 3112335,Nikola Jokic,C,72,2516,10.9,12.93,4.68,0.87,False,C,,C
 4432158,Evan Mobley,C,73,2342,4.03,10.02,3.75,1.91,False,C,,C
 4396971,Naz Reid,C,86,2276,2.96,8.73,8.04,1.31,False,C,,C
@@ -17,7 +17,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4433621,Jalen Duren,C,72,2016,2.54,13.43,0.0,1.09,False,C,,C
 4898371,Maxime Raynaud,C,74,1968,1.83,10.17,1.35,0.71,False,C,,C
 4278067,Nic Claxton,C,69,1920,4.74,8.96,0.36,1.44,False,C,,C
-6478,Nikola Vucevic,C,71,1886,4.24,10.65,5.38,0.88,False,C,,C
+6478,Nikola Vucevic,C,72,1890,4.23,10.63,5.39,0.88,False,C,,C
 4065731,Jay Huff,C,90,1878,2.49,6.81,7.65,3.07,False,C,,C
 5105623,Kel'el Ware,C,85,1859,1.2,14.72,5.02,1.76,False,C,,C
 3448,Brook Lopez,C,83,1824,2.07,6.2,6.77,1.89,False,C,,C
@@ -44,9 +44,9 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4277951,Luka Garza,C,77,1215,2.22,9.07,4.39,0.86,False,C,,C
 4278562,Paul Reed,F,73,1118,3.22,11.21,1.55,2.16,False,C,,C
 4066211,Robert Williams III,C,65,1108,2.14,14.88,0.75,3.05,False,C,,C
+3213,Al Horford,C,52,1101,4.02,8.11,7.42,1.8,False,C,,C
 3102530,Jusuf Nurkic,C,41,1084,6.51,14.11,2.36,0.73,False,C,,C
-3213,Al Horford,C,51,1083,4.06,8.08,7.48,1.83,False,C,,C
-4348700,Goga Bitadze,C,69,1016,3.05,11.83,0.39,2.23,False,C,,C
+4348700,Goga Bitadze,C,70,1024,3.02,11.92,0.39,2.21,False,C,,C
 3102529,Clint Capela,C,81,1010,2.14,13.4,0.07,2.39,False,C,,C
 4066399,Micah Potter,C,51,934,2.66,9.25,6.59,0.58,False,C,,C
 4433174,Dylan Cardwell,C,45,924,2.42,13.17,0.16,2.61,False,C,,C
@@ -54,10 +54,10 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 3102531,Kristaps Porzingis,C,32,770,3.79,7.81,7.48,1.78,False,C,,C
 3934723,Thomas Bryant,C,63,763,1.56,9.77,6.7,1.27,False,C,,C
 2991235,Steven Adams,C,33,739,2.39,13.54,0.0,0.97,False,C,,C
-4278076,Nick Richards,C,51,712,0.86,12.39,0.96,1.62,False,C,,C
+4278076,Nick Richards,C,52,713,0.86,12.37,0.96,1.62,False,C,,C
 3150844,Moritz Wagner,C,44,578,2.24,8.84,5.36,0.19,False,C,,C
+5203685,Khaman Maluach,C,53,549,0.98,11.48,1.64,2.56,False,C,,C
 4701208,Moussa Cisse,C,42,546,0.59,14.57,0.0,2.97,False,C,,C
-5203685,Khaman Maluach,C,52,527,0.89,11.54,1.71,2.66,False,C,,C
 4592435,Branden Carlson,C,45,510,2.19,9.04,6.21,2.05,False,C,,C
 4871141,Ariel Hukporti,C,54,504,2.07,11.36,0.29,1.86,False,C,,C
 4432827,Oscar Tshiebwe,C,32,485,2.6,14.18,0.0,0.52,False,C,,C
@@ -68,10 +68,10 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 5108024,Yanic Konan Niederhauser,C,40,425,1.02,9.91,0.42,2.54,False,C,,C
 4431778,Christian Koloko,C,27,358,1.81,8.15,0.91,2.31,False,C,,C
 5217746,Yang Hansen,C,47,333,2.59,8.22,5.19,1.19,False,C,,C
-4066268,Duop Reath,C,36,282,1.28,5.36,7.79,1.15,False,C,,C
+4066268,Duop Reath,C,37,284,1.27,5.32,7.73,1.14,False,C,,C
+4397886,Charles Bassey,C,20,236,1.68,14.34,0.31,2.75,False,C,,C
 3442,DeAndre Jordan,C,14,231,2.03,13.87,0.0,1.87,False,C,,C
 4701225,PJ Hall,C,19,226,2.07,12.27,1.27,1.75,False,C,,C
-4397886,Charles Bassey,C,19,222,1.78,14.11,0.16,2.43,False,C,,C
 5107156,Lachlan Olbrich,C,14,196,4.78,12.12,2.02,1.29,False,C,,C
 2488653,Mason Plumlee,C,20,172,4.19,11.09,0.0,0.0,False,C,,C
 5174983,Aday Mara,C,8,153,2.35,10.35,0.0,3.53,False,C,,C
@@ -87,7 +87,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4432180,Hunter Dickinson,C,5,43,1.67,4.19,3.35,1.67,True,C,,C
 3936296,Skal Labissiere,C,3,38,2.84,8.53,4.74,0.95,True,C,,C
 5157587,Rocco Zikarsky,C,5,37,1.95,13.62,0.0,4.86,True,C,,C
-4397204,Colin Castleton,C,6,32,2.25,13.5,0.0,1.12,True,C,,C
+4397204,Colin Castleton,C,7,34,3.18,12.71,0.0,1.06,True,C,,C
 4593049,Orlando Robinson,C,4,25,4.32,5.76,2.88,0.0,True,C,,C
 4700818,Vladislav Goldin,C,9,23,4.7,14.09,0.0,4.7,True,C,,C
 5105809,Tarris Reed Jr.,C,4,20,0.0,27.0,0.0,1.8,True,C,,C
@@ -105,17 +105,17 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4431679,Precious Achiuwa,F,81,1967,2.03,9.9,1.9,1.08,False,PF,,PF
 4278580,Sandro Mamukelashvili,F,89,1964,3.04,7.99,5.96,0.84,False,PF,,PF
 4278104,Michael Porter Jr.,F,60,1955,3.09,7.84,10.26,0.31,False,PF,,PF
-4601023,Oso Ighodaro,F,86,1893,3.84,8.35,0.02,1.16,False,PF,,PF
+4601023,Oso Ighodaro,F,87,1917,3.81,8.34,0.02,1.16,False,PF,,PF
 4684793,Kyle Filipowski,F,82,1841,3.91,10.87,4.52,0.76,False,PF,,PF
 4903027,Cedric Coward,F,69,1807,3.81,8.47,6.24,0.56,False,PF,,PF
-3064482,Bobby Portis,F,75,1790,2.45,9.75,6.64,0.34,False,PF,,PF
+3064482,Bobby Portis,F,76,1804,2.43,9.78,6.63,0.34,False,PF,,PF
 4433192,Tari Eason,F,69,1775,2.05,8.7,5.88,0.79,False,PF,,PF
 4870562,Dominick Barlow,F,71,1685,1.86,7.26,1.75,1.13,False,PF,,PF
+4888725,Ryan Dunn,F,77,1461,2.71,7.91,4.44,0.86,False,PF,,PF
 4432907,Justin Champagnie,F,72,1451,2.21,10.27,4.29,1.12,False,PF,,PF
-4888725,Ryan Dunn,F,76,1436,2.68,7.97,4.46,0.85,False,PF,,PF
 5093267,Collin Murray-Boyles,F,65,1411,2.96,8.24,1.63,1.45,False,PF,,PF
 4432823,Jaylin Williams,F,72,1408,4.32,9.89,7.16,1.07,False,PF,,PF
-3032977,Giannis Antetokounmpo,F,44,1303,6.69,12.49,1.77,0.91,False,PF,,PF
+3032977,Giannis Antetokounmpo,F,45,1334,6.64,12.58,1.86,0.89,False,PF,,PF
 4277848,Marvin Bagley III,F,67,1290,2.48,10.91,1.53,1.28,False,PF,,PF
 4397189,Jalen Smith,F,61,1273,2.23,11.79,7.32,1.39,False,PF,,PF
 5107173,Danny Wolf,F,60,1238,3.87,8.55,6.48,0.93,False,PF,,PF
@@ -144,7 +144,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4065654,Jonathan Isaac,F,50,520,1.52,9.14,2.63,2.15,False,PF,,PF
 4610139,Jeremy Sochan,F,44,470,3.06,8.2,3.45,0.54,False,PF,,PF
 2960236,Maxi Kleber,F,41,460,2.11,6.57,2.03,0.86,False,PF,,PF
-4431772,Myron Gardner,F,48,421,3.85,10.6,5.47,0.77,False,PF,,PF
+4431772,Myron Gardner,F,49,422,3.84,10.58,5.46,0.77,False,PF,,PF
 3136777,Jae'Sean Tate,F,51,420,2.23,6.69,2.83,0.26,False,PF,,PF
 4683742,Julian Reese,F,14,405,2.13,12.27,0.0,0.71,False,PF,,PF
 4684208,Brooks Barnhizer,F,45,375,2.21,7.87,2.4,0.48,False,PF,,PF
@@ -152,10 +152,10 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4432813,Jeremiah Robinson-Earl,F,22,362,1.49,10.24,4.08,0.1,False,PF,,PF
 3155535,Kevon Looney,F,25,337,3.74,13.46,1.39,1.07,False,PF,,PF
 5107897,Jonathan Mogbo,F,42,320,3.26,8.89,0.79,1.12,False,PF,,PF
-4897449,Malevy Leons,F,28,292,2.84,6.78,2.1,1.11,False,PF,,PF
+4897449,Malevy Leons,F,29,293,2.83,6.76,2.09,1.11,False,PF,,PF
+5175737,Yaxel Lendeborg,F,9,285,4.67,8.08,6.69,0.63,False,PF,,PF
 4431786,Keshad Johnson,F,32,279,1.03,8.0,5.68,1.03,False,PF,,PF
 5041935,Cameron Boozer,F,8,257,6.02,10.93,6.72,0.84,False,PF,,PF
-5175737,Yaxel Lendeborg,F,8,255,4.38,7.91,7.06,0.56,False,PF,,PF
 4066650,Zach Collins,F,16,236,2.9,10.68,4.27,0.61,False,PF,,PF
 4277964,Xavier Tillman,F,28,186,2.52,8.32,3.48,0.97,False,PF,,PF
 4397882,Tolu Smith,F,22,165,3.05,13.09,0.0,1.75,False,PF,,PF
@@ -176,12 +176,12 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4278073,Shai Gilgeous-Alexander,G,76,2532,6.88,4.64,5.08,0.87,False,PG,,PG
 4066259,De'Aaron Fox,G,81,2513,7.21,4.38,6.06,0.33,False,PG,,PG
 4395724,Immanuel Quickley,G,78,2491,6.66,4.48,7.79,0.07,False,PG,,PG
+4278585,Collin Gillespie,G,87,2454,5.87,5.02,9.12,0.25,False,PG,,PG
 4432166,Cade Cunningham,G,72,2440,10.25,5.9,6.21,0.93,False,PG,,PG
-4278585,Collin Gillespie,G,86,2430,5.9,5.04,9.14,0.25,False,PG,,PG
 4845374,Bub Carrington,G,90,2429,5.93,4.3,6.54,0.27,False,PG,,PG
-3136193,Devin Booker,G,70,2355,6.33,4.08,6.08,0.31,False,PG,,PG
+3136193,Devin Booker,G,71,2389,6.36,4.04,6.12,0.3,False,PG,,PG
+4278053,Davion Mitchell,G,79,2315,8.2,3.13,4.31,0.25,False,PG,,PG
 4845367,Stephon Castle,G,77,2309,8.61,6.52,4.77,0.34,False,PG,,PG
-4278053,Davion Mitchell,G,78,2277,8.21,3.15,4.24,0.25,False,PG,,PG
 4432816,LaMelo Ball,G,81,2256,9.05,6.03,13.07,0.3,False,PG,,PG
 3062679,Josh Hart,G,74,2247,5.56,8.73,4.53,0.32,False,PG,,PG
 4066457,Austin Reaves,G,60,2086,5.61,4.64,6.51,0.41,False,PG,,PG
@@ -199,17 +199,17 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4683766,Isaiah Collier,G,67,1645,10.04,3.87,2.36,0.44,False,PG,,PG
 5107199,Daniss Jenkins,G,80,1644,6.85,4.18,4.88,0.35,False,PG,,PG
 4396907,Darius Garland,G,53,1612,7.91,2.68,8.11,0.18,False,PG,,PG
-4397040,Brandon Williams,G,73,1586,6.2,4.79,3.97,0.5,False,PG,,PG
+4397040,Brandon Williams,G,74,1607,6.21,4.75,3.94,0.54,False,PG,,PG
+3975,Stephen Curry,G,50,1533,5.5,4.23,13.13,0.42,False,PG,,PG
 4896372,Walter Clayton Jr.,G,76,1513,7.16,3.74,6.26,0.48,False,PG,,PG
-3975,Stephen Curry,G,49,1505,5.5,4.28,13.08,0.43,False,PG,,PG
 5279130,Nolan Traore,G,64,1423,5.95,2.96,5.59,0.71,False,PG,,PG
 4277869,Jose Alvarado,G,73,1416,6.13,4.47,7.47,0.23,False,PG,,PG
 4592492,Bones Hyland,G,79,1291,5.94,3.85,9.37,0.59,False,PG,,PG
 4395651,Coby White,G,52,1283,5.75,4.91,9.2,0.17,False,PG,,PG
 4397140,Kevin Porter Jr.,G,38,1261,7.99,5.65,4.08,0.54,False,PG,,PG
-4592714,Pat Spencer,G,68,1235,6.85,4.69,4.96,0.17,False,PG,,PG
+4592714,Pat Spencer,G,69,1237,6.84,4.69,4.95,0.17,False,PG,,PG
 4701233,Craig Porter Jr.,G,70,1202,6.35,6.95,2.88,1.2,False,PG,,PG
-4066993,Dru Smith,G,75,1196,5.66,5.39,4.03,0.63,False,PG,,PG
+4066993,Dru Smith,G,76,1197,5.65,5.38,4.06,0.63,False,PG,,PG
 4433629,Ryan Nembhard,G,63,1180,9.7,4.09,4.15,0.06,False,PG,,PG
 3135046,Tyus Jones,G,74,1058,5.82,2.62,4.9,0.14,False,PG,,PG
 4593803,Jalen Williams,G,36,1032,6.66,5.83,3.0,0.38,False,PG,,PG
@@ -251,9 +251,9 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4431736,Toumani Camara,F,89,2924,2.59,5.44,7.92,0.46,False,SF,,SF
 3064514,Julius Randle,F,87,2882,5.45,7.36,4.83,0.24,False,SF,,SF
 4431671,Jaden McDaniels,F,82,2617,3.19,5.03,3.98,1.09,False,SF,,SF
+4066383,Miles Bridges,F,84,2614,3.69,6.95,6.75,0.54,False,SF,,SF
 3913176,Brandon Ingram,F,77,2602,3.93,5.95,4.88,0.76,False,SF,,SF
 5041939,Cooper Flagg,F,77,2591,5.0,7.09,3.85,0.97,False,SF,,SF
-4066383,Miles Bridges,F,83,2583,3.67,6.86,6.75,0.54,False,SF,,SF
 4397688,Trey Murphy III,F,73,2572,3.84,5.72,8.45,0.35,False,SF,,SF
 3934719,OG Anunoby,F,76,2530,2.39,5.75,6.63,0.75,False,SF,,SF
 4592479,Julian Champagnie,F,91,2501,2.0,7.27,8.18,0.65,False,SF,,SF
@@ -263,24 +263,24 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 3157465,Duncan Robinson,F,85,2361,2.7,3.35,9.29,0.37,False,SF,,SF
 4278594,Naji Marshall,F,79,2316,4.17,5.67,3.59,0.11,False,SF,,SF
 3149673,Pascal Siakam,F,70,2314,4.14,7.27,5.07,0.4,False,SF,,SF
-3059319,Andrew Wiggins,F,76,2275,3.05,5.55,5.82,1.19,False,SF,,SF
+3059319,Andrew Wiggins,F,77,2296,3.09,5.6,5.8,1.19,False,SF,,SF
 4433287,Brandon Miller,F,74,2265,3.78,5.83,10.08,0.81,False,SF,,SF
 4592691,Jake LaRavia,F,90,2251,2.51,5.65,4.16,0.74,False,SF,,SF
 1966,LeBron James,F,67,2219,7.85,6.75,4.32,0.67,False,SF,,SF
 5106060,Jarace Walker,F,85,2172,3.48,7.43,6.43,0.5,False,SF,,SF
 6450,Kawhi Leonard,F,67,2139,3.99,7.2,7.73,0.47,False,SF,,SF
+4702382,Tristan da Silva,F,85,2136,2.31,5.22,6.49,0.47,False,SF,,SF
 4066648,Rui Hachimura,F,74,2114,1.14,4.51,5.11,0.37,False,SF,,SF
-4702382,Tristan da Silva,F,84,2106,2.32,5.26,6.38,0.48,False,SF,,SF
 4065804,Sam Hauser,F,86,2103,2.07,5.53,9.38,0.39,False,SF,,SF
 6578,Harrison Barnes,F,84,2078,2.6,3.78,6.46,0.24,False,SF,,SF
 3908845,John Collins,F,77,2073,1.29,7.19,4.17,1.01,False,SF,,SF
+6589,Draymond Green,F,75,2057,7.44,7.18,5.58,0.84,False,SF,,SF
 5112087,Jaylen Wells,F,77,2039,2.17,4.31,7.13,0.18,False,SF,,SF
-6589,Draymond Green,F,74,2030,7.34,7.18,5.62,0.83,False,SF,,SF
 3134907,Kyle Kuzma,F,77,2021,3.71,6.47,4.86,0.5,False,SF,,SF
 4395625,RJ Barrett,F,65,1984,3.99,6.31,5.93,0.42,False,SF,,SF
 4712896,Noah Clowney,F,74,1951,2.12,5.66,7.57,0.9,False,SF,,SF
+3155526,Dillon Brooks,F,63,1915,2.22,4.32,7.54,0.21,False,SF,,SF
 2991070,Jerami Grant,F,65,1891,2.65,4.11,7.29,0.84,False,SF,,SF
-3155526,Dillon Brooks,F,62,1886,2.23,4.37,7.54,0.19,False,SF,,SF
 5105839,Brice Sensabaugh,F,82,1882,2.89,4.86,9.05,0.25,False,SF,,SF
 4432822,Isaac Okoro,F,71,1840,2.13,3.58,4.68,0.63,False,SF,,SF
 4277813,Herbert Jones,F,64,1781,3.29,4.33,5.68,0.59,False,SF,,SF
@@ -302,9 +302,9 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4592427,Spencer Jones,F,63,1418,1.29,5.31,3.66,0.74,False,SF,,SF
 4594326,Kris Murray,F,62,1408,2.17,5.52,3.35,0.69,False,SF,,SF
 4251,Paul George,F,44,1353,4.47,6.25,8.33,0.48,False,SF,,SF
+4566434,Franz Wagner,F,42,1307,4.99,6.28,4.82,0.3,False,SF,,SF
 5105550,GG Jackson,F,62,1303,2.46,7.27,5.97,1.27,False,SF,,SF
 3416,Nicolas Batum,F,74,1292,1.78,5.13,6.35,0.64,False,SF,,SF
-4566434,Franz Wagner,F,41,1269,4.71,6.24,4.94,0.31,False,SF,,SF
 3064290,Aaron Gordon,F,43,1209,3.36,7.33,5.51,0.39,False,SF,,SF
 3899664,Simone Fontecchio,F,74,1190,3.06,6.44,10.1,0.3,False,SF,,SF
 6430,Jimmy Butler III,F,38,1185,5.62,6.41,2.58,0.24,False,SF,,SF
@@ -316,9 +316,9 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4711297,Justin Edwards,F,66,980,2.94,3.53,6.61,0.4,False,SF,,SF
 2581184,Anthony Gill,F,55,954,2.6,5.96,1.81,0.79,False,SF,,SF
 3138160,Caleb Martin,F,62,940,3.18,5.9,2.53,0.57,False,SF,,SF
+4997528,Nikola Jovic,F,53,895,4.38,6.88,7.12,0.8,False,SF,,SF
 2993874,Kyle Anderson,F,49,892,5.37,6.3,0.44,1.13,False,SF,,SF
 5061568,Carter Bryant,F,78,884,2.04,7.33,6.92,1.02,False,SF,,SF
-4997528,Nikola Jovic,F,52,883,4.4,6.97,7.13,0.77,False,SF,,SF
 4687718,Josh Minott,F,53,871,1.98,6.99,6.86,0.99,False,SF,,SF
 4431714,Jalen Wilson,F,54,861,2.09,4.77,6.36,0.08,False,SF,,SF
 4594327,Keegan Murray,F,25,849,1.65,5.85,5.05,1.53,False,SF,,SF
@@ -329,7 +329,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4431893,Jamison Battle,F,68,651,1.49,5.59,6.58,0.17,False,SF,,SF
 2578185,Dorian Finney-Smith,F,40,631,2.11,5.42,5.88,0.34,False,SF,,SF
 2990962,Taurean Prince,F,28,626,2.65,4.77,8.22,0.35,False,SF,,SF
-4278572,Jamal Cain,F,44,597,1.87,5.37,5.55,0.24,False,SF,,SF
+4278572,Jamal Cain,F,45,622,1.79,5.44,5.67,0.23,False,SF,,SF
 2580365,Larry Nance Jr.,F,43,578,2.43,7.41,4.98,0.5,False,SF,,SF
 4897943,Dalton Knecht,F,55,568,1.39,5.2,7.29,0.76,False,SF,,SF
 4873201,Asa Newell,F,48,557,2.0,7.04,5.36,1.03,False,SF,,SF
@@ -353,9 +353,9 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 3059409,Nigel Hayes-Davis,F,27,194,1.3,6.12,2.97,0.37,False,SF,,SF
 3934620,Trevon Scott,F,6,183,1.97,6.1,3.74,0.98,False,SF,,SF
 4432735,Dariq Whitehead,F,6,183,1.77,4.72,11.8,0.0,False,SF,,SF
+2990969,Georges Niang,F,9,181,2.98,5.57,7.16,0.2,False,SF,,SF
 3209,Jeff Green,F,30,176,1.64,5.11,9.0,0.41,False,SF,,SF
 5167876,Tyler Smith,F,12,167,1.08,7.11,7.54,0.0,False,SF,,SF
-2990969,Georges Niang,F,8,159,2.72,5.43,7.02,0.23,False,SF,,SF
 3136196,Trey Lyles,F,9,153,1.41,6.59,6.35,0.47,False,SF,,SF
 2968436,Joe Ingles,F,22,152,8.05,4.5,3.79,0.47,False,SF,,SF
 5211983,Pacome Dadiet,F,30,148,2.92,6.81,8.03,0.24,True,SF,,SF
@@ -377,7 +377,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4906923,Bobi Klintman,F,12,74,2.92,9.24,6.32,0.0,True,SF,,SF
 4593041,David Roddy,F,5,73,1.97,9.86,5.42,0.49,True,SF,,SF
 4713010,David Jones Garcia,F,12,71,9.13,6.59,2.54,0.51,True,SF,,SF
-4703396,Graham Ike,F,6,66,2.73,8.73,2.18,0.55,True,SF,,SF
+4703396,Graham Ike,F,7,67,2.69,9.13,2.15,0.54,True,SF,,SF
 4397689,Drew Peterson,F,6,65,1.11,4.98,6.65,0.55,True,SF,,SF
 5177362,Riley Minix,F,10,65,2.77,4.98,7.75,0.55,True,SF,,SF
 4697270,Payton Sandfort,F,4,63,0.0,5.71,9.71,0.0,True,SF,,SF
@@ -410,7 +410,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4433622,Chris Livingston,F,3,17,2.12,6.35,6.35,0.0,True,SF,,SF
 4592461,Jacob Toppin,F,5,17,2.12,2.12,0.0,2.12,True,SF,,SF
 4395676,Buddy Boeheim,F,4,16,0.0,0.0,13.5,0.0,True,SF,,SF
-5041953,Koa Peat,F,3,13,0.0,5.54,0.0,0.0,True,SF,,SF
+5041953,Koa Peat,F,4,15,0.0,7.2,0.0,0.0,True,SF,,SF
 5061585,Isaiah Evans,F,4,10,7.2,3.6,10.8,0.0,True,SF,,SF
 5106040,Tobi Lawal,F,4,10,7.2,3.6,7.2,0.0,True,SF,,SF
 5142621,Chris Cenac Jr.,F,3,9,0.0,12.0,8.0,0.0,True,SF,,SF
@@ -423,14 +423,14 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 5106283,Dillon Mitchell,F,1,2,0.0,0.0,0.0,0.0,True,SF,,SF
 5105337,Maliq Brown,F,1,1,36.0,0.0,0.0,0.0,True,SF,,SF
 4684740,Amen Thompson,G,88,3247,4.99,7.44,1.39,0.55,False,SG,,SG
-4066320,Desmond Bane,G,89,3001,4.27,4.35,5.93,0.52,False,SG,,SG
+4066320,Desmond Bane,G,90,3033,4.23,4.38,5.97,0.51,False,SG,,SG
 3147657,Mikal Bridges,G,90,2931,3.99,4.18,5.55,0.8,False,SG,,SG
 5124612,VJ Edgecombe,G,83,2894,4.22,5.96,5.71,0.53,False,SG,,SG
 4278039,Nickeil Alexander-Walker,G,87,2876,3.88,3.73,9.01,0.55,False,SG,,SG
 3917376,Jaylen Brown,G,79,2733,5.2,7.21,5.8,0.41,False,SG,,SG
+4709138,Brandin Podziemski,G,89,2567,4.73,6.38,6.42,0.25,False,SG,,SG
 3978,DeMar DeRozan,G,83,2562,4.67,3.34,2.19,0.34,False,SG,,SG
 5061575,Kon Knueppel,G,82,2555,3.86,6.09,9.06,0.27,False,SG,,SG
-4709138,Brandin Podziemski,G,88,2535,4.74,6.38,6.42,0.24,False,SG,,SG
 2490149,CJ McCollum,G,85,2500,4.75,4.02,8.06,0.53,False,SG,,SG
 3934673,Donte DiVincenzo,G,82,2498,4.51,4.84,9.28,0.49,False,SG,,SG
 2991139,Kris Dunn,G,90,2476,4.81,4.41,3.4,0.28,False,SG,,SG
@@ -441,32 +441,32 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4395630,Devin Vassell,G,76,2334,3.02,4.75,7.31,0.42,False,SG,,SG
 5144091,Jeremiah Fears,G,90,2334,4.86,5.18,5.23,0.52,False,SG,,SG
 4711272,Reed Sheppard,G,88,2281,4.72,3.98,9.79,0.85,False,SG,,SG
+2528210,Tim Hardaway Jr.,G,89,2272,1.81,3.47,9.3,0.22,False,SG,,SG
 4594268,Anthony Edwards,G,65,2269,3.81,5.09,8.87,0.83,False,SG,,SG
-2528210,Tim Hardaway Jr.,G,88,2268,1.79,3.48,9.27,0.22,False,SG,,SG
 4873138,Ace Bailey,G,80,2229,2.37,5.81,7.15,0.99,False,SG,,SG
 4397002,Ayo Dosunmu,G,78,2159,4.79,4.75,5.24,0.37,False,SG,,SG
+4601025,Pelle Larsson,G,79,2124,4.58,4.61,3.68,0.29,False,SG,,SG
 4683692,Cason Wallace,G,80,2097,3.5,4.21,5.12,0.48,False,SG,,SG
-4601025,Pelle Larsson,G,78,2095,4.57,4.66,3.64,0.29,False,SG,,SG
 4684742,Ausar Thompson,G,80,2092,4.47,8.23,0.46,1.26,False,SG,,SG
 4397020,Luguentz Dort,G,78,2079,1.71,4.71,7.2,0.5,False,SG,,SG
 4602025,Sion James,G,91,2068,3.27,5.47,4.82,0.35,False,SG,,SG
-4712849,Anthony Black,G,68,2025,4.53,4.68,5.67,0.84,False,SG,,SG
+4712849,Anthony Black,G,69,2056,4.57,4.73,5.64,0.82,False,SG,,SG
 4065670,Bruce Brown,G,82,1996,3.14,5.74,2.67,0.36,False,SG,,SG
 2595516,Norman Powell,G,66,1950,2.88,4.1,8.58,0.26,False,SG,,SG
 4702384,Nique Clifford,G,82,1927,3.46,5.36,4.45,0.45,False,SG,,SG
 2990992,Marcus Smart,G,68,1907,3.78,3.57,6.12,0.45,False,SG,,SG
 4683747,Jaylon Tyson,G,71,1883,3.08,6.81,6.12,0.57,False,SG,,SG
+3913174,Luke Kennard,G,84,1781,3.76,3.86,5.46,0.16,False,SG,,SG
 4576087,Peyton Watson,G,60,1766,2.63,5.87,4.51,1.47,False,SG,,SG
-3913174,Luke Kennard,G,83,1760,3.7,3.89,5.4,0.16,False,SG,,SG
 4277811,Collin Sexton,G,76,1751,4.98,3.54,6.35,0.27,False,SG,,SG
 4683634,Bennedict Mathurin,G,62,1751,2.92,6.41,5.35,0.27,False,SG,,SG
 3133603,Kelly Oubre Jr.,G,57,1738,1.88,5.59,5.51,0.6,False,SG,,SG
 4066372,Kevin Huerter,G,77,1715,4.05,5.44,7.49,0.78,False,SG,,SG
 3135045,Grayson Allen,G,60,1707,4.62,3.8,10.97,0.36,False,SG,,SG
 4684272,Ja'Kobe Walter,G,80,1705,2.24,4.54,6.74,0.36,False,SG,,SG
+6475,Klay Thompson,G,78,1704,2.35,3.32,12.82,0.55,False,SG,,SG
 4900671,Ajay Mitchell,G,65,1691,4.98,4.73,4.26,0.47,False,SG,,SG
 5104155,Bilal Coulibaly,G,64,1683,3.25,5.78,4.73,1.37,False,SG,,SG
-6475,Klay Thompson,G,77,1681,2.31,3.36,12.85,0.51,False,SG,,SG
 4278402,Jordan Goodwin,G,75,1670,3.54,7.72,7.03,0.3,False,SG,,SG
 5144126,Will Riley,G,80,1659,3.19,4.6,5.45,0.22,False,SG,,SG
 4702177,Keon Ellis,G,80,1656,1.87,3.26,6.02,1.2,False,SG,,SG
@@ -482,7 +482,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4702352,Kobe Sanders,G,76,1548,2.91,4.12,5.42,0.26,False,SG,,SG
 4395702,Isaiah Joe,G,74,1547,2.26,4.33,10.26,0.28,False,SG,,SG
 4432171,Moses Moody,G,60,1541,2.29,4.67,8.81,0.79,False,SG,,SG
-4897262,Will Richard,G,77,1520,2.37,4.45,5.42,0.26,False,SG,,SG
+4897262,Will Richard,G,78,1536,2.39,4.41,5.46,0.28,False,SG,,SG
 4396909,Aaron Nesmith,G,52,1502,2.37,4.84,7.57,0.6,False,SG,,SG
 3064440,Zach LaVine,G,47,1493,2.65,3.21,7.57,0.31,False,SG,,SG
 4065663,Josh Okogie,G,85,1486,1.87,5.43,4.12,0.44,False,SG,,SG
@@ -497,12 +497,12 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4683778,Jared McCain,G,75,1363,2.77,4.25,7.98,0.16,False,SG,,SG
 4683689,Jordan Walsh,G,76,1337,1.62,8.13,3.9,0.86,False,SG,,SG
 5037873,Drake Powell,G,65,1337,2.58,3.04,4.9,0.38,False,SG,,SG
+4066436,De'Anthony Melton,G,58,1328,3.93,5.42,7.86,0.62,False,SG,,SG
 4396818,Jordan Miller,G,60,1322,3.7,4.96,3.0,0.3,False,SG,,SG
-4066436,De'Anthony Melton,G,57,1311,3.93,5.33,7.85,0.63,False,SG,,SG
 2581018,Kentavious Caldwell-Pope,G,60,1288,4.22,4.08,5.62,0.25,False,SG,,SG
 3133602,Svi Mykhailiuk,G,58,1285,2.8,3.95,7.45,0.08,False,SG,,SG
 4395725,Tyler Herro,G,41,1274,4.72,5.59,8.19,0.37,False,SG,,SG
-3134903,Gary Payton II,G,81,1253,3.65,8.07,4.11,0.6,False,SG,,SG
+3134903,Gary Payton II,G,82,1263,3.62,8.01,4.1,0.6,False,SG,,SG
 4431823,Miles McBride,G,49,1220,3.36,3.39,9.0,0.35,False,SG,,SG
 5106258,Gradey Dick,G,84,1186,1.7,5.16,6.04,0.27,False,SG,,SG
 5175647,Hugo Gonzalez,G,81,1186,1.34,8.01,3.89,0.7,False,SG,,SG
@@ -514,8 +514,8 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 5099752,Rayan Rupert,G,65,1074,2.28,6.37,4.56,0.3,False,SG,,SG
 4431752,Kobe Brown,G,65,1043,2.97,6.87,5.18,0.41,False,SG,,SG
 4606840,Jamir Watkins,G,48,1030,2.34,6.78,5.52,0.87,False,SG,,SG
+4437244,Jalen Green,G,39,1028,3.99,4.76,8.89,0.49,False,SG,,SG
 4433144,Caleb Love,G,50,1016,4.36,4.04,10.35,0.14,False,SG,,SG
-4437244,Jalen Green,G,38,1004,3.98,4.88,9.07,0.5,False,SG,,SG
 4432811,Josh Green,G,64,1000,1.84,3.96,5.36,0.25,False,SG,,SG
 4277956,Jordan Poole,G,43,999,4.72,3.06,10.88,0.61,False,SG,,SG
 3133626,Kenrich Williams,G,64,996,3.11,7.77,5.53,0.22,False,SG,,SG
@@ -524,7 +524,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4432185,Micah Peavy,G,65,974,2.29,4.88,4.14,0.33,False,SG,,SG
 4684275,Rob Dillingham,G,65,969,5.31,4.87,4.94,0.22,False,SG,,SG
 2990984,Buddy Hield,G,59,924,3.27,5.06,9.08,0.39,False,SG,,SG
-3133635,Jevon Carter,G,56,921,3.71,3.56,8.83,0.39,False,SG,,SG
+3133635,Jevon Carter,G,57,924,3.7,3.55,8.81,0.39,False,SG,,SG
 4868423,Jaden Hardy,G,63,920,2.39,3.48,10.57,0.23,False,SG,,SG
 4279318,Daeqwon Plowden,G,38,916,1.69,4.13,7.66,0.31,False,SG,,SG
 4576086,Bryce McGowens,G,46,911,2.57,3.56,3.75,0.36,False,SG,,SG
@@ -535,7 +535,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4398390,Jalen Pickett,G,53,822,5.21,5.12,5.65,0.22,False,SG,,SG
 3922230,Aaron Holiday,G,57,779,2.77,2.68,7.86,0.23,False,SG,,SG
 4397179,Tyrese Martin,G,46,775,3.62,5.39,7.66,0.28,False,SG,,SG
-5239561,Jase Richardson,G,61,736,3.67,3.72,4.79,0.24,False,SG,,SG
+5239561,Jase Richardson,G,62,762,3.69,3.69,4.82,0.33,False,SG,,SG
 4683750,Jordan Hawkins,G,55,711,2.13,4.56,7.14,0.51,False,SG,,SG
 5105806,Jett Howard,G,58,708,2.29,4.42,7.47,0.56,False,SG,,SG
 4433188,Devin Carter,G,38,701,5.19,6.42,5.85,0.46,False,SG,,SG
@@ -545,7 +545,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4683934,Jahmai Mashack,G,31,674,3.74,4.33,4.01,0.75,False,SG,,SG
 4433218,Jaden Ivey,G,37,670,3.65,4.89,7.2,0.75,False,SG,,SG
 2999547,Gary Harris,G,48,664,2.77,3.31,3.69,0.49,False,SG,,SG
-4280245,Jamaree Bouyea,G,49,658,4.65,4.6,4.32,0.88,False,SG,,SG
+4280245,Jamaree Bouyea,G,50,660,4.64,4.58,4.31,0.87,False,SG,,SG
 4278516,Ethan Thompson,G,32,655,3.13,3.79,6.38,0.49,False,SG,,SG
 5023693,Tyrese Proctor,G,57,650,4.82,4.54,8.09,0.0,False,SG,,SG
 5157066,Johnny Furphy,G,35,640,2.31,8.61,3.99,0.39,False,SG,,SG
@@ -565,7 +565,7 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 4397784,Malachi Smith,G,15,359,4.91,5.11,4.61,0.4,False,SG,,SG
 4065778,Max Strus,G,14,334,3.77,7.98,10.78,0.0,False,SG,,SG
 4397251,Ron Harper Jr.,G,31,333,2.49,5.41,9.19,0.97,False,SG,,SG
-4433149,LJ Cryer,G,23,320,2.7,3.38,11.7,0.0,False,SG,,SG
+4433149,LJ Cryer,G,24,321,2.69,3.36,11.66,0.0,False,SG,,SG
 3134916,Jordan McLaughlin,G,47,301,5.14,4.07,5.02,0.24,False,SG,,SG
 2578239,Pat Connaughton,G,42,294,2.2,7.47,6.37,0.12,False,SG,,SG
 4700852,Chaz Lanier,G,36,276,2.22,3.0,9.39,0.0,False,SG,,SG
@@ -608,18 +608,18 @@ player_id,player,espn_pos,gp,min,ast36,reb36,tpa36,blk36,low_minutes,pos_auto,ov
 3431,Eric Gordon,G,6,74,1.46,0.97,6.81,0.49,True,SG,,SG
 4585618,Keshon Gilbert,G,4,74,5.84,2.43,1.46,1.95,True,SG,,SG
 4023,Garrett Temple,G,22,73,4.44,4.44,5.92,0.99,True,SG,,SG
+5107157,Ryan Conwell,G,7,72,3.5,2.5,7.5,0.0,True,SG,,SG
 4592686,Antonio Reeves,G,10,69,1.57,4.17,6.78,0.0,True,SG,,SG
 5105800,Josh Dix,G,4,67,0.0,2.15,4.84,0.54,True,SG,,SG
 4701845,Kadary Richmond,G,3,66,4.36,5.45,2.18,0.55,True,SG,,SG
 3059310,Monte Morris,G,6,64,5.06,3.94,4.5,0.56,True,SG,,SG
+4593034,Alex Morales,G,9,64,2.81,5.06,1.69,0.0,True,SG,,SG
 3913220,DaQuan Jeffries,G,3,60,0.6,3.0,5.4,0.0,True,SG,,SG
 4433133,Jahmir Young,G,13,58,5.59,2.48,5.59,0.0,True,SG,,SG
-4593034,Alex Morales,G,8,58,3.1,5.59,1.86,0.0,True,SG,,SG
 4702972,Chris Manon,G,11,54,2.0,7.33,2.67,1.33,True,SG,,SG
 4592979,Zyon Pullin,G,7,49,6.61,2.94,2.2,0.0,True,SG,,SG
 4898010,Jaylin Sellers,G,5,45,4.0,3.2,12.8,0.8,True,SG,,SG
 4432117,Isaiah Stevens,G,3,43,8.37,2.51,0.84,0.0,True,SG,,SG
-5107157,Ryan Conwell,G,6,42,4.29,3.43,7.71,0.0,True,SG,,SG
 4701992,Max Shulga,G,9,37,1.95,5.84,3.89,0.0,True,SG,,SG
 4066636,Markelle Fultz,G,5,35,8.23,1.03,0.0,0.0,True,SG,,SG
 4873090,Labaron Philon Jr.,G,5,35,1.03,5.14,7.2,0.0,True,SG,,SG
