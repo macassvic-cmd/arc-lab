@@ -37,6 +37,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main   # a push-triggered run must start from the branch tip, not the pushed commit: on 2026-11-07 a push run checked out
+                      # the board commit, missed the health commit that landed 30 s earlier and repriced TOR@MIL and MIN@NO a second time
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
