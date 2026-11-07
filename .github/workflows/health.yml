@@ -1,6 +1,7 @@
 name: Lines watchdog
 
-# Every 15 minutes, all day (off the top of the hour: GitHub delays :00 schedules most). health.py checks lines.json inside
+# On every board push (data/board_latest.json and its companions, about every 30 minutes; Amendment 2, 2026-11-06) plus a
+# 15-minute schedule as backstop (off the top of the hour: GitHub delays :00 schedules most). health.py checks lines.json inside
 # the slate-driven window (90 minutes before the day's earliest tip to 3 hours after the latest, from data/slate.json),
 # projections.json staleness (> 14 h) on every pass, and after 10:30 ET on a game day self-dispatches update-data when
 # projections.json is not today's slate (at most once an hour; it says so on Discord). The paper-log snapshot runs alongside
@@ -10,7 +11,16 @@ name: Lines watchdog
 
 on:
   schedule:
-    - cron: "3,18,33,48 * * * *"
+    - cron: "3,18,33,48 * * * *"   # backstop only: GitHub fires a few of these a day (three on 2026-11-06, none after 18:20Z)
+  push:
+    # Amendment 2 to the first-basket lineup refresh (CEO-approved 2026-11-06): the board pushes land about every 30 minutes
+    # under the user's own account, so they raise push events (commits made with GITHUB_TOKEN by this workflow and update-data
+    # do not, so no loop). Each one runs this pass inside every game's 150-minute window with no manual dispatch.
+    branches: [main]
+    paths:
+      - data/board_latest.json
+      - data/pp_fantasy_lines.json
+      - docs/data/lines.json
   workflow_dispatch:
 
 permissions:
