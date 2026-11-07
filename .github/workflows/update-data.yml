@@ -53,6 +53,11 @@ jobs:
           python pbp_store.py
           python first_basket.py backfill
           python first_shot.py backfill   # first-shot labels (the first-basket model's grading target)
+      - name: Opening 3 (display only; first three minutes + game firsts from the play-by-play store into append-only data/opening3_games.csv and data/opening3_players.csv, published as docs/data/opening3.json)
+        id: opening3
+        continue-on-error: true   # a display product's failure must not stop grading or the pre-tip logging
+        working-directory: scripts
+        run: python opening3.py
       - name: Grade the first-basket log (last pre-tip snapshot vs first-shot labels; merged into performance.json by the ladder grade)
         id: fb_grade
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

@@ -8,3 +8,5 @@ data/first_basket_odds.csv merge=union
 data/first_basket_odds_credits.csv merge=union
 data/nbacom_player_ids.csv merge=union
 data/first_basket_lineup_audit.csv merge=union
+data/opening3_games.csv merge=union
+data/opening3_players.csv merge=union
