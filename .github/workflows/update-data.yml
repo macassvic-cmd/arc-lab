@@ -75,6 +75,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py grade
+      - name: Ladder fix shadow grade (Part A validation clock, decision once at graded day 34; Part B pre-registered evaluation, read once at n; backtests/live_recalibration_rule.md addendum 2026-11-10 + backtests/ladder_minutes_sim_rule.md)
+        id: ladder_recal_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python ladder_recal.py grade
       - name: Ladder Tonight graded overlay (display only; docs/data/ladder_graded.json from the grader's published rows + data/strip_log.csv + data/main_lines.csv)
         id: ladder_graded
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
@@ -115,6 +120,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python ladder_log.py snapshot
+      - name: Ladder fix shadow snapshot (p_recal and p_minsim next to p_raw and the shipped p, append-only data/ladder_shadow_log.csv; picks and display never read it)
+        id: ladder_recal_shadow
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python ladder_recal.py shadow
       - name: Record Underdog main lines at ladder snapshot time (last pre-tip capture wins)
         id: main_lines
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
