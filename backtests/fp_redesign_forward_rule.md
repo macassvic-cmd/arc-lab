@@ -108,3 +108,33 @@ paper, not an accident of arithmetic.
 - The eight items' kill numbers, the (f)/(d)/(e)/(c)/(b) tests and R4's ambiguous-band rule are not registered here (section 0).
   Items 1-2 (story (g)) must land before the n = 375 futility look; the futility read is published either way and the report
   says whether (g) is on file.
+
+## Addendum (2026-11-11): verified scraper downtime ("outage" lines)
+
+CEO text, verbatim, received 2026-11-11 before any 2026-11-11 line was graded (first tip 2026-11-12T00:00Z):
+
+> Addendum (2026-11-11): Lines priced without a morning pair because of verified scraper downtime are excluded from the
+> morning-pair share and from graded forward-test results. They are logged separately and tagged 'outage.' This applies to
+> today and to any future outage.
+
+Sections 1-7 above are unchanged. How the addendum is applied (written before the code that applies it):
+
+- **Verified downtime** = an entry in `data/fp_forward_outages.json` (id, start, end in UTC, evidence, who verified and when).
+  Entries are added by hand with evidence from outside the test's own outcomes (machine event log, the gap in board commits);
+  nothing in the code adds an entry. An entry may only be added before the lines it covers are graded.
+- **An outage line** = a priced clock line with gap_missing = 1 on a slate that has NO PrizePicks morning pull (section 2) where
+  a verified downtime window overlaps that slate's morning window (10:00-17:00 UTC on the slate date). A line with a missing pair
+  on a slate whose morning pull exists is NOT an outage line (that is PrizePicks not carrying the player, section 2's ~18%).
+- **Tag**: the original priced record stays; a NEW record with the same key, kind = `outage`, void = 1,
+  void_reason = `outage:<id>` is appended to `data/fp_forward_log.csv`, and the same row goes to the separate
+  `data/fp_forward_outage_log.csv`. An outage record is final: the line is never graded, never enters the gate's n, the
+  futility look, the monitor, the ledger or the expanding offset (it had no pair, so it never fed the offset).
+- **Morning-pair share** (section 4, bar >= 90% of slates): a slate whose morning pull is missing under a verified outage is
+  left out of the numerator and the denominator. The line-level missing-pair share is likewise reported without outage lines.
+  The figures as they stood before the exclusion are published next to the new ones (`*_before_outage_exclusion`).
+- The gate's n = 750, the futility look at 375, "not shown at 750 = FAIL" and every bar are unchanged; outage lines simply do
+  not count toward n.
+- First entry: `2026-11-11-reboot`, 2026-11-11T08:59:40Z (last capture) to 2026-11-11T22:02:23Z (first capture after the
+  restart). Evidence: Windows System event 1074 at 01:05 PT (TrustedInstaller restart for the 2026-11 security update); no
+  board commit on main between 08:38Z and 22:02Z; both scraper processes absent until the restart. It covers the 43 Underdog FP
+  lines of the 2026-11-11 slate, all priced at 22:02:58Z with gap 0 and no morning pull.

@@ -1,0 +1,13 @@
+{
+ "note": "Verified scraper downtime for the FP forward test (backtests/fp_redesign_forward_rule.md, addendum 2026-11-11). Hand-entered with outside evidence, before the covered lines are graded.",
+ "outages": [
+  {
+   "id": "2026-11-11-reboot",
+   "start": "2026-11-11T08:59:40Z",
+   "end": "2026-11-11T22:02:23Z",
+   "evidence": "Windows System event 1074 at 2026-11-11 01:05 PT (TrustedInstaller restart, 2026-11 security update KB5132061); no board commit on main between 08:38Z and 22:02Z; both scraper processes absent until restarted at 22:02Z.",
+   "verified_by": "CEO addendum 2026-11-11",
+   "entered_at": "2026-11-11T22:30:00Z"
+  }
+ ]
+}
