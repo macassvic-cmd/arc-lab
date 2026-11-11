@@ -35,6 +35,7 @@ BOARD_LATEST = DATA_DIR / "board_latest.json"   # repo copy of the capture's NBA
 BOARD_REFRESH_SECONDS = 3600                     # an unchanged board is re-stamped at most hourly, so pushes stay quiet
 PP_LATEST = DATA_DIR / "pp_fantasy_lines.json"   # repo copy of pirate-bets' PrizePicks Fantasy Score extract (fantasy_points rule amendment 2026-10-25)
 PP_FILE_ENV = "ARC_LAB_PP_FILE"                  # optional explicit path to pp_fantasy_lines.jsonl
+PP_STAT_LATEST = DATA_DIR / "pp_stat_lines.json"  # repo copy of the PrizePicks single-stat extract (redesign Build 2, 2026-11-10); copied only when the scraper writes it
 
 # Underdog display_stat -> Arc Lab stat code. Scope reset 2026-10-22 trimmed this to 3PM + Fantasy Points; CEO ruling
 # 2026-10-27 restores the main Points / Rebounds / Assists lines for LINE PUBLISHING only (Props tab, Ladder tonight strip).
@@ -155,23 +156,23 @@ def write_board(snapshot, out_path=BOARD_LATEST):
     return True
 
 
-def pp_candidates(snapshot_path):
+def pp_candidates(snapshot_path, name="pp_fantasy_lines.jsonl"):
     """Where pirate-bets' PrizePicks pull writes pp_fantasy_lines.jsonl: an explicit ARC_LAB_PP_FILE, the board_snapshots
     folder of the Underdog snapshot we were handed, and the Desktop pirate-bets checkout."""
     out = []
-    if os.environ.get(PP_FILE_ENV):
+    if os.environ.get(PP_FILE_ENV) and name == "pp_fantasy_lines.jsonl":
         out.append(Path(os.environ[PP_FILE_ENV]))
     if snapshot_path:
-        out.append(Path(snapshot_path).resolve().parent / "pp_fantasy_lines.jsonl")
-    out.append(Path.home() / "Desktop" / "pirate-bets" / "reader" / "board_snapshots" / "pp_fantasy_lines.jsonl")
+        out.append(Path(snapshot_path).resolve().parent / name)
+    out.append(Path.home() / "Desktop" / "pirate-bets" / "reader" / "board_snapshots" / name)
     return out
 
 
-def write_pp(snapshot_path=None, out_path=PP_LATEST):
+def write_pp(snapshot_path=None, out_path=PP_LATEST, name="pp_fantasy_lines.jsonl"):
     """Copy the PrizePicks Fantasy Score extract (one JSON object per line) into the repo as data/pp_fantasy_lines.json with
     its capture time (the file's modification time, UTC). The newest existing candidate wins; rewritten only when the
     content changed. Returns True when written."""
-    found = [p for p in pp_candidates(snapshot_path) if p.is_file()]
+    found = [p for p in pp_candidates(snapshot_path, name) if p.is_file()]
     if not found:
         return False
     src = max(found, key=lambda p: p.stat().st_mtime)
@@ -198,7 +199,7 @@ def write_pp(snapshot_path=None, out_path=PP_LATEST):
         "captured_at": iso(dt.datetime.fromtimestamp(src.stat().st_mtime, dt.timezone.utc)),
         "stored_at": iso(dt.datetime.now(dt.timezone.utc)), "n_lines": len(lines), "bad_lines": bad, "sha1": digest, "lines": lines,
     })
-    log.info("pp_fantasy_lines.json: %d lines copied from %s (%d unparseable)", len(lines), src, bad)
+    log.info("%s: %d lines copied from %s (%d unparseable)", Path(out_path).name, len(lines), src, bad)
     return True
 
 
@@ -232,7 +233,11 @@ def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=No
         pp = write_pp(snapshot_path)
     except Exception as e:  # noqa: BLE001  (never let the PrizePicks copy break the Underdog hook)
         log.warning("pp_fantasy_lines.json not written: %s", e); pp = False
-    pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST)]) if push else False
+    try:
+        write_pp(snapshot_path, PP_STAT_LATEST, "pp_stat_lines.jsonl")   # redesign Build 2: present only once the scraper runs the stat extract
+    except Exception as e:  # noqa: BLE001
+        log.warning("pp_stat_lines.json not written: %s", e)
+    pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST), str(PP_STAT_LATEST)]) if push else False
     by_stat = {s: sum(1 for l in doc["lines"] if l["stat"] == s) for s in PUBLISHED_STATS}
     summary = {"lines": len(doc["lines"]), "by_stat": by_stat, "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pp_written": pp, "pushed": pushed, "path": str(out_path)}
     log.info("lines.json: %(lines)d NBA lines %(by_stat)s, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pp copy written=%(pp_written)s, pushed=%(pushed)s", summary)

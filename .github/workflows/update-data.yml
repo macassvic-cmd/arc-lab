@@ -101,6 +101,14 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python fp_v2.py grade
+      - name: FP redesign forward test (Builds 1 and 3, paper only; capture this board copy, price, grade; integrity audit + gate clock -> docs/data/fp_forward.json)
+        id: fp_forward
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: |
+          python fp_forward.py capture
+          python fp_forward.py price
+          python fp_forward.py grade
       - name: Assign positions
         working-directory: scripts
         run: python positions.py

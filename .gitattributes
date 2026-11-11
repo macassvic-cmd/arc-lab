@@ -12,3 +12,6 @@ data/opening3_games.csv merge=union
 data/opening3_players.csv merge=union
 data/ladder_shadow_log.csv merge=union
 data/failure_log.jsonl merge=union
+data/fp_forward_ud.csv merge=union
+data/fp_forward_pp.csv merge=union
+data/fp_forward_log.csv merge=union

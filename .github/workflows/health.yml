@@ -51,6 +51,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}   # job 6 re-pulls a repriced game's first-basket odds (1 credit per refreshed game)
         run: python health.py
+      - name: FP redesign forward logger (Build 1, paper only; every UD FP line of this board copy with timestamps + NBA.com lineup status, PP history rows, priced records once the morning pull is on file)
+        continue-on-error: true   # a paper logger must never block the watchdog or the lineup refresh
+        working-directory: scripts
+        run: |
+          python fp_forward.py capture
+          python fp_forward.py price
       - name: Snapshot paper log (closing lines)
         working-directory: scripts
         run: python paper_log.py snapshot
@@ -62,7 +68,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           for f in data/health_state.json data/paper_log.csv \
                    data/first_basket_lineups.csv data/nbacom_player_ids.csv data/first_basket_lineup_audit.csv data/first_basket_log.csv data/first_basket_why.jsonl data/first_basket_method_log.csv data/first_basket_method_profiles.json \
-                   data/first_basket_odds.csv data/first_basket_odds_credits.csv docs/data/first_basket_lineups.json docs/data/first_basket_today.json docs/data/first_basket_method.json; do
+                   data/first_basket_odds.csv data/first_basket_odds_credits.csv docs/data/first_basket_lineups.json docs/data/first_basket_today.json docs/data/first_basket_method.json \
+                   data/fp_forward_ud.csv data/fp_forward_pp.csv data/fp_forward_log.csv; do
             [ -f "$f" ] && git add -- "$f"
           done
           git diff --cached --quiet && exit 0
