@@ -36,6 +36,8 @@ UD = DATA_DIR / "fp_forward_ud.csv"
 PP = DATA_DIR / "fp_forward_pp.csv"
 LOG = DATA_DIR / "fp_forward_log.csv"
 OUT = SITE_DATA / "fp_forward.json"
+OUTAGES = DATA_DIR / "fp_forward_outages.json"      # verified scraper downtime, hand-entered (rule addendum 2026-11-11)
+OUTAGE_LOG = DATA_DIR / "fp_forward_outage_log.csv" # the outage-tagged lines, logged separately
 BOARD = DATA_DIR / "board_latest.json"
 PP_COPY = DATA_DIR / "pp_fantasy_lines.json"
 BOX = DATA_DIR / "player_games.csv"
@@ -333,7 +335,47 @@ def price():
             hist = pd.concat([hist, pd.DataFrame([{"date": date, "gap_morning": gap}])], ignore_index=True)
     n = append(LOG, LOG_FIELDS, rows)
     print(f"[fp-forward] priced {n} new UD lines ({sum(r['gap_missing'] for r in rows)} without a PP morning pair -> gap 0, flagged)")
+    tag_outages()
     return n
+
+
+def outage_for(date, outages):
+    """The verified downtime entry overlapping the slate's morning window (10:00-17:00 UTC on the slate date), or None."""
+    lo, hi = f"{date}T{MORNING_WINDOW[0]:02d}:00:00Z", f"{date}T{MORNING_WINDOW[1]:02d}:00:00Z"
+    for o in outages:
+        if o["start"] < hi and o["end"] > lo:
+            return o
+    return None
+
+
+def tag_outages():
+    """Rule addendum 2026-11-11: a priced clock line with no PP pair, on a slate with NO morning pull while a verified downtime
+    window (data/fp_forward_outages.json) overlaps the slate's morning window, gets a NEW record kind = outage (void, final):
+    never graded, out of the gate, the audit shares, the monitor and the ledger. The priced original stays; the same row is
+    appended to the separate outage log. Ungraded lines only: a line already graded or void is left as it stands."""
+    outages = read_json(OUTAGES, {}).get("outages") or []
+    log = read(LOG)
+    if not outages or not len(log):
+        return 0
+    pp = read(PP)
+    closed = log[log.kind.isin(["graded", "void", "outage"])]
+    closed = set(zip(closed.date, closed.player_key, closed.team))
+    t_now = stamp(); rows = []; pull = {}
+    for r in log[(log.kind == "priced") & (log.clock == "1") & (log.gap_missing == "1")].itertuples():
+        if (r.date, r.player_key, r.team) in closed:
+            continue
+        if r.date not in pull:
+            pull[r.date] = morning_copy_at(pp, r.date) if len(pp) else None
+        o = outage_for(r.date, outages)
+        if pull[r.date] is not None or o is None:
+            continue
+        rec = {f: getattr(r, f) for f in LOG_FIELDS}
+        rec.update({"record_at": t_now, "kind": "outage", "void": 1, "void_reason": f"outage:{o['id']}"})
+        rows.append(rec)
+    append(LOG, LOG_FIELDS, rows); append(OUTAGE_LOG, LOG_FIELDS, rows)
+    if rows:
+        print(f"[fp-forward] tagged {len(rows)} lines as outage ({sorted({r['void_reason'] for r in rows})}); excluded from the morning-pair share and the graded results")
+    return len(rows)
 
 
 # ---------------------------------------------------------------- grade + audit + gate clock
@@ -381,7 +423,9 @@ def grade():
     box = pd.read_csv(BOX, dtype={"event_id": str, "player_id": str})
     box["player_key"] = box.player.map(norm_name); box["fp"] = box_fp(box)
     done_events = box.groupby(["date", "team"]).event_id.first().to_dict()
-    graded_keys = set(zip(log[log.kind.isin(["graded", "void"])].date, log[log.kind.isin(["graded", "void"])].player_key, log[log.kind.isin(["graded", "void"])].team))
+    tag_outages(); log = read(LOG)
+    closed = log[log.kind.isin(["graded", "void", "outage"])]            # an outage record is final: the line is never graded
+    graded_keys = set(zip(closed.date, closed.player_key, closed.team))
     rows = []
     for r in log[log.kind == "priced"].itertuples():
         k = (r.date, r.player_key, r.team)
@@ -410,7 +454,7 @@ def grade():
 
 def latest_records(log):
     """One record per line: the latest graded/void record if any, else the priced one (corrections = later records win)."""
-    rank = log.kind.map({"priced": 0, "void": 1, "graded": 1, "correction": 2}).fillna(0)
+    rank = log.kind.map({"priced": 0, "void": 1, "graded": 1, "correction": 2, "outage": 3}).fillna(0)
     d = log.assign(_r=rank).sort_values(["_r", "record_at"]).drop_duplicates(["date", "player_key", "team"], keep="last")
     return d.drop(columns="_r")
 
@@ -431,20 +475,25 @@ def audit(ud, log, box):
     pp = read(PP)
     for date in sorted(d for d in set(boards) | set(lat_clock.date) if d >= CLOCK_START):
         seen = boards.get(date, set()); got = set(zip(ud[ud.date == date].player_key, ud[ud.date == date].team))
-        rec = lat_clock[lat_clock.date == date]; g = rec[rec.kind == "graded"]
+        rec = lat_clock[lat_clock.date == date]; n_out = int((rec.kind == "outage").sum()); rec = rec[rec.kind != "outage"]; g = rec[rec.kind == "graded"]
         recon_ok = 0
         for r in g.itertuples():
             b = box[(box.event_id == r.event_id) & (box.player_key == r.player_key)]
             if len(b) and int(float(b.iloc[0].fp) > float(r.ud_line)) == int(float(r.hit_over)):
                 recon_ok += 1
         out.append({"date": date, "board_lines": len(seen), "captured": len(seen & got), "capture_share": round(len(seen & got) / len(seen), 4) if seen else None,
-                    "pp_morning_pull": morning_copy_at(pp, date) if len(pp) else None, "priced": int(len(rec)), "gap_missing": int((rec.gap_missing == "1").sum()),
+                    "pp_morning_pull": morning_copy_at(pp, date) if len(pp) else None, "priced": int(len(rec)), "gap_missing": int((rec.gap_missing == "1").sum()), "outage_lines": n_out,
                     "graded": int(len(g)), "void": int((rec.kind == "void").sum()), "reconciled": recon_ok, "reconciliation": round(recon_ok / len(g), 4) if len(g) else None,
                     "lineup_status_known": int((~rec.lineup_status_last.isin(["", "not_fetched", "not_captured_backfill"])).sum())})
     slates = out[:5]
-    pp_ok = sum(1 for s in out if s["pp_morning_pull"]) / len(out) if out else None
+    pp_all = sum(1 for s in out if s["pp_morning_pull"]) / len(out) if out else None      # as it stood before the 2026-11-11 addendum
+    for s in out:
+        s["outage_slate"] = bool(s["outage_lines"] and not s["pp_morning_pull"])            # no morning pull under a verified outage
+    kept = [s for s in out if not s["outage_slate"]]
+    pp_ok = sum(1 for s in kept if s["pp_morning_pull"]) / len(kept) if kept else None
     return {"slates": out, "first_five": slates, "bars": {"capture_share": 0.95, "pp_morning_share": 0.90, "reconciliation": 1.0},
-            "pp_morning_share_so_far": round(pp_ok, 4) if pp_ok is not None else None, "capture_share_so_far": round(float(np.mean([s["capture_share"] for s in out if s["capture_share"] is not None])), 4) if any(s["capture_share"] is not None for s in out) else None,
+            "pp_morning_share_so_far": round(pp_ok, 4) if pp_ok is not None else None, "pp_morning_share_before_outage_exclusion": round(pp_all, 4) if pp_all is not None else None,
+            "outage_slates": [s["date"] for s in out if s["outage_slate"]], "gap_arm_alive_before_outage_exclusion": bool(pp_all is None or pp_all >= 0.90), "capture_share_so_far": round(float(np.mean([s["capture_share"] for s in out if s["capture_share"] is not None])), 4) if any(s["capture_share"] is not None for s in out) else None,
             "reconciliation_so_far": round(float(np.mean([s["reconciliation"] for s in out if s["reconciliation"] is not None])), 4) if any(s["reconciliation"] is not None for s in out) else None,
             "gap_arm_alive": bool(pp_ok is None or pp_ok >= 0.90)}
 
@@ -500,20 +549,25 @@ def ledger(g):
 
 def report(log, box):
     ud = read(UD); lat = latest_records(log)
-    clock = lat[lat.clock == "1"]; g = clock[clock.kind == "graded"]
+    clock_all = lat[lat.clock == "1"]; outage = clock_all[clock_all.kind == "outage"]
+    clock = clock_all[clock_all.kind != "outage"]; g = clock[clock.kind == "graded"]             # outage lines: tagged, logged separately, out of every read
     pre = lat[(lat.clock == "0") & (lat.kind == "graded")]
     doc = {"title": "FP redesign forward test (Builds 1 and 3, paper only)", "rule": RULE, "generated": stamp(), "clock_start": CLOCK_START, "beta": BETA, "gate_calibration": GATE_CALIBRATION,
            "label": "Shadow price only: nothing here is staked, shown as a pick or fed to any live model. A PASS certifies an edge over a coin-flip price, not profit.",
            "capture": {"ud_rows": int(len(ud)), "ud_captures": int(ud.board_sha1.nunique()) if len(ud) else 0, "ud_lines": int(ud.drop_duplicates(["date", "player_key", "team"]).shape[0]) if len(ud) else 0,
                        "first_capture": ud.captured_at.min() if len(ud) else None, "last_capture": ud.captured_at.max() if len(ud) else None, "pp_rows": int(len(read(PP)))},
            "log": {"records": int(len(log)), "lines": int(len(lat)), "clock_lines": int(len(clock)), "clock_graded": int(len(g)), "clock_void": int((clock.kind == "void").sum()), "pre_clock_graded": int(len(pre)),
-                   "gap_missing_share_clock": round(float((clock.gap_missing == "1").mean()), 4) if len(clock) else None},
+                   "gap_missing_share_clock": round(float((clock.gap_missing == "1").mean()), 4) if len(clock) else None,
+                   "outage_lines": int(len(outage)), "outage_by_slate": {d: int(n) for d, n in outage.groupby("date").size().items()}, "outage_ids": sorted(set(outage.void_reason)),
+                   "clock_lines_before_outage_exclusion": int(len(clock_all)),
+                   "gap_missing_share_clock_before_outage_exclusion": round(float((clock_all.gap_missing == "1").mean()), 4) if len(clock_all) else None},
            "audit": audit(ud, log, box), "gate": gate_block(g) if len(g) else {"n_graded": 0, "status": f"collecting (0 of {GATE_N})"}, "monitor": monitor(g) if len(g) else [],
            "ledger": ledger(g) if len(g) else None,
            "recent": [{k: r[k] for k in ("date", "player", "team", "opp", "ud_line", "ud_captured_at", "pp_morning_line", "pp_morning_copy_at", "gap_morning", "offset", "p_gap", "kind", "fp_actual", "hit_over", "lineup_status_last")}
                       for r in clock.sort_values(["date", "tip"], ascending=False).head(80).to_dict("records")],
            "method": ["Every Underdog standard Fantasy Points line is captured from every committed board copy with the copy's own timestamps (the hook commits about every 30 minutes); NBA.com's lineup status for the player is stamped on live captures.",
                       "Priced feature = PrizePicks Fantasy Score line as of the slate's MORNING pull (the last copy inside 10:00-17:00Z on the slate date, median lead about 9 h) minus the UD line at its first capture on or after that pull. The PP pre-tip line is a secondary column, never priced. No PP pair = gap 0, flagged.",
+                      "Addendum 2026-11-11: lines priced without a morning pair because of verified scraper downtime (data/fp_forward_outages.json) are tagged outage, logged separately (data/fp_forward_outage_log.csv) and left out of the morning-pair share and of every graded read.",
                       "P = 0.5 + 0.034 x (gap - offset), offset = mean gap over prior slates only, clipped to [0.05, 0.95]; the engine deviation (FP v2 mean - UD line) and the matchup column are logged at zero weight and never priced.",
                       f"Gate: n = {GATE_N} graded clock lines, paired gain vs flat 0.5 >= +{GAIN_BAR} nats with the two-way (player + date) clustered CI excluding 0, and the one-sided calibration prong; futility stop at {FUTILITY_N} if the point estimate is <= 0. Not shown at {GATE_N} = FAIL."]}
     write_json(OUT, doc)
@@ -544,6 +598,6 @@ def power():
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["capture", "backfill", "price", "grade", "power"]); ap.add_argument("--since", default=CLOCK_START)
+    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["capture", "backfill", "price", "grade", "power", "outage"]); ap.add_argument("--since", default=CLOCK_START)
     a = ap.parse_args()
-    {"capture": capture, "backfill": lambda: backfill(a.since), "price": price, "grade": grade, "power": power}[a.cmd]()
+    {"capture": capture, "backfill": lambda: backfill(a.since), "price": price, "grade": grade, "power": power, "outage": tag_outages}[a.cmd]()

@@ -69,7 +69,7 @@ jobs:
           for f in data/health_state.json data/paper_log.csv \
                    data/first_basket_lineups.csv data/nbacom_player_ids.csv data/first_basket_lineup_audit.csv data/first_basket_log.csv data/first_basket_why.jsonl data/first_basket_method_log.csv data/first_basket_method_profiles.json \
                    data/first_basket_odds.csv data/first_basket_odds_credits.csv docs/data/first_basket_lineups.json docs/data/first_basket_today.json docs/data/first_basket_method.json \
-                   data/fp_forward_ud.csv data/fp_forward_pp.csv data/fp_forward_log.csv; do
+                   data/fp_forward_ud.csv data/fp_forward_pp.csv data/fp_forward_log.csv data/fp_forward_outage_log.csv; do
             [ -f "$f" ] && git add -- "$f"
           done
           git diff --cached --quiet && exit 0

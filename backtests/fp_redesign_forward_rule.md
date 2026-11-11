@@ -138,3 +138,17 @@ Sections 1-7 above are unchanged. How the addendum is applied (written before th
   restart). Evidence: Windows System event 1074 at 01:05 PT (TrustedInstaller restart for the 2026-11 security update); no
   board commit on main between 08:38Z and 22:02Z; both scraper processes absent until the restart. It covers the 43 Underdog FP
   lines of the 2026-11-11 slate, all priced at 22:02:58Z with gap 0 and no morning pull.
+
+### Addendum text as finally worded (2026-11-11, received after the first wording above was committed; still before any 2026-11-11 line was graded)
+
+> Addendum (2026-11-11): Lines priced without a PrizePicks morning pair because of verified scraper downtime are excluded from
+> the morning-pair share and from graded forward-test results. They are logged separately and tagged 'outage.' This applies to
+> today and to any future verified outage.
+
+This wording governs; the application notes above are unchanged. Tagging condition restated from the CEO's instruction: ONLY
+lines whose morning pair is genuinely missing because of the downtime are tagged; a line with a valid morning pair stays in the
+test untouched. Capture inventory printed before tagging (2026-11-11 slate): PrizePicks copies inside 10:00-17:00Z = 0 in the
+logger's store and 0 in the repo file (copies that day: 00:00Z .. 07:37Z, then 22:02Z; the 22:02Z copy was built from the
+pre-reboot 08:59Z snapshot); Underdog captures of the slate = 1 (22:02:23Z, 43 lines). 20 of the 43 players carry a PrizePicks
+row captured at 07:34Z, before the downtime and outside the window: under section 2 that is not a morning pair and it is not
+substituted.
