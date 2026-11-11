@@ -561,6 +561,8 @@ def report(log, box):
                    "outage_lines": int(len(outage)), "outage_by_slate": {d: int(n) for d, n in outage.groupby("date").size().items()}, "outage_ids": sorted(set(outage.void_reason)),
                    "clock_lines_before_outage_exclusion": int(len(clock_all)),
                    "gap_missing_share_clock_before_outage_exclusion": round(float((clock_all.gap_missing == "1").mean()), 4) if len(clock_all) else None},
+           "source": {"truth": "data/fp_forward_log.csv on main (append-only); this file is derived from it by `fp_forward.py grade` in the update workflow and is never the record",
+                      "log_records": int(len(log)), "log_last_record_at": str(log.record_at.max()), "check": "python scripts/fp_forward.py status"},
            "audit": audit(ud, log, box), "gate": gate_block(g) if len(g) else {"n_graded": 0, "status": f"collecting (0 of {GATE_N})"}, "monitor": monitor(g) if len(g) else [],
            "ledger": ledger(g) if len(g) else None,
            "recent": [{k: r[k] for k in ("date", "player", "team", "opp", "ud_line", "ud_captured_at", "pp_morning_line", "pp_morning_copy_at", "gap_morning", "offset", "p_gap", "kind", "fp_actual", "hit_over", "lineup_status_last")}
@@ -572,6 +574,21 @@ def report(log, box):
                       f"Gate: n = {GATE_N} graded clock lines, paired gain vs flat 0.5 >= +{GAIN_BAR} nats with the two-way (player + date) clustered CI excluding 0, and the one-sided calibration prong; futility stop at {FUTILITY_N} if the point estimate is <= 0. Not shown at {GATE_N} = FAIL."]}
     write_json(OUT, doc)
     return doc
+
+
+def status():
+    """The gate count from the ONE record, data/fp_forward_log.csv (no box score, no git history), next to what the published
+    docs/data/fp_forward.json says. Exit 1 when the two disagree (the JSON is stale: it is rebuilt only by `grade`)."""
+    lat = latest_records(read(LOG)); clock = lat[lat.clock == "1"]
+    c = {"graded": int((clock.kind == "graded").sum()), "void": int((clock.kind == "void").sum()), "outage": int((clock.kind == "outage").sum()),
+         "awaiting_grade": int((clock.kind == "priced").sum()), "gate_n": GATE_N}
+    by = {d: {k: int(n) for k, n in g.kind.value_counts().items()} for d, g in clock.groupby("date")}
+    pub = read_json(OUT, {}); pn = (pub.get("gate") or {}).get("n_graded")
+    print(f"[fp-forward] gate count from {LOG.name}: {c['graded']} of {GATE_N} graded ({c['void']} void, {c['outage']} outage, {c['awaiting_grade']} awaiting a grade); by slate {by}")
+    print(f"[fp-forward] published {OUT.name} (generated {pub.get('generated')}): {pn} of {GATE_N} -> {'agrees' if pn == c['graded'] else 'DISAGREES (stale JSON: run grade)'}")
+    if pn != c["graded"]:
+        sys.exit(1)
+    return c
 
 
 # ---------------------------------------------------------------- power report (registration)
@@ -598,6 +615,6 @@ def power():
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["capture", "backfill", "price", "grade", "power", "outage"]); ap.add_argument("--since", default=CLOCK_START)
+    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["capture", "backfill", "price", "grade", "power", "outage", "status"]); ap.add_argument("--since", default=CLOCK_START)
     a = ap.parse_args()
-    {"capture": capture, "backfill": lambda: backfill(a.since), "price": price, "grade": grade, "power": power, "outage": tag_outages}[a.cmd]()
+    {"capture": capture, "backfill": lambda: backfill(a.since), "price": price, "grade": grade, "power": power, "outage": tag_outages, "status": status}[a.cmd]()
