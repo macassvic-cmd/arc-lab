@@ -626,25 +626,30 @@ function renderOpening3(){
   // Display only (2026-11-06): docs/data/opening3.json from opening3.py. Leaderboards, rates, per-game averages and the slate strip are
   // the generator's; nothing is re-derived here. Seasons are ESPN season years (2027 = 2026-27); the switcher defaults to the newest.
   const SEASON_LABEL = {"2025":"2024-25","2026":"2025-26","2027":"2026-27"};
-  const lbl = s => SEASON_LABEL[s] || `${Number(s)-1}-${String(s).slice(2)}`;
+  const lbl = s => s === "all" ? "All seasons" : (SEASON_LABEL[s] || `${Number(s)-1}-${String(s).slice(2)}`);
   const dname = d => new Date(d+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric",year:"numeric"});
   const empty = msg => { $("o3Note").textContent = msg; $("o3Season").innerHTML = ""; $("o3Cards").innerHTML = ""; $("to3").innerHTML = ""; $("o3TableNote").textContent = ""; $("o3Latest").innerHTML = ""; };
   if(!O3 || !O3.games) return empty("No Opening 3 data yet: the morning grade pass collects it from the play-by-play store.");
-  const seasons = Object.keys(O3.leaderboards||{}).sort();
+  const seasons = Object.keys(O3.leaderboards||{}).filter(s=>s!=="all").sort().concat(O3.leaderboards && O3.leaderboards.all ? ["all"] : []);
   if(!seasons.length) return empty(`${O3.games} games collected, no season tables yet.`);
-  if(!S.o3Season || !seasons.includes(S.o3Season)) S.o3Season = seasons[seasons.length-1];
+  // card fixes 2026-11-12: the generator picks the default view (career while the current season is too thin to rank) and states each count's basis
+  if(!S.o3Season || !seasons.includes(S.o3Season)) S.o3Season = seasons.includes(O3.default_view) ? O3.default_view : seasons[seasons.length-1];
+  const isAll = S.o3Season === "all", real = seasons.filter(s=>s!=="all");
+  const basisTxt = isAll ? `career in the dataset (${lbl(real[0])} to ${lbl(real[real.length-1])}), each count with the team it was recorded with` : `${lbl(S.o3Season)} only`;
+  const teamCell = x => (x.by_team && x.by_team.length > 1) ? x.by_team.map(b=>`${b.team} ${b.count}`).join(", ") : (x.by_team && x.by_team.length ? x.by_team[0].team : x.team);
+  const small = x => x.small_sample ? ` <span class="fbBadge">small sample</span>` : "";
   chips($("o3Season"), seasons.map(s=>[s,lbl(s)]), S.o3Season, v=>{S.o3Season=v; render();});
   const lb = O3.leaderboards[S.o3Season]||{}, rows = O3.players[S.o3Season]||[], recent = O3.recent_firsts||[];
-  $("o3Note").textContent = `${O3.games} games collected across ${seasons.map(lbl).join(", ")}. Showing ${lbl(S.o3Season)}.`;
+  $("o3Note").textContent = `${O3.games} games collected across ${real.map(lbl).join(", ")}. Showing ${lbl(S.o3Season)}: counts are ${basisTxt}. ${O3.basis ? O3.basis.default_rule.charAt(0).toUpperCase() + O3.basis.default_rule.slice(1) + "." : ""} Leaders with fewer than ${O3.small_sample_n || 30} starts are tagged small sample.`;
   const rate = x => x.rate==null ? "–" : (100*x.rate).toFixed(1)+"%";
   const CARDS = [["first_fgm","First Basket"],["first_ast","First Assist"],["first_reb","First Rebound"],["first_3_game","First 3"],["first_dunk_game","First Dunk"]];
-  $("o3Cards").innerHTML = CARDS.map(([k,t])=>`<div class="fbGame o3Card"><h2>${t} <span class="fbMeta">${lbl(S.o3Season)} · top 10 by count</span></h2>
-    <div class="scroll"><table class="fbTable"><thead><tr><th>Player</th><th>Team</th><th>Count</th><th>Starts</th><th>Rate</th></tr></thead><tbody>${
-      (lb[k]||[]).slice(0,10).map(x=>`<tr><td><span class="name">${x.player}</span></td><td>${x.team}</td><td class="big">${x.count}</td><td>${x.starts}</td><td>${rate(x)}</td></tr>`).join("") || `<tr><td class="empty">None yet this season.</td></tr>`
+  $("o3Cards").innerHTML = CARDS.map(([k,t])=>`<div class="fbGame o3Card"><h2>${t} <span class="fbMeta">${basisTxt} · top 10 by count</span></h2>
+    <div class="scroll"><table class="fbTable"><thead><tr><th>Player</th><th>Recorded with</th><th>Count</th><th>Starts</th><th>Rate</th></tr></thead><tbody>${
+      (lb[k]||[]).slice(0,10).map(x=>`<tr><td><span class="name">${x.player}</span>${small(x)}</td><td>${teamCell(x)}</td><td class="big">${x.count}</td><td>${x.starts}</td><td>${rate(x)}</td></tr>`).join("") || `<tr><td class="empty">None yet this season.</td></tr>`
     }</tbody></table></div></div>`).join("");
   const k = S.sortO3;
   const sorted = rows.slice().sort((a,b)=>((b[k]??0)-(a[k]??0))||(b.win_pts-a.win_pts)||a.player.localeCompare(b.player));
-  $("o3TableNote").textContent = `${lbl(S.o3Season)} · per game inside the first 3 minutes · players with 5+ games · ${rows.length} players · click a column to sort`;
+  $("o3TableNote").textContent = `${isAll ? "all seasons in the dataset, the player's own games on any team (team shown = current)" : lbl(S.o3Season)} · per game inside the first 3 minutes · players with 5+ games · ${rows.length} players · click a column to sort`;
   $("to3").innerHTML = `<thead><tr><th>Player</th><th>Team</th><th data-k="games">GP</th><th data-k="starts">Starts</th><th data-k="win_pts">PTS</th><th data-k="win_ast">AST</th><th data-k="win_reb">REB</th></tr></thead><tbody>${
     sorted.map(r=>`<tr><td><span class="name">${r.player}</span></td><td>${r.team}</td><td>${r.games}</td><td>${r.starts}</td><td class="${k==="win_pts"?"big":""}">${r.win_pts.toFixed(2)}</td><td class="${k==="win_ast"?"big":""}">${r.win_ast.toFixed(2)}</td><td class="${k==="win_reb"?"big":""}">${r.win_reb.toFixed(2)}</td></tr>`).join("") || `<tr><td class="empty">No player has 5 games yet this season.</td></tr>`
   }</tbody>`;

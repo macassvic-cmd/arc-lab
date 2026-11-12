@@ -47,6 +47,8 @@ WINDOW_SECS = 540.0          # clock remaining at the window's end: 12:00 - 3:00
 RECENT = 60
 TOP = 12
 MIN_GAMES = 5
+SMALL_N = 30               # a leader with fewer starts than this is tagged "small sample" (card fixes 2026-11-12)
+THIN_SEASON_GAMES = 400    # the current season becomes the default view at this many collected games (about a third of a season)
 SEASON_MIN = 2025            # the three seasons in scope: 2024-25 (ESPN 2025), 2025-26, 2026-27; earlier box-score history is ignored
 DREB, OREB, JUMP = "155", "156", "615"
 FIRSTS = ("first_fgm", "first_ast", "first_reb", "first_3_game", "first_dunk_game")
@@ -324,11 +326,13 @@ def publish(out=OUT):
     num = [c for c in PLAYER_COLS[9:]]
     players[num] = players[num].fillna(0).astype(int)
     players["starter"] = players["starter"].fillna(0).astype(int)
-    leaderboards, table = {}, {}
-    for season, ps_ in players.groupby("season"):
-        key = str(season)
-        last_team = ps_.sort_values(["date", "event_id"]).groupby("player_id")["team"].last()
-        names = ps_.sort_values(["date", "event_id"]).groupby("player_id")["player"].last()
+    # Card fixes 2026-11-12 (display only): every count carries the team it was recorded WITH (`by_team`, from the game rows), so
+    # a traded player's firsts are never credited to his current team; every entry states its basis; a leader with fewer than
+    # SMALL_N starts is tagged small sample. The "all" view is the career count inside the dataset, with the same attribution.
+    def board(ps_, basis):
+        ps_ = ps_.sort_values(["date", "event_id"])
+        last_team = ps_.groupby("player_id")["team"].last()
+        names = ps_.groupby("player_id")["player"].last()
         agg = ps_.groupby("player_id").agg(games=("event_id", "count"), starts=("starter", "sum"), win_pts=("win_pts", "mean"), win_ast=("win_ast", "mean"), win_reb=("win_reb", "mean"),
                                            f_fgm=("f_fgm", "sum"), f_ast=("f_ast", "sum"), f_reb=("f_reb", "sum"), f_3_game=("f_3_game", "sum"), f_dunk_game=("f_dunk_game", "sum"))
         lb = {}
@@ -337,12 +341,20 @@ def publish(out=OUT):
             top = agg[agg[col] > 0].copy()
             top["rate"] = top.apply(lambda r: (r[col] / r["starts"]) if r["starts"] > 0 else None, axis=1)
             top = top.sort_values([col, "rate"], ascending=[False, False], na_position="last").head(TOP)
-            lb[k] = [{"player": names[pid], "team": last_team[pid], "count": int(r[col]), "starts": int(r["starts"]), "rate": (None if r["rate"] is None or pd.isna(r["rate"]) else round(float(r["rate"]), 4))}
+            split = ps_[ps_[col] > 0].groupby(["player_id", "team"])[col].sum()
+            lb[k] = [{"player": names[pid], "team": last_team[pid], "count": int(r[col]), "starts": int(r["starts"]), "rate": (None if r["rate"] is None or pd.isna(r["rate"]) else round(float(r["rate"]), 4)),
+                      "by_team": [{"team": t, "count": int(n)} for t, n in split[pid].sort_values(ascending=False).items()], "basis": basis, "small_sample": bool(r["starts"] < SMALL_N)}
                      for pid, r in top.iterrows()]
-        leaderboards[key] = lb
         ok = agg[agg.games >= MIN_GAMES].sort_values(["win_pts", "win_ast"], ascending=False)
-        table[key] = [{"player": names[pid], "team": last_team[pid], "games": int(r.games), "starts": int(r.starts), "win_pts": round(float(r.win_pts), 2), "win_ast": round(float(r.win_ast), 2), "win_reb": round(float(r.win_reb), 2)}
-                      for pid, r in ok.iterrows()]
+        tb = [{"player": names[pid], "team": last_team[pid], "games": int(r.games), "starts": int(r.starts), "win_pts": round(float(r.win_pts), 2), "win_ast": round(float(r.win_ast), 2), "win_reb": round(float(r.win_reb), 2)}
+              for pid, r in ok.iterrows()]
+        return lb, tb
+    leaderboards, table = {}, {}
+    for season, ps_ in players.groupby("season"):
+        leaderboards[str(season)], table[str(season)] = board(ps_, "season")
+    leaderboards["all"], table["all"] = board(players, "career")
+    cur = int(games.season.max()); cur_games = int((games.season == cur).sum())
+    default_view = str(cur) if cur_games >= THIN_SEASON_GAMES else "all"
     recent = []
     for r in games.tail(RECENT).iloc[::-1].itertuples():
         def v(x): return None if (x is None or (isinstance(x, float) and pd.isna(x))) else x
@@ -350,9 +362,12 @@ def publish(out=OUT):
                        "first_fgm_player": v(r.first_fgm_player), "first_fgm_clock": v(r.first_fgm_clock), "first_ast_player": v(r.first_ast_player), "first_reb_player": v(r.first_reb_player),
                        "first_3_game_player": v(r.first_3_game_player), "first_3_game_clock": v(r.first_3_game_clock), "first_dunk_game_player": v(r.first_dunk_game_player), "first_dunk_game_clock": v(r.first_dunk_game_clock),
                        "win_pts_home": int(r.win_pts_home), "win_pts_away": int(r.win_pts_away)})
-    doc = {"games": int(len(games)), "leaderboards": leaderboards, "players": table, "recent_firsts": recent}
+    doc = {"games": int(len(games)), "leaderboards": leaderboards, "players": table, "recent_firsts": recent,
+           "default_view": default_view, "small_sample_n": SMALL_N, "seasons_in_dataset": sorted(int(x) for x in games.season.unique()),
+           "basis": {"season": "that season's games only", "career": "every season in the dataset (career within it), each count shown with the team it was recorded with",
+                     "default_rule": f"the current season is the default once it has {THIN_SEASON_GAMES} games collected ({cur_games} so far); until then the career view is, because single-season counts are too thin to rank"}}
     write_json(out, doc)
-    print(f"[opening3] published {out.name}: {len(games)} games, seasons {sorted(leaderboards)}, {len(recent)} recent")
+    print(f"[opening3] published {out.name}: {len(games)} games, views {sorted(leaderboards)}, default {default_view}, {len(recent)} recent")
     return doc
 
 
