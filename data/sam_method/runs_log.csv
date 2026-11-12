@@ -1,0 +1,5 @@
+date,run_id,stat,off_schedule,decision_ts,capture_at,markets,tipped_excluded,side_legs,depth_pass,unpriced_rung,no_model_player,candidates_searched,candidates,ineligible_player,no_base_rate,tail_excluded,clusters_selected,legs_logged,note
+2026-11-12,2026-11-12-PTS-offsched,PTS,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,187,0,374,226,6,11,209,62,51,0,1,3,8,
+2026-11-12,2026-11-12-REB-offsched,REB,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,218,0,436,225,86,6,133,21,15,0,1,3,4,
+2026-11-12,2026-11-12-AST-offsched,AST,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,159,0,318,167,38,7,122,28,21,0,2,3,4,
+2026-11-12,2026-11-12-3PM-offsched,3PM,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,222,0,444,213,79,8,126,22,21,0,0,1,1,

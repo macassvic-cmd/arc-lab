@@ -1,0 +1,107 @@
+name: Sam Method capture and shadow run
+
+# PRE-GATE SHADOW, PAPER ONLY (CEO order 2026-11-12). One capture per slate at 13:00 America/Los_Angeles and, right after it, the
+# four fixed optimizer runs. GitHub fires schedules late, so there are three triggers per clock regime (PST and PDT); the script
+# runs only inside 13:00-13:25 PT and only once per slate (the slate's capture file is the lock). A manual run bypasses the time
+# guard and is stamped off_schedule: it counts toward no gate.
+# Raw API responses go only to the PRIVATE repo arc-lab-data (secret ARC_LAB_DATA_TOKEN: a fine-grained token with Contents
+# read/write on that one repo). This repo receives derived rows only. No request URL is ever logged.
+
+on:
+  schedule:
+    - cron: "42 20 * * *"    # 12:42 PST: waits for 13:00
+    - cron: "52 20 * * *"
+    - cron: "2 21 * * *"
+    - cron: "42 19 * * *"    # the same three under PDT
+    - cron: "52 19 * * *"
+    - cron: "2 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sam-method
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DATA_TOKEN: ${{ secrets.ARC_LAB_DATA_TOKEN }}
+    steps:
+      - name: Storage configured?
+        id: storage
+        run: |
+          if [ -z "$DATA_TOKEN" ]; then
+            echo "::warning::ARC_LAB_DATA_TOKEN is not set: no capture (raw responses are stored only in the private arc-lab-data repo)"
+            echo "ok=0" >> "$GITHUB_OUTPUT"
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then exit 1; fi
+          else
+            echo "ok=1" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Wait for 13:00 PT when the trigger fired early
+        if: steps.storage.outputs.ok == '1' && github.event_name == 'schedule'
+        run: |
+          now=$(TZ=America/Los_Angeles date +%s); target=$(TZ=America/Los_Angeles date -d "today 13:00:05" +%s)
+          wait=$(( target - now ))
+          if [ "$wait" -gt 0 ] && [ "$wait" -le 1500 ]; then echo "sleeping ${wait}s until 13:00 PT"; sleep "$wait"; fi
+      - uses: actions/checkout@v4
+        if: steps.storage.outputs.ok == '1'
+        with:
+          path: arc-lab
+      - uses: actions/checkout@v4
+        if: steps.storage.outputs.ok == '1'
+        with:
+          repository: ${{ github.repository_owner }}/arc-lab-data
+          token: ${{ secrets.ARC_LAB_DATA_TOKEN }}
+          path: arc-lab-data
+      - uses: actions/setup-python@v5
+        if: steps.storage.outputs.ok == '1'
+        with:
+          python-version: "3.11"
+      - if: steps.storage.outputs.ok == '1'
+        run: pip install requests numpy pandas
+      - name: Capture, then the four fixed runs (re-poll at +5 minutes)
+        if: steps.storage.outputs.ok == '1'
+        id: run
+        working-directory: arc-lab/scripts
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ARC_LAB_DATA_DIR: ${{ github.workspace }}/arc-lab-data
+        run: |
+          flag=""; if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then flag="--manual"; fi
+          python sam_capture.py $flag | tee /tmp/capture.out
+          path=$(grep '^CAPTURE_PATH=' /tmp/capture.out | cut -d= -f2-)
+          if [ -n "$path" ]; then
+            python sam_optimizer.py run "$path"
+            echo "captured=1" >> "$GITHUB_OUTPUT"
+          else
+            python sam_optimizer.py publish
+            echo "captured=0" >> "$GITHUB_OUTPUT"
+          fi
+          python validate_site_json.py
+      - name: Store the raw capture in arc-lab-data (private)
+        if: steps.storage.outputs.ok == '1' && steps.run.outputs.captured == '1'
+        working-directory: arc-lab-data
+        run: |
+          git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
+          git add sam_method
+          git diff --cached --quiet && exit 0
+          git commit -q -m "sam method capture $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q
+      - name: Commit the derived rows to arc-lab
+        if: steps.storage.outputs.ok == '1'
+        working-directory: arc-lab
+        run: |
+          git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
+          git add data/sam_method docs/data/sam_method.json
+          [ -f data/oddsapi_props_credits.csv ] && git add data/oddsapi_props_credits.csv
+          git diff --cached --quiet && exit 0
+          git commit -q -m "sam method: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep 5
+          done
+          echo "::error::the Sam Method commit did not land after 3 attempts"; exit 1

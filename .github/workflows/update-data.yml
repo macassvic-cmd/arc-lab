@@ -177,6 +177,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python slips.py
+      - name: Sam Method shadow grade (PRE-GATE SHADOW, paper only; logged Kalshi legs vs the box scores, void when the player never entered; docs/data/sam_method.json)
+        id: sam_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python sam_optimizer.py grade
       - name: First-basket log snapshot (append-only, pre-tip rows only; frozen data/first_basket_params.json)
         id: fb_snap
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

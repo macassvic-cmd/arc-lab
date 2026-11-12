@@ -140,6 +140,7 @@ tr:last-child td{border-bottom:0}
 .fbTable{max-width:760px}.fbTable.fbWide{max-width:1040px}tr.fbPick td{font-weight:700}tr.fbEdge td{background:var(--chip)}tr.fbVoid td{color:var(--muted);text-decoration:line-through}tr.fbVoid td .fbBadge{text-decoration:none}
 .fbBadge{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:1px 8px;font:600 12px var(--body);vertical-align:middle}.fbBadge.fbConf{background:var(--make);color:#fff}
 .o3Cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0 28px}.o3Card.fbGame{margin:0 0 18px}.o3Card .fbTable{max-width:none}
+.samBanner{font:700 16px var(--body);border:2px solid var(--rim);border-radius:8px;padding:10px 14px;margin:0 0 10px;max-width:980px}
 .slDate{margin:0 0 30px}.slDate .fbGame{margin:0 0 18px}.slDate .fbGame h2{font-size:22px;margin:14px 0 2px}
 /* Results tab */
 h2{font:700 26px var(--display);margin:28px 0 8px}
@@ -167,6 +168,7 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <button role="tab" data-tab="fantasy" aria-selected="false">Fantasy Points</button>
     <button role="tab" data-tab="slips" aria-selected="false">Slips</button>
     <button role="tab" data-tab="opening3" aria-selected="false">Opening 3</button>
+    <button role="tab" data-tab="sam" aria-selected="false">Sam Method</button>
     <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
     <a class="navlink" href="performance.html">Performance</a>
@@ -240,6 +242,15 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <p class="foot fn">v2 = the same joint sim with a wider minutes draw plus a short-night mixture, rates blended toward this season (w = GP/(GP+10)), and P(over) through a frozen isotonic map. Paper study until its calibration and market verdicts render, both at 800 lines (a no-verdict checkpoint table at 200; Amendment 1, 2026-10-28). Rule: <code>backtests/fantasy_points_v2_rule.md</code>; record on the <a href="performance.html#fpV2Sec">Performance page</a>.</p>
   </section>
 
+  <section id="sam" hidden>
+    <p class="samBanner" id="samBanner"></p>
+    <p class="foot" id="samGate"></p>
+    <div id="samTonight"></div>
+    <div id="samRecord"></div>
+    <div id="samBook"></div>
+    <div id="samHis"></div>
+    <div id="samMethod"></div>
+  </section>
   <section id="slips" hidden>
     <p class="sub" id="slNote"></p>
     <p class="foot"><b>Raw, uncalibrated model probabilities.</b> FP v2 is mid-gate and the ladder recalibration read is pending; the joint number is a ranking aid, not a promised hit rate. Selection only (no model math): three nested Underdog slips, 3 in 6 in 8, from the model's existing outputs. Every leg is projected 20+ minutes with raw P &ge; 57%, one leg per game and per player, ranked by raw P. Rebuilt on each data build until the slate's earliest tip, then frozen and graded from the box score (More hits when actual &gt; line, Less when actual &lt; line; no minutes or a push = void leg, and a slip with a void leg is not hit). Log: <code>data/slips_log.jsonl</code>.</p>
@@ -275,11 +286,11 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", sortF:"fp",
            sort3:"p2", sortP:"mean", lines:{}, edits:{}, be:55, o3Season:null, sortO3:"win_pts"};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
-if(["threes","props","firstbasket","fantasy","slips","opening3","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","slips","opening3","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
+if(["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
-let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null, FBL = null, SL = null, O3 = null;   // SL = Slips tonight (docs/data/slips.json, slips.py); O3 = Opening 3 (docs/data/opening3.json, opening3.py)   // FBL = first-basket confirmed-lineup marker (docs/data/first_basket_lineups.json, health workflow)   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
+let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null, FBL = null, SL = null, O3 = null, SM = null;   // SL = Slips tonight (docs/data/slips.json, slips.py); O3 = Opening 3 (docs/data/opening3.json, opening3.py)   // FBL = first-basket confirmed-lineup marker (docs/data/first_basket_lineups.json, health workflow)   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -647,6 +658,38 @@ function renderOpening3(){
     }</tbody></table></div>`;
 }
 
+function renderSam(){
+  // Display only (2026-11-12): docs/data/sam_method.json from sam_optimizer.py. PRE-GATE SHADOW, PAPER ONLY: every number here is the
+  // tool's logged value; nothing is computed in the page and nothing on any other tab reads this file.
+  const esc = x => String(x ?? "").replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const pc = (x, d=1) => (x === "" || x == null || isNaN(+x)) ? "–" : (100 * +x).toFixed(d) + "%";
+  const ids = ["samGate","samTonight","samRecord","samBook","samHis","samMethod"];
+  if(!SM){ $("samBanner").textContent = "PRE-GATE SHADOW — PAPER ONLY. No shadow data published yet."; ids.forEach(i => $(i).innerHTML = ""); return; }
+  $("samBanner").textContent = SM.banner;
+  const g = SM.gate || {};
+  $("samGate").innerHTML = `<b>Gate progress:</b> A-fit ${g.a_fit_progress ?? 0} of ${g.a_fit_target} captured slates, then A-check ${g.a_check_progress ?? 0} of ${g.a_check_target}` +
+    ` (${g.on_schedule_slates ?? 0} on schedule, ${g.off_schedule_slates ?? 0} off schedule). ${esc(g.note)}<br>${esc(g.step0)}`;
+  const leg = x => `<tr class="${x.duplicate_of ? "fbVoid" : ""}"><td><span class="name">${esc(x.player)}</span> <span class="fbMeta">${esc(x.team)}</span></td><td>${esc(x.rung)}+</td><td>${x.side === "yes" ? "Yes" : "No"}</td>` +
+    `<td>${pc(x.model_p_shrunk)}${x.raw_p ? ' <span class="fbMeta">raw</span>' : ""}</td><td>$${(+x.ask).toFixed(2)}</td><td>${pc(x.fee_adj_breakeven)}</td><td>${(+x.ranking_z).toFixed(3)}</td><td>${Math.round(+x.ask_size_fillable)}</td>` +
+    `<td>${x.ask_plus5 === "" || x.ask_plus5 == null ? "–" : "$" + (+x.ask_plus5).toFixed(2) + (String(x.ask_survived) === "1" ? " ✓" : " ✗")}</td>` +
+    `<td>${x.duplicate_of ? '<span class="fbBadge">duplicate rung</span>' : x.status === "graded" ? (String(x.hit) === "1" ? "HIT" : "MISS") : x.status === "void" ? "VOID" : "pending"}</td></tr>`;
+  const t = SM.tonight;
+  $("samTonight").innerHTML = !t ? `<h2>Shadow selections</h2><p class="foot">No slate has been searched yet.</p>` :
+    `<h2>Shadow selections <span class="fbMeta">${esc(t.slate_date)}${t.captured_at_pt ? " · captured " + esc(t.captured_at_pt) : ""}${t.off_schedule ? " · OFF SCHEDULE (manual run, counts toward no gate)" : ""} · PAPER ONLY</span></h2>` +
+    (t.runs || []).map(r => `<div class="fbGame"><h2>${esc(r.stat)} run <span class="fbMeta">${esc(r.candidates_searched)} candidates searched · ${esc(r.depth_pass)} side-legs passed the depth rule of ${esc(r.side_legs)} · ${esc(r.unpriced_rung)} at strikes the ladder does not price</span></h2>` +
+      (r.legs && r.legs.length ? `<div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Player</th><th>Rung</th><th>Side</th><th>Model P</th><th>Kalshi ask</th><th>Fee-adj. break-even</th><th>Per-leg z</th><th>Ask size</th><th>Ask +5 min</th><th>Result</th></tr></thead><tbody>${r.legs.map(leg).join("")}</tbody></table></div>`
+        : `<p class="foot">Empty run: ${esc(r.note || "no selection")}.</p>`) + `</div>`).join("");
+  const rec = (title, r) => !r ? "" : `<tr><td>${title}</td><td>${r.graded}</td><td>${r.pending}</td><td>${r.void}</td><td>${r.hits == null ? "–" : r.hits + " (" + pc(r.hit_rate) + ")"}</td><td>${pc(r.mean_breakeven)}</td><td>${r.z_edge ?? "–"}</td><td>${r.z_over ?? "–"}</td><td>${r.ask_survival_rate == null ? "–" : pc(r.ask_survival_rate, 0) + " of " + r.ask_survival_n}</td></tr>`;
+  const R = SM.record || {};
+  $("samRecord").innerHTML = `<h2>Shadow record to date <span class="fbMeta">${esc(R.label)}</span></h2><div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Runs</th><th>Clusters graded</th><th>Pending</th><th>Void</th><th>Hits</th><th>Mean break-even</th><th>Z_edge (descriptive)</th><th>Z_over (descriptive)</th><th>Ask survival</th></tr></thead><tbody>` +
+    (rec("On schedule", R.on_schedule) + rec("Off schedule (no gate)", R.off_schedule) || `<tr><td colspan="9">Nothing logged yet.</td></tr>`) + `</tbody></table></div>`;
+  const B = SM.book_gap || {};
+  $("samBook").innerHTML = `<h2>${esc(B.label || "Book vs Kalshi — PAPER ONLY")}</h2><p class="foot">${B.status === "not_run" ? "Not run. " + esc(B.reason) : esc(B.reason || "")}</p>`;
+  const H = SM.his_record;
+  $("samHis").innerHTML = `<h2>His record</h2>` + (H ? `<pre class="foot">${esc(JSON.stringify(H, null, 1))}</pre>` : `<p class="foot">${esc(SM.his_record_placeholder)}</p>`);
+  $("samMethod").innerHTML = `<h2>Method</h2><ol class="foot">${(SM.method || []).map(m => `<li>${esc(m)}</li>`).join("")}</ol><p class="foot">${(SM.readings || []).map(esc).join(" ")} Updated ${esc(SM.generated)}.</p>`;
+}
+
 function renderSlips(){
   // Display only (2026-11-04): docs/data/slips.json from slips.py. Legs, raw P, joint P and the hit / miss / void marks are the builder's
   // (box-score grade); nothing is re-derived or filtered here. Shows today's slate and, when it is a different date, the latest FINAL slate.
@@ -681,7 +724,7 @@ function renderSlips(){
 function render(){
   const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
   chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
-  $("gameChips").hidden = S.tab==="defense"||S.tab==="results"||S.tab==="slips"||S.tab==="opening3";
+  $("gameChips").hidden = S.tab==="defense"||S.tab==="results"||S.tab==="slips"||S.tab==="opening3"||S.tab==="sam";
   chips($("posChips3"), [["all","All"], ...POS.map(p=>[p,p])], S.pos3, v=>{S.pos3=v; render();});
   chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
   if(S.tab==="threes") renderThrees();
@@ -691,6 +734,7 @@ function render(){
   if(S.tab==="fantasy") renderFantasy();
   if(S.tab==="slips") renderSlips();
   if(S.tab==="opening3") renderOpening3();
+  if(S.tab==="sam") renderSam();
   if(S.tab==="results") renderResults();
 }
 
@@ -698,7 +742,7 @@ document.querySelector("nav").onclick = e => {
   const b = e.target.closest("button"); if(!b) return;
   S.tab = b.dataset.tab;
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
-  ["threes","props","firstbasket","fantasy","slips","opening3","defense","results"].forEach(id=>$(id).hidden = id!==S.tab);
+  ["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].forEach(id=>$(id).hidden = id!==S.tab);
   render();
 };
 $("q3").oninput = render; $("qp").oninput = render; $("qf").oninput = render;
@@ -720,7 +764,7 @@ function freshness(L){
 
 async function boot(){
   [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
-  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null); FBL = await load("data/first_basket_lineups.json", null); SL = await load("data/slips.json", null); O3 = await load("data/opening3.json", null);
+  const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null); FBL = await load("data/first_basket_lineups.json", null); SL = await load("data/slips.json", null); SM = await load("data/sam_method.json", null); O3 = await load("data/opening3.json", null);
   S.lines = {};
   freshness(L);
   for(const l of (L?.lines||[])){ const k = LINE_KEY[String(l.stat).toUpperCase()]; if(k) S.lines[`${norm(l.player)}:${k}`] = +l.line; }
@@ -733,7 +777,7 @@ async function boot(){
   render();
 }
 boot();
-setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); LG = await load("data/ladder_graded.json", LG); FBL = await load("data/first_basket_lineups.json", FBL); SL = await load("data/slips.json", SL); O3 = await load("data/opening3.json", O3); render(); }, 60000);
+setInterval(async()=>{ N = await load("data/news.json", N); P = await load("data/projections.json", P); FB = await load("data/first_basket_today.json", FB); FPX = await load("data/fp_pricing.json", FPX); PPX = await load("data/pp_pricing.json", PPX); FPV2 = await load("data/fp_v2_pricing.json", FPV2); FBM = await load("data/first_basket_method.json", FBM); LG = await load("data/ladder_graded.json", LG); FBL = await load("data/first_basket_lineups.json", FBL); SL = await load("data/slips.json", SL); SM = await load("data/sam_method.json", SM); O3 = await load("data/opening3.json", O3); render(); }, 60000);
 </script>
 </body>
 </html>
