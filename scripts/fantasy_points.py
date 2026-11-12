@@ -268,7 +268,7 @@ def cdf_from_q(q, x):
 
 # ---------------- pricing study ----------------
 def team_abbr(x):
-    from odds import team_abbr as ta
+    from teams import team_abbr as ta
     return ta(x) or x
 
 
@@ -321,7 +321,7 @@ def price(snapshot_path):
     for g in P["games"]:
         games.append(g)
     def match_game(e):
-        # canonicalize BOTH sides through odds.team_abbr: Underdog's and ESPN's abbreviations differ (NYK/NY, GSW/GS, ...)
+        # canonicalize BOTH sides through teams.team_abbr: Underdog's and ESPN's abbreviations differ (NYK/NY, GSW/GS, ...)
         a, b = team_abbr(e.get("team")), team_abbr(e.get("opponent"))
         for g in games:
             if {team_abbr(g["home"]), team_abbr(g["away"])} == {a, b}:

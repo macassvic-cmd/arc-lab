@@ -29,7 +29,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA_DIR, ROOT, SITE_DATA, norm_name, read_json, write_json  # noqa: E402
-from odds import team_abbr  # noqa: E402
+from teams import team_abbr  # noqa: E402
 
 RULE = "backtests/fp_redesign_forward_rule.md"
 UD = DATA_DIR / "fp_forward_ud.csv"

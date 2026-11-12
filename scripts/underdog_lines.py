@@ -3,16 +3,16 @@
 Input:  board_snapshots/underdog.json (pirate-bets canonical contract: {"platform",
         "captured_at", "entries": [{"player", "league", "market", "line", "team",
         "opponent", "game", "scheduled_at", "game_status", "platform_ids": {...}}]})
-Output: docs/data/lines.json in the shape of lines.example.json, plus sharp odds
-        from OddsBlaze on each line when ODDSBLAZE_API_KEY is set:
-  {"updated", "book": "Underdog", "sharp_book": "pinnacle"|null,
-   "lines": [{"player", "stat", "line", "team", "opp", "start", "ud_id",
-              "sharp": {"book", "line", "over", "under", "fair_over", "exact"} | null}]}
+Output: docs/data/lines.json in the shape of lines.example.json:
+  {"updated", "book": "Underdog", "sharp_book": null,
+   "lines": [{"player", "stat", "line", "team", "opp", "start", "ud_id", "sharp": null}]}
+  The per-line "sharp" field and "sharp_book" stay in the shape and are always null (CEO order 2026-11-12: the sharp
+  enrichment is removed; the field is kept, not populated from any other capture).
 
 CLI:
-  python underdog_lines.py --snapshot <path/to/underdog.json> [--out ../docs/data/lines.json] [--push] [--no-odds]
+  python underdog_lines.py --snapshot <path/to/underdog.json> [--out ../docs/data/lines.json] [--push]
 Library (what the pirate-bets scraper hook calls):
-  write_lines(snapshot_dict, out_path, push=False, odds=True) -> summary dict
+  write_lines(snapshot_dict, out_path, push=False) -> summary dict
 """
 import argparse
 import datetime as dt
@@ -27,7 +27,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from collections import Counter  # noqa: E402
 from common import DATA_DIR, SITE_DATA, norm_name, write_json  # noqa: E402
-from odds import OddsBlaze, devig, team_abbr  # noqa: E402
+from teams import team_abbr  # noqa: E402
 
 log = logging.getLogger("arc.lines")
 DEFAULT_OUT = SITE_DATA / "lines.json"
@@ -92,38 +92,10 @@ def nba_lines(snapshot):
     return uniq
 
 
-def attach_sharp(lines, props):
-    """props: OddsBlaze.player_props() index. Exact-line match first, else the nearest
-    posted line (flagged exact=false) so the reader still sees where the sharp number sits."""
-    hits = 0
-    for row in lines:
-        rec = props.get((norm_name(row["player"]), row["stat"]))
-        if not rec or not rec["lines"]:
-            continue
-        exact = row["line"] in rec["lines"]
-        line = row["line"] if exact else min(rec["lines"], key=lambda l: (abs(l - row["line"]), l))
-        sides = rec["lines"][line]
-        row["sharp"] = {
-            "book": rec["book"], "line": line, "over": sides.get("over"), "under": sides.get("under"),
-            "fair_over": (lambda p: None if p is None else round(p, 4))(devig(sides.get("over"), sides.get("under"))),
-            "exact": exact,
-        }
-        hits += 1
-    return hits
-
-
 def build(snapshot, odds=True, client=None):
+    """`odds` and `client` are accepted for old callers and ignored: no sharp enrichment exists any more."""
     lines = nba_lines(snapshot)
     sharp_book, hits = None, 0
-    if odds and lines:
-        client = client or OddsBlaze()
-        if client.enabled:
-            props = client.player_props()
-            if props:
-                hits = attach_sharp(lines, props)
-                sharp_book = next(iter(props.values()))["book"]
-        else:
-            log.info("no ODDSBLAZE_API_KEY - lines written without sharp odds")
     return {
         "updated": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "book": "Underdog", "captured_at": snapshot.get("captured_at"), "sharp_book": sharp_book,
@@ -250,7 +222,7 @@ def main():
     ap.add_argument("--snapshot", required=True, help="pirate-bets board_snapshots/underdog.json")
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     ap.add_argument("--push", action="store_true", help="commit and push lines.json to the arc-lab repo")
-    ap.add_argument("--no-odds", action="store_true", help="skip OddsBlaze even if a key is set")
+    ap.add_argument("--no-odds", action="store_true", help="accepted for the scraper hook's old command line; no effect")
     args = ap.parse_args()
     with open(args.snapshot, encoding="utf-8") as f:
         snapshot = json.load(f)

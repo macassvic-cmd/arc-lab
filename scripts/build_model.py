@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 
 from common import DATA_DIR, NBA_TEAMS, POSITIONS, SITE_DATA, norm_name, norm_pos, read_json, write_json
-from odds import OddsBlaze
 from positions import position_map
 import fantasy_points as fp
 from health import STATE as HEALTH_STATE, notify
@@ -510,10 +509,9 @@ def main():
     nstat = news_status(news, slate["date"])
     played = df.groupby("team").date.max()
     history = AbsorberHistory(df, pd.Timestamp(slate["date"]))
-    ob = OddsBlaze()
-    spreads = ob.spreads() if ob.enabled and slate["games"] else {}
-    if slate["games"] and not spreads:
-        print("[model] no spreads (" + ("OddsBlaze returned nothing" if ob.enabled else "ODDSBLAZE_API_KEY not set") + "), blowout risk skipped")
+    spreads = {}                                   # no spreads feed (the legacy client was removed 2026-11-12; it never had a key): blowout risk stays off
+    if slate["games"]:
+        print("[model] no spreads feed, blowout risk skipped")
 
     by_id = {pid: g for pid, g in df[df.season >= cur - 1].groupby("player_id")}
     pos_map = position_map()

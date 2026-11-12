@@ -34,7 +34,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fantasy_points as fp  # noqa: E402  (cdf_from_q, fp_of, parse_ts: read-only helpers)
 from common import DATA_DIR, SITE_DATA, norm_name, read_json, write_json  # noqa: E402
-from odds import team_abbr  # noqa: E402
+from teams import team_abbr  # noqa: E402
 
 STRIP = DATA_DIR / "strip_log.csv"
 FPLOG = DATA_DIR / "fp_v2_log.csv"

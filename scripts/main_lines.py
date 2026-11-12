@@ -22,7 +22,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA_DIR, SITE_DATA, norm_name, read_json  # noqa: E402
-from odds import team_abbr  # noqa: E402
+from teams import team_abbr  # noqa: E402
 
 OUT = DATA_DIR / "main_lines.csv"
 LINES = SITE_DATA / "lines.json"

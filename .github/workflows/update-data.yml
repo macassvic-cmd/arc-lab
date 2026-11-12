@@ -116,7 +116,6 @@ jobs:
       - name: Build model
         working-directory: scripts
         env:
-          ODDSBLAZE_API_KEY: ${{ secrets.ODDSBLAZE_API_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: python build_model.py
       - name: Snapshot paper log

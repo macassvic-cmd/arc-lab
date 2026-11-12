@@ -78,7 +78,6 @@ PrizePicks standard Fantasy Score lines (rule amendment 2026-10-25) arrive the s
 ARC_LAB_DIR=C:\Users\vmora\Downloads\arc-lab\arc-lab
 ARC_LAB_LINES_SECONDS=600   # at most one write/push per 10 minutes
 ARC_LAB_PUSH=1              # 0 = write the file, don't commit
-ODDSBLAZE_API_KEY=...       # optional, see below
 ```
 
 One-off, from this repo:
@@ -86,7 +85,7 @@ One-off, from this repo:
 python scripts/underdog_lines.py --snapshot ..\..\pirate-bets-pc\reader\board_snapshots\underdog.json --push
 ```
 
-Stats kept: `3PM` and `FP` (Fantasy Points) only since the 2026-10-22 scope reset, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and, when an OddsBlaze key is present, `sharp`: the first book in `ODDSBLAZE_SHARP_BOOKS` (default Pinnacle, Circa, DraftKings, FanDuel) with its `line`, `over`/`under` American prices, devigged `fair_over`, and `exact` (false when the book's nearest line differs from Underdog's). The site reads `player`, `stat`, `line` (the shape of `lines.example.json`); the rest is for you and your validation agent.
+Stats kept: `3PM` and `FP` (Fantasy Points) only since the 2026-10-22 scope reset, main lines only, games not yet started. Season-long markets are dropped. Each line carries `team`, `opp`, `start`, `ud_id` and `sharp`, which is kept in the shape and is always null since 2026-11-12.
 
 ## Paper log and Results tab
 
@@ -98,9 +97,9 @@ Stats kept: `3PM` and `FP` (Fantasy Points) only since the 2026-10-22 scope rese
 
 What the replay knows at tip-off: the roster is whoever played for the team in the previous 21 days plus anyone in that night's box score, and rostered players missing from the box score count as OUT (the injury-report proxy; a late scratch is "known" here when it may not have been at close). No spreads, so no blowout shave; no news text, so no questionable widening; positions come from the full-season `positions.csv`.
 
-## OddsBlaze
+## Odds feed
 
-`scripts/odds.py` is the one client. Key: `ODDSBLAZE_API_KEY` in the environment or a `.env` here (see `.env.example`), plus the repo secret of the same name for Actions (`gh secret set ODDSBLAZE_API_KEY`). Without it everything still runs: lines have no `sharp`, and the model skips blowout risk and says so in the log.
+The Odds API is the lab's only odds feed (`ODDS_API_KEY`, environment or repo secret; used by `scripts/first_basket_odds.py` and `scripts/oddsapi_props.py`). The earlier sharp-odds client was removed on 2026-11-12; lines carry `sharp: null` and the model has no spreads feed, so blowout risk is off and the build log says so.
 
 ## Model notes
 
@@ -113,12 +112,11 @@ What the replay knows at tip-off: the roster is whoever played for the team in t
 - **Defense vs position:** per-minute stats allowed to each position vs league average, with last season at 35% weight and 600 minutes of league average blended in so early-season numbers don't swing wildly. It already reflects pace, so pace isn't applied twice. Validation (2026-10-08) found position adds nothing predictive beyond the team, so the simulation clamps the factor to 0.98–1.02 (`DVP_CLAMP`); the DvP tab keeps the full numbers, labeled descriptive.
 - **Points, rebounds, assists** come from the same simulated minutes, so they're correlated the way real games are. PRA was cut on 2026-10-22.
 - **Fantasy points** (`fantasy_points.py`): STL / BLK / TOV negative-binomial marginals (rates EB-shrunk to position, dispersion frozen from 2024-25) joined to the engine's 3PA / twos / REB / AST through a Gaussian copula whose correlation blends the player's own residual rate correlations with the position prior; minutes is the shared driver. 10,000 sims; the 99 percentiles are logged pre-tip. Pricing: the pirate-bets scraper's Arc Lab hook (`underdog_lines.py`) copies each capture's NBA entries into `data/board_latest.json` with the capture time; the update workflow prices against it and refuses a capture older than the slate or 12 h. Break-even is 1 / decimal for a book-style side (decimal price posted, multiplier 1.0) and 0.55 / multiplier for a pick'em leg; each row logs the convention (rule addendum 2026-10-23).
-- **Blowout risk:** game spreads from OddsBlaze. Final margins run about N(spread, 13.5); starters sit roughly the last 8 minutes of a 20+ point game. The extra blowout chance a spread adds over a pick'em, times those 8 minutes, comes off each regular starter (scaled by their minutes) and goes to the bench, on both teams. A 7.5-point spread shaves about 0.9 minutes, 14.5 about 2.2. Those players get a `Blowout risk (-12.5)` flag and a wider minutes range; `spread`, `total` and `odds_book` sit on each game in `projections.json`.
+- **Blowout risk (off: no spreads feed since the legacy client was removed 2026-11-12; it never ran with a key):** Final margins run about N(spread, 13.5); starters sit roughly the last 8 minutes of a 20+ point game. The extra blowout chance a spread adds over a pick'em, times those 8 minutes, comes off each regular starter (scaled by their minutes) and goes to the bench, on both teams. A 7.5-point spread shaves about 0.9 minutes, 14.5 about 2.2. Those players get a `Blowout risk (-12.5)` flag and a wider minutes range; `spread`, `total` and `odds_book` sit on each game in `projections.json`.
 
 ## Known limits to fix next
 
 - ESPN positions are sometimes generic (G, F); those map to SG and SF.
 - Blowout shave is a fixed curve, not fit to data. Check it against actual starter minutes by spread after a month.
-- OddsBlaze NBA market names are matched by keyword (`stat_for_market` in `scripts/odds.py`), written against the docs rather than a live response. Verify once with a key.
 - Usage bump when a star sits is only through minutes for now, not shot share.
 - Track closing-line value from day one before trusting edges.
