@@ -38,6 +38,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import DATA_DIR, ROOT, SITE_DATA, norm_name, read_json  # noqa: E402
 from teams import team_abbr  # noqa: E402
+import oddsapi_props as op  # noqa: E402  (the shared credit ledger, pool floor and daily cap live there: one number, one place)
 
 KALSHI = "https://api.elections.kalshi.com/trade-api/v2"
 SERIES = {"KXNBA3PT": "tpm", "KXNBAPTS": "pts", "KXNBAREB": "reb", "KXNBAAST": "ast"}
@@ -49,7 +50,7 @@ BOOK_ORDER = ("fanduel", "draftkings")
 PT, ET = ZoneInfo("America/Los_Angeles"), ZoneInfo("America/New_York")
 WINDOW = (dt.time(13, 0), dt.time(13, 25))
 EARLY_TIP = dt.time(14, 0)
-POOL_FLOOR = 20000                       # the shared Odds API pool floor (2026-11-12): under it, no sportsbook pull
+POOL_FLOOR, DAILY_CAP = op.POOL_FLOOR, op.DAILY_CAP
 RUNS = DATA_DIR / "sam_method" / "capture_log.csv"
 RUN_FIELDS = ["slate_date", "captured_at", "off_schedule", "status", "kalshi_markets", "kalshi_by_series", "games", "early_tip_games",
               "odds_credits", "odds_games", "model_updated", "model_players", "note"]
@@ -274,12 +275,14 @@ def main():
         remaining = r.headers.get("x-requests-remaining")
         listing = r.json() if r.status_code == 200 else []
         today = [e for e in listing if parse(e["commence_time"]).astimezone(ET).date().isoformat() == slate_date]
+        spent, projected = op.ledger_today(iso(t)[:10]), len(ODDS_MARKETS) * len(today)
         if remaining is None or float(remaining) < POOL_FLOOR:
             odds["status"] = f"stopped_pool_floor ({remaining})"
+        elif spent + projected > DAILY_CAP:
+            odds["status"] = f"stopped_daily_cap ({spent} spent today + {projected} projected > {DAILY_CAP})"
         else:
             ev, credits, rem, used = odds_reference(today, key)
             odds = {"status": "ok", "events_listing": listing, "event_odds": ev, "credits": credits, "remaining_after": rem}
-            import oddsapi_props as op
             op.ledger_add({"pulled_at": iso(t), "label": "sam_capture", "slate_date": slate_date, "games_requested": len(ev), "games_skipped_tipped": len(today) - len(ev),
                            "credits": credits, "projected": len(ODDS_MARKETS) * len(today), "remaining_before": remaining, "remaining_after": rem, "used_after": used, "status": "ok"})
     elif not a.dry_run_dir:

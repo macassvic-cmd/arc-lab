@@ -14,14 +14,23 @@ Rules built in:
     tip in the future); a game in progress or finished is never called
   - shared pool floor: remaining credits are read from the usage headers before the first paid call and after every call;
     under POOL_FLOOR (20,000) the pull stops and reports
-  - daily cap: DAILY_CAP (300) credits across all pulls of the UTC day; a pull whose projected cost (markets x regions x games)
-    would cross it is not started
+  - daily cap: DAILY_CAP (1,000 since the CEO order of 2026-11-12; it was 300) credits per UTC day across EVERY capture that
+    writes the shared ledger (this one and the Sam Method capture, which imports the number from here); a pull whose
+    projected cost (markets x regions x games) would cross it is not started
   - storage: the RAW responses go ONLY to the private arc-lab-data checkout named by ARC_LAB_DATA_DIR, gzipped, one file per
     day (oddsapi_props_YYYY-MM-DD.jsonl.gz, one JSON object per pull). The script refuses to write raw data inside this
     repository. Only the credit ledger (data/oddsapi_props_credits.csv) and derived coverage counts
     (data/oddsapi_props_coverage.json) are written here.
 
   python oddsapi_props.py pull --label test|morning|pretip|board [--push]   one pull of tonight's untipped games
+  python oddsapi_props.py auto [--event push|schedule] [--check]           the scheduled entry point: decides which pull, if any,
+                                                                           is due now and runs it (--check only prints it)
+
+Schedule (CEO order 2026-11-12), decided here from the free events listing and the ledger, one pull per label per slate:
+  morning   the first run inside 15:00-19:00 UTC that is also at least 90 minutes before the slate's earliest tip
+  pretip    the first run inside the 90 minutes before the slate's earliest tip
+  board     only on slates of 12 or more games, and only on a run triggered by an Underdog board push: the first one inside
+            4 hours to 2.5 hours before the earliest tip
   python oddsapi_props.py coverage [--file PATH] [--pull N]                 coverage inventory of an archived pull (default: latest)
   python oddsapi_props.py budget                                           free: usage headers + today's ledger, no paid call
 """
@@ -48,8 +57,10 @@ MARKETS = ["player_points", "player_rebounds", "player_assists", "player_points_
 STAT = {"player_points": "PTS", "player_rebounds": "REB", "player_assists": "AST", "player_points_rebounds_assists": "PRA",
         "player_steals": "STL", "player_blocks": "BLK", "player_turnovers": "TO"}
 REGIONS = "us"
-POOL_FLOOR = 20000
-DAILY_CAP = 300
+POOL_FLOOR = 20000                       # shared pool floor: under it nothing is pulled (unchanged 2026-11-12)
+DAILY_CAP = 1000                         # ONE number for every capture on the shared ledger (CEO order 2026-11-12; was 300)
+MORNING_UTC = (15, 19)
+PRETIP_MIN, BOARD_MIN, BOARD_GAMES = 90, (240, 150), 12
 ET = ZoneInfo("America/New_York")
 LEDGER = DATA_DIR / "oddsapi_props_credits.csv"
 COVERAGE = DATA_DIR / "oddsapi_props_coverage.json"
@@ -131,7 +142,9 @@ def untipped(listing, t):
     fut = [e for e in listing if parse(e["commence_time"]) > t]
     if not fut:
         return [], len(listing), None
-    day = slate.get("date") or min(parse(e["commence_time"]) for e in fut).astimezone(ET).date().isoformat()
+    day = min(parse(e["commence_time"]) for e in fut).astimezone(ET).date().isoformat()
+    if slate.get("date") != day:
+        tips = {}                                 # a slate file from another day says nothing about tonight's tips
     todo, skipped = [], 0
     for e in listing:
         if parse(e["commence_time"]).astimezone(ET).date().isoformat() != day:
@@ -150,6 +163,46 @@ def budget():
     t = now()
     print(f"[oddsapi-props] usage headers: remaining {u['x-requests-remaining']}, used {u['x-requests-used']}; ledger today {ledger_today(iso(t)[:10])} of {DAILY_CAP}; pool floor {POOL_FLOOR}")
     return r, u
+
+
+def ledger_has(slate_date, label):
+    if not LEDGER.exists():
+        return False
+    with open(LEDGER, newline="", encoding="utf-8") as f:
+        return any(r["slate_date"] == slate_date and r["label"] == label and r["status"] == "ok" and (num(r["games_requested"]) or 0) > 0 for r in csv.DictReader(f))
+
+
+def due(listing, t, event):
+    """(label or None, why): which scheduled pull is due at time t. One pull per label per slate (the ledger is the lock)."""
+    fut = [e for e in listing if parse(e["commence_time"]) > t]
+    if not fut:
+        return None, "no untipped game in the listing"
+    day = min(parse(e["commence_time"]) for e in fut).astimezone(ET).date().isoformat()
+    today = [e for e in listing if parse(e["commence_time"]).astimezone(ET).date().isoformat() == day]
+    first = min(parse(e["commence_time"]) for e in today)
+    mins = (first - t).total_seconds() / 60
+    if mins <= 0:
+        return None, f"{day}: the slate's earliest game has tipped"
+    if mins <= PRETIP_MIN:
+        return (None, f"{day}: pretip already pulled") if ledger_has(day, "pretip") else ("pretip", f"{day}: {mins:.0f} min before the earliest tip")
+    if event == "push" and len(today) >= BOARD_GAMES and BOARD_MIN[1] <= mins <= BOARD_MIN[0] and not ledger_has(day, "board"):
+        return "board", f"{day}: {len(today)} games, board push {mins:.0f} min before the earliest tip"
+    if MORNING_UTC[0] <= t.hour < MORNING_UTC[1] and t.date().isoformat() <= day and not ledger_has(day, "morning"):
+        return "morning", f"{day}: morning window, {mins:.0f} min before the earliest tip"
+    return None, f"{day}: nothing due ({mins:.0f} min before the earliest tip; morning {'done' if ledger_has(day, 'morning') else 'not yet / window closed'}, pretip opens at {PRETIP_MIN} min)"
+
+
+def auto(event, check=False):
+    k = key()
+    r, u = get("events", {}, k)
+    if r.status_code != 200:
+        sys.exit(f"[oddsapi-props] events listing HTTP {r.status_code}: cannot decide what is due")
+    label, why = due(r.json(), now(), event)
+    print(f"[oddsapi-props] auto ({event}): {label or 'no pull'} - {why}")
+    print(f"DUE={label or ''}")
+    if label and not check:
+        pull(label)
+    return label
 
 
 def pull(label, push=False):
@@ -286,13 +339,16 @@ def coverage(path=None, which=-1):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["pull", "coverage", "budget"])
+    ap.add_argument("cmd", choices=["pull", "coverage", "budget", "auto"])
+    ap.add_argument("--event", default="schedule", choices=["push", "schedule", "workflow_dispatch"]); ap.add_argument("--check", action="store_true")
     ap.add_argument("--label", default="test", choices=["test", "morning", "pretip", "board"])
     ap.add_argument("--push", action="store_true")
     ap.add_argument("--file"); ap.add_argument("--pull", type=int, default=-1)
     a = ap.parse_args()
     if a.cmd == "pull":
         pull(a.label, push=a.push)
+    elif a.cmd == "auto":
+        auto("push" if a.event == "push" else "schedule", check=a.check)
     elif a.cmd == "coverage":
         coverage(Path(a.file) if a.file else None, a.pull)
     else:
