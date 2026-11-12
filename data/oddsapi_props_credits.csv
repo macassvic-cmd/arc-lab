@@ -1,3 +1,4 @@
 pulled_at,label,slate_date,games_requested,games_skipped_tipped,credits,projected,remaining_before,remaining_after,used_after,status
 2026-11-12T23:18:12Z,sam_capture,2026-11-12,4,0,32,32,90229,90197,9803,ok
 2026-11-12T23:20:04Z,test,2026-11-12,4,0,23,28,90197,90174,9826,ok
+2026-11-12T23:36:02Z,pretip,2026-11-12,4,0,24,28,90174,90150,9850,ok
