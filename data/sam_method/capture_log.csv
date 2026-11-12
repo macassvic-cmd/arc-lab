@@ -1,2 +1,3 @@
 slate_date,captured_at,off_schedule,status,kalshi_markets,kalshi_by_series,games,early_tip_games,odds_credits,odds_games,model_updated,model_players,note
 2026-11-12,2026-11-12T22:28:20Z,1,captured_dry_run,786,"{""KXNBA3PT"": 222, ""KXNBAPTS"": 187, ""KXNBAREB"": 218, ""KXNBAAST"": 159}",4,0,0,0,2026-11-12T21:26:12.120232Z,60,not_pulled_dry_run
+2026-11-12,2026-11-12T23:18:12Z,1,captured,824,"{""KXNBA3PT"": 238, ""KXNBAPTS"": 193, ""KXNBAREB"": 225, ""KXNBAAST"": 168}",4,0,32,4,2026-11-12T22:49:41.453307Z,60,ok
