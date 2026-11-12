@@ -1,0 +1,68 @@
+name: Odds API stat-line capture (manual)
+
+# FP rebuild premise capture (CEO order 2026-11-12): sportsbook PTS / REB / AST / PRA / STL / BLK / TO lines for tonight's
+# untipped games, archived raw in the PRIVATE repo arc-lab-data; only the credit ledger and coverage counts land here.
+# Manual only: the recurring 2-3 pulls per slate are NOT scheduled until the CEO has seen the first test pull's cost.
+# scripts/oddsapi_props.py enforces the 20,000 shared-pool floor and the 300 credits/day cap and never logs a request URL.
+
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        description: "pull label"
+        default: "test"
+        type: choice
+        options: [test, morning, pretip, board]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: oddsapi-props
+  cancel-in-progress: false
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: arc-lab
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/arc-lab-data
+          token: ${{ secrets.ARC_LAB_DATA_TOKEN }}
+          path: arc-lab-data
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests numpy pandas
+      - name: One pull of tonight's untipped games, then the coverage inventory
+        working-directory: arc-lab/scripts
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ARC_LAB_DATA_DIR: ${{ github.workspace }}/arc-lab-data
+        run: python oddsapi_props.py pull --label "${{ inputs.label }}"
+      - name: Store the raw pull in arc-lab-data (private)
+        if: always()
+        working-directory: arc-lab-data
+        run: |
+          git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
+          git add -A .
+          git diff --cached --quiet && exit 0
+          git commit -q -m "oddsapi props $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q
+      - name: Commit the ledger and coverage counts to arc-lab
+        if: always()
+        working-directory: arc-lab
+        run: |
+          git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
+          for f in data/oddsapi_props_credits.csv data/oddsapi_props_coverage.json; do [ -f "$f" ] && git add -- "$f"; done
+          git diff --cached --quiet && exit 0
+          git commit -q -m "oddsapi props coverage: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep 5
+          done
+          echo "::error::the coverage commit did not land after 3 attempts"; exit 1
