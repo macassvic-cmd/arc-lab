@@ -59,9 +59,66 @@ GAME_COLS = ["event_id", "date", "season", "phase", "home", "away",
              "first_3_game_player", "first_3_game_team", "first_3_game_clock", "first_3_home_player", "first_3_home_clock", "first_3_away_player", "first_3_away_clock",
              "first_dunk_game_player", "first_dunk_game_team", "first_dunk_game_clock", "first_dunk_home_player", "first_dunk_home_clock", "first_dunk_away_player", "first_dunk_away_clock",
              "win_pts_home", "win_pts_away", "window_plays", "collected_at"]
+# Whole-game columns (2026-11-11 store extension). Every name carries "wg" = WHOLE GAME; the columns above are WINDOW-limited
+# (first three minutes only) and are never altered. Clocks are period-aware: <name>_period + <name>_elapsed_s = game seconds
+# elapsed since the opening tip (12-minute quarters, 5-minute overtimes), never a bare quarter clock.
+WG_GAME_COLS = ["wg_first_point_team", "wg_first_point_player", "wg_first_point_is_ft", "wg_first_point_period", "wg_first_point_elapsed_s",
+                "wg_first_3_game_team", "wg_first_3_game_player", "wg_first_3_game_period", "wg_first_3_game_elapsed_s",
+                "wg_first_dunk_game_team", "wg_first_dunk_game_player", "wg_first_dunk_game_period", "wg_first_dunk_game_elapsed_s"] + \
+               [f"wg_first_{k}_{side}_{f}" for k in ("3", "dunk", "fg") for side in ("home", "away") for f in ("player", "period", "elapsed_s")] + ["wg_plays", "wg_collected_at"]
+WG_PLAYER_COLS = ["wg_f_point", "wg_f_3_game", "wg_f_3_team", "wg_f_dunk_game", "wg_f_dunk_team", "wg_f_fg_team"]
+BASE_GAME_COLS = list(GAME_COLS)
+GAME_COLS = GAME_COLS + WG_GAME_COLS
 PLAYER_COLS = ["event_id", "date", "season", "player_id", "player", "team", "opp", "home", "starter",
                "win_pts", "win_ast", "win_oreb", "win_dreb", "win_reb", "win_fgm", "win_fga", "win_3pm", "win_3pa", "win_dunks", "win_ftm",
                "f_fgm", "f_ast", "f_reb", "f_3_game", "f_3_team", "f_dunk_game", "f_dunk_team", "jump_win", "jump_gain"]
+BASE_PLAYER_COLS = list(PLAYER_COLS)
+PLAYER_COLS = PLAYER_COLS + WG_PLAYER_COLS
+
+
+def elapsed_s(period, secs):
+    """Game seconds elapsed since the opening tip for a play at `secs` remaining in `period` (quarters 720 s, overtimes 300 s)."""
+    period = int(period)
+    return (period - 1) * 720.0 + (720.0 - secs) if period <= 4 else 2880.0 + (period - 5) * 300.0 + (300.0 - secs)
+
+
+def extract_wg(doc, who, side_of, tid_abbr):
+    """Whole-game firsts over EVERY play in sequence order: (game columns, {athlete id: {flag: 1}}). Made shots only
+    (scoringPlay); a dunk = a made shooting play whose type text contains "Dunk"; first point = the first made shot of any
+    kind, free throws included."""
+    def name(pid): return who[pid]["name"] if pid in who else str(pid)
+    def team_of(pid, play_team): return who[pid]["team"] if pid in who else tid_abbr.get(str(play_team), str(play_team))
+    plays = [p for p in sorted(doc["plays"], key=lambda p: p["seq"]) if p.get("period") is not None and p.get("secs") is not None]
+    g = {c: None for c in WG_GAME_COLS}; g["wg_plays"] = len(plays); g["wg_collected_at"] = now_iso()
+    fl = defaultdict(dict)
+    def put(key, p, shooter, with_team):
+        if g[key + "_player"] is not None:
+            return False
+        g[key + "_player"] = name(shooter); g[key + "_period"] = int(p["period"]); g[key + "_elapsed_s"] = round(elapsed_s(p["period"], p["secs"]), 1)
+        if with_team:
+            g[key + "_team"] = team_of(shooter, p.get("team"))
+        return True
+    for p in plays:
+        ath = [str(a) for a in (p.get("ath") or []) if a]
+        if not p.get("shooting") or not ath or not p.get("scoring"):
+            continue
+        att = int(p.get("att") or 0); val = int(p.get("value") or 0); shooter = ath[0]
+        side = side_of.get(str(p.get("team")) if p.get("team") is not None else None)
+        if att not in (1, 2, 3):
+            continue
+        if put("wg_first_point", p, shooter, True):
+            g["wg_first_point_is_ft"] = int(att == 1); fl[shooter]["wg_f_point"] = 1
+        if att == 1:
+            continue
+        if side and put(f"wg_first_fg_{side}", p, shooter, False):
+            fl[shooter]["wg_f_fg_team"] = 1
+        if att == 3 and val == 3:
+            if put("wg_first_3_game", p, shooter, True): fl[shooter]["wg_f_3_game"] = 1
+            if side and put(f"wg_first_3_{side}", p, shooter, False): fl[shooter]["wg_f_3_team"] = 1
+        if "dunk" in (p.get("type") or "").lower():
+            if put("wg_first_dunk_game", p, shooter, True): fl[shooter]["wg_f_dunk_game"] = 1
+            if side and put(f"wg_first_dunk_{side}", p, shooter, False): fl[shooter]["wg_f_dunk_team"] = 1
+    return g, fl
 
 
 def now_iso():
@@ -155,6 +212,10 @@ def extract(doc):
                 g["first_dunk_game_player"], g["first_dunk_game_team"], g["first_dunk_game_clock"] = name(shooter), shooter_team, clock; st[shooter]["f_dunk_game"] = 1
             if side and side not in seen_dunk_team:
                 seen_dunk_team.add(side); g[f"first_dunk_{side}_player"], g[f"first_dunk_{side}_clock"] = name(shooter), clock; st[shooter]["f_dunk_team"] = 1
+    wg, wg_flags = extract_wg(doc, who, side_of, tid_abbr)
+    g.update(wg)
+    for pid, f in wg_flags.items():
+        st[pid].update(f)
     rows = []
     ids = [pid for pid, a in who.items() if a["played"]] + [pid for pid in st if pid not in who]
     for pid in ids:
@@ -215,6 +276,39 @@ def collect(fetch_missing=False, sleep=0.0):
         append_rows(GAMES, GAME_COLS, [g]); append_rows(PLAYERS, PLAYER_COLS, rows); added.append(g["event_id"])
     print(f"[opening3] {len(done)} games already collected; {len(todo)} candidates; added {len(added)}; skipped {dict(skipped)}")
     return added
+
+
+def backfill_wg(fetch_missing=True):
+    """Idempotent backfill of the whole-game columns for every game already in the store, from the play-by-play cache.
+    Existing columns are carried over value for value (verified after writing); only the wg columns are computed."""
+    import time
+    old_g = pd.read_csv(GAMES, dtype=str, keep_default_na=False); old_p = pd.read_csv(PLAYERS, dtype=str, keep_default_na=False)
+    ev = candidate_events().set_index("event_id")
+    grow, prow, problems = {}, {}, defaultdict(list)
+    for e in old_g.event_id:
+        doc = ps.load(e)
+        if doc is None and fetch_missing and e in ev.index:
+            r = ev.loc[e]; ps.store(e, r.date, r.season, r.phase); doc = ps.load(e); time.sleep(0.12)
+        g, rows = extract(doc) if doc is not None else (None, "not_cached")
+        if g is None:
+            problems[rows].append(e); continue
+        grow[e] = {c: g[c] for c in WG_GAME_COLS}
+        for r in rows:
+            prow[(e, str(r["player_id"]))] = {c: r[c] for c in WG_PLAYER_COLS}
+    fmt = lambda v: "" if v is None else str(v)
+    new_g = old_g[BASE_GAME_COLS].copy()
+    for c in WG_GAME_COLS:
+        new_g[c] = [fmt(grow.get(e, {}).get(c)) for e in old_g.event_id]
+    new_p = old_p[BASE_PLAYER_COLS].copy()
+    keys = list(zip(old_p.event_id, old_p.player_id)); keyset = set(keys)
+    no_row = [k for k in prow if any(prow[k].values()) and k not in keyset]
+    for c in WG_PLAYER_COLS:
+        new_p[c] = [fmt(prow[k][c]) if k in prow else ("" if k[0] not in grow else "0") for k in keys]
+    new_g.to_csv(GAMES, index=False, lineterminator="\n"); new_p.to_csv(PLAYERS, index=False, lineterminator="\n")
+    chk_g = pd.read_csv(GAMES, dtype=str, keep_default_na=False); chk_p = pd.read_csv(PLAYERS, dtype=str, keep_default_na=False)
+    assert chk_g[BASE_GAME_COLS].equals(old_g[BASE_GAME_COLS]) and chk_p[BASE_PLAYER_COLS].equals(old_p[BASE_PLAYER_COLS]), "existing columns changed"
+    print(f"[opening3] whole-game backfill: {len(grow)} of {len(old_g)} games; not extracted {dict(problems)}; "
+          f"flagged players with no store row: {len(no_row)} {no_row[:10]}; existing columns verified unchanged")
 
 
 # ---------------------------------------------------------------- publish
@@ -281,6 +375,8 @@ if __name__ == "__main__":
         check(a[1])
     elif a and a[0] == "publish":
         publish()
+    elif a and a[0] == "backfill-wg":
+        backfill_wg()
     else:
         collect(fetch_missing="--fetch" in a, sleep=0.12)
         publish()
