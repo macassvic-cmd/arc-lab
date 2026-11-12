@@ -266,11 +266,12 @@ def minutes_fit():
     write_json(MINSIM, doc)
     for k, v_ in groups.items():
         print(f"[minsim] {k}: n {v_['n']} mean err {v_['mean']} sd {v_['sd']} share proj high {v_['share_over']} (>5: {v_['share_over_5']}, >10: {v_['share_over_10']}) p10/p50/p90 {v_['p10']}/{v_['p50']}/{v_['p90']}")
-    print(f"[minsim] sigma_cond {{{', '.join(f'{s}: {x['sigma_cond']} (uncond {x['sigma_unconditional_same_rows']}, shipped {x['shipped_sigma']})' for s, x in sig.items())}}}; registered n = {EVAL_N} from {EVAL_START}")
+    sig_txt = ", ".join(f"{s}: {x['sigma_cond']} (uncond {x['sigma_unconditional_same_rows']}, shipped {x['shipped_sigma']})" for s, x in sig.items())   # own line: nested same-quote f-strings need Python 3.12, Actions runs 3.11
+    print(f"[minsim] sigma_cond {{{sig_txt}}}; registered n = {EVAL_N} from {EVAL_START}")
     return doc
 
 
-LL_SIGMA = {"pts": 6.5044, "ast": 2.0175, "reb": 2.6527}   # build_model.SIGMA, copied for the provenance line only (build_model is not imported here: its import pulls the odds client)
+LL_SIGMA = {"pts": 6.5044, "ast": 2.0175, "reb": 2.6527}   # build_model.SIGMA, copied for the provenance line only (build_model is not imported here: its import pulls the whole model buildt)
 
 
 # ================= shadow engine =================
