@@ -79,7 +79,11 @@ def key():
 
 
 def get(path, params, k):
-    r = requests.get(f"{BASE}/{path}".rstrip("/"), params={**params, "apiKey": k}, timeout=30)
+    try:
+        r = requests.get(f"{BASE}/{path}".rstrip("/"), params={**params, "apiKey": k}, timeout=30)
+    except requests.RequestException as e:
+        # a requests error message carries the full URL, key included: never let it reach a log or a traceback
+        sys.exit(f"[oddsapi-props] request for /{path} failed ({type(e).__name__}); no further calls")
     return r, {h: r.headers.get(h) for h in USAGE}
 
 
