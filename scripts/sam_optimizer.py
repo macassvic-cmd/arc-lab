@@ -6,9 +6,13 @@ published numbers; it writes nothing the ladder, FP, first-basket or any existin
 Rules as locked in the order (kept here so the file is self-contained):
   universe     Kalshi markets of the capture whose game had not tipped, per side, passing the DEPTH RULE at capture: the side's
                ask exists, ask size >= 100 contracts, yes spread (yes_ask - yes_bid) <= $0.10
-  model P      Kalshi "X or more" = the ladder model's P(stat >= X). PTS: the frozen recalibration map (data/ladder_recal.json,
-               recal_v1) applied to the engine's raw probability. Other stats have no recalibration map: the ladder's published
-               P is used as is and the leg is labelled raw_p. A strike that is not a ladder rung cannot be priced: skipped, counted.
+  model P      Kalshi "X or more" = the ladder model's LIVE PUBLISHED P(stat >= X) for every stat (backtests/sam_method_guard_rule.md
+               section 1, CEO ruling 2026-11-12). A recalibration map in shadow prices nothing: the Part A points map stays out
+               until it ships, and then arrives through the published P. A strike that is not a ladder rung cannot be priced:
+               skipped, counted.
+  guard_v1     registered before the first counted run (same rule file, section 3): a candidate is excluded when its claimed edge
+               exceeds 10.0 points, or when the player's projected minutes moved more than 3.0 from the slate's morning build
+               (or cannot be checked). Counted per run; excluded legs are never logged.
   fee          taker fee per contract = 0.07 x ask x (1 - ask); fee-adjusted break-even = ask + fee, per side
   candidate    the side's P beats its own fee-adjusted break-even by >= 3 points. Both sides are searched.
   eligibility  (i) >= 20 current-season games, same team, role stable; or (ii) >= 41 prior-season games with the same team and
@@ -56,6 +60,8 @@ import sam_capture as sc  # noqa: E402
 STATS = ["pts", "reb", "ast", "tpm"]
 LABEL = {"pts": "PTS", "reb": "REB", "ast": "AST", "tpm": "3PM"}
 MIN_SIZE, MAX_SPREAD, EDGE_FLOOR, FEE, TAIL, TOP = 100.0, 0.10, 0.03, 0.07, 1.75, 3
+METHOD_VERSION, P_SOURCE = "sam_v1+guard_v1", "live_published_p"   # backtests/sam_method_guard_rule.md; a change = a version bump and a new record
+GUARD_EDGE, GUARD_MINUTES = 0.10, 3.0
 A_FIT, A_CHECK = 14, 7
 COLS = ["date", "venue", "run_id", "cluster_id", "stat", "player", "team", "game_id", "rung", "side", "model_p_raw", "model_p_shrunk",
         "calibrated_book_value", "decision_ts", "reference_price", "reference_source", "kalshi_mid", "ask", "ask_size_fillable", "spread",
@@ -63,7 +69,8 @@ COLS = ["date", "venue", "run_id", "cluster_id", "stat", "player", "team", "game
         "base_rate_clause", "tail_claim_flag", "tail_claim_reason", "duplicate_of", "ask_plus5", "ask_survived", "scratch_status", "hit", "status"]
 assert len(COLS) == 35
 RUN_COLS = ["date", "run_id", "stat", "off_schedule", "decision_ts", "capture_at", "markets", "tipped_excluded", "side_legs", "depth_pass", "unpriced_rung",
-            "no_model_player", "candidates_searched", "candidates", "ineligible_player", "no_base_rate", "tail_excluded", "clusters_selected", "legs_logged", "note"]
+            "no_model_player", "candidates_searched", "candidates", "ineligible_player", "no_base_rate", "tail_excluded", "clusters_selected", "legs_logged", "note",
+            "method_version", "p_source", "guard_edge", "guard_minutes"]
 ROOT_DATA, ROOT_SITE = DATA_DIR, SITE_DATA
 
 
@@ -144,15 +151,9 @@ class Box:
 
 # ---------------------------------------------------------------- the search
 
-def recal_pts():
-    import ladder_recal as lr
-    m = (read_json(DATA_DIR / "ladder_recal.json", {}) or {}).get("maps", {}).get("pts")
-    return (lambda raw: float(lr.apply_map(m, [raw])[0])) if m else None
-
-
 def search(cap):
     """All four runs for one capture: (legs to log, run summaries). Pure: no file is read after the inputs, nothing is written."""
-    box = Box(); pts_map = recal_pts()
+    box = Box()
     slate = read_json(DATA_DIR / "slate.json", {}) or {}
     game_id = {f"{sc.team_abbr(g['away'])}@{sc.team_abbr(g['home'])}": str(g["event_id"]) for g in slate.get("games") or []}
     model = {(p["player_key"], p["team"]): p for p in cap["model"]["players"]}
@@ -162,7 +163,7 @@ def search(cap):
     for stat in STATS:
         run_id = f"{date}-{LABEL[stat]}" + ("-offsched" if off else "")
         c = dict.fromkeys(["markets", "tipped_excluded", "side_legs", "depth_pass", "unpriced_rung", "no_model_player", "candidates_searched", "candidates",
-                           "ineligible_player", "no_base_rate", "tail_excluded"], 0)
+                           "ineligible_player", "no_base_rate", "tail_excluded", "guard_edge", "guard_minutes"], 0)
         cands = []
         for m in (r for r in cap["kalshi"]["markets"] if r["stat"] == stat):
             c["markets"] += 1
@@ -182,12 +183,17 @@ def search(cap):
                 if not rung:
                     c["unpriced_rung"] += 1; continue
                 c["candidates_searched"] += 1
-                p_pub = float(rung["p"]); p_use = pts_map(float(rung["raw"])) if (stat == "pts" and pts_map) else p_pub
+                p_pub = float(rung["p"]); p_use = p_pub            # the live published P, every stat (rule section 1)
                 ps_raw, ps = (p_pub, p_use) if side == "yes" else (1 - p_pub, 1 - p_use)
                 f = fee(ask); be = ask + f; edge = ps - be
                 if edge < EDGE_FLOOR - 1e-12:
                     continue
                 c["candidates"] += 1
+                if edge > GUARD_EDGE + 1e-12:                    # guard_v1, edge cap
+                    c["guard_edge"] += 1; continue
+                mm = p.get("min_morning")
+                if mm is None or p.get("min") is None or abs(float(p["min"]) - float(mm)) > GUARD_MINUTES + 1e-9:   # guard_v1, minutes move (fails closed)
+                    c["guard_minutes"] += 1; continue
                 clause, why = box.eligibility(p["player_id"], m["team"])
                 if not clause:
                     c["ineligible_player"] += 1; continue
@@ -206,7 +212,7 @@ def search(cap):
                               "fee_adj_breakeven": round(be, 5), "claimed_edge_pp": round(edge * 100, 2), "ranking_z": round(edge / math.sqrt(be * (1 - be)), 4),
                               "base_rate_eligible": 1, "base_rate_clause": clause, "tail_claim_flag": 0, "tail_claim_reason": "", "duplicate_of": "",
                               "ask_plus5": "", "ask_survived": "", "scratch_status": "", "hit": "", "status": "pending",
-                              "_ticker": m["ticker"], "_base_rate": round(br, 4), "_base_n": n, "_base_hits": hits, "_raw_p": stat != "pts" or not pts_map})
+                              "_ticker": m["ticker"], "_base_rate": round(br, 4), "_base_n": n, "_base_hits": hits, "_raw_p": True})
         by_cluster = {}
         for x in cands:
             by_cluster.setdefault(x["cluster_id"], []).append(x)
@@ -221,8 +227,8 @@ def search(cap):
                 out.append(x)
         legs += out
         runs.append({"date": date, "run_id": run_id, "stat": LABEL[stat], "off_schedule": int(off), "decision_ts": decision_ts, "capture_at": cap["captured_at"], **c,
-                     "clusters_selected": len(ranked), "legs_logged": len(out),
-                     "note": "" if ranked else ("no candidate cleared the +3pp floor" if not c["candidates"] else "every candidate failed eligibility, base rate or the tail flag")})
+                     "clusters_selected": len(ranked), "legs_logged": len(out), "method_version": METHOD_VERSION, "p_source": P_SOURCE,
+                     "note": "" if ranked else ("no candidate cleared the +3pp floor" if not c["candidates"] else "every candidate failed the outlier guard, eligibility, base rate or the tail flag")})
     return legs, runs
 
 
@@ -266,7 +272,7 @@ def run(capture_path, wait=True):
     write_json(P["dir"] / "tonight_meta.json", tonight)
     for r in runs:
         print(f"[sam-optimizer] {r['run_id']}: markets {r['markets']}, side-legs {r['side_legs']}, depth pass {r['depth_pass']}, unpriced rung {r['unpriced_rung']}, no model player {r['no_model_player']}, "
-              f"searched {r['candidates_searched']}, candidates {r['candidates']} (ineligible {r['ineligible_player']}, no base rate {r['no_base_rate']}, tail {r['tail_excluded']}), "
+              f"searched {r['candidates_searched']}, candidates {r['candidates']} (guard edge {r['guard_edge']}, guard minutes {r['guard_minutes']}, ineligible {r['ineligible_player']}, no base rate {r['no_base_rate']}, tail {r['tail_excluded']}), "
               f"clusters {r['clusters_selected']}, legs logged {r['legs_logged']} {r['note']}")
     for x in legs:
         print(f"   {x['stat']:3s} {x['player']:24s} {x['rung']}+ {x['side']:3s} P {x['model_p_shrunk']:.3f} ask {float(x['ask']):.2f} BE {x['fee_adj_breakeven']:.4f} edge {x['claimed_edge_pp']:+.1f}pp z {x['ranking_z']:.3f} "
@@ -320,6 +326,9 @@ def record(rows):
 def publish():
     P = paths(); log, runs, caps = read_csv(P["log"]), read_csv(P["runs"]), read_csv(P["capture_log"])
     meta = read_json(P["dir"] / "tonight_meta.json", {}) or {}
+    for col in RUN_COLS:
+        if len(runs) and col not in runs.columns:
+            runs[col] = ""
     on = runs[runs.off_schedule == "0"] if len(runs) else runs
     slates_on = int(on.date.nunique()) if len(on) else 0
     latest = runs.date.max() if len(runs) else None
@@ -349,9 +358,11 @@ def publish():
            "his_record_placeholder": "Grading in progress — 20 posted ladders transcribed.",
            "method": ["The tool searches every Kalshi single-leg rung (points, rebounds, assists, threes) for the biggest gap between our model's probability and the price, after Kalshi's fee.",
                       "It is Sam's method — a tool-driven search of alt rungs at fixed targets — rebuilt on Kalshi singles; sportsbook prices are reference only, never a venue.",
-                      "Model probabilities are the ladder's, shrunk by the frozen recalibration map where one exists (points); legs without a map are labelled raw.",
+                      "Model probabilities are the ladder's live published numbers for every stat; the points recalibration map is in shadow and prices nothing until it ships.",
                       "Legs are ranked by per-leg z (edge over the break-even's standard deviation) in four fixed runs a day, one per stat, top three player-game clusters each, no re-runs.",
                       "Everything here is paper. Staking is a separate CEO decision after the locked gate."],
+           "guard": {"version": METHOD_VERSION, "rule": "backtests/sam_method_guard_rule.md", "edge_cap_points": GUARD_EDGE * 100, "minutes_move": GUARD_MINUTES,
+                     "text": f"Outlier guard (registered before the first counted run): a leg is dropped when its claimed edge is above {GUARD_EDGE * 100:.0f} points or the player's projected minutes moved more than {GUARD_MINUTES:.0f} from the morning build. The largest gaps are usually the model's own projection errors."},
            "readings": ["P shown is the probability of the listed side.", "A strike that is not a ladder rung is not priced.", "Off-schedule (manual) runs are shown but count toward no gate."]}
     write_json(P["out"], doc)
     print(f"[sam-optimizer] published {P['out'].name}: {len(log)} logged legs, {slates_on} on-schedule slates")

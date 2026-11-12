@@ -670,13 +670,13 @@ function renderSam(){
   $("samGate").innerHTML = `<b>Gate progress:</b> A-fit ${g.a_fit_progress ?? 0} of ${g.a_fit_target} captured slates, then A-check ${g.a_check_progress ?? 0} of ${g.a_check_target}` +
     ` (${g.on_schedule_slates ?? 0} on schedule, ${g.off_schedule_slates ?? 0} off schedule). ${esc(g.note)}<br>${esc(g.step0)}`;
   const leg = x => `<tr class="${x.duplicate_of ? "fbVoid" : ""}"><td><span class="name">${esc(x.player)}</span> <span class="fbMeta">${esc(x.team)}</span></td><td>${esc(x.rung)}+</td><td>${x.side === "yes" ? "Yes" : "No"}</td>` +
-    `<td>${pc(x.model_p_shrunk)}${x.raw_p ? ' <span class="fbMeta">raw</span>' : ""}</td><td>$${(+x.ask).toFixed(2)}</td><td>${pc(x.fee_adj_breakeven)}</td><td>${(+x.ranking_z).toFixed(3)}</td><td>${Math.round(+x.ask_size_fillable)}</td>` +
+    `<td>${pc(x.model_p_shrunk)}</td><td>$${(+x.ask).toFixed(2)}</td><td>${pc(x.fee_adj_breakeven)}</td><td>${(+x.ranking_z).toFixed(3)}</td><td>${Math.round(+x.ask_size_fillable)}</td>` +
     `<td>${x.ask_plus5 === "" || x.ask_plus5 == null ? "–" : "$" + (+x.ask_plus5).toFixed(2) + (String(x.ask_survived) === "1" ? " ✓" : " ✗")}</td>` +
     `<td>${x.duplicate_of ? '<span class="fbBadge">duplicate rung</span>' : x.status === "graded" ? (String(x.hit) === "1" ? "HIT" : "MISS") : x.status === "void" ? "VOID" : "pending"}</td></tr>`;
   const t = SM.tonight;
   $("samTonight").innerHTML = !t ? `<h2>Shadow selections</h2><p class="foot">No slate has been searched yet.</p>` :
     `<h2>Shadow selections <span class="fbMeta">${esc(t.slate_date)}${t.captured_at_pt ? " · captured " + esc(t.captured_at_pt) : ""}${t.off_schedule ? " · OFF SCHEDULE (manual run, counts toward no gate)" : ""} · PAPER ONLY</span></h2>` +
-    (t.runs || []).map(r => `<div class="fbGame"><h2>${esc(r.stat)} run <span class="fbMeta">${esc(r.candidates_searched)} candidates searched · ${esc(r.depth_pass)} side-legs passed the depth rule of ${esc(r.side_legs)} · ${esc(r.unpriced_rung)} at strikes the ladder does not price</span></h2>` +
+    (t.runs || []).map(r => `<div class="fbGame"><h2>${esc(r.stat)} run <span class="fbMeta">${esc(r.candidates_searched)} candidates searched · ${esc(r.depth_pass)} side-legs passed the depth rule of ${esc(r.side_legs)} · ${esc(r.unpriced_rung)} at strikes the ladder does not price${(r.guard_edge !== "" && r.guard_edge != null) ? ` · outlier guard dropped ${esc(r.guard_edge)} on edge, ${esc(r.guard_minutes)} on minutes` : " · run before the outlier guard" + (r.p_source ? " (" + esc(r.p_source) + ")" : "")}</span></h2>` +
       (r.legs && r.legs.length ? `<div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Player</th><th>Rung</th><th>Side</th><th>Model P</th><th>Kalshi ask</th><th>Fee-adj. break-even</th><th>Per-leg z</th><th>Ask size</th><th>Ask +5 min</th><th>Result</th></tr></thead><tbody>${r.legs.map(leg).join("")}</tbody></table></div>`
         : `<p class="foot">Empty run: ${esc(r.note || "no selection")}.</p>`) + `</div>`).join("");
   const rec = (title, r) => !r ? "" : `<tr><td>${title}</td><td>${r.graded}</td><td>${r.pending}</td><td>${r.void}</td><td>${r.hits == null ? "–" : r.hits + " (" + pc(r.hit_rate) + ")"}</td><td>${pc(r.mean_breakeven)}</td><td>${r.z_edge ?? "–"}</td><td>${r.z_over ?? "–"}</td><td>${r.ask_survival_rate == null ? "–" : pc(r.ask_survival_rate, 0) + " of " + r.ask_survival_n}</td></tr>`;
@@ -687,7 +687,7 @@ function renderSam(){
   $("samBook").innerHTML = `<h2>${esc(B.label || "Book vs Kalshi — PAPER ONLY")}</h2><p class="foot">${B.status === "not_run" ? "Not run. " + esc(B.reason) : esc(B.reason || "")}</p>`;
   const H = SM.his_record;
   $("samHis").innerHTML = `<h2>His record</h2>` + (H ? `<pre class="foot">${esc(JSON.stringify(H, null, 1))}</pre>` : `<p class="foot">${esc(SM.his_record_placeholder)}</p>`);
-  $("samMethod").innerHTML = `<h2>Method</h2><ol class="foot">${(SM.method || []).map(m => `<li>${esc(m)}</li>`).join("")}</ol><p class="foot">${(SM.readings || []).map(esc).join(" ")} Updated ${esc(SM.generated)}.</p>`;
+  $("samMethod").innerHTML = `<h2>Method</h2><ol class="foot">${(SM.method || []).map(m => `<li>${esc(m)}</li>`).join("")}</ol><p class="foot">${SM.guard ? esc(SM.guard.text) + " " : ""}${(SM.readings || []).map(esc).join(" ")} Updated ${esc(SM.generated)}.</p>`;
 }
 
 function renderSlips(){

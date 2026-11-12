@@ -51,6 +51,7 @@ jobs:
         if: steps.storage.outputs.ok == '1'
         with:
           path: arc-lab
+          fetch-depth: 300     # the guard reads the slate's morning projection build from git history (about 100 commits a day)
       - uses: actions/checkout@v4
         if: steps.storage.outputs.ok == '1'
         with:

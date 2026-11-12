@@ -27,6 +27,7 @@ import gzip
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -160,6 +161,32 @@ def odds_reference(events_today, key):
     return out, credits, remaining, used
 
 
+def morning_minutes(slate_date, snapshot_updated):
+    """{player id: projected minutes} from the slate's MORNING build = the first committed docs/data/projections.json dated the
+    slate (git history), plus that build's stamp. (None, None) when no such build can be read: the guard then fails closed.
+    When the capture snapshot is itself the first build of the day, it is its own morning build (move 0)."""
+    try:
+        shas = subprocess.run(["git", "log", "--format=%H", "--since", f"{slate_date}T00:00:00Z", "--", "docs/data/projections.json"],
+                              capture_output=True, text=True, cwd=ROOT, timeout=60).stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        return None, None
+    first = None
+    for sha in reversed(shas):                                   # oldest first
+        txt = subprocess.run(["git", "show", f"{sha}:docs/data/projections.json"], capture_output=True, text=True, cwd=ROOT, encoding="utf-8").stdout
+        try:
+            P = json.loads(txt)
+        except ValueError:
+            continue
+        if P.get("date") == slate_date:
+            first = P; break
+    if first is None:
+        cur = read_json(SITE_DATA / "projections.json", {}) or {}
+        first = cur if cur.get("date") == slate_date and cur.get("updated") == snapshot_updated and not shas else None
+    if first is None:
+        return None, None
+    return {str(p.get("id")): p.get("min") for p in first.get("players") or [] if not p.get("inactive")}, first.get("updated")
+
+
 def reference_index(event_odds):
     """(player key, stat, X) -> {'yes': (american, book), 'no': (american, book)}: FanDuel first, else DraftKings, else the best
     available price, the source book named per rung. A book rung matches a Kalshi 'X or more' only at the same threshold
@@ -235,7 +262,9 @@ def main():
         log_run({**base, "status": "skipped_stale_projection", "kalshi_markets": len(rows), "kalshi_by_series": json.dumps(by_series), "games": len(games),
                  "model_updated": proj.get("updated", ""), "note": f"projection snapshot is dated {proj.get('date')}, not {slate_date}: never used"})
         print(f"[sam-capture] {slate_date}: the projection snapshot is dated {proj.get('date')}: slate skipped and logged (a previous day's snapshot is never used)"); return None
-    model = [{"player_id": p.get("id"), "player": p["name"], "player_key": norm_name(p["name"]), "team": p["team"], "opp": p.get("opp"), "min": p.get("min"), "ladder": p.get("ladder")}
+    morning, morning_updated = morning_minutes(slate_date, proj.get("updated"))
+    model = [{"player_id": p.get("id"), "player": p["name"], "player_key": norm_name(p["name"]), "team": p["team"], "opp": p.get("opp"), "min": p.get("min"),
+              "min_morning": (morning or {}).get(str(p.get("id"))), "ladder": p.get("ladder")}
              for p in proj.get("players") or [] if not p.get("inactive") and p.get("ladder")]
     # ---- sportsbook reference (skipped on a dry run: its raw responses have no private home there)
     odds = {"status": "not_pulled_dry_run" if a.dry_run_dir else "not_pulled", "event_odds": [], "credits": 0}
@@ -260,7 +289,7 @@ def main():
         r["reference"] = ref.get((r["player_key"], r["stat"], r["x"]))
     cap = {"slate_date": slate_date, "captured_at": iso(t), "captured_at_pt": t_pt.strftime("%Y-%m-%d %H:%M:%S %Z"), "off_schedule": bool(a.manual), "dry_run": bool(a.dry_run_dir),
            "games": games, "early_tip_games": early, "kalshi": {"by_series": by_series, "markets": rows, "raw": raw},
-           "sportsbook": odds, "model": {"source": "docs/data/projections.json", "date": proj.get("date"), "updated": proj.get("updated"), "players": model}}
+           "sportsbook": odds, "model": {"source": "docs/data/projections.json", "date": proj.get("date"), "updated": proj.get("updated"), "morning_build": morning_updated, "players": model}}
     path.parent.mkdir(parents=True, exist_ok=True)
     with gzip.open(path, "wt", encoding="utf-8") as f:
         json.dump(cap, f, separators=(",", ":"))
