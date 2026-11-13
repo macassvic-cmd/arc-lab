@@ -3,3 +3,7 @@ date,run_id,stat,off_schedule,decision_ts,capture_at,markets,tipped_excluded,sid
 2026-11-12,2026-11-12-REB-offsched,REB,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,218,0,436,225,86,6,133,21,15,0,1,3,4,off-schedule dry run before guard_v1 and before the points P switch (backtests/sam_method_guard_rule.md),sam_v1_pre_guard,live_published_p,,
 2026-11-12,2026-11-12-AST-offsched,AST,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,159,0,318,167,38,7,122,28,21,0,2,3,4,off-schedule dry run before guard_v1 and before the points P switch (backtests/sam_method_guard_rule.md),sam_v1_pre_guard,live_published_p,,
 2026-11-12,2026-11-12-3PM-offsched,3PM,1,2026-11-12T22:30:20Z,2026-11-12T22:28:20Z,222,0,444,213,79,8,126,22,21,0,0,1,1,off-schedule dry run before guard_v1 and before the points P switch (backtests/sam_method_guard_rule.md),sam_v1_pre_guard,live_published_p,,
+2026-11-13,2026-11-13-PTS-offsched,PTS,1,2026-11-13T21:58:01Z,2026-11-13T21:57:55Z,432,0,864,463,34,11,418,96,37,0,2,3,6,,sam_v1+guard_v1,live_published_p,29,2
+2026-11-13,2026-11-13-REB-offsched,REB,1,2026-11-13T21:58:01Z,2026-11-13T21:57:55Z,474,0,948,478,192,23,263,31,14,0,0,3,3,,sam_v1+guard_v1,live_published_p,9,0
+2026-11-13,2026-11-13-AST-offsched,AST,1,2026-11-13T21:58:01Z,2026-11-13T21:57:55Z,358,0,716,383,95,18,270,51,24,0,1,3,4,,sam_v1+guard_v1,live_published_p,9,0
+2026-11-13,2026-11-13-3PM-offsched,3PM,1,2026-11-13T21:58:01Z,2026-11-13T21:57:55Z,533,0,1066,553,215,13,325,32,17,0,2,3,4,,sam_v1+guard_v1,live_published_p,6,0
