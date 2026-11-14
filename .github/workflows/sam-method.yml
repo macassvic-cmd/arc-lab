@@ -26,6 +26,15 @@ on:
     - cron: "42 19 * * *"    # the same three under PDT
     - cron: "52 19 * * *"
     - cron: "2 20 * * *"
+  push:
+    # Board-push trigger (CEO order and rule amendment 2026-11-14): the Underdog board pushes land about every 30 minutes under
+    # the owner's own account, so they start workflows promptly (the same mechanism oddsapi-props.yml rides). A push from
+    # 12:30 PT onward starts the job, which waits for 13:00 PT like the early cron triggers; pushes outside 12:30-13:25 PT
+    # exit in seconds. One concurrency group: a single run waits, later pushes queue behind it, and the capture lock stops a
+    # second capture. The cron sets below stay as they are: this is an addition, not a replacement.
+    branches: [main]
+    paths:
+      - data/board_latest.json
   workflow_dispatch:
 
 permissions:
@@ -52,8 +61,16 @@ jobs:
           else
             echo "ok=1" >> "$GITHUB_OUTPUT"
           fi
+          # a board push outside 12:30-13:25 PT has nothing to do: stop here, before any checkout
+          if [ "${{ github.event_name }}" = "push" ]; then
+            hm=$(TZ=America/Los_Angeles date +%H%M)
+            if [ "$hm" -lt 1230 ] || [ "$hm" -gt 1325 ]; then
+              echo "board push at $(TZ=America/Los_Angeles date '+%H:%M %Z'): outside 12:30-13:25 PT, nothing to do"
+              echo "ok=0" >> "$GITHUB_OUTPUT"
+            fi
+          fi
       - name: Wait for 13:00 PT when the trigger fired early
-        if: steps.storage.outputs.ok == '1' && github.event_name == 'schedule'
+        if: steps.storage.outputs.ok == '1' && github.event_name != 'workflow_dispatch'
         run: |
           now=$(TZ=America/Los_Angeles date +%s); target=$(TZ=America/Los_Angeles date -d "today 13:00:05" +%s)
           wait=$(( target - now ))
@@ -87,7 +104,7 @@ jobs:
           ARC_LAB_DATA_DIR: ${{ github.workspace }}/arc-lab-data
         run: |
           flag=""; if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then flag="--manual"; fi
-          python sam_capture.py $flag | tee /tmp/capture.out
+          python sam_capture.py $flag --trigger "${{ github.event_name }}" | tee /tmp/capture.out
           path=$(grep '^CAPTURE_PATH=' /tmp/capture.out | cut -d= -f2-)
           if [ -n "$path" ]; then
             python sam_optimizer.py run "$path"

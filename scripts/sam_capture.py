@@ -12,7 +12,9 @@ One pass per slate, everything inside the same few minutes:
 
 Schedule (addition A): three cron triggers; the script itself runs only inside 13:00-13:25 America/Los_Angeles and only once per
 slate (lock = the slate's capture file already exists). A manual run (--manual, workflow_dispatch) bypasses the time guard and
-is stamped off_schedule=true; off-schedule slates count toward no gate (addition B).
+is stamped off_schedule=true; off-schedule slates count toward no gate (addition B). Rule amendment 2026-11-14: a capture that
+STARTS inside the window with the lock is on-schedule whatever started the job (cron, board push, or an early trigger that
+waited); --trigger only records which one it was.
 
 Storage (standing decision 2026-11-12): the capture, raw API responses included, is one gzipped JSON per slate in the PRIVATE
 arc-lab-data checkout named by ARC_LAB_DATA_DIR: sam_method/capture/YYYY-MM-DD.json.gz. Nothing raw is written to this
@@ -218,6 +220,7 @@ def reference_index(event_odds):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manual", action="store_true", help="bypass the 13:00-13:25 PT guard; the capture is stamped off_schedule")
+    ap.add_argument("--trigger", default="", help="what started this run (schedule / push / workflow_dispatch): recorded with the capture, never used to decide anything")
     ap.add_argument("--dry-run-dir", help="write the capture here (outside both repos) and skip the sportsbook pull")
     a = ap.parse_args()
     t = now(); t_pt = t.astimezone(PT)
@@ -290,7 +293,7 @@ def main():
     ref = reference_index(odds["event_odds"])
     for r in rows:
         r["reference"] = ref.get((r["player_key"], r["stat"], r["x"]))
-    cap = {"slate_date": slate_date, "captured_at": iso(t), "captured_at_pt": t_pt.strftime("%Y-%m-%d %H:%M:%S %Z"), "off_schedule": bool(a.manual), "dry_run": bool(a.dry_run_dir),
+    cap = {"slate_date": slate_date, "captured_at": iso(t), "captured_at_pt": t_pt.strftime("%Y-%m-%d %H:%M:%S %Z"), "off_schedule": bool(a.manual), "trigger": a.trigger or None, "dry_run": bool(a.dry_run_dir),
            "games": games, "early_tip_games": early, "kalshi": {"by_series": by_series, "markets": rows, "raw": raw},
            "sportsbook": odds, "model": {"source": "docs/data/projections.json", "date": proj.get("date"), "updated": proj.get("updated"), "morning_build": morning_updated, "players": model}}
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -298,7 +301,7 @@ def main():
         json.dump(cap, f, separators=(",", ":"))
     log_run({**base, "status": "captured_dry_run" if a.dry_run_dir else "captured", "kalshi_markets": len(rows), "kalshi_by_series": json.dumps(by_series), "games": len(games),
              "early_tip_games": len(early), "odds_credits": odds.get("credits", 0), "odds_games": len(odds.get("event_odds") or []), "model_updated": proj.get("updated", ""),
-             "model_players": len(model), "note": odds["status"]})
+             "model_players": len(model), "note": odds["status"] + (f"; trigger={a.trigger}" if a.trigger else "")})
     print(f"[sam-capture] {slate_date} captured at {cap['captured_at_pt']} (off_schedule={cap['off_schedule']}): {len(rows)} Kalshi markets {by_series}, {len(games)} games "
           f"({len(early)} early tip), sportsbook {odds['status']} cost {odds.get('credits', 0)} credits, model {len(model)} players (snapshot {proj.get('updated')})")
     print(f"CAPTURE_PATH={path}")
