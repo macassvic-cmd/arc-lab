@@ -1,15 +1,26 @@
 name: Sam Method capture and shadow run
 
 # PRE-GATE SHADOW, PAPER ONLY (CEO order 2026-11-12). One capture per slate at 13:00 America/Los_Angeles and, right after it, the
-# four fixed optimizer runs. GitHub fires schedules late, so there are three triggers per clock regime (PST and PDT); the script
-# runs only inside 13:00-13:25 PT and only once per slate (the slate's capture file is the lock). A manual run bypasses the time
-# guard and is stamped off_schedule: it counts toward no gate.
+# four fixed optimizer runs. The script runs only inside 13:00-13:25 PT and only once per slate (the slate's capture file is the
+# lock). A manual run bypasses the time guard and is stamped off_schedule: it counts toward no gate.
+#
+# Scheduler fix 2026-11-14. Diagnosis: the schedule WAS registered and DID fire, but GitHub starts this repo's scheduled runs
+# 4 to 7 hours after the cron time (measured 2026-11-12..14: update-data 14:07Z started 19:01Z / 20:50Z / 21:24Z, 21:37Z started
+# 01:41Z / 02:04Z / 02:28Z; this workflow's six 2026-11-13 triggers, 19:42Z-21:02Z, started 00:27Z-01:17Z = 16:27-17:17 PT).
+# Every one landed hours after the window and the script's guard skipped it, so no scheduled capture ever ran.
+# Fix, design unchanged: a second set of three triggers placed 7 to 9 hours BEFORE the window so that a 4-7 hour start delay
+# still lands the job ahead of 13:00 PT, and the job now waits for 13:00 PT for up to 5 h 20 min (it used to wait 25 minutes at
+# most). The original near-window triggers stay for the days GitHub starts on time. A job that starts more than 5 h 20 min
+# early cannot wait inside the 6-hour job limit: it goes straight on and the script's guard skips it.
 # Raw API responses go only to the PRIVATE repo arc-lab-data (secret ARC_LAB_DATA_TOKEN: a fine-grained token with Contents
 # read/write on that one repo). This repo receives derived rows only. No request URL is ever logged.
 
 on:
   schedule:
-    - cron: "42 20 * * *"    # 12:42 PST: waits for 13:00
+    - cron: "50 11 * * *"    # early set: with the measured 4-7 h start delay these start 15:50Z-20:50Z and wait for 13:00 PT
+    - cron: "50 12 * * *"    #   (PST window 21:00Z; under PDT the window is 20:00Z and the first two still land ahead of it)
+    - cron: "50 13 * * *"
+    - cron: "42 20 * * *"    # near-window set, for an on-time scheduler: 12:42 PST, waits for 13:00
     - cron: "52 20 * * *"
     - cron: "2 21 * * *"
     - cron: "42 19 * * *"    # the same three under PDT
@@ -27,7 +38,7 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 360   # the job may wait up to 5 h 20 min for 13:00 PT; the capture and the +5 minute re-poll take about 8
     env:
       DATA_TOKEN: ${{ secrets.ARC_LAB_DATA_TOKEN }}
     steps:
@@ -46,7 +57,10 @@ jobs:
         run: |
           now=$(TZ=America/Los_Angeles date +%s); target=$(TZ=America/Los_Angeles date -d "today 13:00:05" +%s)
           wait=$(( target - now ))
-          if [ "$wait" -gt 0 ] && [ "$wait" -le 1500 ]; then echo "sleeping ${wait}s until 13:00 PT"; sleep "$wait"; fi
+          echo "started $(TZ=America/Los_Angeles date '+%H:%M:%S %Z'); 13:00 PT is ${wait}s away"
+          if [ "$wait" -gt 19200 ]; then echo "more than 5 h 20 min early: cannot wait inside the job limit; the script's guard will skip this run"
+          elif [ "$wait" -gt 0 ]; then echo "sleeping ${wait}s until 13:00 PT"; sleep "$wait"
+          else echo "13:00 PT has passed: the script's 13:00-13:25 PT guard decides"; fi
       - uses: actions/checkout@v4
         if: steps.storage.outputs.ok == '1'
         with:
