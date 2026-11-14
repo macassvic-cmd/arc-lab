@@ -54,3 +54,73 @@ did not start as VOID for all eight markets (the stricter reading), and flags it
 
 Each side carries a multiplier (the capture stores it). "Winning entries receive a share of the total prize pool proportional
 to their share of Standings Points amongst all winners." Multipliers under 1x exist on likely outcomes.
+
+## Payouts: what IS published (added 2026-11-14)
+
+Pick6 is a prize pool, not a fixed-odds product. Two published pieces define what an entry receives.
+
+**1. Base Multiplier (the guaranteed minimum, "Base Payout").** Source: DraftKings support article KB0010250, "Picks with
+Multipliers and Standings Points" (v13.0, last modified 2026-08-25),
+https://support.draftkings.com/dk/en-us/picks-with-multipliers-and-standings-points?id=kb_article_view&sysparm_article=KB0010250
+
+> "Your Base Multiplier is calculated by multiplying the Standard Base Multiplier of the sport and pick tier by the Pick
+> Multiplier of all the picks in your lineup, capped at a Max Base Multiplier."
+
+Its worked example: a $1 3-pick NFL lineup, Standard Multiplier 5x, pick multipliers 1x, 1.2x, 1.3x, Max Base Multiplier 80x:
+"Your Base Multiplier for this lineup is 7.8x (5x * 1x * 1.2x * 1.3x)."
+
+**The Standard Base Multiplier table for NBA** is not in the article; the Pick6 page publishes it in its own entry details
+for the pick group. As captured logged out on 2026-11-14 (NBA pick group 156466); the capture now stores it with every
+board (`payout_table` in data/pick6_board.json), because it can differ by sport and may change:
+
+| Pick level | Correct picks | Standard Base Multiplier | Max Base Multiplier |
+|---|---|---|---|
+| 2 | 2 of 2 | 3x | 50x |
+| 3 | 3 of 3 | 6x | 100x |
+| 4 | 4 of 4 | 10x | 150x |
+| 5 | 5 of 5 | 12x | 200x |
+| 5 | 4 of 5 | 1x | 10x |
+| 6 | 6 of 6 | 25x | 400x |
+| 6 | 5 of 6 | 1.5x | 15x |
+| 7 | 7 of 7 | 40x | 600x |
+| 7 | 6 of 7 | 2x | 20x |
+| 8 | 8 of 8 | 80x | 800x |
+| 8 | 7 of 8 | 3x | 30x |
+| 8 | 6 of 8 | 1x | 10x |
+
+**2. Standings Points and the prize-pool share ("Extra Winnings").** Same article:
+
+> "Standings Points are calculated by multiplying your entry fee by the Pick Multipliers of your correct picks."
+
+> "Your Extra Winnings are calculated by dividing the Standings Points for this entry by the total Standings Points of all
+> winning lineups in the contest and multiplying by the guaranteed prize pool."
+
+In the article's example the lineup's contest winnings are $10, shown "as $7.80 in Base Payout and $2.20 in Extra Winnings".
+So the Base Payout is a floor that can be computed in advance; the amount above it depends on the other winners and cannot.
+
+**Void picks.** Source: support article KB0010365, "Pick6 Minimum Play Requirements and Voided Pick Policy",
+https://support.draftkings.com/dk/en-us/pick6-minimum-play-requirements-and-voided-pick-policy?id=kb_article_view&sysparm_article=KB0010365
+
+> "Voided picks will reduce the size (i.e., number of picks) of your entry by the number of voided picks when calculating the
+> associated Base Payout and contest standing points for a finished lineup, but the entry will still compete in the original
+> contests it was entered into."
+
+Its examples: a 4-pick with one void and three correct "would be scored as 3/3"; a 6-pick with one void, four correct and one
+incorrect "will be scored as a 4/5". "If a lineup settles with all but one (1) voided pick, or with all voided picks, that
+lineup will be paid its entry fee".
+
+## Payouts: what is NOT published or not explicit
+
+- **Partial tiers.** The Base Multiplier sentence says "all the picks in your lineup", and the only worked example is an
+  all-correct lineup. Whether a 5-of-6 finish multiplies by all six pick multipliers or only the five correct ones is not
+  stated. Our grader applies the sentence literally (all non-void picks) and labels those results "partial tier (literal
+  reading)"; their total is shown separately in the record.
+- **Adjusted multipliers.** "Specific pick combinations may result in adjusted multipliers, impacting your Base Multiplier as
+  well as your Standings Points calculation." Which combinations, and by how much, is not published. Our numbers use the
+  per-card multipliers as captured and ignore any such adjustment.
+- **Extra Winnings** cannot be computed without the contest's other winners. Nothing in our files estimates them.
+- Multipliers can change after posting; the logged slip keeps the multipliers of the last pre-tip board.
+
+How our files use this: the "multiplier product" of a slip is the Standings Points basis per $1 (never called a payout); the
+"Base Payout multiple" is DraftKings' guaranteed floor by the formula above; the record's "Base Payout returned" sums that
+floor over graded slips at one unit each and leaves Extra Winnings out.

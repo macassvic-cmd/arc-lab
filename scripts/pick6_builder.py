@@ -54,6 +54,15 @@ WINDOW = {"Points 1st 3 Mins": ("win_pts", "points"), "Rebounds 1st 3 Mins": ("w
 MARKETS = list(FIRSTS) + list(WINDOW)
 COUNT_MIN, RATE_MIN_STARTS, TEAM_BASIS_N, WINDOW_MIN_N = 3, 5, 15, 20
 SIZES = [3, 4, 6, 8]
+RANKINGS = ["standard", "value"]          # standard = leader's margin / hit share; value = historical rate x multiplier
+PAYOUT_FORMULA = {
+    "source": "DraftKings support article KB0010250 'Picks with Multipliers and Standings Points' (v13, 2026-08-25) and the Pick6 page's own entry details for the pick group; see data/pick6_rules.md",
+    "base_multiplier": "Base Multiplier = Standard Base Multiplier of the sport and pick tier x the Pick Multiplier of all the picks in the lineup, capped at a Max Base Multiplier",
+    "standings_points": "Standings Points = entry fee x the Pick Multipliers of the correct picks; a winner's share of the prize pool is its Standings Points over all winners' Standings Points",
+    "label": "Base Payout multiple (DraftKings' guaranteed minimum per $1 if every leg hits; Extra Winnings from the prize pool come on top and cannot be known in advance)",
+    "partial_tier_reading": "for a tier with a missed pick (5 of 6, 7 of 8, ...) the article's wording 'all the picks in your lineup' is applied literally; its worked example covers only an all-correct lineup"}
+PAYOUT_NOTE = ("Pick6 is a prize pool: winners share it in proportion to Standings Points. The multiplier product shown here is a Standings Points basis, "
+               "not a payout and not a price. See data/pick6_rules.md for what is and is not published about payouts.")
 
 
 def now():
@@ -84,7 +93,8 @@ def build():
     board = read_json(BOARD, None)
     proj = read_json(SITE_DATA / "projections.json", {}) or {}
     record = record_block()
-    base = {"title": "Pick6", "generated": iso(now()), "markets": MARKETS, "sizes": SIZES, "record": record,
+    base = {"title": "Pick6", "generated": iso(now()), "markets": MARKETS, "sizes": SIZES, "rankings": RANKINGS, "record": record, "logged": [],
+            "payout_note": PAYOUT_NOTE, "payout": {**PAYOUT_FORMULA, "table": (board or {}).get("payout_table") if isinstance(board, dict) else None},
             "label": "The model's first-3-minutes leaders matched to tonight's Pick6 board. Historical rates only: no prices, no edges, no win probabilities. This method is not priced or backtested.",
             "rules": {"firsts": "leaders ranked on tonight's team only (count; per-start rate when the best current-team count is under 3); career is context", "window": "More only, default line; share of starts clearing tonight's line; current team when n >= 15 else career; minimum n = 20",
                       "caps": "max 1 leg per player, max 2 legs per game; game-level markets one leg per game, team-level markets one leg per team",
@@ -175,12 +185,16 @@ def build():
         return (0 if c["rank_mode"] == "count" else 1 if c["rank_mode"] == "rate" else 0, -float(c["margin"]), -c["rate"], c["player"])
     out = []
     for m in MARKETS:
-        for i, c in enumerate(sorted((x for x in cands if x["market"] == m), key=order)):
-            c["order"] = i; c["id"] = f"{m}|{c['player_key']}|{c['team']}"; out.append(c)
+        ms = [x for x in cands if x["market"] == m]
+        for c in ms:
+            c["value"] = round(c["rate"] * float(c["multiplier"]), 4)       # historical rate x multiplier (not a payout, not an edge)
+        by_value = {id(c): i for i, c in enumerate(sorted(ms, key=lambda c: (-c["value"], -c["rate"], c["player"])))}
+        for i, c in enumerate(sorted(ms, key=order)):
+            c["order"] = i; c["order_value"] = by_value[id(c)]; c["id"] = f"{m}|{c['player_key']}|{c['team']}"; out.append(c)
     doc = {**base, "date": date, "board_captured_at": board["captured_at"], "first_tip": iso(first_tip), "last_tip": iso(last_tip),
            "leaders_date": proj.get("date"), "fresh": bool(leaders_ok), "why_not": "" if leaders_ok else f"tonight's leaders are missing (the projection pool is dated {proj.get('date')}, the board {date})",
            "games": [{"game": g, "start": v[2]} for g, v in games.items()], "board_summary": board.get("summary"),
-           "candidates": out, "not_on_pick6": missing, "counts": {m: sum(1 for c in out if c["market"] == m) for m in MARKETS}}
+           "logged": logged_for(date), "candidates": out, "not_on_pick6": missing, "counts": {m: sum(1 for c in out if c["market"] == m) for m in MARKETS}}
     write_json(OUT, doc)
     print(f"[pick6] {date}: board {board['captured_at']}, {len(out)} candidate legs {doc['counts']}, {len(missing)} leaders not on Pick6 tonight, fresh={doc['fresh']} {doc['why_not']}")
     return doc
@@ -195,15 +209,19 @@ def read_slips():
 
 
 def standard(slips):
-    """The record's slips: per (date, size), the LAST record built from a board captured before the slate's first tip."""
+    """The record's slips: per (date, size, ranking), the LAST record built from a board captured before the slate's first tip.
+    Records written before 2026-11-14's two-ranking change carry no ranking: they are the standard ranking."""
     best = {}
     for i, s in enumerate(slips):
         if s.get("board_captured_at") and s.get("first_tip") and s["board_captured_at"] < s["first_tip"]:
-            best[(s["date"], s["size"])] = i
+            best[(s["date"], s["size"], s.get("ranking") or "standard")] = i
     return sorted(best.values())
 
 
 def grade():
+    """Grade per data/pick6_rules.md. A void leg (did not start / minimum play unmet) does NOT void the slip: the slip drops a
+    level and is graded on its non-void legs, flagged `reduced`. A slip left with 0 or 1 non-void legs is a REFUND: excluded
+    from the hit and return tallies and counted separately. no_event legs keep the labelled convention (counted as a miss)."""
     slips = read_slips()
     if not slips:
         print("[pick6] no logged slips yet"); build_record_only(); return
@@ -235,8 +253,17 @@ def grade():
                 val = float(r[WINDOW[l["market"]][0]]); l["actual"] = val
                 l["outcome"] = "hit" if val > float(l["line"]) else "miss"
         live = [l for l in s["legs"] if l["outcome"] != "void"]
-        s["graded"] = {"at": iso(now()), "hits": sum(l["outcome"] == "hit" for l in live), "live_legs": len(live), "void_legs": len(s["legs"]) - len(live),
-                       "fully_hit": bool(live) and all(l["outcome"] == "hit" for l in live) and len(live) == len(s["legs"])}
+        voids = len(s["legs"]) - len(live)
+        refund = len(live) <= 1
+        fully = (not refund) and all(l["outcome"] == "hit" for l in live)
+        mult = 1.0
+        for l in live:
+            mult *= float(l["multiplier"])
+        base, basis = base_payout(s.get("payout_table"), live)
+        s["graded"] = {"at": iso(now()), "base_payout_multiple": base, "base_payout_basis": basis, "hits": sum(l["outcome"] == "hit" for l in live), "live_legs": len(live), "void_legs": voids,
+                       "status": "refund" if refund else "graded", "reduced": bool(voids and not refund), "graded_size": None if refund else len(live),
+                       "fully_hit": fully, "multiplier_product_live": None if refund else round(mult, 4),
+                       "multiplier_product_returned": round(mult, 4) if fully else 0.0, "units_staked": 0 if refund else 1}
         n += 1
     if n:
         with open(SLIPS, "w", encoding="utf-8", newline="\n") as f:
@@ -246,24 +273,90 @@ def grade():
     build_record_only()
 
 
-def record_block():
-    slips = read_slips(); idx = standard(slips)
-    std = [slips[i] for i in idx]; g = [s for s in std if s.get("graded")]
-    legs = [l for s in g for l in s["legs"]]
+def base_payout(table, live):
+    """DraftKings' Base Payout multiple for a graded slip, per the published formula, at its REDUCED size (non-void legs):
+    Standard Base Multiplier of the tier (pick level = non-void legs, correct = hits) x the Pick Multipliers of the lineup's
+    picks, capped at the tier's Max Base Multiplier. (0.0, 'no tier') when the finish is not a paying tier; (None, ...) when the
+    slip was logged without a payout table or is a refund."""
+    if not table or len(live) <= 1:
+        return None, "refund" if len(live) <= 1 else "no payout table on the logged slip"
+    hits = sum(l["outcome"] == "hit" for l in live)
+    tier = next((t for t in table.get(str(len(live))) or [] if int(t["correct"]) == hits), None)
+    if not tier:
+        return 0.0, "no paying tier"
+    m = float(tier["standard_multiplier"])
+    for l in live:
+        m *= float(l["multiplier"])
+    return round(min(m, float(tier["max_base_multiplier"])), 4), ("all correct" if hits == len(live) else "partial tier (literal reading of the published formula)")
+
+
+def tally(std):
+    g = [s for s in std if s.get("graded")]
+    live = [s for s in g if (s["graded"].get("status") or "graded") != "refund" and s["graded"].get("live_legs", 0) > 1]
+    refunds = len(g) - len(live)
     by = {}
-    for l in legs:
-        b = by.setdefault(l["market"], {"hit": 0, "miss": 0, "void": 0}); b[l["outcome"]] += 1
-    return {"label": "Logged standard slips only (sizes 3/4/6/8, all markets on, last pre-tip board). Custom builds in the browser are not logged or graded.",
-            "slips_built": len(std), "slips_graded": len(g), "slips_pending": len(std) - len(g), "slips_fully_hit": sum(bool(s["graded"]["fully_hit"]) for s in g),
-            "by_size": {str(z): {"graded": sum(1 for s in g if s["size"] == z), "fully_hit": sum(1 for s in g if s["size"] == z and s["graded"]["fully_hit"])} for z in SIZES},
-            "leg_hit_rate_by_market": {m: {**v, "rate": round(v["hit"] / (v["hit"] + v["miss"]), 4) if v["hit"] + v["miss"] else None} for m, v in by.items()},
-            "recent": [{"date": s["date"], "size": s["size"], "hits": s["graded"]["hits"], "live_legs": s["graded"]["live_legs"], "void_legs": s["graded"]["void_legs"], "fully_hit": s["graded"]["fully_hit"]} for s in g[-12:]]}
+    for s in live:
+        for l in s["legs"]:
+            b = by.setdefault(l["market"], {"hit": 0, "miss": 0, "void": 0}); b[l["outcome"]] += 1
+
+    def returned(s):
+        gr = s["graded"]
+        if "multiplier_product_returned" in gr:
+            return float(gr["multiplier_product_returned"])
+        if not gr.get("fully_hit"):
+            return 0.0
+        m = 1.0
+        for l in s["legs"]:
+            if l.get("outcome") != "void":
+                m *= float(l["multiplier"])
+        return m
+    return {"slips_built": len(std), "slips_graded": len(live), "slips_pending": len(std) - len(g), "refunds": refunds,
+            "reduced": sum(1 for s in live if s["graded"].get("reduced") or s["graded"].get("void_legs")), "slips_fully_hit": sum(bool(s["graded"]["fully_hit"]) for s in live),
+            "units_staked": len(live), "multiplier_product_returned": round(sum(returned(s) for s in live), 2),
+            "base_payout_returned": round(sum(float(s["graded"].get("base_payout_multiple") or 0) for s in live), 2),
+            "base_payout_from_partial_tiers": round(sum(float(s["graded"].get("base_payout_multiple") or 0) for s in live if str(s["graded"].get("base_payout_basis", "")).startswith("partial")), 2),
+            "slips_without_payout_table": sum(1 for s in live if s["graded"].get("base_payout_multiple") is None),
+            "by_size": {str(z): {"graded": sum(1 for s in live if s["size"] == z), "fully_hit": sum(1 for s in live if s["size"] == z and s["graded"]["fully_hit"])} for z in SIZES},
+            "leg_hit_rate_by_market": {m: {**v, "rate": round(v["hit"] / (v["hit"] + v["miss"]), 4) if v["hit"] + v["miss"] else None} for m, v in by.items()}}
+
+
+def record_block():
+    slips = read_slips(); std = [slips[i] for i in standard(slips)]
+    out = {"label": "Logged standard slips only (sizes 3/4/6/8 under both rankings, all markets on, last pre-tip board). Custom builds in the browser are not logged or graded.",
+           "return_label": "multiplier product returned = the sum, over fully-hit slips, of their multiplier product at a flat 1 unit per slip. A Standings Points basis, not a payout.",
+           "base_payout_label": "Base Payout returned = the sum of DraftKings' guaranteed Base Payout multiples of the graded slips at 1 unit each, by the published formula (data/pick6_rules.md). Extra Winnings from the prize pool are not included: they depend on the other winners.",
+           "void_rule": "A void leg drops the slip a level: it is graded on its non-void legs (reduced). A slip left with 0 or 1 non-void legs is a refund, counted separately.",
+           "overall": tally(std), "by_ranking": {r: tally([s for s in std if (s.get("ranking") or "standard") == r]) for r in RANKINGS}}
+    out.update({k: out["overall"][k] for k in ("slips_built", "slips_graded", "slips_pending", "slips_fully_hit", "leg_hit_rate_by_market")})   # the fields the first tab version read
+    g = [s for s in std if s.get("graded")]
+    out["recent"] = [{"date": s["date"], "size": s["size"], "ranking": s.get("ranking") or "standard", "status": s["graded"].get("status") or "graded", "hits": s["graded"]["hits"],
+                      "live_legs": s["graded"]["live_legs"], "void_legs": s["graded"]["void_legs"], "fully_hit": s["graded"]["fully_hit"]} for s in g[-16:]]
+    return out
+
+
+def logged_for(date):
+    """Tonight's logged standard slips (the last record per size and ranking), for display next to the built slip."""
+    slips = read_slips(); best = {}
+    for s in slips:
+        if s["date"] == date:
+            best[(s.get("ranking") or "standard", s["size"])] = s
+    out = []
+    for (ranking, size), s in sorted(best.items()):
+        rate = 1.0; mult = 1.0
+        for l in s["legs"]:
+            rate *= float(l["rate"]); mult *= float(l["multiplier"])
+        tier = next((t for t in ((s.get("payout_table") or {}).get(str(len(s["legs"]))) or []) if int(t["correct"]) == len(s["legs"])), None)
+        out.append({"base_multiple": round(min(float(tier["standard_multiplier"]) * mult, float(tier["max_base_multiplier"])), 4) if tier else None,
+                    "ranking": ranking, "size": size, "built_at": s.get("built_at"), "board_captured_at": s.get("board_captured_at"), "complete": s.get("complete"),
+                    "multiplier_product": round(mult, 4), "breakeven_multiple": round(1 / rate, 2) if rate > 0 else None, "graded": s.get("graded"),
+                    "legs": [{**l, "value": l.get("value", round(float(l["rate"]) * float(l["multiplier"]), 4))} for l in s["legs"]]})
+    return out
 
 
 def build_record_only():
     doc = read_json(OUT, None)
     if doc:
-        doc["record"] = record_block(); doc["generated"] = iso(now()); write_json(OUT, doc)
+        doc["record"] = record_block(); doc["logged"] = logged_for(doc.get("date")) if doc.get("date") else []; doc["generated"] = iso(now()); write_json(OUT, doc)
     else:
         build()
 

@@ -234,8 +234,10 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <p class="foot" id="p6Fresh"></p>
     <div class="controls" id="p6Markets"></div>
     <div class="controls"><label class="inline">Slip size <select id="p6Size"><option>3</option><option>4</option><option selected>6</option><option>8</option></select></label>
+      <label class="inline"><input type="checkbox" id="p6Value"> Rank by value <span class="fbMeta">(historical rate × multiplier)</span></label>
       <button class="chip" id="p6Build" aria-pressed="true">Build Parlay</button> <button class="chip" id="p6Copy" hidden>Copy</button></div>
     <div id="p6Slip"></div>
+    <div id="p6Logged"></div>
     <p class="foot" id="p6Missing"></p>
     <div id="p6Record"></div>
   </section>
@@ -664,26 +666,39 @@ function renderPick6(){
   $("p6Markets").innerHTML = markets.map(m => `<label class="inline"><input type="checkbox" data-m="${esc(m)}" ${S.p6Markets[m] !== false ? "checked" : ""}> ${esc(m)} <span class="fbMeta">${(P6.counts||{})[m] ?? 0}</span></label>`).join("");
   $("p6Markets").querySelectorAll("input").forEach(i => i.onchange = e => { S.p6Markets[e.target.dataset.m] = e.target.checked; });
   $("p6Build").disabled = !ok; $("p6Build").style.opacity = ok ? 1 : .4;
+  const num = (x, d=2) => x == null ? "–" : (+x).toFixed(d);
+  const LB = (window.Pick6 && Pick6.LABELS) || {multiplier_product: "multiplier product — Standings Points basis, not a payout", breakeven_multiple: "break-even on its own history (historical)"};
+  // one renderer for a built slip and for a logged slip: each leg shows its historical rate, its multiplier and rate x multiplier
+  const slipTable = legs => `<div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Player</th><th>Market</th><th>Line</th><th>Game</th><th>Historical rate</th><th>Multiplier</th><th>Rate × multiplier</th><th>History</th></tr></thead><tbody>${
+    legs.map(c => `<tr class="${c.outcome === "void" ? "fbVoid" : ""}"><td><span class="name">${esc(c.player)}</span> <span class="fbMeta">${esc(c.team)}</span></td><td>${esc(c.market)} · ${esc(c.side)}</td><td>${c.line == null ? "–" : esc(c.line)}</td><td>${esc(c.game)}</td><td>${pct(c.rate)} <span class="fbMeta">n ${c.n}</span></td><td>${esc(c.multiplier)}x</td><td>${num(c.value != null ? c.value : c.rate * c.multiplier)}</td><td>${esc(c.text)}${c.outcome ? ` <span class="fbBadge">${esc(c.outcome === "hit" ? "HIT" : c.outcome === "miss" ? "MISS" : "VOID")}</span>` : ""}</td></tr>`).join("")}</tbody></table></div>`;
+  const slipNumbers = x => `<b>${num(x.multiplier_product)}x</b> ${esc(LB.multiplier_product)} · <b>${num(x.breakeven_multiple, 1)}x</b> ${esc(LB.breakeven_multiple)}` +
+    (x.base_multiple != null ? ` · <b>${num(x.base_multiple)}x</b> ${esc(LB.base_multiple || "Base Payout multiple if every leg hits (DraftKings' guaranteed minimum)")}` : "");
+  $("p6Value").checked = !!S.p6Value; $("p6Value").onchange = e => { S.p6Value = e.target.checked; };
   $("p6Build").onclick = () => {
     if(!ok || !window.Pick6) return;
-    const sel = markets.filter(m => S.p6Markets[m] !== false), size = +$("p6Size").value;
-    const slip = Pick6.assemble(P6.candidates, sel, size); S.p6Slip = slip;
+    const sel = markets.filter(m => S.p6Markets[m] !== false), size = +$("p6Size").value, ranking = S.p6Value ? "value" : "standard";
+    const slip = Pick6.assemble(P6.candidates, sel, size, ranking, (P6.payout || {}).table); S.p6Slip = slip;
     const custom = sel.length !== markets.length;
     $("p6Slip").innerHTML = !slip.legs.length ? `<p class="foot">No leg can be built from the selected markets.</p>` :
-      `<h2>${slip.legs.length}-leg slip <span class="fbMeta">${slip.complete ? "" : `only ${slip.legs.length} of ${size} legs exist under the rules · `}product of the leg rates ${slip.product == null ? "–" : (100 * slip.product).toFixed(3) + "%"} — historical rate, not a prediction${custom ? " · custom selection: shown, not logged" : ""}</span></h2>
-       <div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Player</th><th>Market</th><th>Line</th><th>Game</th><th>Payout</th><th>Historical rate</th></tr></thead><tbody>${
-        slip.legs.map(c => `<tr><td><span class="name">${esc(c.player)}</span> <span class="fbMeta">${esc(c.team)}</span></td><td>${esc(c.market)} · ${esc(c.side)}</td><td>${c.line == null ? "–" : esc(c.line)}</td><td>${esc(c.game)}</td><td>${esc(c.multiplier)}x</td><td>${esc(c.text)} <span class="fbMeta">${pct(c.rate)} · n ${c.n}${c.second ? " · next: " + esc(c.second) : ""}</span></td></tr>`).join("")}</tbody></table></div>`;
+      `<h2>${slip.legs.length}-leg slip <span class="fbMeta">${ranking === "value" ? "ranked by value (rate × multiplier)" : "ranked by leader margin / hit share"}${slip.complete ? "" : ` · only ${slip.legs.length} of ${size} legs exist under the rules`}${custom ? " · custom selection: shown, not logged" : ""}</span></h2>
+       <p class="foot">${slipNumbers(slip)}</p>${slipTable(slip.legs)}`;
     $("p6Copy").hidden = !slip.legs.length;
   };
-  $("p6Copy").onclick = () => { if(!S.p6Slip) return; const t = S.p6Slip.legs.map(Pick6.legText).join("\n") + `\nProduct of leg rates ${(100 * S.p6Slip.product).toFixed(3)}% — historical rate, not a prediction`;
+  $("p6Copy").onclick = () => { if(!S.p6Slip) return; const x = S.p6Slip; const t = x.legs.map(Pick6.legText).join("\n") + `\n${num(x.multiplier_product)}x ${LB.multiplier_product}; ${num(x.breakeven_multiple, 1)}x ${LB.breakeven_multiple}`;
     navigator.clipboard.writeText(t).then(() => { $("p6Copy").textContent = "Copied"; setTimeout(() => $("p6Copy").textContent = "Copy", 1500); }); };
+  const logged = (P6 && P6.logged) || [];
+  $("p6Logged").innerHTML = !logged.length ? "" : `<h2>Logged standard slips <span class="fbMeta">${esc(P6.date || "")} · all markets on · last pre-tip board · both rankings</span></h2>` +
+    logged.map(x => `<details class="more"><summary>${x.ranking === "value" ? "By value" : "Standard"} · ${x.size}-leg${x.complete === false ? " (short: " + x.legs.length + ")" : ""} — ${num(x.multiplier_product)}x multiplier product · ${num(x.breakeven_multiple, 1)}x break-even${x.graded ? " · " + (x.graded.status === "refund" ? "REFUND" : x.graded.fully_hit ? "FULLY HIT" : `${x.graded.hits} of ${x.graded.live_legs}`) + (x.graded.reduced ? " (reduced)" : "") : ""}</summary><p class="foot">${slipNumbers(x)}</p>${slipTable(x.legs)}</details>`).join("");
   const miss = (P6 && P6.not_on_pick6) || [];
   $("p6Missing").textContent = P6 ? `Not on Pick6 tonight: ${miss.length} leader${miss.length === 1 ? "" : "s"}${miss.length ? " (" + miss.map(x => `${x.player} ${x.market}: ${x.why}`).join("; ") + ")" : ""}.` : "";
   const R = P6 && P6.record;
+  const row = (name, t) => !t ? "" : `<tr><td>${name}</td><td>${t.slips_built}</td><td>${t.slips_graded}</td><td class="big">${t.slips_fully_hit}</td><td>${t.reduced ?? 0}</td><td>${t.refunds ?? 0}</td><td>${t.units_staked ?? 0}</td><td>${num(t.multiplier_product_returned)}</td><td>${num(t.base_payout_returned)}</td></tr>`;
+  const mk = t => Object.entries((t && t.leg_hit_rate_by_market) || {}).map(([m, v]) => `<tr><td>${esc(m)}</td><td>${v.hit}</td><td>${v.miss}</td><td>${v.void}</td><td>${pct(v.rate)}</td></tr>`).join("");
   $("p6Record").innerHTML = !R ? "" : `<h2>Record <span class="fbMeta">${esc(R.label)}</span></h2>
-    <div class="scroll"><table class="fbTable"><tbody><tr><td>Slips built</td><td class="big">${R.slips_built}</td></tr><tr><td>Slips graded</td><td>${R.slips_graded}</td></tr><tr><td>Slips fully hit</td><td class="big">${R.slips_fully_hit}</td></tr></tbody></table></div>
-    <div class="scroll"><table class="fbTable"><thead><tr><th>Market</th><th>Legs hit</th><th>Miss</th><th>Void</th><th>Leg hit rate</th></tr></thead><tbody>${
-      Object.entries(R.leg_hit_rate_by_market || {}).map(([m, v]) => `<tr><td>${esc(m)}</td><td>${v.hit}</td><td>${v.miss}</td><td>${v.void}</td><td>${pct(v.rate)}</td></tr>`).join("") || `<tr><td colspan="5">No graded legs yet.</td></tr>`}</tbody></table></div>`;
+    <div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Ranking</th><th>Slips built</th><th>Graded</th><th>Fully hit</th><th>Reduced</th><th>Refunds</th><th>Units staked</th><th>Multiplier product returned</th><th>Base Payout returned</th></tr></thead><tbody>${
+      row("Overall", R.overall) + row("Standard", (R.by_ranking || {}).standard) + row("By value", (R.by_ranking || {}).value)}</tbody></table></div>
+    <p class="foot">${esc(R.return_label || "")} ${esc(R.base_payout_label || "")} ${esc(R.void_rule || "")} ${esc((P6 && P6.payout_note) || "")}</p>
+    ${["standard", "value"].map(k => { const t = (R.by_ranking || {})[k]; const b = mk(t); return `<h2>Leg hit rate by market <span class="fbMeta">${k === "value" ? "by value" : "standard"} ranking</span></h2><div class="scroll"><table class="fbTable"><thead><tr><th>Market</th><th>Legs hit</th><th>Miss</th><th>Void</th><th>Leg hit rate</th></tr></thead><tbody>${b || `<tr><td colspan="5">No graded legs yet.</td></tr>`}</tbody></table></div>`; }).join("")}`;
 }
 
 function renderSam(){

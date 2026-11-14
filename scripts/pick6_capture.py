@@ -20,6 +20,7 @@ import base64
 import datetime as dt
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -130,7 +131,7 @@ async def capture(keep_raw=None):
         sys.exit("[pick6] Google Chrome not found")
     proc = subprocess.Popen([CHROME, f"--user-data-dir={PROFILE}", f"--remote-debugging-port={PORT}", "--remote-allow-origins=*", "--no-first-run", "--no-default-browser-check",
                              "--window-size=1280,900", "--window-position=-2400,-2400", "about:blank"])   # parked off-screen so it does not pop over the user's work
-    board = {"captured_at": None, "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile", "category": CATEGORY, "markets": {}, "notes": []}
+    board = {"captured_at": None, "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile", "category": CATEGORY, "markets": {}, "payout_table": None, "notes": []}
     try:
         tabs = None
         for _ in range(40):
@@ -142,7 +143,7 @@ async def capture(keep_raw=None):
             sys.exit("[pick6] Chrome did not open its DevTools port")
         page = next(t for t in tabs if t.get("type") == "page")
         async with websockets.connect(page["webSocketDebuggerUrl"], max_size=None) as ws:
-            n = 0; results = {}; data_reqs = []
+            n = 0; results = {}; data_reqs = []; doc_reqs = []
             async def pump(seconds):
                 end = time.time() + seconds
                 while time.time() < end:
@@ -153,6 +154,8 @@ async def capture(keep_raw=None):
                     if msg.get("method") == "Network.responseReceived":
                         r = msg["params"]; u = r["response"]["url"]
                         path = u.split("?")[0]
+                        if r.get("type") == "Document" and "pick6.draftkings.com" in u:
+                            doc_reqs.append(r["requestId"])
                         # what the page itself fetches: the category's route data, and one pick-card list per market pill
                         if ("pick6.draftkings.com" in u and path.endswith(".data")) or ("api.draftkings.com/pick6/" in u and path.endswith("/pickcards")):
                             data_reqs.append((r["requestId"], r["response"]["status"]))
@@ -204,6 +207,18 @@ async def capture(keep_raw=None):
             if "Log In" not in text and "Sign Up" not in text:
                 board["notes"].append("the page does not show a logged-out header: stopped (this capture must never run inside an account)")
                 return board
+            # the page's own entry details carry the Base Payout table for this sport and pick group (pick level x correct picks)
+            try:
+                html_doc = await body(doc_reqs[0]) if doc_reqs else None
+                for chunk in re.findall(r'streamController\.enqueue\((".*?")\);?\s*</script>', html_doc or "", re.S):
+                    for line in json.loads(chunk).split("\n"):
+                        if line.strip().startswith("["):
+                            ed = find(decode(json.loads(line)), "payoutPackages")
+                            if ed:
+                                board["payout_table"] = {str(p["pickSetSize"]): [{"correct": t["numberOfPicksCorrect"], "standard_multiplier": t["guaranteedMultiplier"], "max_base_multiplier": t["guaranteedMultiplierLimit"]}
+                                                                                 for t in p["payoutTiers"]] for p in ed["payoutPackages"]}
+            except Exception:
+                board["notes"].append("the Base Payout table could not be read from the page this time")
             if not await click(CATEGORY):
                 board["notes"].append(f"category pill {CATEGORY!r} not found on the page")
                 return board
