@@ -228,7 +228,11 @@ async def capture(keep_raw=None):
                 if not await click(label):
                     board["markets"][name] = {"listed": False, "cards": [], "note": f"pill {label!r} not on the page"}
                     continue
-                await pump(6.5)                                       # a person reading the list
+                for _ in range(30):                                   # up to 15 s for the page's own response to this pill
+                    if len(data_reqs) > before:
+                        break
+                    await pump(0.5)
+                await pump(4.0)                                       # then a person reading the list
                 pc = None
                 # the first pill is already selected when the category opens: its cards came with the category's own data
                 pool = data_reqs[before:] or (data_reqs[-1:] if label == MARKETS[0][0] else [])
@@ -275,8 +279,8 @@ if __name__ == "__main__":
     board["summary"] = summarize(board)
     complete = board["captured_at"] and all(board["markets"].get(n, {}).get("listed") for _, n in MARKETS)
     board["complete"] = bool(complete)
-    if board["captured_at"]:
-        Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    if complete:                                       # an incomplete capture never touches the file (2026-11-14: a partial file left the
+        Path(a.out).parent.mkdir(parents=True, exist_ok=True)   # scraper's clone dirty and blocked its board pushes)
         tmp = a.out + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(board, f, indent=1, ensure_ascii=False)

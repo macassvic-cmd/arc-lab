@@ -192,7 +192,7 @@ def git_push(paths):
     staged = git("diff", "--cached", "--name-only", check=False).stdout.split()
     git("commit", "-q", "-m", f"board: {dt.datetime.now(dt.timezone.utc):%Y-%m-%dT%H:%MZ} ({', '.join(staged) or 'lines'})")
     for _ in range(3):
-        if git("pull", "--rebase", "-q", check=False).returncode == 0 and git("push", "-q", check=False).returncode == 0:
+        if git("pull", "--rebase", "--autostash", "-q", check=False).returncode == 0 and git("push", "-q", check=False).returncode == 0:
             return True
     raise RuntimeError("git push failed after 3 attempts")
 
