@@ -169,7 +169,6 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <button role="tab" data-tab="slips" aria-selected="false">Slips</button>
     <button role="tab" data-tab="opening3" aria-selected="false">Opening 3</button>
     <button role="tab" data-tab="sam" aria-selected="false">Sam Method</button>
-    <button role="tab" data-tab="defense" aria-selected="false">Defense vs position</button>
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
     <a class="navlink" href="performance.html">Performance</a>
     <a class="navlink" href="backtest.html" style="margin-left:0">Backtest</a>
@@ -213,19 +212,6 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
     <h2>Players <span class="fbMeta" id="o3TableNote"></span></h2>
     <div class="scroll"><table id="to3" class="fbTable fbWide"></table></div>
     <div id="o3Latest"></div>
-  </section>
-
-  <section id="defense" hidden>
-    <div class="controls">
-      <select id="dstat" aria-label="Stat">
-        <option value="tpm">3-pointers made</option><option value="tpa">3-point attempts</option>
-        <option value="pts">Points</option><option value="reb">Rebounds</option><option value="ast">Assists</option>
-      </select>
-      <span id="dmode"></span>
-    </div>
-    <div class="scroll"><table id="td" class="heat"></table></div>
-    <p class="foot" id="dnote"></p>
-    <p class="foot">Tap a position to sort teams by who gives up the most to it.</p>
   </section>
 
   <section id="fantasy" hidden>
@@ -283,14 +269,14 @@ h2{font:700 26px var(--display);margin:28px 0 8px}
 </main>
 
 <script>
-const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", dstat:"tpm", dmode:"f", sortF:"fp",
+const S = {tab:"threes", game:"all", pos3:"all", stat:"pts", sortF:"fp",
            sort3:"p2", sortP:"mean", lines:{}, edits:{}, be:55, o3Season:null, sortO3:"win_pts"};
 try { S.be = parseFloat(localStorage.getItem("arc_be")) || 55; } catch(e) {}
-if(["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
+if(["threes","props","firstbasket","fantasy","slips","opening3","sam","results"].includes(location.hash.slice(1))){ S.tab = location.hash.slice(1); document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x.dataset.tab===S.tab)); ["threes","props","firstbasket","fantasy","slips","opening3","sam","results"].forEach(id=>document.getElementById(id).hidden = id!==S.tab); }
 const $ = id => document.getElementById(id);
 const POS = ["PG","SG","SF","PF","C"];
 const LINE_KEY = {"3PM":"tpm","3PT":"tpm","PTS":"pts","REB":"reb","AST":"ast"};   // CEO ruling 2026-10-27: main UD lines for every ladder stat (Fantasy Points via fp_pricing.json; no PRA)
-let P = null, D = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null, FBL = null, SL = null, O3 = null, SM = null;   // SL = Slips tonight (docs/data/slips.json, slips.py); O3 = Opening 3 (docs/data/opening3.json, opening3.py)   // FBL = first-basket confirmed-lineup marker (docs/data/first_basket_lineups.json, health workflow)   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
+let P = null, N = [], R = null, FB = null, FPX = null, PPX = null, FPV2 = null, FBM = null, LG = null, FBL = null, SL = null, O3 = null, SM = null;   // SL = Slips tonight (docs/data/slips.json, slips.py); O3 = Opening 3 (docs/data/opening3.json, opening3.py)   // FBL = first-basket confirmed-lineup marker (docs/data/first_basket_lineups.json, health workflow)   // LG = Ladder Tonight graded overlay (docs/data/ladder_graded.json, written by the grading run)   // FBM = first-basket METHOD layer (docs/data/first_basket_method.json)
 
 const norm = s => (s||"").normalize("NFKD").replace(/[^\w ]/g,"").toLowerCase()
   .replace(/\b(jr|sr|ii|iii|iv)\b/g,"").replace(/\s+/g," ").trim();
@@ -461,26 +447,6 @@ function renderProps(){
   sortable($("tp"), null, null, v=>S.sortP=v);
   $("tp").querySelectorAll("input").forEach(inp=>inp.onchange=()=>{
     const v = parseFloat(inp.value); S.edits[`${inp.dataset.id}:${S.stat}`] = isNaN(v)?undefined:v; render(); });
-}
-
-function renderDefense(){
-  if(!D){ $("td").innerHTML=""; return; }
-  const st = S.dstat, m = S.dmode;
-  const teams = Object.keys(D.teams).sort();
-  if(S.dsort) teams.sort((a,b)=>(D.teams[a][S.dsort]?.[st]?.rk??99)-(D.teams[b][S.dsort]?.[st]?.rk??99));
-  const vals = t => POS.map(p=>D.teams[t][p]?.[st]);
-  const head = `<thead><tr><th>Team</th>${POS.map(p=>`<th data-p="${p}" title="Sort by ${p}">${p}${S.dsort===p?" ▾":""}</th>`).join("")}</tr></thead>`;
-  const body = teams.map(t=>`<tr><td class="name">${t}</td>${vals(t).map(v=>{
-      if(!v) return "<td>–</td>";
-      const heat = Math.max(0, Math.min(1, (30 - v.rk) / 29));
-      const shown = m==="f" ? `${v.f>=1?"+":""}${Math.round((v.f-1)*100)}%` : (v.pg ?? "–");
-      return `<td style="background:${heatColor(heat*0.85)}">${shown}<small>rank ${v.rk}</small></td>`; }).join("")}</tr>`).join("");
-  $("td").innerHTML = head + `<tbody>${body}</tbody>`;
-  $("td").querySelector("thead").onclick = e => { const th=e.target.closest("th"); if(!th) return;
-    S.dsort = th.dataset.p || null; render(); };
-  $("dnote").textContent = m==="f"
-    ? `Descriptive: what teams allowed to each position last season, percent above or below league average per minute, blended with league average early in the season. Not predictive: in testing, position added nothing beyond the team, so projections only nudge by ±2% from it. Rank 1 gave up the most. Season ${D.season-1}–${String(D.season).slice(2)}.`
-    : `Descriptive: raw per-game totals allowed to each position this season. Rank still uses the minute-adjusted rate. Projections use at most a ±2% nudge from these.`;
 }
 
 function renderResults(){
@@ -729,13 +695,11 @@ function renderSlips(){
 function render(){
   const games = (P?.games||[]).map(g=>[[g.home,g.away].sort().join("-"), `${g.away} @ ${g.home}`]);
   chips($("gameChips"), [["all","All games"], ...games], S.game, v=>{S.game=v; render();});
-  $("gameChips").hidden = S.tab==="defense"||S.tab==="results"||S.tab==="slips"||S.tab==="opening3"||S.tab==="sam";
+  $("gameChips").hidden = S.tab==="results"||S.tab==="slips"||S.tab==="opening3"||S.tab==="sam";
   chips($("posChips3"), [["all","All"], ...POS.map(p=>[p,p])], S.pos3, v=>{S.pos3=v; render();});
-  chips($("dmode"), [["f","Vs league avg"],["pg","Per game"]], S.dmode, v=>{S.dmode=v; render();});
   if(S.tab==="threes") renderThrees();
   if(S.tab==="props") renderProps();
   if(S.tab==="firstbasket") renderFirstBasket();
-  if(S.tab==="defense") renderDefense();
   if(S.tab==="fantasy") renderFantasy();
   if(S.tab==="slips") renderSlips();
   if(S.tab==="opening3") renderOpening3();
@@ -747,12 +711,11 @@ document.querySelector("nav").onclick = e => {
   const b = e.target.closest("button"); if(!b) return;
   S.tab = b.dataset.tab;
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected", x===b));
-  ["threes","props","firstbasket","fantasy","slips","opening3","sam","defense","results"].forEach(id=>$(id).hidden = id!==S.tab);
+  ["threes","props","firstbasket","fantasy","slips","opening3","sam","results"].forEach(id=>$(id).hidden = id!==S.tab);
   render();
 };
 $("q3").oninput = render; $("qp").oninput = render; $("qf").oninput = render;
 $("stat").onchange = e => { S.stat = e.target.value; render(); };
-$("dstat").onchange = e => { S.dstat = e.target.value; render(); };
 $("be").value = S.be;
 $("be").onchange = e => { S.be = parseFloat(e.target.value)||55; try{localStorage.setItem("arc_be", S.be);}catch(_){} render(); };
 
@@ -768,7 +731,7 @@ function freshness(L){
 }
 
 async function boot(){
-  [P, D, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/dvp.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
+  [P, N, R, FB] = await Promise.all([load("data/projections.json", null), load("data/news.json", []), load("data/results.json", null), load("data/first_basket_today.json", null)]);
   const L = await load("data/lines.json", null); FPX = await load("data/fp_pricing.json", null); PPX = await load("data/pp_pricing.json", null); FPV2 = await load("data/fp_v2_pricing.json", null); FBM = await load("data/first_basket_method.json", null); LG = await load("data/ladder_graded.json", null); FBL = await load("data/first_basket_lineups.json", null); SL = await load("data/slips.json", null); SM = await load("data/sam_method.json", null); O3 = await load("data/opening3.json", null);
   S.lines = {};
   freshness(L);

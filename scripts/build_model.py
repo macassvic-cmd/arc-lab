@@ -1,7 +1,8 @@
 """Build defense-vs-position tables and player projections for today's slate.
 
 Outputs (read by the site):
-  docs/data/dvp.json          team x position allowed rates, factors, ranks
+  data/dvp.json               team x position allowed rates, factors, ranks (internal since 2026-11-14: the page tab was removed;
+                              scripts/fp_forward.py still reads it for its registered zero-weight matchup column)
   docs/data/projections.json  per-player minutes, means and full stat distributions
 """
 import datetime as dt
@@ -89,7 +90,7 @@ def build_dvp(df, cur):
 
 
 # Muse V2 (2026-10-08): positional defense adds nothing predictive beyond the team (3PA/36 R2 0.4526 with or without
-# it), so the factor only nudges the simulation. The full numbers stay in dvp.json for the DvP tab, labeled descriptive.
+# it), so the factor only nudges the simulation. The full numbers stay in data/dvp.json (internal; the page tab was removed 2026-11-14).
 DVP_CLAMP = 0.02
 
 
@@ -600,7 +601,7 @@ def main():
                                     "pos": o["pos"], "status": o["status"], "inactive": True})
 
     alerts = unconfirmed_starters(df, cur, slate, news, out_players)
-    write_json(SITE_DATA / "dvp.json", {"season": cur, "positions": POSITIONS, "league": lg, "teams": dvp,
+    write_json(DATA_DIR / "dvp.json", {"season": cur, "positions": POSITIONS, "league": lg, "teams": dvp,
                                         "updated": dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z"})
     write_json(SITE_DATA / "projections.json", {
         "date": slate["date"], "season": cur, "games": games_out, "league_3p_pct": round(lg_pct, 3),
