@@ -56,3 +56,21 @@ each player's morning-build minutes next to the snapshot minutes.
 
 The 35 locked columns, the +3 point candidate floor, eligibility, base rates, tail flags, one run per stat, top three clusters,
 per-leg z ranking, the grading and void rules, and the off-schedule exclusion from every gate count.
+
+## Amendment (2026-11-14): what counts as an on-schedule capture
+
+CEO order 2026-11-14, committed before the 2026-11-15 window and before any code that applies it.
+
+- A capture counts as **ON-SCHEDULE** when the capture STARTS inside the 13:00-13:25 PT window with the slate's capture lock
+  taken, regardless of which trigger started the job: a cron schedule trigger, the board-push trigger, or an early trigger
+  that waited for the window.
+- A manual `workflow_dispatch` run still stamps `off_schedule` and counts toward nothing.
+- The amendment applies forward from the **2026-11-15** slate. No earlier slate is re-stamped: 2026-11-12 and 2026-11-13
+  remain off-schedule, permanently.
+- Everything else in this rule is unchanged: sam_v1 + guard_v1, the guard window, the lock, the 14-slate gate and its prongs.
+
+Why: GitHub starts this repository's scheduled runs 4 to 7 hours after their cron time (measured 2026-11-12..14), so a
+capture that depends on the schedule alone depends on guessing that delay. The Underdog board pushes land about every 30
+minutes under the owner's account and start workflows promptly; one of them falls inside or just before the window every day
+the scrapers run. The trigger that fired is recorded with each capture (the `note` field of
+`data/sam_method/capture_log.csv` and the capture file itself).
