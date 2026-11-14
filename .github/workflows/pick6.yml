@@ -1,0 +1,51 @@
+name: Pick6 builder
+
+# Display and logging only (2026-11-14): the model's first-3-minutes leaders matched to tonight's DraftKings Pick6 board.
+# Runs after every board capture the PC pushes (data/pick6_board.json, pushed under the user's own account so it raises a push
+# event): builds the candidate legs (docs/data/pick6_tonight.json) and logs the standard slips (sizes 3/4/6/8, all markets on)
+# to data/pick6_slips.jsonl with the page's own assembly code (docs/pick6_builder.js under Node). No prices, no edges.
+# The morning grade of the logged slips runs in the update workflow.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/pick6_board.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pick6
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q requests numpy pandas
+      - name: Candidate legs, standard slips, record
+        working-directory: scripts
+        run: |
+          python pick6_builder.py build
+          node pick6_slips.cjs
+          python pick6_builder.py record
+          python validate_site_json.py
+      - name: Commit
+        run: |
+          git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
+          git add docs/data/pick6_tonight.json
+          [ -f data/pick6_slips.jsonl ] && git add data/pick6_slips.jsonl
+          git diff --cached --quiet && exit 0
+          git commit -q -m "pick6: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep 5
+          done
+          echo "::error::the Pick6 commit did not land after 3 attempts"; exit 1

@@ -197,6 +197,35 @@ def git_push(paths):
     raise RuntimeError("git push failed after 3 attempts")
 
 
+PICK6_BOARD = DATA_DIR / "pick6_board.json"
+
+
+def pick6_capture(snapshot):
+    """Pick6 board capture on the board cycle (2026-11-14): only while an NBA game on tonight's Underdog board has not tipped and
+    the earliest untipped tip is within 9 hours, so the PC makes no Pick6 loads overnight or on off days. Runs
+    scripts/pick6_capture.py with this interpreter (it needs `websockets`, which the scraper venv has). ARC_LAB_PICK6=0 turns it
+    off. Never raises: a failed capture must not break the Underdog hook. Returns True when a complete board was written."""
+    if (os.environ.get("ARC_LAB_PICK6") or "1").strip().lower() in ("0", "false", "no"):
+        return False
+    now = dt.datetime.now(dt.timezone.utc); tips = []
+    for e in snapshot.get("entries") or []:
+        if (e.get("league") or "").upper() == "NBA" and e.get("scheduled_at"):
+            try:
+                tips.append(dt.datetime.fromisoformat(str(e["scheduled_at"]).replace("Z", "+00:00")))
+            except ValueError:
+                pass
+    ahead = [t for t in tips if t > now]
+    if not ahead or (min(ahead) - now).total_seconds() > 9 * 3600:
+        return False
+    try:
+        r = subprocess.run([sys.executable, "-X", "utf8", str(Path(__file__).resolve().parent / "pick6_capture.py")], capture_output=True, text=True, timeout=240)
+        log.info("pick6 capture: exit %s (0 = complete board)", r.returncode)
+        return r.returncode == 0
+    except Exception as e:  # noqa: BLE001
+        log.warning("pick6 capture not run: %s", type(e).__name__)
+        return False
+
+
 def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=None, snapshot_path=None):
     doc, hits = build(snapshot, odds=odds, client=client)
     write_json(Path(out_path), doc)
@@ -209,7 +238,8 @@ def write_lines(snapshot, out_path=DEFAULT_OUT, push=False, odds=True, client=No
         write_pp(snapshot_path, PP_STAT_LATEST, "pp_stat_lines.jsonl")   # redesign Build 2: present only once the scraper runs the stat extract
     except Exception as e:  # noqa: BLE001
         log.warning("pp_stat_lines.json not written: %s", e)
-    pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST), str(PP_STAT_LATEST)]) if push else False
+    pick6 = pick6_capture(snapshot)
+    pushed = git_push([str(out_path), str(BOARD_LATEST), str(PP_LATEST), str(PP_STAT_LATEST)] + ([str(PICK6_BOARD)] if pick6 else [])) if push else False
     by_stat = {s: sum(1 for l in doc["lines"] if l["stat"] == s) for s in PUBLISHED_STATS}
     summary = {"lines": len(doc["lines"]), "by_stat": by_stat, "sharp": hits, "sharp_book": doc["sharp_book"], "board_written": board, "pp_written": pp, "pushed": pushed, "path": str(out_path)}
     log.info("lines.json: %(lines)d NBA lines %(by_stat)s, %(sharp)d with sharp odds (%(sharp_book)s), board copy written=%(board_written)s, pp copy written=%(pp_written)s, pushed=%(pushed)s", summary)

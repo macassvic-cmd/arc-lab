@@ -177,6 +177,11 @@ jobs:
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
         working-directory: scripts
         run: python slips.py
+      - name: Pick6 standard slips grade (display only; logged slips' legs vs the Opening 3 store, outcomes filled into data/pick6_slips.jsonl, record on the tab)
+        id: pick6_grade
+        continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)
+        working-directory: scripts
+        run: python pick6_builder.py grade
       - name: Sam Method shadow grade (PRE-GATE SHADOW, paper only; logged Kalshi legs vs the box scores, void when the player never entered; docs/data/sam_method.json)
         id: sam_grade
         continue-on-error: true   # one product's failure must not stop the others' pre-tip logging (2026-10-28)

@@ -129,7 +129,7 @@ async def capture(keep_raw=None):
     if not CHROME:
         sys.exit("[pick6] Google Chrome not found")
     proc = subprocess.Popen([CHROME, f"--user-data-dir={PROFILE}", f"--remote-debugging-port={PORT}", "--remote-allow-origins=*", "--no-first-run", "--no-default-browser-check",
-                             "--window-size=1280,900", "about:blank"])
+                             "--window-size=1280,900", "--window-position=-2400,-2400", "about:blank"])   # parked off-screen so it does not pop over the user's work
     board = {"captured_at": None, "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile", "category": CATEGORY, "markets": {}, "notes": []}
     try:
         tabs = None

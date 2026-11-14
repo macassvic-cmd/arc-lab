@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-14T20:57:25Z",
+ "captured_at": "2026-11-14T21:04:59Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -2203,7 +2203,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -2631,7 +2631,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -2744,27 +2744,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Cameron Johnson",
-     "player_short": "C. Johnson",
-     "team": "DEN",
-     "position": "SF",
-     "game": "DEN @ NOP",
-     "start": "2026-11-15T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "James Harden",
      "player_short": "J. Harden",
      "team": "CLE",
@@ -2780,7 +2759,28 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Cameron Johnson",
+     "player_short": "C. Johnson",
+     "team": "DEN",
+     "position": "SF",
+     "game": "DEN @ NOP",
+     "start": "2026-11-15T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -3329,27 +3329,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ MIA",
-     "start": "2026-11-15T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Isaac Okoro",
      "player_short": "I. Okoro",
      "team": "CHI",
@@ -3364,6 +3343,27 @@
       {
        "side": "Yes",
        "multiplier": 3.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Cade Cunningham",
+     "player_short": "C. Cunningham",
+     "team": "DET",
+     "position": "PG",
+     "game": "DET @ MIA",
+     "start": "2026-11-15T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -4602,27 +4602,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Nikola Jokic",
-     "player_short": "N. Jokic",
-     "team": "DEN",
-     "position": "C",
-     "game": "DEN @ NOP",
-     "start": "2026-11-15T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 7.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Cam Spencer",
      "player_short": "C. Spencer",
      "team": "MEM",
@@ -4644,22 +4623,20 @@
      "alt_lines": 0
     },
     {
-     "player": "Yves Missi",
-     "player_short": "Y. Missi",
-     "team": "NOP",
+     "player": "Nikola Jokic",
+     "player_short": "N. Jokic",
+     "team": "DEN",
      "position": "C",
      "game": "DEN @ NOP",
      "start": "2026-11-15T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.9
+       "multiplier": 7.3
       }
      ],
      "paused": false,
@@ -4681,6 +4658,29 @@
       {
        "side": "Yes",
        "multiplier": 13.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Yves Missi",
+     "player_short": "Y. Missi",
+     "team": "NOP",
+     "position": "C",
+     "game": "DEN @ NOP",
+     "start": "2026-11-15T00:10:00.0000000+00:00",
+     "status_tags": [
+      "Q"
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -5374,27 +5374,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Jamal Murray",
-     "player_short": "J. Murray",
-     "team": "DEN",
-     "position": "PG",
-     "game": "DEN @ NOP",
-     "start": "2026-11-15T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
-    },
-    {
      "player": "Klay Thompson",
      "player_short": "K. Thompson",
      "team": "MIA",
@@ -5411,6 +5390,27 @@
       {
        "side": "More",
        "multiplier": 1.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 5
+    },
+    {
+     "player": "Jamal Murray",
+     "player_short": "J. Murray",
+     "team": "DEN",
+     "position": "PG",
+     "game": "DEN @ NOP",
+     "start": "2026-11-15T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -5459,30 +5459,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
-    },
-    {
-     "player": "Jarrett Allen",
-     "player_short": "J. Allen",
-     "team": "CLE",
-     "position": "C",
-     "game": "DAL @ CLE",
-     "start": "2026-11-15T00:40:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
+     "alt_lines": 4
     },
     {
      "player": "Giannis Antetokounmpo",
@@ -5506,6 +5483,29 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
+    },
+    {
+     "player": "Jarrett Allen",
+     "player_short": "J. Allen",
+     "team": "CLE",
+     "position": "C",
+     "game": "DAL @ CLE",
+     "start": "2026-11-15T00:40:00.0000000+00:00",
+     "status_tags": [
+      "Q"
+     ],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 3
     },
     {
      "player": "Cameron Johnson",
@@ -5869,6 +5869,27 @@
      "alt_lines": 4
     },
     {
+     "player": "Jonathan Kuminga",
+     "player_short": "J. Kuminga",
+     "team": "MIN",
+     "position": "PF",
+     "game": "CHI @ MIN",
+     "start": "2026-11-15T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 1.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
+    },
+    {
      "player": "Donovan Mitchell",
      "player_short": "D. Mitchell",
      "team": "CLE",
@@ -5890,27 +5911,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
-    },
-    {
-     "player": "Jonathan Kuminga",
-     "player_short": "J. Kuminga",
-     "team": "MIN",
-     "position": "PF",
-     "game": "CHI @ MIN",
-     "start": "2026-11-15T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
     }
    ],
    "dk_markets": [
@@ -6274,7 +6274,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -6379,7 +6379,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -6408,29 +6408,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Nolan Traore",
-     "player_short": "N. Traore",
-     "team": "BKN",
-     "position": "PG",
-     "game": "BKN @ MEM",
-     "start": "2026-11-15T01:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Zach Edey",
      "player_short": "Z. Edey",
      "team": "MEM",
@@ -6452,6 +6429,29 @@
      "paused": false,
      "locked": false,
      "alt_lines": 2
+    },
+    {
+     "player": "Nolan Traore",
+     "player_short": "N. Traore",
+     "team": "BKN",
+     "position": "PG",
+     "game": "BKN @ MEM",
+     "start": "2026-11-15T01:10:00.0000000+00:00",
+     "status_tags": [
+      "Q"
+     ],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Daniel Gafford",
@@ -6580,27 +6580,6 @@
      "alt_lines": 0
     },
     {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ CLE",
-     "start": "2026-11-15T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Klay Thompson",
      "player_short": "K. Thompson",
      "team": "MIA",
@@ -6622,6 +6601,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
+    },
+    {
+     "player": "PJ Washington",
+     "player_short": "PJ Washington",
+     "team": "DAL",
+     "position": "PF",
+     "game": "DAL @ CLE",
+     "start": "2026-11-15T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
     },
     {
      "player": "Norman Powell",
@@ -7170,7 +7170,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 2
     },
     {
      "player": "Bam Adebayo",
@@ -7270,7 +7270,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -7322,27 +7322,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Aaron Gordon",
-     "player_short": "A. Gordon",
-     "team": "DEN",
-     "position": "PF",
-     "game": "DEN @ NOP",
-     "start": "2026-11-15T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Egor Demin",
      "player_short": "E. Demin",
      "team": "BKN",
@@ -7357,6 +7336,27 @@
       {
        "side": "More",
        "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Aaron Gordon",
+     "player_short": "A. Gordon",
+     "team": "DEN",
+     "position": "PF",
+     "game": "DEN @ NOP",
+     "start": "2026-11-15T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -7534,27 +7534,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jaden McDaniels",
-     "player_short": "J. McDaniels",
-     "team": "MIN",
-     "position": "PF",
-     "game": "CHI @ MIN",
-     "start": "2026-11-15T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Nolan Traore",
      "player_short": "N. Traore",
      "team": "BKN",
@@ -7576,6 +7555,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
+    },
+    {
+     "player": "Jaden McDaniels",
+     "player_short": "J. McDaniels",
+     "team": "MIN",
+     "position": "PF",
+     "game": "CHI @ MIN",
+     "start": "2026-11-15T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Herbert Jones",
