@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-15T20:40:41Z",
+ "captured_at": "2026-11-15T21:10:56Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -7,13 +7,36 @@
    "listed": true,
    "cards": [
     {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Luka Doncic",
      "player_short": "L. Doncic",
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -97,7 +120,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -267,7 +292,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -288,14 +315,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -372,14 +401,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3
       }
      ],
      "paused": false,
@@ -455,8 +486,10 @@
      "team": "LAL",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -476,8 +509,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -498,14 +533,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -599,13 +636,36 @@
      "alt_lines": 0
     },
     {
+     "player": "Stephon Castle",
+     "player_short": "S. Castle",
+     "team": "SAS",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Jalen Green",
      "player_short": "J. Green",
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -620,13 +680,36 @@
      "alt_lines": 0
     },
     {
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Jake LaRavia",
      "player_short": "J. LaRavia",
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -668,14 +751,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -746,6 +831,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Kyle Filipowski",
+     "player_short": "K. Filipowski",
+     "team": "UTA",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Kyshawn George",
      "player_short": "K. George",
      "team": "WAS",
@@ -788,6 +894,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Keyonte George",
+     "player_short": "K. George",
+     "team": "UTA",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Derrick White",
      "player_short": "D. White",
      "team": "BOS",
@@ -809,34 +936,15 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Point",
-     "dk_market": "1st Points Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Quentin Grimes",
      "player_short": "Q. Grimes",
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -935,13 +1043,36 @@
      "alt_lines": 0
     },
     {
+     "player": "Dylan Harper",
+     "player_short": "D. Harper",
+     "team": "SAS",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Dillon Brooks",
      "player_short": "D. Brooks",
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1025,14 +1156,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -1168,6 +1301,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Ace Bailey",
+     "player_short": "A. Bailey",
+     "team": "UTA",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Reed Sheppard",
      "player_short": "R. Sheppard",
      "team": "HOU",
@@ -1236,8 +1390,10 @@
      "team": "PHX",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1320,8 +1476,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1349,7 +1507,28 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.5
+       "multiplier": 5.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Darryn Peterson",
+     "player_short": "D. Peterson",
+     "team": "UTA",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -1384,14 +1563,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.8
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -1404,8 +1585,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1426,7 +1609,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1455,6 +1640,27 @@
       {
        "side": "Yes",
        "multiplier": 6.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Josh Green",
+     "player_short": "J. Green",
+     "team": "UTA",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 8.6
       }
      ],
      "paused": false,
@@ -1498,7 +1704,30 @@
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
@@ -1667,7 +1896,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1709,7 +1940,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1751,14 +1984,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.7
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -1792,8 +2027,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1942,14 +2179,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.9
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -1985,8 +2224,10 @@
      "team": "LAL",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2090,8 +2331,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2155,8 +2398,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2184,7 +2429,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.0
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -2205,7 +2450,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.1
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -2282,14 +2527,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.2
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -2324,14 +2571,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.2
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -2374,6 +2623,27 @@
       {
        "side": "Yes",
        "multiplier": 2.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Stephon Castle",
+     "player_short": "S. Castle",
+     "team": "SAS",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -2444,27 +2714,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Aday Mara",
      "player_short": "A. Mara",
      "team": "OKC",
@@ -2491,8 +2740,10 @@
      "team": "PHX",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2576,14 +2827,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.5
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -2722,8 +2975,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2807,6 +3062,29 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
@@ -2814,7 +3092,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -2848,8 +3126,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2869,8 +3149,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2913,8 +3195,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2992,6 +3276,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Dylan Harper",
+     "player_short": "D. Harper",
+     "team": "SAS",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Caleb Martin",
      "player_short": "C. Martin",
      "team": "DAL",
@@ -3019,7 +3324,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -3132,7 +3439,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3194,8 +3503,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3215,8 +3526,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3278,8 +3591,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3320,8 +3635,10 @@
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3329,6 +3646,27 @@
       {
        "side": "Yes",
        "multiplier": 1.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Dylan Harper",
+     "player_short": "D. Harper",
+     "team": "SAS",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -3351,7 +3689,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.0
+       "multiplier": 6.1
       }
      ],
      "paused": false,
@@ -3428,14 +3766,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.4
+       "multiplier": 7.6
       }
      ],
      "paused": false,
@@ -3548,34 +3888,15 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Dillon Brooks",
      "player_short": "D. Brooks",
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3637,8 +3958,10 @@
      "team": "LAL",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3667,6 +3990,27 @@
       {
        "side": "Yes",
        "multiplier": 14.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Darryn Peterson",
+     "player_short": "D. Peterson",
+     "team": "UTA",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -3750,7 +4094,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -3785,14 +4129,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -3821,12 +4167,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Naz Reid",
-     "player_short": "N. Reid",
-     "team": "CHA",
-     "position": "C",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
@@ -3834,7 +4180,30 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Naz Reid",
+     "player_short": "N. Reid",
+     "team": "CHA",
+     "position": "C",
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -3869,14 +4238,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -3952,8 +4323,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3974,14 +4347,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -3995,14 +4370,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -4015,8 +4392,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -4172,7 +4551,28 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Stephon Castle",
+     "player_short": "S. Castle",
+     "team": "SAS",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -4193,28 +4593,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Cooper Flagg",
-     "player_short": "C. Flagg",
-     "team": "DAL",
-     "position": "SF",
-     "game": "DAL @ BOS",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -4236,6 +4615,27 @@
       {
        "side": "Yes",
        "multiplier": 3.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Cooper Flagg",
+     "player_short": "C. Flagg",
+     "team": "DAL",
+     "position": "SF",
+     "game": "DAL @ BOS",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -4279,7 +4679,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 6.0
       }
      ],
      "paused": false,
@@ -4293,27 +4693,6 @@
      "position": "C",
      "game": "ATL @ MIL",
      "start": "2026-11-16T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jalen Green",
-     "player_short": "J. Green",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
@@ -4350,12 +4729,35 @@
      "alt_lines": 0
     },
     {
-     "player": "Brook Lopez",
-     "player_short": "B. Lopez",
-     "team": "LAC",
-     "position": "C",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "player": "Jalen Green",
+     "player_short": "J. Green",
+     "team": "PHX",
+     "position": "SG",
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Keyonte George",
+     "player_short": "K. George",
+     "team": "UTA",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
@@ -4364,6 +4766,71 @@
       {
        "side": "Yes",
        "multiplier": 3.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Brook Lopez",
+     "player_short": "B. Lopez",
+     "team": "LAC",
+     "position": "C",
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Ace Bailey",
+     "player_short": "A. Bailey",
+     "team": "UTA",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -4491,8 +4958,10 @@
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -4740,12 +5209,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
@@ -4753,7 +5222,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -4934,8 +5403,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -4976,8 +5447,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5019,7 +5492,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5060,8 +5535,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5103,14 +5580,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.7
+       "multiplier": 1.4
       }
      ],
      "paused": false,
@@ -5168,7 +5647,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5210,14 +5691,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.8
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -5272,8 +5755,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5315,14 +5800,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.0
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -5356,8 +5843,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5377,8 +5866,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5420,7 +5911,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5441,7 +5934,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5449,6 +5944,27 @@
       {
        "side": "Yes",
        "multiplier": 2.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Stephon Castle",
+     "player_short": "S. Castle",
+     "team": "SAS",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -5533,6 +6049,27 @@
       {
        "side": "Yes",
        "multiplier": 2.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -5813,6 +6350,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Dylan Harper",
+     "player_short": "D. Harper",
+     "team": "SAS",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Cooper Flagg",
      "player_short": "C. Flagg",
      "team": "DAL",
@@ -5839,8 +6397,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5861,7 +6421,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5905,6 +6467,283 @@
    "listed": true,
    "cards": [
     {
+     "player": "Cooper Flagg",
+     "player_short": "C. Flagg",
+     "team": "DAL",
+     "position": "SF",
+     "game": "DAL @ BOS",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Alperen Sengun",
+     "player_short": "A. Sengun",
+     "team": "HOU",
+     "position": "C",
+     "game": "HOU @ WAS",
+     "start": "2026-11-16T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Jordan Walsh",
+     "player_short": "J. Walsh",
+     "team": "BOS",
+     "position": "SF",
+     "game": "DAL @ BOS",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Stephon Castle",
+     "player_short": "S. Castle",
+     "team": "SAS",
+     "position": "SG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Alexandre Sarr",
+     "player_short": "A. Sarr",
+     "team": "WAS",
+     "position": "C",
+     "game": "HOU @ WAS",
+     "start": "2026-11-16T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Domantas Sabonis",
+     "player_short": "D. Sabonis",
+     "team": "SAC",
+     "position": "PF",
+     "game": "OKC @ SAC",
+     "start": "2026-11-16T02:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Kevin Durant",
+     "player_short": "K. Durant",
+     "team": "HOU",
+     "position": "SF",
+     "game": "HOU @ WAS",
+     "start": "2026-11-16T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Ace Bailey",
+     "player_short": "A. Bailey",
+     "team": "UTA",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Dyson Daniels",
+     "player_short": "D. Daniels",
+     "team": "ATL",
+     "position": "SG",
+     "game": "ATL @ MIL",
+     "start": "2026-11-16T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Jalen Green",
+     "player_short": "J. Green",
+     "team": "PHX",
+     "position": "SG",
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Jabari Smith Jr.",
+     "player_short": "J. Smith Jr.",
+     "team": "HOU",
+     "position": "PF",
+     "game": "HOU @ WAS",
+     "start": "2026-11-16T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Zach LaVine",
+     "player_short": "Z. LaVine",
+     "team": "SAC",
+     "position": "SG",
+     "game": "OKC @ SAC",
+     "start": "2026-11-16T02:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Miles Bridges",
+     "player_short": "M. Bridges",
+     "team": "PHX",
+     "position": "SF",
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "RJ Barrett",
      "player_short": "RJ Barrett",
      "team": "TOR",
@@ -5919,6 +6758,27 @@
       {
        "side": "Yes",
        "multiplier": 5.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Kyle Filipowski",
+     "player_short": "K. Filipowski",
+     "team": "UTA",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.9
       }
      ],
      "paused": false,
@@ -5953,6 +6813,29 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 5.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Dylan Harper",
+     "player_short": "D. Harper",
+     "team": "SAS",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -5960,7 +6843,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -6031,6 +6914,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Keegan Murray",
      "player_short": "K. Murray",
      "team": "SAC",
@@ -6058,14 +6962,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.8
+       "multiplier": 7.7
       }
      ],
      "paused": false,
@@ -6162,8 +7068,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6178,20 +7086,22 @@
      "alt_lines": 0
     },
     {
-     "player": "Moussa Diabate",
-     "player_short": "M. Diabate",
-     "team": "CHA",
+     "player": "Walker Kessler",
+     "player_short": "W. Kessler",
+     "team": "LAL",
      "position": "C",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -6220,12 +7130,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
+     "player": "Aday Mara",
+     "player_short": "A. Mara",
+     "team": "OKC",
      "position": "C",
-     "game": "DAL @ BOS",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
+     "game": "OKC @ SAC",
+     "start": "2026-11-16T02:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6233,7 +7143,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.6
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -6268,14 +7178,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 9.1
+       "multiplier": 10.0
       }
      ],
      "paused": false,
@@ -6309,8 +7221,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6351,8 +7265,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6360,6 +7276,27 @@
       {
        "side": "Yes",
        "multiplier": 11.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 11.9
       }
      ],
      "paused": false,
@@ -6430,29 +7367,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Scottie Barnes",
-     "player_short": "S. Barnes",
-     "team": "TOR",
-     "position": "SF",
-     "game": "NYK @ TOR",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Caleb Martin",
      "player_short": "C. Martin",
      "team": "DAL",
@@ -6479,8 +7393,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6537,12 +7453,35 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
+     "player": "Moussa Diabate",
+     "player_short": "M. Diabate",
      "team": "CHA",
-     "position": "SG",
+     "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Neemias Queta",
+     "player_short": "N. Queta",
+     "team": "BOS",
+     "position": "C",
+     "game": "DAL @ BOS",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6550,7 +7489,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 16.4
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -6579,12 +7518,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Dillon Brooks",
-     "player_short": "D. Brooks",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
+     "player": "Keyonte George",
+     "player_short": "K. George",
+     "team": "UTA",
+     "position": "PG",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6592,7 +7531,51 @@
      "sides": [
       {
        "side": "Yes",
+       "multiplier": 16.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Dillon Brooks",
+     "player_short": "D. Brooks",
+     "team": "PHX",
+     "position": "SG",
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
        "multiplier": 19.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Josh Green",
+     "player_short": "J. Green",
+     "team": "UTA",
+     "position": "SF",
+     "game": "SAS @ UTA",
+     "start": "2026-11-15T22:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 18.8
       }
      ],
      "paused": false,
@@ -6621,76 +7604,15 @@
      "alt_lines": 0
     },
     {
-     "player": "Onyeka Okongwu",
-     "player_short": "O. Okongwu",
-     "team": "ATL",
-     "position": "C",
-     "game": "ATL @ MIL",
-     "start": "2026-11-16T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Anthony Davis",
-     "player_short": "A. Davis",
-     "team": "WAS",
-     "position": "PF",
-     "game": "HOU @ WAS",
-     "start": "2026-11-16T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Derrick Jones Jr.",
-     "player_short": "D. Jones Jr.",
-     "team": "LAC",
-     "position": "SF",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Oso Ighodaro",
      "player_short": "O. Ighodaro",
      "team": "PHX",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6747,11 +7669,11 @@
      "alt_lines": 0
     },
     {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
+     "player": "OG Anunoby",
+     "player_short": "OG Anunoby",
+     "team": "NYK",
      "position": "SF",
-     "game": "DAL @ BOS",
+     "game": "NYK @ TOR",
      "start": "2026-11-15T23:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
@@ -6760,7 +7682,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -6768,12 +7690,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Rui Hachimura",
-     "player_short": "R. Hachimura",
-     "team": "LAC",
-     "position": "SF",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "player": "Karl-Anthony Towns",
+     "player_short": "K. Towns",
+     "team": "NYK",
+     "position": "PF",
+     "game": "NYK @ TOR",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6781,7 +7703,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -6789,12 +7711,35 @@
      "alt_lines": 0
     },
     {
-     "player": "Brandon Miller",
-     "player_short": "B. Miller",
-     "team": "CHA",
+     "player": "Scottie Barnes",
+     "player_short": "S. Barnes",
+     "team": "TOR",
      "position": "SF",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "game": "NYK @ TOR",
+     "start": "2026-11-15T23:10:00.0000000+00:00",
+     "status_tags": [
+      "Q"
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Onyeka Okongwu",
+     "player_short": "O. Okongwu",
+     "team": "ATL",
+     "position": "C",
+     "game": "ATL @ MIL",
+     "start": "2026-11-16T01:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6802,7 +7747,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -6810,10 +7755,10 @@
      "alt_lines": 0
     },
     {
-     "player": "AJ Dybantsa",
-     "player_short": "AJ Dybantsa",
+     "player": "Anthony Davis",
+     "player_short": "A. Davis",
      "team": "WAS",
-     "position": "SF",
+     "position": "PF",
      "game": "HOU @ WAS",
      "start": "2026-11-16T00:10:00.0000000+00:00",
      "status_tags": [],
@@ -6823,7 +7768,30 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 2.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Derrick Jones Jr.",
+     "player_short": "D. Jones Jr.",
+     "team": "LAC",
+     "position": "SF",
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -6854,96 +7822,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Cooper Flagg",
-     "player_short": "C. Flagg",
-     "team": "DAL",
-     "position": "SF",
-     "game": "DAL @ BOS",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Alperen Sengun",
-     "player_short": "A. Sengun",
-     "team": "HOU",
-     "position": "C",
-     "game": "HOU @ WAS",
-     "start": "2026-11-16T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
+     "player": "Jayson Tatum",
+     "player_short": "J. Tatum",
      "team": "BOS",
      "position": "SF",
      "game": "DAL @ BOS",
      "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Alexandre Sarr",
-     "player_short": "A. Sarr",
-     "team": "WAS",
-     "position": "C",
-     "game": "HOU @ WAS",
-     "start": "2026-11-16T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Domantas Sabonis",
-     "player_short": "D. Sabonis",
-     "team": "SAC",
-     "position": "PF",
-     "game": "OKC @ SAC",
-     "start": "2026-11-16T02:10:00.0000000+00:00",
      "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -6959,20 +7843,22 @@
      "alt_lines": 0
     },
     {
-     "player": "OG Anunoby",
-     "player_short": "OG Anunoby",
-     "team": "NYK",
+     "player": "Rui Hachimura",
+     "player_short": "R. Hachimura",
+     "team": "LAC",
      "position": "SF",
-     "game": "NYK @ TOR",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [],
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.1
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -6980,9 +7866,32 @@
      "alt_lines": 0
     },
     {
-     "player": "Kevin Durant",
-     "player_short": "K. Durant",
-     "team": "HOU",
+     "player": "Brandon Miller",
+     "player_short": "B. Miller",
+     "team": "CHA",
+     "position": "SF",
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "AJ Dybantsa",
+     "player_short": "AJ Dybantsa",
+     "team": "WAS",
      "position": "SF",
      "game": "HOU @ WAS",
      "start": "2026-11-16T00:10:00.0000000+00:00",
@@ -6993,175 +7902,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Dyson Daniels",
-     "player_short": "D. Daniels",
-     "team": "ATL",
-     "position": "SG",
-     "game": "ATL @ MIL",
-     "start": "2026-11-16T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jalen Green",
-     "player_short": "J. Green",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Karl-Anthony Towns",
-     "player_short": "K. Towns",
-     "team": "NYK",
-     "position": "PF",
-     "game": "NYK @ TOR",
-     "start": "2026-11-15T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Walker Kessler",
-     "player_short": "W. Kessler",
-     "team": "LAL",
-     "position": "C",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jabari Smith Jr.",
-     "player_short": "J. Smith Jr.",
-     "team": "HOU",
-     "position": "PF",
-     "game": "HOU @ WAS",
-     "start": "2026-11-16T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Aday Mara",
-     "player_short": "A. Mara",
-     "team": "OKC",
-     "position": "C",
-     "game": "OKC @ SAC",
-     "start": "2026-11-16T02:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Zach LaVine",
-     "player_short": "Z. LaVine",
-     "team": "SAC",
-     "position": "SG",
-     "game": "OKC @ SAC",
-     "start": "2026-11-16T02:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Miles Bridges",
-     "player_short": "M. Bridges",
-     "team": "PHX",
-     "position": "SF",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -7182,8 +7923,10 @@
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 3.5,
@@ -7245,8 +7988,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7316,7 +8061,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -7542,7 +8287,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7667,8 +8414,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7717,7 +8466,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -7731,7 +8480,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7752,14 +8503,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -7856,8 +8609,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7961,8 +8716,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8069,14 +8826,16 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -8110,8 +8869,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8294,27 +9055,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "OKC @ SAC",
-     "start": "2026-11-16T02:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
-    },
-    {
      "player": "Paul George",
      "player_short": "P. George",
      "team": "BOS",
@@ -8336,6 +9076,27 @@
      "alt_lines": 5
     },
     {
+     "player": "Isaiah Hartenstein",
+     "player_short": "I. Hartenstein",
+     "team": "OKC",
+     "position": "C",
+     "game": "OKC @ SAC",
+     "start": "2026-11-16T02:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 3
+    },
+    {
      "player": "Josh Hart",
      "player_short": "J. Hart",
      "team": "NYK",
@@ -8343,6 +9104,29 @@
      "game": "NYK @ TOR",
      "start": "2026-11-15T23:10:00.0000000+00:00",
      "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 3
+    },
+    {
+     "player": "Oso Ighodaro",
+     "player_short": "O. Ighodaro",
+     "team": "PHX",
+     "position": "C",
+     "game": "LAL @ PHX",
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8376,27 +9160,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
-    },
-    {
-     "player": "Oso Ighodaro",
-     "player_short": "O. Ighodaro",
-     "team": "PHX",
-     "position": "C",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
     },
     {
      "player": "Karl-Anthony Towns",
@@ -8488,8 +9251,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8510,7 +9275,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8553,8 +9320,10 @@
      "team": "LAL",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8575,40 +9344,21 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
-    },
-    {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
+     "alt_lines": 3
     },
     {
      "player": "Scottie Barnes",
@@ -8661,7 +9411,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8718,27 +9470,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Kris Dunn",
-     "player_short": "K. Dunn",
-     "team": "LAC",
-     "position": "PG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 2
-    },
-    {
      "player": "Jaime Jaquez Jr.",
      "player_short": "J. Jaquez Jr.",
      "team": "MIL",
@@ -8760,13 +9491,38 @@
      "alt_lines": 4
     },
     {
+     "player": "Kris Dunn",
+     "player_short": "K. Dunn",
+     "team": "LAC",
+     "position": "PG",
+     "game": "CHA @ LAC",
+     "start": "2026-11-15T21:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 2
+    },
+    {
      "player": "Matisse Thybulle",
      "player_short": "M. Thybulle",
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8787,14 +9543,16 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -8815,8 +9573,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -8858,27 +9618,6 @@
      "position": "SG",
      "game": "ATL @ MIL",
      "start": "2026-11-16T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
      "status_tags": [],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
@@ -8963,7 +9702,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9134,8 +9875,10 @@
      "team": "LAL",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9155,8 +9898,10 @@
      "team": "PHX",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9176,8 +9921,10 @@
      "team": "LAL",
      "position": "PG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9220,8 +9967,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9263,7 +10012,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9325,8 +10076,10 @@
      "team": "LAL",
      "position": "C",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9347,7 +10100,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9472,8 +10227,10 @@
      "team": "PHX",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9515,7 +10272,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9601,7 +10360,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9790,7 +10551,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10041,8 +10804,10 @@
      "team": "LAL",
      "position": "SF",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10105,7 +10870,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10147,7 +10914,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10209,8 +10978,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10252,7 +11023,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10377,8 +11150,10 @@
      "team": "PHX",
      "position": "SG",
      "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-15T21:20:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10548,48 +11323,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Grayson Allen",
-     "player_short": "G. Allen",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHA @ LAC",
-     "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Quentin Grimes",
-     "player_short": "Q. Grimes",
-     "team": "LAL",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Jalen Johnson",
      "player_short": "J. Johnson",
      "team": "ATL",
@@ -10609,27 +11342,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Jake LaRavia",
-     "player_short": "J. LaRavia",
-     "team": "LAL",
-     "position": "SF",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Jayson Tatum",
@@ -10674,27 +11386,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jalen Green",
-     "player_short": "J. Green",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Onyeka Okongwu",
      "player_short": "O. Okongwu",
      "team": "ATL",
@@ -10716,27 +11407,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Miles Bridges",
-     "player_short": "M. Bridges",
-     "team": "PHX",
-     "position": "SF",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Devin Vassell",
      "player_short": "D. Vassell",
      "team": "SAS",
@@ -10750,7 +11420,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -10764,7 +11434,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -10827,14 +11499,16 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -10926,34 +11600,15 @@
      "alt_lines": 1
     },
     {
-     "player": "Dillon Brooks",
-     "player_short": "D. Brooks",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Moussa Diabate",
      "player_short": "M. Diabate",
      "team": "CHA",
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11157,27 +11812,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Matisse Thybulle",
-     "player_short": "M. Thybulle",
-     "team": "LAL",
-     "position": "SF",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Domantas Sabonis",
      "player_short": "D. Sabonis",
      "team": "SAC",
@@ -11197,27 +11831,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Walker Kessler",
-     "player_short": "W. Kessler",
-     "team": "LAL",
-     "position": "C",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Anthony Davis",
@@ -11331,7 +11944,9 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11478,7 +12093,9 @@
      "position": "C",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11564,40 +12181,21 @@
      "position": "SF",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.8
+       "multiplier": 3.1
       }
      ],
      "paused": false,
      "locked": false,
      "alt_lines": 0
-    },
-    {
-     "player": "Devin Booker",
-     "player_short": "D. Booker",
-     "team": "PHX",
-     "position": "SG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
     },
     {
      "player": "Daniel Gafford",
@@ -11713,7 +12311,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11774,34 +12374,15 @@
      "alt_lines": 1
     },
     {
-     "player": "Luka Doncic",
-     "player_short": "L. Doncic",
-     "team": "LAL",
-     "position": "PG",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Darius Garland",
      "player_short": "D. Garland",
      "team": "LAC",
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11843,7 +12424,9 @@
      "position": "PG",
      "game": "CHA @ LAC",
      "start": "2026-11-15T21:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11977,27 +12560,6 @@
       {
        "side": "More",
        "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Oso Ighodaro",
-     "player_short": "O. Ighodaro",
-     "team": "PHX",
-     "position": "C",
-     "game": "LAL @ PHX",
-     "start": "2026-11-15T21:15:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -12152,22 +12714,22 @@
  "notes": [],
  "summary": {
   "1st Point": {
-   "cards": 70,
-   "open": 70,
+   "cards": 78,
+   "open": 78,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 2.2,
-   "multiplier_max": 6.8,
-   "games": 7,
+   "multiplier_min": 1.7,
+   "multiplier_max": 8.6,
+   "games": 8,
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 75,
-   "open": 75,
+   "cards": 78,
+   "open": 78,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12180,8 +12742,8 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 64,
-   "open": 64,
+   "cards": 70,
+   "open": 70,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12190,12 +12752,12 @@
    "cards_with_less": 0,
    "multiplier_min": 1.8,
    "multiplier_max": 19.2,
-   "games": 7,
+   "games": 8,
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 69,
-   "open": 69,
+   "cards": 72,
+   "open": 72,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12208,22 +12770,22 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 60,
-   "open": 60,
+   "cards": 67,
+   "open": 67,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 1.2,
+   "multiplier_min": 0.9,
    "multiplier_max": 19.1,
-   "games": 7,
+   "games": 8,
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 76,
+   "open": 76,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12241,8 +12803,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 76,
+   "open": 76,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12258,8 +12820,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 66,
+   "open": 66,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12268,7 +12830,7 @@
    "cards_with_less": 0,
    "multiplier_min": 0.8,
    "multiplier_max": 3.2,
-   "games": 8,
+   "games": 7,
    "lines": [
     0.5
    ]
