@@ -11,3 +11,7 @@ date,run_id,stat,off_schedule,decision_ts,capture_at,markets,tipped_excluded,sid
 2026-11-14,2026-11-14-REB-offsched,REB,1,2026-11-14T22:20:38Z,2026-11-14T22:20:34Z,270,0,540,220,86,8,126,19,8,0,3,3,3,,sam_v1+guard_v1,live_published_p,4,0
 2026-11-14,2026-11-14-AST-offsched,AST,1,2026-11-14T22:20:38Z,2026-11-14T22:20:34Z,191,0,382,156,46,0,110,16,8,0,1,3,3,,sam_v1+guard_v1,live_published_p,1,0
 2026-11-14,2026-11-14-3PM-offsched,3PM,1,2026-11-14T22:20:38Z,2026-11-14T22:20:34Z,268,0,536,217,81,6,130,16,8,0,0,3,4,,sam_v1+guard_v1,live_published_p,4,0
+2026-11-15,2026-11-15-PTS,PTS,0,2026-11-15T21:00:19Z,2026-11-15T21:00:19Z,391,54,674,378,41,23,314,91,28,0,0,3,4,commit_step_failure_recovered_same_day,sam_v1+guard_v1,live_published_p,30,0
+2026-11-15,2026-11-15-REB,REB,0,2026-11-15T21:00:19Z,2026-11-15T21:00:19Z,406,53,706,385,147,12,226,44,26,0,0,3,5,commit_step_failure_recovered_same_day,sam_v1+guard_v1,live_published_p,6,0
+2026-11-15,2026-11-15-AST,AST,0,2026-11-15T21:00:19Z,2026-11-15T21:00:19Z,287,37,500,290,72,15,203,47,22,0,3,3,5,commit_step_failure_recovered_same_day,sam_v1+guard_v1,live_published_p,6,0
+2026-11-15,2026-11-15-3PM,3PM,0,2026-11-15T21:00:19Z,2026-11-15T21:00:19Z,432,59,746,371,130,14,227,34,13,0,6,3,6,commit_step_failure_recovered_same_day,sam_v1+guard_v1,live_published_p,7,0
