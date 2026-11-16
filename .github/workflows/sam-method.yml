@@ -82,6 +82,8 @@ jobs:
         if: steps.storage.outputs.ok == '1'
         with:
           path: arc-lab
+          ref: main            # 2026-11-16: the commit at checkout time, not the trigger commit (the job may have waited hours;
+                               # on 2026-11-15 it priced off a 3-hour-old tree and its commit could not be rebased)
           fetch-depth: 300     # the guard reads the slate's morning projection build from git history (about 100 commits a day)
       - uses: actions/checkout@v4
         if: steps.storage.outputs.ok == '1'
@@ -110,7 +112,9 @@ jobs:
             python sam_optimizer.py run "$path"
             echo "captured=1" >> "$GITHUB_OUTPUT"
           else
-            python sam_optimizer.py publish
+            # lock held or outside the window: if today's stored capture has no rows here yet (a failed publish), re-derive it
+            # from the STORED capture and re-poll; otherwise this just republishes
+            python sam_optimizer.py recover
             echo "captured=0" >> "$GITHUB_OUTPUT"
           fi
           python validate_site_json.py
@@ -127,13 +131,20 @@ jobs:
         if: steps.storage.outputs.ok == '1'
         working-directory: arc-lab
         run: |
+          # 2026-11-16 fix. The old step rebased this job's commit onto main and died three times on a merge conflict in the
+          # derived docs/data/sam_method.json (another build had regenerated it while the job waited). Now: remember the rows
+          # this job appended, take main as it is, append them, regenerate the JSON from the logs, commit, push.
           git config user.name "arc-lab-bot"; git config user.email "actions@users.noreply.github.com"
-          git add data/sam_method docs/data/sam_method.json
-          [ -f data/oddsapi_props_credits.csv ] && git add data/oddsapi_props_credits.csv
-          git diff --cached --quiet && exit 0
-          git commit -q -m "sam method: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3; do
-            git fetch -q origin main && git rebase -q origin/main && git push -q origin HEAD:main && exit 0
-            git rebase --abort 2>/dev/null || true; sleep 5
+          python scripts/sam_commit.py save
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python scripts/sam_commit.py apply
+            (cd scripts && python sam_optimizer.py publish && python validate_site_json.py)
+            git add data/sam_method docs/data/sam_method.json
+            [ -f data/oddsapi_props_credits.csv ] && git add data/oddsapi_props_credits.csv
+            if git diff --cached --quiet; then echo "nothing new to commit"; exit 0; fi
+            git commit -q -m "sam method: $(date -u +%Y-%m-%dT%H:%MZ)"
+            if git push -q origin HEAD:main; then echo "committed and pushed on attempt $i"; exit 0; fi
+            sleep 5
           done
-          echo "::error::the Sam Method commit did not land after 3 attempts"; exit 1
+          echo "::error::the Sam Method commit did not land after 5 attempts"; exit 1

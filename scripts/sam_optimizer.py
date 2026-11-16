@@ -37,6 +37,12 @@ Readings this build had to choose (the spec text does not fix them; each is stam
   - grading fills only hit / scratch_status / status on the logged row; no other field of a logged row ever changes.
 
   python sam_optimizer.py run <capture.json.gz> [--no-wait] [--out-root DIR]   search, +5 re-poll, log, publish
+  python sam_optimizer.py recover [capture.json.gz] [--ruling]                publish-path recovery (2026-11-16): a capture that is stored
+                                                                              but whose derived rows never reached this repo is re-derived
+                                                                              from the STORED capture and its STORED +5 re-poll. search() is
+                                                                              the same code; nothing is re-fetched and the real capture time
+                                                                              is kept. Refuses once the slate's box scores are in, unless the
+                                                                              owner's ruling is passed explicitly.
   python sam_optimizer.py grade                                               nightly: grade pending rows, publish
   python sam_optimizer.py publish                                             rebuild docs/data/sam_method.json only
 """
@@ -280,6 +286,75 @@ def run(capture_path, wait=True):
     publish()
 
 
+RECOVER_NOTE = "commit_step_failure_recovered_same_day"
+
+
+def recover(capture_path=None, ruling=False):
+    """Re-derive a stored capture whose derived rows never landed here (the 2026-11-15 commit step failed after a clean
+    in-window capture). Uses ONLY the stored capture and its stored +5 re-poll sidecar: no market is fetched again, and the
+    capture's own time is what gets logged (the decision time is stamped as the capture time: the original decision followed
+    it by seconds and was lost with the failed commit). The capture's own off_schedule flag is kept: the capture is what was
+    or was not in the window, not the publish. Returns True when rows were written."""
+    P = paths()
+    if capture_path is None:
+        import os
+        d = (os.environ.get("ARC_LAB_DATA_DIR") or "").strip()
+        day = sc.now().astimezone(sc.ET).date().isoformat()
+        capture_path = Path(d) / "sam_method" / "capture" / f"{day}.json.gz" if d else None
+        if not capture_path or not capture_path.exists():
+            return False                                     # nothing stored for today's slate: nothing to recover
+    capture_path = Path(capture_path)
+    with gzip.open(capture_path, "rt", encoding="utf-8") as f:
+        cap = json.load(f)
+    date = cap["slate_date"]
+    done, log = read_csv(P["runs"]), read_csv(P["log"])
+    if len(done) and (done.date == date).any():
+        return False                                         # already published: the normal case, nothing to do
+    if cap.get("dry_run"):
+        print(f"[sam-optimizer] {date}: the stored capture is a dry run: not recovered"); return False
+    if len(log) and ((log.date == date) & (log.status != "pending")).any():
+        sys.exit(f"[sam-optimizer] HARD STOP: {date} already has graded legs in the shadow log; recovery refused")
+    box = pd.read_csv(DATA_DIR / "player_games.csv", usecols=["date"])
+    if (box.date == date).any() and not ruling:
+        sys.exit(f"[sam-optimizer] {date}: the slate's box scores are already on file. Recovery after the games needs the owner's ruling (--ruling).")
+    side = capture_path.with_name(capture_path.name.replace(".json.gz", ".repoll.json.gz"))
+    stored = {}
+    if side.exists():
+        with gzip.open(side, "rt", encoding="utf-8") as f:
+            stored = {x["ticker"]: x for x in (json.load(f).get("repoll") or [])}
+    legs, runs = search(cap)
+    for x in legs:                                           # the +5 minute asks as they were polled then
+        m = (stored.get(x["_ticker"]) or {}).get("market")
+        a = sc.fnum((m or {}).get("yes_ask_dollars" if x["side"] == "yes" else "no_ask_dollars")) if x["_ticker"] in stored else None
+        x["ask_plus5"] = "" if a is None else a
+        x["ask_survived"] = "" if x["_ticker"] not in stored else int(a is not None and 0 < a < 1 and a <= float(x["ask"]) + 1e-9)
+        x["decision_ts"] = cap["captured_at"]
+    for r in runs:
+        r["decision_ts"] = cap["captured_at"]; r["note"] = (r["note"] + "; " if r["note"] else "") + RECOVER_NOTE
+    append(P["log"], COLS, legs); append(P["runs"], RUN_COLS, runs)
+    caps = read_csv(P["capture_log"])
+    if not (len(caps) and ((caps.slate_date == date) & (caps.status == "captured")).any()):
+        rows = cap["kalshi"]["markets"]
+        sc.RUNS = P["capture_log"]
+        sc.log_run({"slate_date": date, "captured_at": cap["captured_at"], "off_schedule": int(bool(cap.get("off_schedule"))), "status": "captured", "kalshi_markets": len(rows),
+                    "kalshi_by_series": json.dumps(cap["kalshi"].get("by_series")), "games": len(cap.get("games") or []), "early_tip_games": len(cap.get("early_tip_games") or []),
+                    "odds_credits": cap["sportsbook"].get("credits", 0), "odds_games": len(cap["sportsbook"].get("event_odds") or []), "model_updated": cap["model"].get("updated", ""),
+                    "model_players": len(cap["model"].get("players") or []), "note": f"{cap['sportsbook'].get('status')}; trigger={cap.get('trigger')}; {RECOVER_NOTE}"})
+    tonight = {"slate_date": date, "captured_at": cap["captured_at"], "captured_at_pt": cap.get("captured_at_pt"), "off_schedule": bool(cap.get("off_schedule")),
+               "model_snapshot": cap["model"].get("updated"), "sportsbook": cap["sportsbook"].get("status"), "recovered": RECOVER_NOTE,
+               "extra": {f"{x['cluster_id']}|{x['rung']}|{x['side']}": {"raw_p": x["_raw_p"], "base_rate": x["_base_rate"], "base_n": x["_base_n"], "base_hits": x["_base_hits"], "ticker": x["_ticker"]} for x in legs}}
+    latest = read_csv(P["runs"]).date.max()
+    if latest == date:                                       # the tab's "tonight" block follows the newest slate only
+        write_json(P["dir"] / "tonight_meta.json", tonight)
+    for r in runs:
+        print(f"[sam-optimizer] RECOVERED {r['run_id']}: markets {r['markets']}, side-legs {r['side_legs']}, depth pass {r['depth_pass']}, unpriced rung {r['unpriced_rung']}, no model player {r['no_model_player']}, "
+              f"searched {r['candidates_searched']}, candidates {r['candidates']} (guard edge {r['guard_edge']}, guard minutes {r['guard_minutes']}, ineligible {r['ineligible_player']}, no base rate {r['no_base_rate']}, tail {r['tail_excluded']}), "
+              f"clusters {r['clusters_selected']}, legs logged {r['legs_logged']}")
+    for x in legs:
+        print(f"   {x['stat']:3s} {x['player']:24s} {x['rung']}+ {x['side']:3s} P {x['model_p_shrunk']:.3f} ask {float(x['ask']):.2f} edge {x['claimed_edge_pp']:+.1f}pp z {x['ranking_z']:.3f} +5 {x['ask_plus5']} survived {x['ask_survived']} {'DUPLICATE' if x['duplicate_of'] else ''}")
+    return True
+
+
 # ---------------------------------------------------------------- grading and the tab file
 
 def grade():
@@ -371,7 +446,8 @@ def publish():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run", "grade", "publish"]); ap.add_argument("capture", nargs="?")
+    ap.add_argument("cmd", choices=["run", "grade", "publish", "recover"]); ap.add_argument("capture", nargs="?")
+    ap.add_argument("--ruling", action="store_true", help="recover: the owner has ruled that a capture whose games have already been played is to be recovered")
     ap.add_argument("--no-wait", action="store_true", help="re-poll immediately (testing only)")
     ap.add_argument("--out-root", help="write logs and the tab JSON under this directory instead of the repository (dry runs)")
     a = ap.parse_args()
@@ -380,6 +456,10 @@ if __name__ == "__main__":
         ROOT_SITE.mkdir(parents=True, exist_ok=True)
     if a.cmd == "run":
         run(a.capture, wait=not a.no_wait)
+    elif a.cmd == "recover":
+        if recover(a.capture, ruling=a.ruling):
+            print("[sam-optimizer] recovery wrote the slate's rows")
+        publish()
     elif a.cmd == "grade":
         grade()
     else:
