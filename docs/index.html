@@ -395,6 +395,9 @@ function gradedStrip(el, stat, G){
 function playMin(line){ if(!LPL || !LPL.active || line === undefined || line === null) return null; const k = LPL.min_rung_by_line[(+line).toFixed(1)]; return k === undefined ? null : k; }
 function isRev(line, n){ const k = playMin(line); return k !== null && n >= k; }
 function revTag(line, rungs){ return rungs.some(n => isRev(line, n)) ? `<span class="revTag">${LPL.label}</span>` : ""; }
+const LADDER_KEY = {PTS:"pts", REB:"reb", AST:"ast", "3PM":"tpm", pts:"pts", reb:"reb", ast:"ast", tpm:"tpm"};
+function overIsRev(udLine, L){ const a = playMin(udLine), b = playMin(L); return a !== null && b !== null && b >= a; }   // P(over L) shown next to an Underdog main line
+function revInline(on){ return on ? ` <span class="revTag" style="display:inline">${LPL.label}</span>` : ""; }
 function revNote(){ return (LPL && LPL.active) ? `<p class="revNote">${LPL.label}: every outlined ladder price is a playable rung (at or above the main line + 1). ${LPL.why || ""}</p>` : ""; }
 function ladderStrip(el, stat, rungs){
   const G = gradedSlate(); if(G){ gradedStrip(el, stat, G); return; }
@@ -435,7 +438,7 @@ function renderThrees(){
     <td><span class="ladder">${[1,2,3,4,5,6,7].map(n=>{const v=p.ladder?.tpm?.[n] ? p.ladder.tpm[n].p : atLeast(p.tpm.pmf,n);
       return `<span class="${isRev(ud,n)?"rev":""}" style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ threes${isRev(ud,n)?" · "+LPL.label:""}">${pct(v)}</span>`}).join("")}</span>${revTag(ud,[1,2,3,4,5,6,7])}</td>
     <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>
-    ${hasLines?`<td>${ud!==undefined?`${ud} <span class="${edge>=.03?"pos":edge<0?"neg":""}">${pct(over(p.tpm.pmf,ud))}</span>`:"–"}</td>`:""}
+    ${hasLines?`<td>${ud!==undefined?`${ud} <span class="${edge>=.03?"pos":edge<0?"neg":""}">${pct(over(p.tpm.pmf,ud))}</span>${revInline(overIsRev(ud,ud))}`:"–"}</td>`:""}
     <td>${spark(p.last10.tpm, L)}</td></tr>`).join("");
   $("t3").innerHTML = head + `<tbody>${body}</tbody>`;
   sortable($("t3"), null, null, v=>S.sort3=v);
@@ -463,7 +466,7 @@ function renderProps(){
     ${RUNGS[st]?`<td><span class="ladder">${RUNGS[st].map(n=>{const e=p.ladder?.[st]?.[n]; const v=e?e.p:(st==="tpm"?atLeast(p.tpm.pmf,n):null); const u=S.lines[`${norm(p.name)}:${st}`]; return v==null?"":`<span class="${isRev(u,n)?"rev":""}" style="background:${heatColor(v)};color:${v>.55?"#fff":"inherit"}" title="${n}+ ${st.toUpperCase()}${isRev(u,n)?" · "+LPL.label:""}">${pct(v)}</span>`;}).join("")}</span>${revTag(S.lines[`${norm(p.name)}:${st}`], RUNGS[st])}</td>`:""}
     <td><input type="number" step="0.5" value="${L}" data-id="${p.id}" aria-label="Line for ${p.name}">
       <div class="meta">${S.edits[`${p.id}:${st}`]!==undefined?"Edited":S.lines[`${norm(p.name)}:${st}`]!==undefined?"Underdog":"Fair"}</div></td>
-    <td class="big">${pct(po)}</td>
+    <td class="big">${pct(po)}${revInline(overIsRev(S.lines[`${norm(p.name)}:${st}`], L))}</td>
     <td>${hits}/${p.last10[S.stat].length}</td>
     <td><span class="rk ${rk<=5?"hot":""}">${rk===99?"–":rk}</span></td>
     <td>${spark(p.last10[st], L)}</td></tr>`).join("");
@@ -723,7 +726,7 @@ function renderSam(){
   $("samGate").innerHTML = `<b>Gate progress:</b> A-fit ${g.a_fit_progress ?? 0} of ${g.a_fit_target} captured slates, then A-check ${g.a_check_progress ?? 0} of ${g.a_check_target}` +
     ` (${g.on_schedule_slates ?? 0} on schedule, ${g.off_schedule_slates ?? 0} off schedule). ${esc(g.note)}<br>${esc(g.step0)}`;
   const leg = x => `<tr class="${x.duplicate_of ? "fbVoid" : ""}"><td><span class="name">${esc(x.player)}</span> <span class="fbMeta">${esc(x.team)}</span></td><td>${esc(x.rung)}+</td><td>${x.side === "yes" ? "Yes" : "No"}</td>` +
-    `<td>${pc(x.model_p_shrunk)}</td><td>$${(+x.ask).toFixed(2)}</td><td>${pc(x.fee_adj_breakeven)}</td><td>${(+x.ranking_z).toFixed(3)}</td><td>${Math.round(+x.ask_size_fillable)}</td>` +
+    `<td>${pc(x.model_p_shrunk)}${revInline(isRev(S.lines[`${norm(x.player)}:${LADDER_KEY[x.stat]}`], +x.rung))}</td><td>$${(+x.ask).toFixed(2)}</td><td>${pc(x.fee_adj_breakeven)}</td><td>${(+x.ranking_z).toFixed(3)}</td><td>${Math.round(+x.ask_size_fillable)}</td>` +
     `<td>${x.ask_plus5 === "" || x.ask_plus5 == null ? "–" : "$" + (+x.ask_plus5).toFixed(2) + (String(x.ask_survived) === "1" ? " ✓" : " ✗")}</td>` +
     `<td>${x.duplicate_of ? '<span class="fbBadge">duplicate rung</span>' : x.status === "graded" ? (String(x.hit) === "1" ? "HIT" : "MISS") : x.status === "void" ? "VOID" : "pending"}</td></tr>`;
   const t = SM.tonight;
@@ -760,9 +763,9 @@ function renderSlips(){
   else $("slNote").textContent = `${dname(T.date)}: ${today.slips.length} slip${today.slips.length===1?"":"s"} ${today.final?"FINAL, graded from the box score":T.frozen?`frozen at the earliest tip (${ptTime(T.earliest_tip)})`:`open until the earliest tip (${ptTime(T.earliest_tip)}); rebuilt on each data build`}; last build ${ago(today.slips[0].built_at)} (${today.builds} build${today.builds===1?"":"s"} logged)${nb.length?`; ${nb.join("; ")}`:""}.`;
   const legRow = lg => { const st = lg.status||"pending";
     const mark = st==="hit" ? `<span class="pos">HIT</span>` : st==="miss" ? `<span class="neg">MISS</span>` : st==="void" ? `<span class="fbBadge">VOID</span> <span class="fbMeta">${lg.reason||""}</span>` : `<span class="fbMeta">pending</span>`;
-    return `<tr class="${st==="void"?"fbVoid":""}"><td><span class="name">${lg.player}</span><div class="meta">${lg.team} v ${lg.opp} &middot; tip ${ptTime(lg.tip)} &middot; ${lg.min==null?"":lg.min.toFixed(0)+" min proj"}</div></td><td>${lg.stat}</td><td>${lg.side}</td><td>${lg.line}</td><td class="big">${p1(lg.p)}</td><td>${lg.actual==null?"\u2013":lg.actual}</td><td>${mark}</td></tr>`; };
+    return `<tr class="${st==="void"?"fbVoid":""}"><td><span class="name">${lg.player}</span><div class="meta">${lg.team} v ${lg.opp} &middot; tip ${ptTime(lg.tip)} &middot; ${lg.min==null?"":lg.min.toFixed(0)+" min proj"}</div></td><td>${lg.stat}</td><td>${lg.side}</td><td>${lg.line}</td><td class="big">${p1(lg.p)}${revInline(!!LADDER_KEY[lg.stat] && overIsRev(lg.line, lg.line))}</td><td>${lg.actual==null?"\u2013":lg.actual}</td><td>${mark}</td></tr>`; };
   const slipBlock = s => `<div class="fbGame"><h2>${s.size}-leg <span class="fbMeta">joint raw P ${p1(s.joint_p)}${s.status==="hit"?' &middot; <span class="pos">HIT</span>':s.status==="miss"?` &middot; <span class="neg">${s.voids?"NOT HIT":"MISS"}</span>${s.voids?` <span class="fbBadge">${s.voids} void leg${s.voids===1?"":"s"}</span>`:""}`:""}</span></h2>
-    <p class="fbTop fbMeta">${SL.honesty}</p>
+    <p class="fbTop fbMeta">${SL.honesty}</p>${(LPL && LPL.active) ? `<p class="revNote">${LPL.label}: every points, rebounds, assists or threes leg below is a playable-rung probability (the over or under of an Underdog main line). ${LPL.why || ""}</p>` : ""}
     <div class="scroll"><table class="fbTable fbWide"><thead><tr><th>Player</th><th>Stat</th><th>Side</th><th>UD line</th><th>Raw P</th><th>Actual</th><th>Result</th></tr></thead><tbody>${s.legs.map(legRow).join("")}</tbody></table></div></div>`;
   const dateBlock = (d, label) => `<div class="slDate"><h2>${dname(d.date)} <span class="fbBadge${d.final?" fbConf":""}">${label}</span> <span class="fbMeta">built ${new Date(d.slips[0].built_at).toLocaleString("en-US",{timeZone:"America/Los_Angeles",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})} PT${d.slips[0].lines_captured_at?`, FP lines captured ${ago(d.slips[0].lines_captured_at)}`:""}</span></h2>${d.slips.map(slipBlock).join("")}</div>`;
   const blocks = [];

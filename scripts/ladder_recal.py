@@ -441,6 +441,32 @@ def ship_recal(recal, st):
     write_json(CALIB, cal)
 
 
+EXTREME = (0.05, 0.95)
+
+
+def extremes_diagnostic(m, r):
+    """Pre-registered readout diagnostic (backtests/live_recalibration_rule.md, 2026-11-16), REPORT ONLY: the map's output range,
+    how many validation rows it maps below 0.05 or above 0.95, and the ship statistic (shipped minus mapped log loss) on all
+    rows, without those rows, and on those rows alone. It never feeds the decision."""
+    grid = np.linspace(0, 1, 10001)
+    out = {"label": "report only: never part of the ship condition", "map_output_min": float(apply_map(m, grid).min()), "map_output_max": float(apply_map(m, grid).max()), "thresholds": list(EXTREME)}
+    if not len(r):
+        return {**out, "rows": 0}
+    mapped = apply_map(m, r.p_raw)
+    lo, hi = mapped < EXTREME[0], mapped > EXTREME[1]
+    la, lb = logloss(r.p, r.hit), logloss(mapped, r.hit)
+
+    def part(mask):
+        x = r[mask]
+        if not len(x):
+            return {"n": 0}
+        return {"n": int(len(x)), "player_games": LL.player_games(x), "diff_shipped_minus_mapped": round(float((la[mask] - lb[mask]).mean()), 5), "diff_ci": boot_paired(x, la[mask], lb[mask])}
+    out.update({"rows": int(len(r)), "mapped_below_0.05": {"n": int(lo.sum()), "player_games": LL.player_games(r[lo]) if lo.any() else 0},
+                "mapped_above_0.95": {"n": int(hi.sum()), "player_games": LL.player_games(r[hi]) if hi.any() else 0},
+                "all_rows": part(np.ones(len(r), bool)), "without_extremes": part(~(lo | hi)), "extremes_only": part(lo | hi)})
+    return out
+
+
 def grade():
     assert_frozen()
     recal, ms = read_json(RECAL, None), read_json(MINSIM, None)
@@ -479,6 +505,7 @@ def grade():
             recal["freeze_proof"] = {"file_sha256_before_decision": file_sha256(), "expected": FROZEN_SHA256,
                                      "maps_sha256": {st: hashlib.sha256(json.dumps([m["x"], m["y"], m["n"]], separators=(",", ":")).encode()).hexdigest() for st, m in recal["maps"].items()},
                                      "note": "written with the day-34 decision: the file hash as found before this write, and a hash of each map's x / y / n arrays, which this write does not touch"}
+            val["diagnostic_extremes"] = {st: extremes_diagnostic(m, w[w.stat == st]) for st, m in recal["maps"].items()}   # pre-registered 2026-11-16, report only
             val.update({"status": "decided", "decided_at": stamp(), "decisions": decisions, "table": table})
             recal["status"] = "decided: " + ", ".join(f"{st} {'SHIPPED' if d['ship'] else 'DROPPED'}" for st, d in decisions.items())
             write_json(RECAL, recal)
