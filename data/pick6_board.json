@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-17T18:12:19Z",
+ "captured_at": "2026-11-17T18:42:32Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -41,7 +41,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -253,7 +253,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -295,7 +295,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -379,7 +379,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.5
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -2161,7 +2161,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -2392,7 +2392,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -2455,7 +2455,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -2539,7 +2539,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -2623,7 +2623,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -2644,7 +2644,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -2665,7 +2665,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -2707,7 +2707,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -2898,7 +2898,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.6
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -3024,7 +3024,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 10.9
+       "multiplier": 10.7
       }
      ],
      "paused": false,
@@ -3087,7 +3087,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -5748,27 +5748,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Jalen Brunson",
-     "player_short": "J. Brunson",
-     "team": "NYK",
-     "position": "PG",
-     "game": "NYK @ TOR",
-     "start": "2026-11-18T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 2.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
-    },
-    {
      "player": "Mo Bamba",
      "player_short": "Mo Bamba",
      "team": "UTA",
@@ -5788,6 +5767,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 3
+    },
+    {
+     "player": "Jalen Brunson",
+     "player_short": "J. Brunson",
+     "team": "NYK",
+     "position": "PG",
+     "game": "NYK @ TOR",
+     "start": "2026-11-18T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 2.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 5
     },
     {
      "player": "Matisse Thybulle",
@@ -6168,6 +6168,27 @@
      "alt_lines": 5
     },
     {
+     "player": "Ja'Kobe Walter",
+     "player_short": "J. Walter",
+     "team": "TOR",
+     "position": "SG",
+     "game": "NYK @ TOR",
+     "start": "2026-11-18T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
+    },
+    {
      "player": "Scottie Barnes",
      "player_short": "S. Barnes",
      "team": "TOR",
@@ -6184,27 +6205,6 @@
       {
        "side": "More",
        "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
-     "player": "Ja'Kobe Walter",
-     "player_short": "J. Walter",
-     "team": "TOR",
-     "position": "SG",
-     "game": "NYK @ TOR",
-     "start": "2026-11-18T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -6267,7 +6267,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6716,12 +6716,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.4
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Ausar Thompson",
@@ -6805,7 +6805,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Darius Garland",
@@ -6913,27 +6913,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Derrick Jones Jr.",
-     "player_short": "D. Jones Jr.",
-     "team": "LAC",
-     "position": "SF",
-     "game": "UTA @ LAC",
-     "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Rudy Gobert",
      "player_short": "R. Gobert",
      "team": "MIN",
@@ -6953,6 +6932,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 2
+    },
+    {
+     "player": "Derrick Jones Jr.",
+     "player_short": "D. Jones Jr.",
+     "team": "LAC",
+     "position": "SF",
+     "game": "UTA @ LAC",
+     "start": "2026-11-18T03:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
     },
     {
      "player": "Grayson Allen",
@@ -7159,7 +7159,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.7
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -7377,7 +7377,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 3.0
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -7973,6 +7973,27 @@
      "alt_lines": 1
     },
     {
+     "player": "Devin Vassell",
+     "player_short": "D. Vassell",
+     "team": "SAS",
+     "position": "SF",
+     "game": "DET @ SAS",
+     "start": "2026-11-18T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 2.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Scottie Barnes",
      "player_short": "S. Barnes",
      "team": "TOR",
@@ -7994,27 +8015,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Devin Vassell",
-     "player_short": "D. Vassell",
-     "team": "SAS",
-     "position": "SF",
-     "game": "DET @ SAS",
-     "start": "2026-11-18T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Ja'Kobe Walter",
@@ -8248,27 +8248,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Darius Garland",
-     "player_short": "D. Garland",
-     "team": "LAC",
-     "position": "PG",
-     "game": "UTA @ LAC",
-     "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Coby White",
      "player_short": "C. White",
      "team": "CHA",
@@ -8283,6 +8262,27 @@
       {
        "side": "More",
        "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
+     "player": "Darius Garland",
+     "player_short": "D. Garland",
+     "team": "LAC",
+     "position": "PG",
+     "game": "UTA @ LAC",
+     "start": "2026-11-18T03:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -8552,7 +8552,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.8,
-   "multiplier_max": 3.1,
+   "multiplier_max": 3.3,
    "games": 5,
    "lines": [
     0.5
