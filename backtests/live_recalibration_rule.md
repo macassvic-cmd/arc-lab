@@ -80,3 +80,68 @@ Backtest page): band gap +15.2 pts, cluster CI [+9.2, +21.0]; the trigger is sti
   (`performance.json` -> diagnostic.recalibration, also `docs/data/ladder_recal.json`, rendered on the Backtest page) either way.
 - Part B of the same CEO order (minutes uncertainty) is a separate engine version under its own rule file,
   `backtests/ladder_minutes_sim_rule.md`; it runs in shadow and may not ship before this rule's validation window closes.
+
+## Addendum (2026-11-16): how the recal_v1 map was actually constructed, and its freeze
+
+Written before the day-34 readout, at the CEO's instruction (order dated 2026-11-11). Nothing in this addendum changes the map,
+the shadow log, the validation window or the ship condition. Every number below was recomputed read-only from the committed
+files on 2026-11-16; `data/ladder_recal.json` was not written.
+
+### Freeze
+
+`data/ladder_recal.json` (recal_v1) is frozen as of 2026-11-11. SHA-256 of the file on main:
+`049f22add58b737fd485b364c5cd9a4b6d2c1253ff3cc3e6f527db8d696da4bc`. It is not modified, regenerated or re-fitted before the
+day-34 readout. `scripts/ladder_recal.py` now refuses to run its shadow and grade steps if the file's hash differs while the
+validation is pending (the step fails and is reported), and the day-34 decision records the hash it found and a hash of each
+map's arrays before it writes its decision into the file.
+
+Verified 2026-11-16: all 9,755 `p_recal` values logged in `data/ladder_shadow_log.csv` (PTS rows, 2026-11-10 .. 2026-11-16)
+equal the frozen map applied to the logged `p_raw`, to the fourth decimal.
+
+### Construction, step by step (the code is `ladder_calibrate.fit_map` / `pav`, called once by `ladder_recal.py evaluate`)
+
+1. **Rows.** Every graded PTS rung of graded days 1-20 (2026-10-20 .. 2026-11-09): 11,655 rows from 2,331 player-games.
+   x = the engine's raw probability `p_raw`, y = hit (0 or 1). There are 2,815 distinct `p_raw` values among those rows.
+2. **Order.** Rows are sorted by `p_raw` with a stable sort. Rows that share a `p_raw` are NOT pooled first: they stay in the
+   graded frame's own order (date, game, player, rung) and enter the scan one at a time.
+3. **Scan (pool-adjacent-violators).** Each row is appended as its own block; while the previous block's mean is STRICTLY
+   greater than the new block's mean, the two are merged (n-weighted mean of y, n-weighted mean of x). Equal neighbours are
+   not merged.
+4. **Output.** One knot per surviving block: x = the block's mean `p_raw` rounded to 5 decimals, y = the block's hit rate
+   clipped to [0.005, 0.995] and rounded to 5 decimals, n = rows in the block.
+5. **Application.** `p_recal = clip(numpy.interp(p_raw, x, y), 0.005, 0.995)`: linear interpolation between consecutive
+   knots, constant outside the first and last knot. It is not a step function.
+
+### What "925 blocks" means
+
+The file's `blocks: 925` counts KNOTS, not distinct fitted levels. Because equal neighbours are never merged, every all-miss
+row at the bottom and every all-hit row at the top stays a single-row block:
+
+- 833 knots (1,480 rows) form the low tail: raw 0.0000 to 0.0040, fitted 0 clipped to 0.005;
+- 43 knots (43 rows) form the high tail: raw 0.9991 to 1.0000, fitted 1 clipped to 0.995;
+- 49 interior knots, one per level, carry the other 10,132 rows (largest 646 rows).
+
+So the map has **51 distinct levels** on 925 knots; 874 of the knots are single rows. Between two neighbouring levels the map
+ramps linearly from the last knot of the lower level to the first knot of the upper one (50 ramps; the widest spans raw 0.2460
+to 0.3125). Several knots share an x after rounding (874 knots across 25 x values); in every such case they also share y, so
+the interpolation is unambiguous.
+
+### How it differs from a textbook isotonic fit
+
+A textbook isotonic regression on the same rows (rows with identical `p_raw` pooled first, tied neighbours merged) gives
+**53 blocks**. Compared at probes 0.01, 0.02, ..., 0.99, the built map minus the textbook map ranges from -0.036 (at raw 0.61)
+to +0.033 (at raw 0.89), mean absolute difference 0.0057; 19 of the 99 probes differ by more than 0.01. On the 9,755 logged
+shadow rows the two differ by 0.0031 on average and 0.039 at most. In-sample log loss on the fit rows is 0.34149 for the built
+map and 0.34147 for the textbook one.
+
+The construction detail is therefore load-bearing: the unpooled ties and the strict merge rule decide where the block
+boundaries fall, and the ramps between knots decide the value between them. The validation grades the logged `p_recal`, i.e.
+THIS map, not a textbook refit of the rule text.
+
+### The Quant's 2026-11-10 finding
+
+The Quant reported 77 blocks from a pooled fit of the rule text and deviations of up to +0.050 at individual probes. I could
+not reproduce those two figures from the committed data: my textbook fit gives 53 blocks and a largest deviation of 0.036.
+The direction of the finding stands (the build's "925" is knots, and the built map is not the pooled fit); the exact figures
+depend on inputs or a pooling convention I do not have. What is reproduced exactly: re-running `fit_map` on the day 1-20 PTS
+rows returns the frozen x, y and n arrays value for value.
