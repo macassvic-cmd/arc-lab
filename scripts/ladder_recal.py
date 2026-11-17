@@ -39,6 +39,26 @@ import ladder_log as LL  # noqa: E402  (graded_snapshot, boot_ci, cluster_ids, g
 from common import DATA_DIR, ROOT, SITE_DATA, read_json, write_json  # noqa: E402
 
 RECAL = DATA_DIR / "ladder_recal.json"
+# FREEZE (CEO order dated 2026-11-11): recal_v1 is not modified, regenerated or re-fitted before the day-34 readout. The
+# validation grades the p_recal values in the shadow log; this hash is how the readout proves the map behind them never changed.
+FROZEN_SHA256 = "049f22add58b737fd485b364c5cd9a4b6d2c1253ff3cc3e6f527db8d696da4bc"
+
+
+def file_sha256(path=None):
+    import hashlib
+    return hashlib.sha256((path or RECAL).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def assert_frozen():
+    """Stop the step (non-zero exit, reported by the workflow) if the frozen map file changed while its validation is pending."""
+    if not RECAL.exists():
+        return
+    doc = read_json(RECAL, {}) or {}
+    if (doc.get("validation") or {}).get("status") != "pending":
+        return                                           # after the day-34 decision the file carries the decision
+    got = file_sha256()
+    if got != FROZEN_SHA256:
+        raise SystemExit(f"FROZEN FILE CHANGED: {RECAL.name} hashes to {got}, expected {FROZEN_SHA256}. recal_v1 must not change before the day-34 readout: step stopped.")
 MINSIM = DATA_DIR / "ladder_minsim.json"
 SHADOW = DATA_DIR / "ladder_shadow_log.csv"
 CALIB = DATA_DIR / "ladder_calibration.json"
@@ -354,6 +374,7 @@ def append_shadow(rows):
 
 
 def shadow(backfill_date=None):
+    assert_frozen()
     recal, ms = read_json(RECAL, None), read_json(MINSIM, None)
     if not recal and not ms:
         print("[shadow] nothing to shadow yet (no data/ladder_recal.json or data/ladder_minsim.json)"); return 0
@@ -421,6 +442,7 @@ def ship_recal(recal, st):
 
 
 def grade():
+    assert_frozen()
     recal, ms = read_json(RECAL, None), read_json(MINSIM, None)
     if not recal and not ms:
         print("[recal] nothing to grade yet"); return
@@ -453,6 +475,10 @@ def grade():
                     ship_recal(recal, st)
                 else:
                     log_failure({"track": "Part A live recalibration", "version": recal["version"], "stat": st, "result": "map dropped: validation days 21-34 did not beat the shipped p with a CI excluding 0", "numbers": t})
+            import hashlib
+            recal["freeze_proof"] = {"file_sha256_before_decision": file_sha256(), "expected": FROZEN_SHA256,
+                                     "maps_sha256": {st: hashlib.sha256(json.dumps([m["x"], m["y"], m["n"]], separators=(",", ":")).encode()).hexdigest() for st, m in recal["maps"].items()},
+                                     "note": "written with the day-34 decision: the file hash as found before this write, and a hash of each map's x / y / n arrays, which this write does not touch"}
             val.update({"status": "decided", "decided_at": stamp(), "decisions": decisions, "table": table})
             recal["status"] = "decided: " + ", ".join(f"{st} {'SHIPPED' if d['ship'] else 'DROPPED'}" for st, d in decisions.items())
             write_json(RECAL, recal)

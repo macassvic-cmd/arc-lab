@@ -171,6 +171,29 @@ def diagnostic(g):
                        "If the gap concentrates where minutes ran high, the cause is early-season rotations, not the probability layer. Report-only: nothing here changes the model; the only permitted live change is the pre-committed rule."]}
 
 
+def playable_min_rung(line):
+    """THE definition of a playable rung, used by the graded playable view below and published for the page: the lowest
+    playable rung for a main line is floor(line) + 1 (2.5 -> 3+, 3.0 -> 4+). Works on a number or a Series."""
+    return np.floor(np.asarray(line, dtype=float)) + 1
+
+
+PLAYABLE_LABEL = "UNDER REVIEW — DO NOT PLAY"
+
+
+def write_playable_label():
+    """docs/data/ladder_playable.json: the label the page must show on every playable-rung price, and the playable threshold as
+    a lookup (main line -> lowest playable rung) computed by playable_min_rung, so display code never re-defines it.
+    Display only (CEO order 2026-11-11): prices, logging and grading do not change. Remove only on CEO word after the day-34
+    readout (set "active" to false here)."""
+    lines = [round(0.5 * i, 1) for i in range(0, 141)]             # 0.0 .. 70.0 in half-point steps
+    write_json(SITE_DATA / "ladder_playable.json", {
+        "active": True, "label": PLAYABLE_LABEL, "since": "2026-11-11",
+        "why": "Graded days 1-20: playable rungs priced about 60% hit about 45%. The fix is in shadow until the day-34 readout.",
+        "remove": "only on CEO word after the day-34 readout",
+        "definition": "playable rung = rung >= floor(Underdog main line) + 1, the grader's own filter (scripts/ladder_log.py playable_min_rung)",
+        "min_rung_by_line": {f"{l:.1f}": int(playable_min_rung(l)) for l in lines}})
+
+
 def playable_view(g):
     """Display-only slice (2026-10-28): the graded record restricted to PLAYABLE rungs, i.e. rung >= floor(main line) + 1 for
     that player-game-stat (the Underdog main line's over plus the true alts above it; everything at or below the line is a
@@ -185,7 +208,7 @@ def playable_view(g):
     ml = ml.drop_duplicates(keys, keep="last")
     d = g.merge(ml[keys + ["line"]].rename(columns={"line": "main_line"}), on=keys, how="left")
     has = d.main_line.notna()
-    d["playable"] = has & (d.rung >= np.floor(d.main_line.astype(float)) + 1)
+    d["playable"] = has & (d.rung >= playable_min_rung(d.main_line))
     p = d[d.playable].copy()
     def counts(x):
         return {"rungs": int(len(x)), "player_game_stats": int(x.groupby(keys).ngroups) if len(x) else 0, "player_games": player_games(x)}
@@ -234,6 +257,7 @@ def grade():
                            "95% CIs are cluster bootstraps by player-game: rungs from the same player-game are correlated."}
     diag = diagnostic(g)
     play = playable_view(g)
+    write_playable_label()
     by_stat = {}
     for st in STAT_ACT:
         s = g[g.stat == st]
