@@ -145,3 +145,27 @@ not reproduce those two figures from the committed data: my textbook fit gives 5
 The direction of the finding stands (the build's "925" is knots, and the built map is not the pooled fit); the exact figures
 depend on inputs or a pooling convention I do not have. What is reproduced exactly: re-running `fit_map` on the day 1-20 PTS
 rows returns the frozen x, y and n arrays value for value.
+
+### Pre-registered readout diagnostic: extreme map outputs (registered 2026-11-16, REPORT ONLY)
+
+Registered before the day-34 readout, at the CEO's instruction. It changes nothing: not the frozen map, not the validation
+window, not the ship condition, and its result cannot convert a ship into a drop or a drop into a ship. It is written into the
+decision record (`validation.diagnostic_extremes` in `data/ladder_recal.json`) at the same moment as the decision and is not
+computed on outcomes before then.
+
+Reported at the readout, per stat with a map (PTS):
+
+1. the map's minimum and maximum output over raw probabilities 0 to 1;
+2. the number of validation rows (graded rungs of days 21-34) whose mapped probability is above 0.95 or below 0.05, each count
+   given separately, with the number of player-games they come from;
+3. the validation log-loss difference (shipped minus mapped, the ship condition's own statistic, same player-game cluster
+   bootstrap) three ways: on all validation rows, on the rows WITHOUT those extreme rows, and on the extreme rows alone.
+
+Why: the map's tails are 876 single-row knots clipped to 0.005 and 0.995, so a large share of rows can be mapped to near-certain
+values; this shows how much of any validation result rests on them.
+
+Outcome-free facts as of 2026-11-16 (no hit or miss was read to produce these): the map's output ranges from 0.005 to 0.995.
+Raw probabilities at or below 0.0855 map under 0.05; raw probabilities at or above 0.9904 map over 0.95. Of the 4,255 PTS shadow
+rows logged so far that the grader would use (last pre-tip snapshot per rung, 2026-11-10 .. 2026-11-16), 1,730 are mapped below
+0.05 and 81 above 0.95: 42.6% of rows. By rung, below 0.05: 15+ 107, 20+ 334, 25+ 578, 30+ 711; above 0.95: 10+ 63, 15+ 12,
+20+ 6. The log-loss differences (item 3) need outcomes and are computed only at the readout.
