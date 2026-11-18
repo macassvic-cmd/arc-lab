@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-18T02:51:28Z",
+ "captured_at": "2026-11-18T03:21:29Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -34,7 +34,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -55,7 +57,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -97,7 +101,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -118,7 +124,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -139,7 +147,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -160,7 +170,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -181,7 +193,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -223,7 +237,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -370,7 +386,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -391,7 +409,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -441,7 +461,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -462,7 +484,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -483,7 +507,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -504,7 +530,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -525,7 +553,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -546,7 +576,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -693,7 +725,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -750,27 +784,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Rui Hachimura",
-     "player_short": "R. Hachimura",
-     "team": "LAC",
-     "position": "SF",
-     "game": "UTA @ LAC",
-     "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Jake LaRavia",
      "player_short": "J. LaRavia",
      "team": "LAL",
@@ -792,13 +805,38 @@
      "alt_lines": 0
     },
     {
+     "player": "Rui Hachimura",
+     "player_short": "R. Hachimura",
+     "team": "LAC",
+     "position": "SF",
+     "game": "UTA @ LAC",
+     "start": "2026-11-18T03:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Mo Bamba",
      "player_short": "Mo Bamba",
      "team": "UTA",
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -819,7 +857,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -848,7 +888,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -869,7 +911,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -932,7 +976,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -953,7 +999,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1037,7 +1085,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1058,7 +1108,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1079,7 +1131,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1121,7 +1175,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1163,7 +1219,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1226,7 +1284,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1276,7 +1336,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1297,7 +1359,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1318,7 +1382,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1339,7 +1405,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1347,6 +1415,29 @@
       {
        "side": "Yes",
        "multiplier": 3.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Mo Bamba",
+     "player_short": "Mo Bamba",
+     "team": "UTA",
+     "position": "C",
+     "game": "UTA @ LAC",
+     "start": "2026-11-18T03:40:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -1368,27 +1459,6 @@
       {
        "side": "Yes",
        "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Mo Bamba",
-     "player_short": "Mo Bamba",
-     "team": "UTA",
-     "position": "C",
-     "game": "UTA @ LAC",
-     "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -1549,7 +1619,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1570,7 +1642,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1591,7 +1665,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1612,7 +1688,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1633,7 +1711,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1683,7 +1763,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1767,7 +1849,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1809,7 +1893,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1830,7 +1916,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1851,7 +1939,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1872,7 +1962,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1893,7 +1985,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1914,7 +2008,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1935,7 +2031,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -1956,7 +2054,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -2027,7 +2127,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2132,7 +2234,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2153,7 +2257,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2195,7 +2301,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2237,7 +2345,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2300,7 +2410,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 1.5,
@@ -2321,7 +2433,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 1.5,
@@ -2342,7 +2456,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2384,7 +2500,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2405,7 +2523,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -2518,7 +2638,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2560,7 +2682,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2581,7 +2705,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2602,7 +2728,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2623,7 +2751,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 1.5,
@@ -2644,7 +2774,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2707,7 +2839,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2749,7 +2883,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2777,7 +2913,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.7
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -2791,7 +2927,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2833,7 +2971,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -2925,7 +3065,9 @@
      "position": "SG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -2946,7 +3088,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -2988,7 +3132,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3009,7 +3155,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3037,7 +3185,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 4.0
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -3072,7 +3220,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3093,7 +3243,9 @@
      "position": "C",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3114,7 +3266,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3135,7 +3289,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3198,7 +3354,9 @@
      "position": "PG",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3261,7 +3419,9 @@
      "position": "SF",
      "game": "UTA @ LAC",
      "start": "2026-11-18T03:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -3478,7 +3638,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 1.7,
+   "multiplier_max": 1.8,
    "games": 2,
    "lines": [
     0.5,
@@ -3495,7 +3655,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.8,
-   "multiplier_max": 4.0,
+   "multiplier_max": 3.9,
    "games": 2,
    "lines": [
     0.5
