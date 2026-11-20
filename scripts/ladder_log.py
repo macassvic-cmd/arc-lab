@@ -194,6 +194,13 @@ def write_playable_label():
         "min_rung_by_line": {f"{l:.1f}": int(playable_min_rung(l)) for l in lines}})
 
 
+def rung_blocks(s):
+    """by_rung for one stat's rows: per rung the record block, mean P, Brier, probability buckets and the >= 55/60/65/70% bands.
+    Used for the full record and (2026-11-20) for the playable rows, so the two cuts cannot drift apart."""
+    return {str(k): {**block(r), "mean_p": round(float(r.p.mean()), 4), "brier": round(float(((r.p - r.hit) ** 2).mean()), 4), "buckets": bucket_table(r),
+                     "tiers": {str(t): block(r[r.p >= t]) for t in TIERS}} for k, r in s.groupby("rung")}
+
+
 def playable_view(g):
     """Display-only slice (2026-10-28): the graded record restricted to PLAYABLE rungs, i.e. rung >= floor(main line) + 1 for
     that player-game-stat (the Underdog main line's over plus the true alts above it; everything at or below the line is a
@@ -220,7 +227,7 @@ def playable_view(g):
     return {"label": "Playable rungs only: rung >= floor(Underdog main line) + 1",
             "definition": "A rung counts only if rung >= floor(main line) + 1 for that player-game-stat: the main line's over and the true alts above it. Rungs at or below the line are negative alts and are excluded. Player-game-stats with no recorded main line are excluded and counted below.",
             "source": "data/main_lines.csv (main_lines.py): the Underdog board capture lines.json is built from, recorded at ladder snapshot time; 3PM history backfilled from data/ud_prices.csv; last pre-tip capture per player-game-stat wins.",
-            "overall": block(p), "by_stat": {st: block(p[p.stat == st]) for st in STAT_ACT}, "tiers": tiers, "calibration": calibration,
+            "overall": block(p), "by_stat": {st: {**block(p[p.stat == st]), "by_rung": rung_blocks(p[p.stat == st])} for st in STAT_ACT}, "tiers": tiers, "calibration": calibration,
             "with_line": split(d[has]), "dropped_missing_line": split(d[~has]), "excluded_below_line": split(d[has & ~d.playable]),
             "lines_file": {"rows": int(len(ml)), "first_date": str(ml.date.min()) if len(ml) else None, "last_date": str(ml.date.max()) if len(ml) else None,
                            "by_stat": {st: int((ml.stat == st).sum()) for st in STAT_ACT}},
@@ -262,8 +269,7 @@ def grade():
     for st in STAT_ACT:
         s = g[g.stat == st]
         by_stat[st] = {**block(s), "brier": round(float(((s.p - s.hit) ** 2).mean()), 4) if len(s) else None,
-                       "by_rung": {str(k): {**block(r), "mean_p": round(float(r.p.mean()), 4), "brier": round(float(((r.p - r.hit) ** 2).mean()), 4), "buckets": bucket_table(r),
-                                            "tiers": {str(t): block(r[r.p >= t]) for t in TIERS}} for k, r in s.groupby("rung")}}
+                       "by_rung": rung_blocks(s)}
     by_pos = {pos: {**block(s), "by_stat": {st: block(s[s.stat == st]) for st in STAT_ACT}} for pos, s in g.groupby("pos")}
     players = [{"player": name, "player_id": pid, "team": s.team.iloc[-1], "pos": s.pos.iloc[-1], **block(s), "by_stat": {st: block(s[s.stat == st]) for st in STAT_ACT if (s.stat == st).any()}}
                for (pid, name), s in g.groupby(["player_id", "player"])]

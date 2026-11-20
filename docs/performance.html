@@ -118,7 +118,7 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   <h2>By position <span>descriptive: which rungs players at each position reach, not a quality measure</span></h2>
   <div class="scroll"><table id="byPos"></table></div>
 
-  <h2>By stat and rung <span>calibration: probability buckets × hit rate × n</span></h2>
+  <h2>By stat and rung <span id="exSub">calibration: probability buckets × hit rate × n</span></h2>
   <div class="controls">
     <select id="fStat" aria-label="Stat"><option value="tpm">3PM</option><option value="pts">PTS</option><option value="ast">AST</option><option value="reb">REB</option></select>
     <select id="fRung" aria-label="Rung"></select>
@@ -126,8 +126,8 @@ ul.notes{padding-left:18px;color:var(--muted);font-size:14px}
   </div>
   <div class="stats" id="rungCards"></div>
   <div class="scroll"><table id="cal"></table></div>
-  <p class="foot">Cells with fewer than 30 graded rungs are flagged thin. A calibrated model's "hit" column matches "model said" in every row.</p>
-  <h3>Players <span class="foot">graded rungs for the selected stat</span></h3>
+  <p class="foot"><span id="exFoot"></span> Cards and cells with fewer than 30 graded rungs are flagged thin. A calibrated model's "hit" column matches "model said" in every row.</p>
+  <h3>Players <span class="foot">graded rungs for the selected stat, all rungs (the playable checkbox does not filter this table)</span></h3>
   <div class="scroll"><table id="players"></table></div>
   <h3>Recent picks <span class="foot" id="recentNote"></span></h3>
   <div class="scroll"><table id="recent"></table></div>
@@ -301,6 +301,7 @@ function rerenderView(){
   writeView();
   section("shipped tiers", ["tierCards"], renderTiers); section("calibration line", ["calLine"], renderCalLine);
   if(R && R.overall && R.overall.n) section("calibration", ["calCards"], renderCalSection);
+  if(R && R.by_stat) section("rung explorer", ["rungCards"], renderStat);
 }
 $("vStat").onchange = e => { VIEW.stat = e.target.value; rerenderView(); };
 $("vPlay").onchange = e => { VIEW.playable = e.target.checked; rerenderView(); };
@@ -370,7 +371,16 @@ function renderDetails(){
 }
 
 function renderStat(){
-  const st = S.stat, B = R.by_stat[st], rungs = Object.keys(B.by_rung).map(Number).sort((a,b)=>a-b);
+  // Population (2026-11-20): the same "Playable rungs only" checkbox as the tier cards. Checked = the grader's playable blocks
+  // (R.playable.by_stat[stat].by_rung and R.playable.tiers); unchecked = the full record. Nothing is filtered or recomputed here.
+  const st = S.stat, PB = R.playable && R.playable.by_stat && R.playable.by_stat[st];
+  const play = !!(VIEW.playable && PB && PB.by_rung), B = play ? PB : R.by_stat[st], TT = play ? R.playable.tiers : R.tiers;
+  const rungs = Object.keys(B.by_rung).map(Number).sort((a,b)=>a-b);
+  const thinTag = n => n < 30 ? ` <span class="thin">n ${n}</span>` : "";
+  $("exSub").textContent = `${play ? "PLAYABLE RUNGS ONLY" : "ALL GRADED RUNGS"} · calibration: probability buckets × hit rate × n`;
+  $("exFoot").textContent = play ? "Showing playable rungs only (rung ≥ floor(Underdog main line) + 1; player-game-stats with no recorded main line are excluded): the same population as the playable tier cards above."
+    : VIEW.playable ? "The playable cut by rung is not published yet (it arrives with the next data build): showing all graded rungs."
+    : "Showing all graded rungs (the full record). Tick \"Playable rungs only\" at the top to switch this explorer to the playable cut.";
   const sel = $("fRung"); const cur = S.rung;
   sel.innerHTML = `<option value="all">All rungs</option>` + rungs.map(k=>`<option value="${k}">${NAMES[st]} ${k}+</option>`).join("");
   sel.value = rungs.includes(Number(cur)) ? cur : "all"; S.rung = sel.value;
@@ -379,8 +389,8 @@ function renderStat(){
   const buckets = S.rung==="all" ? merge() : B.by_rung[S.rung].buckets;
   const tot = blocks.reduce((a,b)=>({n:a.n+b.n,hits:a.hits+b.hits}),{n:0,hits:0});
   const pgN = S.rung==="all" ? B.player_games : B.by_rung[S.rung].player_games;
-  $("rungCards").innerHTML = [card(`${tot.hits}-${tot.n-tot.hits}`, `${NAMES[st]} ${S.rung==="all"?"all rungs":S.rung+"+"} record · ${pgN} player-games`), card(pct(tot.n?tot.hits/tot.n:null),"hit rate"),
-    ...R.tiers.map(t=>{ const b = S.rung==="all" ? t.by_stat[st] : B.by_rung[S.rung].tiers[String(t.min_p)]; return card(b&&b.n?pct(b.hit_rate):"–", `≥ ${Math.round(t.min_p*100)}%: predicted ${b&&b.n?pct(b.mean_p):"–"} · ${b&&b.n?b.record:"–"}`); })].join("");
+  $("rungCards").innerHTML = [card(`${tot.hits}-${tot.n-tot.hits}`, `${NAMES[st]} ${S.rung==="all"?(play?"all playable rungs":"all rungs"):S.rung+"+"+(play?" playable":"")} record · ${pgN} player-games${thinTag(tot.n)}`), card(pct(tot.n?tot.hits/tot.n:null),`hit rate${thinTag(tot.n)}`),
+    ...TT.map(t=>{ const b = S.rung==="all" ? t.by_stat[st] : B.by_rung[S.rung].tiers[String(t.min_p)]; return card(b&&b.n?pct(b.hit_rate):"–", `≥ ${Math.round(t.min_p*100)}%: predicted ${b&&b.n?pct(b.mean_p):"–"} · ${b&&b.n?b.record:"–"}${thinTag(b?b.n:0)}`); })].join("");
   $("cal").innerHTML = `<thead><tr><th>Model said</th><th>n</th><th>Mean P</th><th>Hit</th><th>Gap</th></tr></thead><tbody>${buckets.map(b=>`<tr><td>${Math.round(b.lo*100)}–${Math.round(b.hi*100)}%</td><td class="${b.thin?"thin":""}">${b.n}</td><td>${pct(b.pred)}</td><td>${pct(b.actual)}</td><td class="${b.n&&b.actual-b.pred<-0.05?"neg":b.n&&b.actual-b.pred>0.05?"pos":""}">${b.n?((b.actual-b.pred)>=0?"+":"")+((b.actual-b.pred)*100).toFixed(1)+" pts":"–"}</td></tr>`).join("")}</tbody>`;
   const q = norm(S.q);
   const pl = R.players.filter(p=>p.by_stat[st] && (!q || norm(p.player).includes(q))).slice(0,60);
