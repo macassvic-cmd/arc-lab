@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-20T19:19:10Z",
+ "captured_at": "2026-11-20T19:49:16Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -83,7 +83,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -721,7 +721,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.4
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -1246,7 +1246,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -1288,7 +1288,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -3865,7 +3865,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.4
       }
      ],
      "paused": false,
@@ -4014,7 +4014,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -4142,7 +4142,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -4163,7 +4163,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -4713,7 +4713,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -4923,7 +4923,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 16.8
+       "multiplier": 16.9
       }
      ],
      "paused": false,
@@ -5227,27 +5227,6 @@
      "alt_lines": 0
     },
     {
-     "player": "James Harden",
-     "player_short": "J. Harden",
-     "team": "CLE",
-     "position": "PG",
-     "game": "IND @ CLE",
-     "start": "2026-11-21T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Luka Doncic",
      "player_short": "L. Doncic",
      "team": "LAL",
@@ -5262,6 +5241,27 @@
       {
        "side": "Yes",
        "multiplier": 2.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "James Harden",
+     "player_short": "J. Harden",
+     "team": "CLE",
+     "position": "PG",
+     "game": "IND @ CLE",
+     "start": "2026-11-21T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -7284,27 +7284,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Alexandre Sarr",
-     "player_short": "A. Sarr",
-     "team": "WAS",
-     "position": "C",
-     "game": "WAS @ CHI",
-     "start": "2026-11-21T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Trey Murphy III",
      "player_short": "T. Murphy III",
      "team": "NOP",
@@ -7321,6 +7300,27 @@
       {
        "side": "Yes",
        "multiplier": 1.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Alexandre Sarr",
+     "player_short": "A. Sarr",
+     "team": "WAS",
+     "position": "C",
+     "game": "WAS @ CHI",
+     "start": "2026-11-21T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -9511,11 +9511,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -10180,27 +10180,6 @@
      "alt_lines": 3
     },
     {
-     "player": "Darryn Peterson",
-     "player_short": "D. Peterson",
-     "team": "UTA",
-     "position": "SG",
-     "game": "PHX @ UTA",
-     "start": "2026-11-21T02:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
-    },
-    {
      "player": "Jalen Johnson",
      "player_short": "J. Johnson",
      "team": "ATL",
@@ -10220,6 +10199,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 4
+    },
+    {
+     "player": "Darryn Peterson",
+     "player_short": "D. Peterson",
+     "team": "UTA",
+     "position": "SG",
+     "game": "PHX @ UTA",
+     "start": "2026-11-21T02:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 5
     },
     {
      "player": "Julius Randle",
@@ -11028,27 +11028,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Tyrese Proctor",
-     "player_short": "T. Proctor",
-     "team": "CLE",
-     "position": "SG",
-     "game": "IND @ CLE",
-     "start": "2026-11-21T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
      "player": "Day'Ron Sharpe",
      "player_short": "D. Sharpe",
      "team": "BKN",
@@ -11068,6 +11047,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 3
+    },
+    {
+     "player": "Tyrese Proctor",
+     "player_short": "T. Proctor",
+     "team": "CLE",
+     "position": "SG",
+     "game": "IND @ CLE",
+     "start": "2026-11-21T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
     },
     {
      "player": "Kevin Huerter",
@@ -11408,12 +11408,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.5
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Keyonte George",
@@ -11837,7 +11837,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Desmond Bane",
@@ -12560,27 +12560,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Matas Buzelis",
-     "player_short": "M. Buzelis",
-     "team": "CHI",
-     "position": "PF",
-     "game": "WAS @ CHI",
-     "start": "2026-11-21T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Kyshawn George",
      "player_short": "K. George",
      "team": "WAS",
@@ -12595,6 +12574,27 @@
       {
        "side": "More",
        "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
+     "player": "Matas Buzelis",
+     "player_short": "M. Buzelis",
+     "team": "CHI",
+     "position": "PF",
+     "game": "WAS @ CHI",
+     "start": "2026-11-21T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -12686,27 +12686,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Trae Young",
-     "player_short": "T. Young",
-     "team": "WAS",
-     "position": "PG",
-     "game": "WAS @ CHI",
-     "start": "2026-11-21T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Isaiah Hartenstein",
      "player_short": "I. Hartenstein",
      "team": "OKC",
@@ -12726,6 +12705,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 2
+    },
+    {
+     "player": "Trae Young",
+     "player_short": "T. Young",
+     "team": "WAS",
+     "position": "PG",
+     "game": "WAS @ CHI",
+     "start": "2026-11-21T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 2.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Zach LaVine",
@@ -13087,7 +13087,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -13861,12 +13861,12 @@
      "alt_lines": 1
     },
     {
-     "player": "Kyshawn George",
-     "player_short": "K. George",
-     "team": "WAS",
-     "position": "SF",
-     "game": "WAS @ CHI",
-     "start": "2026-11-21T01:10:00.0000000+00:00",
+     "player": "Day'Ron Sharpe",
+     "player_short": "D. Sharpe",
+     "team": "BKN",
+     "position": "PF",
+     "game": "ORL @ BKN",
+     "start": "2026-11-21T00:40:00.0000000+00:00",
      "status_tags": [],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
@@ -13882,12 +13882,12 @@
      "alt_lines": 1
     },
     {
-     "player": "Day'Ron Sharpe",
-     "player_short": "D. Sharpe",
-     "team": "BKN",
-     "position": "PF",
-     "game": "ORL @ BKN",
-     "start": "2026-11-21T00:40:00.0000000+00:00",
+     "player": "Kyshawn George",
+     "player_short": "K. George",
+     "team": "WAS",
+     "position": "SF",
+     "game": "WAS @ CHI",
+     "start": "2026-11-21T01:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
@@ -14196,7 +14196,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Tyrese Proctor",
@@ -14388,27 +14388,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Josh Giddey",
-     "player_short": "J. Giddey",
-     "team": "CHI",
-     "position": "SG",
-     "game": "WAS @ CHI",
-     "start": "2026-11-21T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 2
-    },
-    {
      "player": "Alexandre Sarr",
      "player_short": "A. Sarr",
      "team": "WAS",
@@ -14428,6 +14407,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
+    },
+    {
+     "player": "Josh Giddey",
+     "player_short": "J. Giddey",
+     "team": "CHI",
+     "position": "SG",
+     "game": "WAS @ CHI",
+     "start": "2026-11-21T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 2
     },
     {
      "player": "Pascal Siakam",
@@ -15057,7 +15057,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.0,
-   "multiplier_max": 16.8,
+   "multiplier_max": 16.9,
    "games": 8,
    "lines": []
   },
