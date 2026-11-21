@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-21T20:36:16Z",
+ "captured_at": "2026-11-21T21:06:53Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -20,7 +20,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -62,7 +62,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -146,7 +146,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -251,7 +251,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -272,7 +272,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -314,7 +314,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3
       }
      ],
      "paused": false,
@@ -377,7 +377,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.1
+       "multiplier": 6
       }
      ],
      "paused": false,
@@ -400,7 +400,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -421,7 +421,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 6.1
       }
      ],
      "paused": false,
@@ -484,7 +484,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -547,7 +547,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -568,7 +568,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.7
+       "multiplier": 5.4
       }
      ],
      "paused": false,
@@ -631,7 +631,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -652,30 +652,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Point",
-     "dk_market": "1st Points Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 5.7
       }
      ],
      "paused": false,
@@ -698,30 +675,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Point",
-     "dk_market": "1st Points Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -910,7 +864,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -1015,7 +969,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -1178,27 +1132,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Domantas Sabonis",
      "player_short": "D. Sabonis",
      "team": "SAC",
@@ -1301,50 +1234,6 @@
       {
        "side": "Yes",
        "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
-     "position": "C",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -1478,29 +1367,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Jaden McDaniels",
      "player_short": "J. McDaniels",
      "team": "MIN",
@@ -1515,27 +1381,6 @@
       {
        "side": "Yes",
        "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Paul George",
-     "player_short": "P. George",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -1585,27 +1430,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Victor Wembanyama",
-     "player_short": "V. Wembanyama",
-     "team": "SAS",
-     "position": "PF",
-     "game": "NOP @ SAS",
-     "start": "2026-11-22T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Keegan Murray",
      "player_short": "K. Murray",
      "team": "SAC",
@@ -1620,6 +1444,27 @@
       {
        "side": "Yes",
        "multiplier": 2.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Victor Wembanyama",
+     "player_short": "V. Wembanyama",
+     "team": "SAS",
+     "position": "PF",
+     "game": "NOP @ SAS",
+     "start": "2026-11-22T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -1934,7 +1779,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.2
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -1997,7 +1842,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2152,7 +1997,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -2194,7 +2039,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -2216,48 +2061,6 @@
       {
        "side": "Yes",
        "multiplier": 3.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
-     "position": "C",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 28.2
-      }
-     ],
-     "paused": true,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -2320,7 +2123,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.4
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -2341,7 +2144,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.0
+       "multiplier": 5.9
       }
      ],
      "paused": false,
@@ -2391,29 +2194,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Ayo Dosunmu",
      "player_short": "A. Dosunmu",
      "team": "MIN",
@@ -2428,29 +2208,6 @@
       {
        "side": "Yes",
        "multiplier": 3.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -2555,7 +2312,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.0
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -2597,7 +2354,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -2681,7 +2438,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2702,7 +2459,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -2765,7 +2522,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -2828,7 +2585,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -2933,7 +2690,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -2977,7 +2734,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -2998,7 +2755,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -3040,7 +2797,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.6
+       "multiplier": 5.7
       }
      ],
      "paused": false,
@@ -3126,7 +2883,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -3921,27 +3678,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Paul George",
-     "player_short": "P. George",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Darius Acuff Jr.",
      "player_short": "D. Acuff Jr.",
      "team": "SAC",
@@ -3956,29 +3692,6 @@
       {
        "side": "Yes",
        "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -4070,27 +3783,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
-     "position": "C",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 17.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Deni Avdija",
      "player_short": "D. Avdija",
      "team": "POR",
@@ -4107,50 +3799,6 @@
       {
        "side": "Yes",
        "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -4252,71 +3900,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 17.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Paul George",
-     "player_short": "P. George",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 10.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
-     "position": "C",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Brook Lopez",
      "player_short": "B. Lopez",
      "team": "LAC",
@@ -4380,27 +3963,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Darius Acuff Jr.",
-     "player_short": "D. Acuff Jr.",
-     "team": "SAC",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 13.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Devin Vassell",
      "player_short": "D. Vassell",
      "team": "SAS",
@@ -4415,27 +3977,6 @@
       {
        "side": "Yes",
        "multiplier": 11.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Domantas Sabonis",
-     "player_short": "D. Sabonis",
-     "team": "SAC",
-     "position": "PF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -4548,27 +4089,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Zach LaVine",
-     "player_short": "Z. LaVine",
-     "team": "SAC",
-     "position": "SG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Cooper Flagg",
      "player_short": "C. Flagg",
      "team": "DAL",
@@ -4583,27 +4103,6 @@
       {
        "side": "Yes",
        "multiplier": 2.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Keegan Murray",
-     "player_short": "K. Murray",
-     "team": "SAC",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -4667,29 +4166,6 @@
       {
        "side": "Yes",
        "multiplier": 4.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -4825,27 +4301,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Herbert Jones",
      "player_short": "H. Jones",
      "team": "NOP",
@@ -4881,27 +4336,6 @@
       {
        "side": "Yes",
        "multiplier": 11.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "De'Andre Hunter",
-     "player_short": "D. Hunter",
-     "team": "SAC",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 9.5
       }
      ],
      "paused": false,
@@ -5245,7 +4679,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -5269,29 +4703,6 @@
       {
        "side": "More",
        "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
-    },
-    {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 2.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -5606,7 +5017,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -5691,29 +5102,6 @@
       {
        "side": "More",
        "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -5889,27 +5277,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Neemias Queta",
-     "player_short": "N. Queta",
-     "team": "BOS",
-     "position": "C",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
-    },
-    {
      "player": "Damian Lillard",
      "player_short": "D. Lillard",
      "team": "POR",
@@ -5929,6 +5296,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
+    },
+    {
+     "player": "Neemias Queta",
+     "player_short": "N. Queta",
+     "team": "BOS",
+     "position": "C",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 3
     },
     {
      "player": "Landry Shamet",
@@ -5971,27 +5359,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
     },
     {
      "player": "Ty Jerome",
@@ -6068,11 +5435,11 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 2.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -6089,11 +5456,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 2.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -6613,29 +5980,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "De'Aaron Fox",
      "player_short": "D. Fox",
      "team": "SAS",
@@ -6733,7 +6077,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6840,7 +6184,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -6885,29 +6229,6 @@
       {
        "side": "More",
        "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -7076,27 +6397,6 @@
       {
        "side": "More",
        "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -7641,29 +6941,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Derrick White",
-     "player_short": "D. White",
-     "team": "BOS",
-     "position": "PG",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Zach Edey",
      "player_short": "Z. Edey",
      "team": "MEM",
@@ -7874,29 +7151,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jayson Tatum",
-     "player_short": "J. Tatum",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Brook Lopez",
      "player_short": "B. Lopez",
      "team": "LAC",
@@ -7936,7 +7190,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Victor Wembanyama",
@@ -8015,28 +7269,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -8170,8 +7403,8 @@
  "notes": [],
  "summary": {
   "1st Point": {
-   "cards": 50,
-   "open": 50,
+   "cards": 48,
+   "open": 48,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8184,36 +7417,36 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 50,
-   "open": 50,
+   "cards": 45,
+   "open": 45,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 1.2,
-   "multiplier_max": 3.6,
+   "multiplier_min": 1.3,
+   "multiplier_max": 3.3,
    "games": 5,
    "lines": []
   },
   "1st Three": {
-   "cards": 47,
-   "open": 43,
-   "paused": 4,
+   "cards": 43,
+   "open": 40,
+   "paused": 3,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.1,
-   "multiplier_max": 6.0,
+   "multiplier_max": 5.9,
    "games": 5,
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 48,
-   "open": 46,
+   "cards": 43,
+   "open": 41,
    "paused": 2,
    "locked": 0,
    "sides_offered": [
@@ -8221,13 +7454,13 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 1.1,
-   "multiplier_max": 17.1,
+   "multiplier_max": 10.4,
    "games": 5,
    "lines": []
   },
   "1st Dunk": {
-   "cards": 46,
-   "open": 41,
+   "cards": 36,
+   "open": 31,
    "paused": 5,
    "locked": 0,
    "sides_offered": [
@@ -8236,12 +7469,12 @@
    "cards_with_less": 0,
    "multiplier_min": 0.9,
    "multiplier_max": 19.6,
-   "games": 5,
+   "games": 4,
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 46,
-   "open": 46,
+   "cards": 43,
+   "open": 43,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8249,7 +7482,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 1.4,
+   "multiplier_max": 1.3,
    "games": 5,
    "lines": [
     0.5,
@@ -8258,8 +7491,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 46,
-   "open": 46,
+   "cards": 43,
+   "open": 43,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8275,8 +7508,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 46,
-   "open": 46,
+   "cards": 43,
+   "open": 43,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
