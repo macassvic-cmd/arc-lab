@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-21T14:31:43Z",
+ "captured_at": "2026-11-21T15:02:08Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -41,7 +41,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.6
+       "multiplier": 6.7
       }
      ],
      "paused": false,
@@ -251,7 +251,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -293,7 +293,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -335,7 +335,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -545,7 +545,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.4
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -566,7 +566,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -692,7 +692,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.5
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -755,7 +755,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -797,7 +797,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.1
+       "multiplier": 6.4
       }
      ],
      "paused": false,
@@ -1057,7 +1057,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -1120,7 +1120,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -1206,7 +1206,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -1229,7 +1229,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -1273,7 +1273,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -1415,27 +1415,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "VJ Edgecombe",
      "player_short": "VJ Edgecombe",
      "team": "PHI",
@@ -1450,6 +1429,27 @@
       {
        "side": "Yes",
        "multiplier": 2.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Jordan Walsh",
+     "player_short": "J. Walsh",
+     "team": "BOS",
+     "position": "SF",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -1992,7 +1992,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -2013,7 +2013,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -2034,7 +2034,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2078,7 +2078,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -2099,7 +2099,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -2248,7 +2248,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -2292,7 +2292,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.8
+       "multiplier": 6.7
       }
      ],
      "paused": false,
@@ -2439,7 +2439,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -2460,7 +2460,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 22.8
+       "multiplier": 22.6
       }
      ],
      "paused": true,
@@ -2544,7 +2544,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2607,7 +2607,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.6
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -2628,7 +2628,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -2649,7 +2649,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -2670,7 +2670,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.8
+       "multiplier": 5.7
       }
      ],
      "paused": false,
@@ -2691,7 +2691,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -2754,7 +2754,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -2819,7 +2819,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -2882,7 +2882,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -2970,7 +2970,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -3077,7 +3077,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 26.2
+       "multiplier": 26.1
       }
      ],
      "paused": true,
@@ -4426,7 +4426,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 4
+     "alt_lines": 5
     },
     {
      "player": "Nate Ament",
@@ -4587,7 +4587,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -4612,7 +4612,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -4803,7 +4803,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -5036,7 +5036,7 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -5120,11 +5120,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 2.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.7
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -5332,7 +5332,7 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -5619,7 +5619,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -5955,7 +5955,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -6115,7 +6115,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "De'Aaron Fox",
@@ -6236,7 +6236,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6607,7 +6607,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.5
+       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -6651,7 +6651,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6970,7 +6970,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 3.0
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -7096,7 +7096,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.0
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -7138,7 +7138,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.7
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -7863,7 +7863,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.2,
-   "multiplier_max": 6.8,
+   "multiplier_max": 6.7,
    "games": 6,
    "lines": []
   },
@@ -7940,7 +7940,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.8,
-   "multiplier_max": 3.0,
+   "multiplier_max": 3.1,
    "games": 6,
    "lines": [
     0.5
