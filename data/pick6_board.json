@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-21T01:21:51Z",
+ "captured_at": "2026-11-21T01:52:14Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -83,7 +83,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -104,7 +104,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -167,7 +167,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.6
+       "multiplier": 6.5
       }
      ],
      "paused": false,
@@ -181,16 +181,14 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -213,7 +211,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -297,7 +295,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -318,7 +316,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -444,7 +442,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -465,7 +463,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -549,7 +547,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.3
+       "multiplier": 6.4
       }
      ],
      "paused": false,
@@ -655,9 +653,7 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -918,7 +914,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.0
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -1107,7 +1103,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -1398,6 +1394,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Domantas Sabonis",
+     "player_short": "D. Sabonis",
+     "team": "SAC",
+     "position": "PF",
+     "game": "SAC @ LAL",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 23.1
+      }
+     ],
+     "paused": true,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Josh Green",
      "player_short": "J. Green",
      "team": "UTA",
@@ -1415,27 +1432,6 @@
       }
      ],
      "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Domantas Sabonis",
-     "player_short": "D. Sabonis",
-     "team": "SAC",
-     "position": "PF",
-     "game": "SAC @ LAL",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 23.7
-      }
-     ],
-     "paused": true,
      "locked": false,
      "alt_lines": 0
     },
@@ -1482,27 +1478,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Keegan Murray",
-     "player_short": "K. Murray",
-     "team": "SAC",
-     "position": "SF",
-     "game": "SAC @ LAL",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Ziaire Williams",
      "player_short": "Z. Williams",
      "team": "LAL",
@@ -1524,6 +1499,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Keegan Murray",
+     "player_short": "K. Murray",
+     "team": "SAC",
+     "position": "SF",
+     "game": "SAC @ LAL",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Matisse Thybulle",
      "player_short": "M. Thybulle",
      "team": "LAL",
@@ -1537,7 +1533,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -1558,7 +1554,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 17.8
+       "multiplier": 17.2
       }
      ],
      "paused": false,
@@ -1663,7 +1659,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -2231,9 +2227,7 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -2684,9 +2678,7 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -2762,27 +2754,6 @@
       }
      ],
      "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Fred VanVleet",
-     "player_short": "F. VanVleet",
-     "team": "HOU",
-     "position": "PG",
-     "game": "HOU @ DEN",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 28.2
-      }
-     ],
-     "paused": true,
      "locked": false,
      "alt_lines": 0
     },
@@ -2871,27 +2842,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Luka Doncic",
-     "player_short": "L. Doncic",
-     "team": "LAL",
-     "position": "PG",
-     "game": "SAC @ LAL",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 28.2
-      }
-     ],
-     "paused": true,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Cameron Johnson",
      "player_short": "C. Johnson",
      "team": "DEN",
@@ -2909,6 +2859,27 @@
       }
      ],
      "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Luka Doncic",
+     "player_short": "L. Doncic",
+     "team": "LAL",
+     "position": "PG",
+     "game": "SAC @ LAL",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 28.2
+      }
+     ],
+     "paused": true,
      "locked": false,
      "alt_lines": 0
     },
@@ -3580,9 +3551,7 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3606,7 +3575,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -3632,9 +3601,7 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -3725,7 +3692,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -3943,27 +3910,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Fred VanVleet",
-     "player_short": "F. VanVleet",
-     "team": "HOU",
-     "position": "PG",
-     "game": "HOU @ DEN",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Walker Kessler",
      "player_short": "W. Kessler",
      "team": "LAL",
@@ -3983,6 +3929,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 2
+    },
+    {
+     "player": "Fred VanVleet",
+     "player_short": "F. VanVleet",
+     "team": "HOU",
+     "position": "PG",
+     "game": "HOU @ DEN",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Christian Braun",
@@ -4302,7 +4269,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -4365,7 +4332,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.7
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -4400,16 +4367,14 @@
      "position": "C",
      "game": "HOU @ DEN",
      "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
+     "status_tags": [],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -4537,7 +4502,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.9
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4671,27 +4636,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Quentin Grimes",
-     "player_short": "Q. Grimes",
-     "team": "LAL",
-     "position": "SG",
-     "game": "SAC @ LAL",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Aaron Gordon",
      "player_short": "A. Gordon",
      "team": "DEN",
@@ -4706,6 +4650,27 @@
       {
        "side": "More",
        "multiplier": 2.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Quentin Grimes",
+     "player_short": "Q. Grimes",
+     "team": "LAL",
+     "position": "SG",
+     "game": "SAC @ LAL",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -4734,27 +4699,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Keyonte George",
-     "player_short": "K. George",
-     "team": "UTA",
-     "position": "PG",
-     "game": "PHX @ UTA",
-     "start": "2026-11-21T02:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Matisse Thybulle",
      "player_short": "M. Thybulle",
      "team": "LAL",
@@ -4776,6 +4720,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Keyonte George",
+     "player_short": "K. George",
+     "team": "UTA",
+     "position": "PG",
+     "game": "PHX @ UTA",
+     "start": "2026-11-21T02:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 0.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
      "player": "Kevin Durant",
      "player_short": "K. Durant",
      "team": "HOU",
@@ -4789,7 +4754,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -4831,28 +4796,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Zach LaVine",
-     "player_short": "Z. LaVine",
-     "team": "SAC",
-     "position": "SG",
-     "game": "SAC @ LAL",
-     "start": "2026-11-21T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.8
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -4879,6 +4823,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
+    },
+    {
+     "player": "Zach LaVine",
+     "player_short": "Z. LaVine",
+     "team": "SAC",
+     "position": "SG",
+     "game": "SAC @ LAL",
+     "start": "2026-11-21T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Domantas Sabonis",
@@ -4995,7 +4960,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 1.9,
-   "multiplier_max": 6.6,
+   "multiplier_max": 6.5,
    "games": 3,
    "lines": []
   },
@@ -5023,7 +4988,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.0,
-   "multiplier_max": 17.8,
+   "multiplier_max": 17.2,
    "games": 2,
    "lines": []
   },
@@ -5042,9 +5007,9 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 30,
+   "cards": 29,
    "open": 28,
-   "paused": 2,
+   "paused": 1,
    "locked": 0,
    "sides_offered": [
     "Yes"
@@ -5100,7 +5065,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 2.9,
+   "multiplier_max": 3.1,
    "games": 3,
    "lines": [
     0.5
