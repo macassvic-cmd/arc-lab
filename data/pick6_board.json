@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-21T21:37:17Z",
+ "captured_at": "2026-11-21T22:07:42Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -547,7 +547,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -568,7 +568,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -1011,7 +1011,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -1208,7 +1208,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.6
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -1493,6 +1493,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Zion Williamson",
      "player_short": "Z. Williamson",
      "team": "NOP",
@@ -1527,7 +1548,28 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Payton Pritchard",
+     "player_short": "P. Pritchard",
+     "team": "BOS",
+     "position": "PG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -1548,7 +1590,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -2186,7 +2228,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -2207,7 +2249,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -2249,7 +2291,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -2396,7 +2438,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -2480,7 +2522,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -2585,7 +2627,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.5
+       "multiplier": 5.4
       }
      ],
      "paused": false,
@@ -2740,6 +2782,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Jonathan Kuminga",
      "player_short": "J. Kuminga",
      "team": "MIN",
@@ -2860,7 +2923,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -2881,7 +2944,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -3030,7 +3093,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -3051,7 +3114,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 24.2
+       "multiplier": 23.0
       }
      ],
      "paused": true,
@@ -3902,6 +3965,48 @@
       {
        "side": "Yes",
        "multiplier": 1.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Payton Pritchard",
+     "player_short": "P. Pritchard",
+     "team": "BOS",
+     "position": "PG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.7
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -4971,6 +5076,48 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
+    },
+    {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 11.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Payton Pritchard",
+     "player_short": "P. Pritchard",
+     "team": "BOS",
+     "position": "PG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 28.2
+      }
+     ],
+     "paused": true,
+     "locked": false,
+     "alt_lines": 0
     }
    ],
    "dk_markets": [
@@ -5338,6 +5485,48 @@
      "paused": false,
      "locked": false,
      "alt_lines": 3
+    },
+    {
+     "player": "De'Andre Hunter",
+     "player_short": "D. Hunter",
+     "team": "SAC",
+     "position": "SF",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
+    },
+    {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
     },
     {
      "player": "Yves Missi",
@@ -5823,27 +6012,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Jordan Walsh",
-     "player_short": "J. Walsh",
-     "team": "BOS",
-     "position": "SF",
-     "game": "BOS @ SAC",
-     "start": "2026-11-22T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
      "player": "Ty Jerome",
      "player_short": "Ty Jerome",
      "team": "MEM",
@@ -5863,6 +6031,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
+    },
+    {
+     "player": "Jordan Walsh",
+     "player_short": "J. Walsh",
+     "team": "BOS",
+     "position": "SF",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
     },
     {
      "player": "Saddiq Bey",
@@ -5918,11 +6107,11 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.7
       }
      ],
      "paused": false,
@@ -5939,11 +6128,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 2.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6337,6 +6526,48 @@
      "alt_lines": 1
     },
     {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
+     "player": "De'Andre Hunter",
+     "player_short": "D. Hunter",
+     "team": "SAC",
+     "position": "SF",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
      "player": "Taylor Hendricks",
      "player_short": "T. Hendricks",
      "team": "MEM",
@@ -6518,7 +6749,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -6663,11 +6894,11 @@
      ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 0.7
       }
      ],
      "paused": false,
@@ -7057,7 +7288,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -7078,7 +7309,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -7529,6 +7760,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Baylor Scheierman",
+     "player_short": "B. Scheierman",
+     "team": "BOS",
+     "position": "SG",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Darius Garland",
      "player_short": "D. Garland",
      "team": "LAC",
@@ -7569,6 +7821,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
+    },
+    {
+     "player": "De'Andre Hunter",
+     "player_short": "D. Hunter",
+     "team": "SAC",
+     "position": "SF",
+     "game": "BOS @ SAC",
+     "start": "2026-11-22T03:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 2.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "LaMelo Ball",
@@ -7634,6 +7907,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Rui Hachimura",
+     "player_short": "R. Hachimura",
+     "team": "LAC",
+     "position": "SF",
+     "game": "LAC @ DAL",
+     "start": "2026-11-22T01:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 2.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Payton Pritchard",
      "player_short": "P. Pritchard",
      "team": "BOS",
@@ -7655,12 +7949,12 @@
      "alt_lines": 1
     },
     {
-     "player": "Rui Hachimura",
-     "player_short": "R. Hachimura",
-     "team": "LAC",
+     "player": "Toumani Camara",
+     "player_short": "T. Camara",
+     "team": "POR",
      "position": "SF",
-     "game": "LAC @ DAL",
-     "start": "2026-11-22T01:10:00.0000000+00:00",
+     "game": "POR @ NYK",
+     "start": "2026-11-22T00:40:00.0000000+00:00",
      "status_tags": [],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
@@ -7668,7 +7962,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.9
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -7697,12 +7991,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Toumani Camara",
-     "player_short": "T. Camara",
-     "team": "POR",
+     "player": "Jaylen Wells",
+     "player_short": "J. Wells",
+     "team": "MEM",
      "position": "SF",
-     "game": "POR @ NYK",
-     "start": "2026-11-22T00:40:00.0000000+00:00",
+     "game": "MEM @ MIN",
+     "start": "2026-11-22T01:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
@@ -7710,7 +8004,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.6
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -7732,27 +8026,6 @@
       {
        "side": "More",
        "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jaylen Wells",
-     "player_short": "J. Wells",
-     "team": "MEM",
-     "position": "SF",
-     "game": "MEM @ MIN",
-     "start": "2026-11-22T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -8068,8 +8341,8 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 48,
-   "open": 48,
+   "cards": 50,
+   "open": 50,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8082,8 +8355,8 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 46,
-   "open": 42,
+   "cards": 47,
+   "open": 43,
    "paused": 4,
    "locked": 0,
    "sides_offered": [
@@ -8096,8 +8369,8 @@
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 46,
-   "open": 44,
+   "cards": 48,
+   "open": 46,
    "paused": 2,
    "locked": 0,
    "sides_offered": [
@@ -8110,9 +8383,9 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 44,
-   "open": 39,
-   "paused": 5,
+   "cards": 46,
+   "open": 40,
+   "paused": 6,
    "locked": 0,
    "sides_offered": [
     "Yes"
@@ -8124,8 +8397,8 @@
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 47,
-   "open": 47,
+   "cards": 49,
+   "open": 49,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8142,8 +8415,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 47,
-   "open": 47,
+   "cards": 49,
+   "open": 49,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -8159,8 +8432,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 47,
-   "open": 47,
+   "cards": 49,
+   "open": 49,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
