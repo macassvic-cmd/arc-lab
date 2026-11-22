@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-22T01:39:44Z",
+ "captured_at": "2026-11-22T02:10:03Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -1131,12 +1131,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.3
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 4
+     "alt_lines": 3
     },
     {
      "player": "Keegan Murray",
@@ -1391,7 +1391,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -1885,7 +1885,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.8,
-   "multiplier_max": 1.2,
+   "multiplier_max": 1.3,
    "games": 1,
    "lines": [
     0.5,
