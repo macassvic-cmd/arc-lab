@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-22T17:18:46Z",
+ "captured_at": "2026-11-22T17:49:15Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -173,7 +173,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3
       }
      ],
      "paused": false,
@@ -236,7 +236,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -322,7 +322,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -366,7 +366,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -471,7 +471,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -513,7 +513,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -599,7 +599,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -685,7 +685,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -792,7 +792,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -836,7 +836,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -878,7 +878,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -985,7 +985,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -1090,7 +1090,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -1111,7 +1111,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -1384,7 +1384,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5
       }
      ],
      "paused": false,
@@ -1405,7 +1405,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -1447,7 +1447,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.8
+       "multiplier": 5.7
       }
      ],
      "paused": false,
@@ -1469,6 +1469,27 @@
       {
        "side": "Yes",
        "multiplier": 6.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Point",
+     "dk_market": "1st Points Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -2030,27 +2051,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Christian Braun",
-     "player_short": "C. Braun",
-     "team": "DEN",
-     "position": "SG",
-     "game": "DEN @ CHI",
-     "start": "2026-11-23T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Bam Adebayo",
      "player_short": "B. Adebayo",
      "team": "MIA",
@@ -2065,6 +2065,27 @@
       {
        "side": "Yes",
        "multiplier": 1.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Christian Braun",
+     "player_short": "C. Braun",
+     "team": "DEN",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2746,7 +2767,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -2769,7 +2790,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -2853,7 +2874,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -2874,7 +2895,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -2895,7 +2916,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.0
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -2916,7 +2937,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -3115,6 +3136,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Three",
+     "dk_market": "Game 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Neemias Queta",
      "player_short": "N. Queta",
      "team": "BOS",
@@ -3256,7 +3298,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -3531,7 +3573,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -3573,7 +3615,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -3657,7 +3699,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -3680,7 +3722,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -3810,7 +3852,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -3831,7 +3873,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -4045,7 +4087,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -4754,27 +4796,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Brandin Podziemski",
-     "player_short": "B. Podziemski",
-     "team": "GSW",
-     "position": "SG",
-     "game": "BOS @ GSW",
-     "start": "2026-11-23T01:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Nikola Jokic",
      "player_short": "N. Jokic",
      "team": "DEN",
@@ -4789,6 +4810,27 @@
       {
        "side": "Yes",
        "multiplier": 2.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Brandin Podziemski",
+     "player_short": "B. Podziemski",
+     "team": "GSW",
+     "position": "SG",
+     "game": "BOS @ GSW",
+     "start": "2026-11-23T01:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -6194,7 +6236,7 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -6370,7 +6412,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -6429,11 +6471,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -6450,11 +6492,32 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
        "multiplier": 0.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 4
+    },
+    {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Points 1st 3 Mins",
+     "dk_market": "Points 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -6536,11 +6599,11 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -6557,11 +6620,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -6664,7 +6727,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -7132,7 +7195,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -7365,7 +7428,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -7902,7 +7965,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.7
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -8271,6 +8334,27 @@
      "alt_lines": 1
     },
     {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.3
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
+    },
+    {
      "player": "Jaxson Hayes",
      "player_short": "J. Hayes",
      "team": "UTA",
@@ -8540,7 +8624,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -8761,7 +8845,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
+     "alt_lines": 3
     },
     {
      "player": "Giannis Antetokounmpo",
@@ -9085,12 +9169,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.7
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 2
     },
     {
      "player": "Pascal Siakam",
@@ -9108,7 +9192,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -9538,6 +9622,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Neemias Queta",
      "player_short": "N. Queta",
      "team": "BOS",
@@ -9805,7 +9910,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.5
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -9826,7 +9931,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.5
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -9956,7 +10061,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.7
+       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -10048,27 +10153,6 @@
      "alt_lines": 1
     },
     {
-     "player": "John Collins",
-     "player_short": "J. Collins",
-     "team": "DET",
-     "position": "PF",
-     "game": "DET @ ATL",
-     "start": "2026-11-22T20:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 3.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Giannis Antetokounmpo",
      "player_short": "G. Antetokounmpo",
      "team": "MIA",
@@ -10090,6 +10174,27 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
+    },
+    {
+     "player": "John Collins",
+     "player_short": "J. Collins",
+     "team": "DET",
+     "position": "PF",
+     "game": "DET @ ATL",
+     "start": "2026-11-22T20:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
     },
     {
      "player": "Jalen Brunson",
@@ -10212,7 +10317,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -10453,8 +10558,8 @@
  "notes": [],
  "summary": {
   "1st Point": {
-   "cards": 69,
-   "open": 69,
+   "cards": 70,
+   "open": 70,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10481,8 +10586,8 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 67,
-   "open": 63,
+   "cards": 68,
+   "open": 64,
    "paused": 4,
    "locked": 0,
    "sides_offered": [
@@ -10523,8 +10628,8 @@
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 69,
-   "open": 69,
+   "cards": 70,
+   "open": 70,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10532,7 +10637,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 1.9,
+   "multiplier_max": 1.8,
    "games": 7,
    "lines": [
     0.5,
@@ -10541,8 +10646,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 68,
-   "open": 68,
+   "cards": 69,
+   "open": 69,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10558,15 +10663,15 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 69,
-   "open": 69,
+   "cards": 70,
+   "open": 70,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "More"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 0.8,
+   "multiplier_min": 0.7,
    "multiplier_max": 3.2,
    "games": 7,
    "lines": [
