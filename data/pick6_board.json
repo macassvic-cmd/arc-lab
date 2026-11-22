@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-22T17:49:15Z",
+ "captured_at": "2026-11-22T18:19:30Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -150,7 +150,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -492,7 +492,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -513,7 +513,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -727,7 +727,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -1237,7 +1237,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -1447,7 +1447,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.7
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -2051,27 +2051,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Bam Adebayo",
-     "player_short": "B. Adebayo",
-     "team": "MIA",
-     "position": "C",
-     "game": "OKC @ MIA",
-     "start": "2026-11-22T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Christian Braun",
      "player_short": "C. Braun",
      "team": "DEN",
@@ -2086,6 +2065,27 @@
       {
        "side": "Yes",
        "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Bam Adebayo",
+     "player_short": "B. Adebayo",
+     "team": "MIA",
+     "position": "C",
+     "game": "OKC @ MIA",
+     "start": "2026-11-22T23:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -2177,27 +2177,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Davion Mitchell",
      "player_short": "D. Mitchell",
      "team": "MIA",
@@ -2233,27 +2212,6 @@
       {
        "side": "Yes",
        "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jalen Brunson",
-     "player_short": "J. Brunson",
-     "team": "NYK",
-     "position": "PG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -2351,27 +2309,6 @@
      "position": "PG",
      "game": "OKC @ MIA",
      "start": "2026-11-22T23:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
@@ -2513,6 +2450,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Josh Giddey",
+     "player_short": "J. Giddey",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Isaiah Hartenstein",
      "player_short": "I. Hartenstein",
      "team": "OKC",
@@ -2555,12 +2513,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
@@ -2568,7 +2526,49 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.4
+       "multiplier": 2.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Matas Buzelis",
+     "player_short": "M. Buzelis",
+     "team": "CHI",
+     "position": "PF",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.9
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Isaac Okoro",
+     "player_short": "I. Okoro",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -2723,7 +2723,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -2746,7 +2746,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -2790,7 +2790,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -2853,7 +2853,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -2937,7 +2937,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -3107,7 +3107,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 13.2
+       "multiplier": 13.0
       }
      ],
      "paused": false,
@@ -3340,31 +3340,10 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.8
       }
      ],
      "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ivica Zubac",
-     "player_short": "I. Zubac",
-     "team": "IND",
-     "position": "C",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 28.2
-      }
-     ],
-     "paused": true,
      "locked": false,
      "alt_lines": 0
     },
@@ -3382,7 +3361,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -3873,7 +3852,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.8
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -3938,7 +3917,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -4129,7 +4108,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -4313,27 +4292,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Davion Mitchell",
      "player_short": "D. Mitchell",
      "team": "MIA",
@@ -4424,27 +4382,6 @@
      "position": "C",
      "game": "DET @ ATL",
      "start": "2026-11-22T20:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jalen Brunson",
-     "player_short": "J. Brunson",
-     "team": "NYK",
-     "position": "PG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
@@ -4796,27 +4733,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Nikola Jokic",
-     "player_short": "N. Jokic",
-     "team": "DEN",
-     "position": "C",
-     "game": "DEN @ CHI",
-     "start": "2026-11-23T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Brandin Podziemski",
      "player_short": "B. Podziemski",
      "team": "GSW",
@@ -4838,12 +4754,12 @@
      "alt_lines": 0
     },
     {
-     "player": "De'Anthony Melton",
-     "player_short": "D. Melton",
-     "team": "GSW",
-     "position": "SG",
-     "game": "BOS @ GSW",
-     "start": "2026-11-23T01:40:00.0000000+00:00",
+     "player": "Nikola Jokic",
+     "player_short": "N. Jokic",
+     "team": "DEN",
+     "position": "C",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
@@ -4851,7 +4767,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -4880,12 +4796,12 @@
      "alt_lines": 0
     },
     {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
+     "player": "De'Anthony Melton",
+     "player_short": "D. Melton",
+     "team": "GSW",
+     "position": "SG",
+     "game": "BOS @ GSW",
+     "start": "2026-11-23T01:40:00.0000000+00:00",
      "status_tags": [],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
@@ -4893,7 +4809,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -5006,27 +4922,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Kyrie Irving",
      "player_short": "K. Irving",
      "team": "DAL",
@@ -5090,6 +4985,48 @@
      "alt_lines": 0
     },
     {
+     "player": "Matas Buzelis",
+     "player_short": "M. Buzelis",
+     "team": "CHI",
+     "position": "PF",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Josh Giddey",
+     "player_short": "J. Giddey",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Caleb Martin",
      "player_short": "C. Martin",
      "team": "DAL",
@@ -5146,6 +5083,48 @@
       {
        "side": "Yes",
        "multiplier": 2.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Isaac Okoro",
+     "player_short": "I. Okoro",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Buddy Hield",
+     "player_short": "B. Hield",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st Three",
+     "dk_market": "Team 1st 3PT Made",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -5413,27 +5392,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 11.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Daniss Jenkins",
      "player_short": "D. Jenkins",
      "team": "DET",
@@ -5448,27 +5406,6 @@
       {
        "side": "Yes",
        "multiplier": 11.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 10.9
       }
      ],
      "paused": false,
@@ -5511,27 +5448,6 @@
       {
        "side": "Yes",
        "multiplier": 10.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Aaron Nesmith",
-     "player_short": "A. Nesmith",
-     "team": "IND",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 10.1
       }
      ],
      "paused": false,
@@ -5623,27 +5539,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 6.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Kyshawn George",
      "player_short": "K. George",
      "team": "WAS",
@@ -5721,27 +5616,6 @@
       {
        "side": "Yes",
        "multiplier": 4.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Kelly Oubre Jr.",
-     "player_short": "K. Oubre Jr.",
-     "team": "IND",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -5896,27 +5770,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Ivica Zubac",
-     "player_short": "I. Zubac",
-     "team": "IND",
-     "position": "C",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Aday Mara",
      "player_short": "A. Mara",
      "team": "OKC",
@@ -5959,6 +5812,132 @@
      "alt_lines": 0
     },
     {
+     "player": "Christian Braun",
+     "player_short": "C. Braun",
+     "team": "DEN",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 3.0
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Jamal Murray",
+     "player_short": "J. Murray",
+     "team": "DEN",
+     "position": "PG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 11.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Nikola Jokic",
+     "player_short": "N. Jokic",
+     "team": "DEN",
+     "position": "C",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 7.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Matas Buzelis",
+     "player_short": "M. Buzelis",
+     "team": "CHI",
+     "position": "PF",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 2.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Josh Giddey",
+     "player_short": "J. Giddey",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 16.6
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Cameron Johnson",
+     "player_short": "C. Johnson",
+     "team": "DEN",
+     "position": "SF",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 6.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "John Collins",
      "player_short": "J. Collins",
      "team": "DET",
@@ -5994,6 +5973,48 @@
       {
        "side": "Yes",
        "multiplier": 2.4
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Aaron Gordon",
+     "player_short": "A. Gordon",
+     "team": "DEN",
+     "position": "PF",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.8
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
+     "player": "Isaac Okoro",
+     "player_short": "I. Okoro",
+     "team": "CHI",
+     "position": "SG",
+     "game": "DEN @ CHI",
+     "start": "2026-11-23T00:10:00.0000000+00:00",
+     "status_tags": [],
+     "market": "1st Dunk",
+     "dk_market": "1st Dunk Scorer",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 11.5
       }
      ],
      "paused": false,
@@ -6236,7 +6257,7 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -6534,7 +6555,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -7224,27 +7245,6 @@
      "alt_lines": 3
     },
     {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
      "player": "Ausar Thompson",
      "player_short": "A. Thompson",
      "team": "DET",
@@ -7264,27 +7264,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 3
-    },
-    {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
     },
     {
      "player": "Davion Mitchell",
@@ -7476,27 +7455,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 4
-    },
-    {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
     }
    ],
    "dk_markets": [
@@ -7693,7 +7651,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Kevin Huerter",
@@ -7736,27 +7694,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 2
-    },
-    {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Keyonte George",
@@ -7986,12 +7923,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.5
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Kingston Flemings",
@@ -8124,27 +8061,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Daniel Gafford",
      "player_short": "D. Gafford",
      "team": "DAL",
@@ -8250,27 +8166,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Josh Giddey",
      "player_short": "J. Giddey",
      "team": "CHI",
@@ -8326,7 +8221,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -8845,7 +8740,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 2
     },
     {
      "player": "Giannis Antetokounmpo",
@@ -9339,7 +9234,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -9408,27 +9303,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Mikal Bridges",
-     "player_short": "M. Bridges",
-     "team": "NYK",
-     "position": "SF",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Christian Braun",
@@ -9853,27 +9727,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Landry Shamet",
-     "player_short": "L. Shamet",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Andrew Nembhard",
      "player_short": "A. Nembhard",
      "team": "IND",
@@ -9996,7 +9849,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -10153,6 +10006,27 @@
      "alt_lines": 1
     },
     {
+     "player": "John Collins",
+     "player_short": "J. Collins",
+     "team": "DET",
+     "position": "PF",
+     "game": "DET @ ATL",
+     "start": "2026-11-22T20:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Assists 1st 3 Mins",
+     "dk_market": "Assists 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 3.2
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Giannis Antetokounmpo",
      "player_short": "G. Antetokounmpo",
      "team": "MIA",
@@ -10174,27 +10048,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "John Collins",
-     "player_short": "J. Collins",
-     "team": "DET",
-     "position": "PF",
-     "game": "DET @ ATL",
-     "start": "2026-11-22T20:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 3.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Jalen Brunson",
@@ -10317,7 +10170,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -10383,27 +10236,6 @@
       {
        "side": "More",
        "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Josh Hart",
-     "player_short": "J. Hart",
-     "team": "NYK",
-     "position": "SG",
-     "game": "IND @ NYK",
-     "start": "2026-11-23T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -10586,9 +10418,9 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 68,
+   "cards": 67,
    "open": 64,
-   "paused": 4,
+   "paused": 3,
    "locked": 0,
    "sides_offered": [
     "Yes"
@@ -10614,8 +10446,8 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 38,
-   "open": 38,
+   "cards": 40,
+   "open": 40,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10628,8 +10460,8 @@
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 70,
-   "open": 70,
+   "cards": 67,
+   "open": 67,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10646,8 +10478,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 69,
-   "open": 69,
+   "cards": 66,
+   "open": 66,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -10663,8 +10495,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 70,
-   "open": 70,
+   "cards": 67,
+   "open": 67,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
