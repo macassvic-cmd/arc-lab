@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-23T21:34:32Z",
+ "captured_at": "2026-11-23T22:04:47Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -440,7 +440,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.3
       }
      ],
      "paused": false,
@@ -629,7 +629,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1853,7 +1853,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -2077,7 +2077,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -2211,7 +2211,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.0
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -2296,27 +2296,6 @@
       {
        "side": "Yes",
        "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jahmai Mashack",
-     "player_short": "J. Mashack",
-     "team": "MEM",
-     "position": "SG",
-     "game": "MEM @ CHA",
-     "start": "2026-11-24T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -2790,27 +2769,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Alperen Sengun",
      "player_short": "A. Sengun",
      "team": "HOU",
@@ -2895,27 +2853,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Oso Ighodaro",
      "player_short": "O. Ighodaro",
      "team": "PHX",
@@ -2972,27 +2909,6 @@
       {
        "side": "Yes",
        "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -3202,7 +3118,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.5
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -3244,7 +3160,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.7
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -3630,27 +3546,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Quenton Jackson",
      "player_short": "Q. Jackson",
      "team": "IND",
@@ -3665,27 +3560,6 @@
       {
        "side": "Yes",
        "multiplier": 2.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Micah Peavy",
-     "player_short": "M. Peavy",
-     "team": "OKC",
-     "position": "SF",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4159,7 +4033,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -4180,7 +4054,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -4222,7 +4096,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4392,7 +4266,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 11.9
+       "multiplier": 11.7
       }
      ],
      "paused": false,
@@ -4434,7 +4308,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -5360,7 +5234,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -5635,7 +5509,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -5681,7 +5555,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -6012,7 +5886,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -6097,27 +5971,6 @@
       {
        "side": "Yes",
        "multiplier": 8.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -6589,48 +6442,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jahmai Mashack",
-     "player_short": "J. Mashack",
-     "team": "MEM",
-     "position": "SG",
-     "game": "MEM @ CHA",
-     "start": "2026-11-24T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Ja'Kobe Walter",
      "player_short": "J. Walter",
      "team": "TOR",
@@ -6665,7 +6476,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -6791,7 +6602,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.5
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -7107,48 +6918,6 @@
       {
        "side": "Yes",
        "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Micah Peavy",
-     "player_short": "M. Peavy",
-     "team": "OKC",
-     "position": "SF",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -7683,7 +7452,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 13.1
+       "multiplier": 19.4
       }
      ],
      "paused": false,
@@ -7922,29 +7691,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Pascal Siakam",
-     "player_short": "P. Siakam",
-     "team": "IND",
-     "position": "PF",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 14.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Donovan Mitchell",
      "player_short": "D. Mitchell",
      "team": "CLE",
@@ -8000,7 +7746,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 10.5
+       "multiplier": 15.6
       }
      ],
      "paused": false,
@@ -8239,27 +7985,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Kelly Oubre Jr.",
-     "player_short": "K. Oubre Jr.",
-     "team": "IND",
-     "position": "SF",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Amen Thompson",
      "player_short": "A. Thompson",
      "team": "HOU",
@@ -8337,27 +8062,6 @@
       {
        "side": "Yes",
        "multiplier": 5.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -8546,7 +8250,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.3
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -8716,28 +8420,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ivica Zubac",
-     "player_short": "I. Zubac",
-     "team": "IND",
-     "position": "C",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.4
+       "multiplier": 6.6
       }
      ],
      "paused": false,
@@ -8829,48 +8512,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 7.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Micah Peavy",
-     "player_short": "M. Peavy",
-     "team": "OKC",
-     "position": "SF",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 5.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Trey Murphy III",
      "player_short": "T. Murphy III",
      "team": "NOP",
@@ -8885,27 +8526,6 @@
       {
        "side": "Yes",
        "multiplier": 3.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Quenton Jackson",
-     "player_short": "Q. Jackson",
-     "team": "IND",
-     "position": "SG",
-     "game": "OKC @ IND",
-     "start": "2026-11-24T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 6.7
       }
      ],
      "paused": false,
@@ -9075,7 +8695,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -9606,7 +9226,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -9984,11 +9604,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -10119,7 +9739,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
+     "alt_lines": 3
     },
     {
      "player": "Jared McCain",
@@ -10156,12 +9776,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 5
+     "alt_lines": 4
     },
     {
      "player": "Fred VanVleet",
@@ -11421,7 +11041,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.4
       }
      ],
      "paused": false,
@@ -11992,7 +11612,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -12286,7 +11906,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -12454,7 +12074,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -13566,7 +13186,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -14139,7 +13759,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -14349,7 +13969,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -14698,8 +14318,8 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 93,
-   "open": 93,
+   "cards": 87,
+   "open": 87,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -14726,8 +14346,8 @@
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 83,
-   "open": 83,
+   "cards": 78,
+   "open": 78,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -14740,8 +14360,8 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 78,
-   "open": 78,
+   "cards": 71,
+   "open": 71,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -14749,8 +14369,8 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 1.1,
-   "multiplier_max": 18.8,
-   "games": 10,
+   "multiplier_max": 19.4,
+   "games": 9,
    "lines": []
   },
   "Points 1st 3 Mins": {
