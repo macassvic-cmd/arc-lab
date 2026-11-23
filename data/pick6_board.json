@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-23T19:33:19Z",
+ "captured_at": "2026-11-23T20:03:43Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -62,7 +62,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -104,7 +104,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -398,7 +398,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -629,7 +629,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -692,7 +692,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -713,7 +713,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -1051,7 +1051,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -1072,7 +1072,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -1284,7 +1284,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -1599,7 +1599,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -1683,7 +1683,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.5
+       "multiplier": 6.4
       }
      ],
      "paused": false,
@@ -1811,7 +1811,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1897,7 +1897,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.4
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -1920,7 +1920,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -2077,7 +2077,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -3609,6 +3609,27 @@
      "alt_lines": 0
     },
     {
+     "player": "Shai Gilgeous-Alexander",
+     "player_short": "S. Gilgeous-Alexander",
+     "team": "OKC",
+     "position": "PG",
+     "game": "OKC @ IND",
+     "start": "2026-11-24T00:40:00.0000000+00:00",
+     "status_tags": [],
+     "market": "Team 1st FG",
+     "dk_market": "Team 1st FG",
+     "line": null,
+     "sides": [
+      {
+       "side": "Yes",
+       "multiplier": 1.5
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 0
+    },
+    {
      "player": "Zach LaVine",
      "player_short": "Z. LaVine",
      "team": "SAC",
@@ -3991,7 +4012,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4012,7 +4033,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.3
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -4117,7 +4138,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4266,7 +4287,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -4287,7 +4308,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 11.9
+       "multiplier": 11.7
       }
      ],
      "paused": false,
@@ -4350,7 +4371,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.4
       }
      ],
      "paused": false,
@@ -4770,7 +4791,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.5
+       "multiplier": 5.4
       }
      ],
      "paused": false,
@@ -4791,7 +4812,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -4812,7 +4833,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4959,7 +4980,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -5043,7 +5064,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -5255,7 +5276,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -5276,7 +5297,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -5318,7 +5339,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 5.0
       }
      ],
      "paused": false,
@@ -5486,7 +5507,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -5530,7 +5551,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -5576,7 +5597,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -9342,7 +9363,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 5
+     "alt_lines": 4
     },
     {
      "player": "Deni Avdija",
@@ -9820,12 +9841,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
+     "alt_lines": 3
     },
     {
      "player": "Danny Wolf",
@@ -10284,7 +10305,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -10561,7 +10582,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -10726,12 +10747,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.4
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Julian Champagnie",
@@ -10978,7 +10999,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -11211,7 +11232,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -11530,7 +11551,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -12139,7 +12160,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -12328,7 +12349,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -13230,7 +13251,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.1
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -13593,7 +13614,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -13640,7 +13661,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Saddiq Bey",
@@ -13950,7 +13971,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.4
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -14076,7 +14097,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -14227,7 +14248,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.4
       }
      ],
      "paused": false,
@@ -14319,7 +14340,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.0
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -14425,8 +14446,8 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 89,
-   "open": 89,
+   "cards": 90,
+   "open": 90,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
