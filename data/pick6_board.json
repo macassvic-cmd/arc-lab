@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-24T20:15:31Z",
+ "captured_at": "2026-11-24T20:46:01Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -62,7 +62,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.7
+       "multiplier": 6.6
       }
      ],
      "paused": false,
@@ -167,7 +167,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -251,7 +251,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -293,7 +293,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -419,7 +419,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -461,7 +461,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 5
       }
      ],
      "paused": false,
@@ -566,7 +566,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.8
+       "multiplier": 5.9
       }
      ],
      "paused": false,
@@ -610,7 +610,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -1304,7 +1304,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -1472,7 +1472,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -1514,7 +1514,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -1535,7 +1535,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -1577,7 +1577,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -1724,7 +1724,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.9
+       "multiplier": 8.2
       }
      ],
      "paused": false,
@@ -1852,7 +1852,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -3096,7 +3096,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -4993,7 +4993,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.2,
-   "multiplier_max": 6.7,
+   "multiplier_max": 6.6,
    "games": 3,
    "lines": []
   },
@@ -5021,7 +5021,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.2,
-   "multiplier_max": 8.0,
+   "multiplier_max": 8.2,
    "games": 3,
    "lines": []
   },
