@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-24T23:17:19Z",
+ "captured_at": "2026-11-24T23:47:56Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -117,15 +117,17 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -159,8 +161,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -243,15 +247,17 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -306,15 +312,17 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -411,15 +419,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -432,8 +442,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -453,15 +465,17 @@
      "team": "DET",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -516,15 +530,17 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.6
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -537,8 +553,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -566,7 +584,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -588,29 +606,6 @@
       {
        "side": "Yes",
        "multiplier": 3.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Point",
-     "dk_market": "1st Points Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -843,8 +838,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -864,8 +861,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -873,27 +872,6 @@
       {
        "side": "Yes",
        "multiplier": 2.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "John Collins",
-     "player_short": "J. Collins",
-     "team": "DET",
-     "position": "PF",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -915,48 +893,6 @@
       {
        "side": "Yes",
        "multiplier": 2.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Daniss Jenkins",
-     "player_short": "D. Jenkins",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Kevin Huerter",
-     "player_short": "K. Huerter",
-     "team": "DET",
-     "position": "SG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -990,8 +926,10 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1053,8 +991,10 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1095,8 +1035,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -1104,27 +1046,6 @@
       {
        "side": "Yes",
        "multiplier": 2.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ausar Thompson",
-     "player_short": "A. Thompson",
-     "team": "DET",
-     "position": "SF",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -1190,29 +1111,6 @@
       {
        "side": "Yes",
        "multiplier": 2.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -1317,15 +1215,17 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -1338,8 +1238,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1359,15 +1261,17 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1401,15 +1305,17 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 6.4
       }
      ],
      "paused": false,
@@ -1422,15 +1328,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.6
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -1472,7 +1380,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -1514,7 +1422,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.4
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -1535,7 +1443,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -1556,7 +1464,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 5.0
       }
      ],
      "paused": false,
@@ -1632,8 +1540,10 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -1653,15 +1563,17 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -1695,15 +1607,17 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -1808,7 +1722,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -1858,29 +1772,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
-    },
-    {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     }
    ],
    "dk_markets": [
@@ -1917,8 +1808,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -1980,8 +1873,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -2001,15 +1896,17 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.7
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -2022,8 +1919,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -2043,8 +1942,10 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -2064,15 +1965,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.6
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -2106,15 +2009,17 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.0
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -2148,8 +2053,10 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -2473,15 +2380,17 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -2515,15 +2424,17 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 10.7
+       "multiplier": 9.2
       }
      ],
      "paused": false,
@@ -2578,8 +2489,10 @@
      "team": "DET",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -2599,15 +2512,17 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 9.7
+       "multiplier": 8.4
       }
      ],
      "paused": false,
@@ -2683,15 +2598,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 12.6
+       "multiplier": 12.2
       }
      ],
      "paused": false,
@@ -2725,15 +2642,17 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.6
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -2767,8 +2686,10 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -3008,8 +2929,10 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3092,8 +3015,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 1.5,
@@ -3155,15 +3080,17 @@
      "team": "DET",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -3176,8 +3103,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3323,8 +3252,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3407,8 +3338,10 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3428,15 +3361,17 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -3491,8 +3426,10 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3533,8 +3470,10 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -3546,7 +3485,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 4
+     "alt_lines": 5
     },
     {
      "player": "Neemias Queta",
@@ -3591,29 +3530,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 4
-    },
-    {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
     }
    ],
    "dk_markets": [
@@ -3629,15 +3545,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -3734,8 +3652,10 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -3797,8 +3717,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -3860,15 +3782,17 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -3944,8 +3868,10 @@
      "team": "DET",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -4007,8 +3933,10 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -4028,8 +3956,10 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -4154,15 +4084,17 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -4175,8 +4107,10 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -4210,29 +4144,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
-    },
-    {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
     },
     {
      "player": "PJ Washington",
@@ -4271,8 +4182,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -4321,7 +4234,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -4355,15 +4268,17 @@
      "team": "DET",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -4397,8 +4312,10 @@
      "team": "ORL",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -4439,15 +4356,17 @@
      "team": "DET",
      "position": "PG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -4460,15 +4379,17 @@
      "team": "ORL",
      "position": "SF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -4586,15 +4507,17 @@
      "team": "DET",
      "position": "PF",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 3.3
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -4628,8 +4551,10 @@
      "team": "ORL",
      "position": "C",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -4691,15 +4616,17 @@
      "team": "DET",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -4817,8 +4744,10 @@
      "team": "ORL",
      "position": "SG",
      "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -4854,29 +4783,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Cade Cunningham",
-     "player_short": "C. Cunningham",
-     "team": "DET",
-     "position": "PG",
-     "game": "DET @ ORL",
-     "start": "2026-11-25T00:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "PJ Washington",
      "player_short": "PJ Washington",
      "team": "DAL",
@@ -4892,7 +4798,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.6
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -4984,8 +4890,8 @@
  "notes": [],
  "summary": {
   "1st Point": {
-   "cards": 30,
-   "open": 30,
+   "cards": 29,
+   "open": 29,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -4998,8 +4904,8 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 30,
-   "open": 30,
+   "cards": 25,
+   "open": 25,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -5012,8 +4918,8 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 28,
-   "open": 28,
+   "cards": 27,
+   "open": 27,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -5054,8 +4960,8 @@
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 30,
-   "open": 30,
+   "cards": 29,
+   "open": 29,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -5072,8 +4978,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 30,
-   "open": 30,
+   "cards": 29,
+   "open": 29,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -5088,8 +4994,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 30,
-   "open": 30,
+   "cards": 29,
+   "open": 29,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -5097,7 +5003,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 3.3,
+   "multiplier_max": 2.6,
    "games": 3,
    "lines": [
     0.5
