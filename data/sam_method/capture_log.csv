@@ -13,3 +13,4 @@ slate_date,captured_at,off_schedule,status,kalshi_markets,kalshi_by_series,games
 2026-11-22,2026-11-22T21:00:25Z,0,captured,1249,"{""KXNBA3PT"": 342, ""KXNBAPTS"": 313, ""KXNBAREB"": 345, ""KXNBAAST"": 249}",7,1,48,6,2026-11-22T20:45:14.242125Z,109,ok; trigger=schedule
 2026-11-23,2026-11-23T21:00:27Z,0,captured,1816,"{""KXNBA3PT"": 505, ""KXNBAPTS"": 449, ""KXNBAREB"": 490, ""KXNBAAST"": 372}",10,0,80,10,2026-11-23T15:38:07.557596Z,153,ok; trigger=push
 2026-11-24,2026-11-24T21:00:26Z,0,captured,594,"{""KXNBA3PT"": 167, ""KXNBAPTS"": 147, ""KXNBAREB"": 156, ""KXNBAAST"": 124}",3,0,24,3,2026-11-24T05:34:41.528021Z,48,ok; trigger=push
+2026-11-25,2026-11-25T21:06:04Z,0,captured,1721,"{""KXNBA3PT"": 493, ""KXNBAPTS"": 426, ""KXNBAREB"": 440, ""KXNBAAST"": 362}",9,0,72,9,2026-11-25T20:39:05.537522Z,140,ok; trigger=push
