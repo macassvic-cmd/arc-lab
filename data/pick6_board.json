@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-25T02:19:17Z",
+ "captured_at": "2026-11-25T02:49:27Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -12,15 +12,17 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -33,15 +35,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.9
+       "multiplier": 6.6
       }
      ],
      "paused": false,
@@ -54,8 +58,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -75,8 +81,10 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -96,8 +104,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -117,8 +127,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -138,15 +150,17 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -159,15 +173,17 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -180,30 +196,9 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Point",
-     "dk_market": "1st Points Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
+     "start": "2026-11-25T03:15:00.0000000+00:00",
      "status_tags": [
-      "Q"
+      null
      ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
@@ -211,7 +206,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -232,8 +227,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -253,15 +250,17 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.1
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -274,8 +273,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -295,8 +296,10 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -316,8 +319,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -337,15 +342,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.6
+       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -358,8 +365,10 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -379,8 +388,10 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -400,8 +411,10 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -409,29 +422,6 @@
       {
        "side": "Yes",
        "multiplier": 3.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -452,15 +442,17 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -473,8 +465,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -494,8 +488,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -515,15 +511,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -536,15 +534,17 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.5
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -557,15 +557,17 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -578,8 +580,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -599,30 +603,9 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
+     "start": "2026-11-25T03:15:00.0000000+00:00",
      "status_tags": [
-      "Q"
+      null
      ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
@@ -630,7 +613,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -651,8 +634,10 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -672,8 +657,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -693,8 +680,10 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -714,8 +703,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -735,15 +726,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -756,8 +749,10 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -777,8 +772,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -798,30 +795,9 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
+     "start": "2026-11-25T03:15:00.0000000+00:00",
      "status_tags": [
-      "Q"
+      null
      ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
@@ -829,7 +805,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 1.9
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -850,15 +826,17 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.9
+       "multiplier": 7.8
       }
      ],
      "paused": false,
@@ -871,8 +849,10 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -892,15 +872,17 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.3
+       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -913,15 +895,17 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 8.4
+       "multiplier": 8.3
       }
      ],
      "paused": false,
@@ -934,15 +918,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 11.2
+       "multiplier": 10.4
       }
      ],
      "paused": false,
@@ -955,15 +941,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -976,15 +964,17 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 14.9
+       "multiplier": 14.8
       }
      ],
      "paused": false,
@@ -997,30 +987,9 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
+     "start": "2026-11-25T03:15:00.0000000+00:00",
      "status_tags": [
-      "Q"
+      null
      ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
@@ -1028,7 +997,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.1
+       "multiplier": 3.8
       }
      ],
      "paused": false,
@@ -1044,36 +1013,15 @@
    "listed": true,
    "cards": [
     {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
      "player": "Nikola Jokic",
      "player_short": "N. Jokic",
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -1093,11 +1041,13 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -1114,8 +1064,10 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -1135,15 +1087,17 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -1156,8 +1110,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -1177,15 +1133,17 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.4
       }
      ],
      "paused": false,
@@ -1198,8 +1156,10 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -1219,15 +1179,17 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -1240,8 +1202,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -1269,15 +1233,17 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -1290,8 +1256,10 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1311,8 +1279,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1332,8 +1302,10 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1353,8 +1325,10 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1374,8 +1348,10 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1395,8 +1371,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1416,8 +1394,10 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -1437,43 +1417,22 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.5
       }
      ],
      "paused": false,
      "locked": false,
      "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
     }
    ],
    "dk_markets": [
@@ -1489,8 +1448,10 @@
      "team": "DEN",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1510,15 +1471,17 @@
      "team": "DAL",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -1531,8 +1494,10 @@
      "team": "DEN",
      "position": "PG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1552,8 +1517,10 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1573,8 +1540,10 @@
      "team": "DEN",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1594,8 +1563,10 @@
      "team": "DAL",
      "position": "SF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1615,8 +1586,10 @@
      "team": "DEN",
      "position": "PF",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1636,8 +1609,10 @@
      "team": "DAL",
      "position": "C",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1657,8 +1632,10 @@
      "team": "DEN",
      "position": "SG",
      "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-25T03:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -1666,29 +1643,6 @@
       {
        "side": "More",
        "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.4
       }
      ],
      "paused": false,
@@ -1780,8 +1734,8 @@
  "notes": [],
  "summary": {
   "1st Point": {
-   "cards": 10,
-   "open": 10,
+   "cards": 9,
+   "open": 9,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1789,41 +1743,41 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.2,
-   "multiplier_max": 6.9,
+   "multiplier_max": 6.6,
    "games": 1,
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 10,
-   "open": 10,
+   "cards": 9,
+   "open": 9,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 1.6,
+   "multiplier_min": 1.5,
    "multiplier_max": 3.4,
    "games": 1,
    "lines": []
   },
   "1st Three": {
-   "cards": 9,
-   "open": 9,
+   "cards": 8,
+   "open": 8,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 2.5,
+   "multiplier_min": 2.2,
    "multiplier_max": 5.6,
    "games": 1,
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 9,
-   "open": 9,
+   "cards": 8,
+   "open": 8,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1836,8 +1790,8 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 9,
-   "open": 9,
+   "cards": 8,
+   "open": 8,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1845,13 +1799,13 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 1.5,
-   "multiplier_max": 14.9,
+   "multiplier_max": 14.8,
    "games": 1,
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 10,
-   "open": 10,
+   "cards": 9,
+   "open": 9,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1859,15 +1813,16 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 1.5,
+   "multiplier_max": 1.4,
    "games": 1,
    "lines": [
-    0.5
+    0.5,
+    1.5
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 10,
-   "open": 10,
+   "cards": 9,
+   "open": 9,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1882,8 +1837,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 10,
-   "open": 10,
+   "cards": 9,
+   "open": 9,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -1891,7 +1846,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 2.4,
+   "multiplier_max": 2.1,
    "games": 1,
    "lines": [
     0.5
