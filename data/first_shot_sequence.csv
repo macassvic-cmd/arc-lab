@@ -6689,3 +6689,7 @@ event_id,date,season,phase,idx,team,opp,home,player_id,player,pos,started,shot_t
 401910045,2026-11-23,2027,regular,4,SAC,SA,1,4065732,De'Andre Hunter,SF,1,mid,1,53.0,0
 401910044,2026-11-23,2027,regular,1,LAL,UTAH,1,4397014,Quentin Grimes,SG,1,mid,0,17.0,
 401910044,2026-11-23,2027,regular,2,UTAH,LAL,0,5041955,Darryn Peterson,SG,1,mid,1,35.0,0
+401909314,2026-11-24,2027,regular,1,DET,ORL,0,4395702,Isaiah Joe,SG,1,mid,1,27.0,
+401909315,2026-11-24,2027,regular,1,WSH,BOS,1,5142718,AJ Dybantsa,SF,1,mid,1,16.0,
+401909316,2026-11-24,2027,regular,1,DAL,DEN,0,5211175,Zaccharie Risacher,SF,1,3,0,17.0,
+401909316,2026-11-24,2027,regular,2,DEN,DAL,1,3138196,Cameron Johnson,SF,1,3,1,35.0,0
