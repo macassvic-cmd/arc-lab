@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-25T01:18:42Z",
+ "captured_at": "2026-11-25T01:48:49Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -1264,29 +1264,6 @@
    "listed": true,
    "cards": [
     {
-     "player": "PJ Washington",
-     "player_short": "PJ Washington",
-     "team": "DAL",
-     "position": "PF",
-     "game": "DAL @ DEN",
-     "start": "2026-11-25T03:10:00.0000000+00:00",
-     "status_tags": [
-      "Q"
-     ],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Daniel Gafford",
      "player_short": "D. Gafford",
      "team": "DAL",
@@ -1474,6 +1451,29 @@
      "paused": false,
      "locked": false,
      "alt_lines": 0
+    },
+    {
+     "player": "PJ Washington",
+     "player_short": "PJ Washington",
+     "team": "DAL",
+     "position": "PF",
+     "game": "DAL @ DEN",
+     "start": "2026-11-25T03:10:00.0000000+00:00",
+     "status_tags": [
+      "Q"
+     ],
+     "market": "Rebounds 1st 3 Mins",
+     "dk_market": "Rebounds 1st 3 Mins",
+     "line": 0.5,
+     "sides": [
+      {
+       "side": "More",
+       "multiplier": 1.1
+      }
+     ],
+     "paused": false,
+     "locked": false,
+     "alt_lines": 1
     }
    ],
    "dk_markets": [
