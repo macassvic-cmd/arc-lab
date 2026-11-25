@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-25T17:30:28Z",
+ "captured_at": "2026-11-25T18:00:40Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -125,7 +125,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -167,7 +167,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -505,7 +505,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -610,7 +610,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -694,7 +694,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.2
       }
      ],
      "paused": false,
@@ -715,7 +715,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -729,14 +729,16 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -778,7 +780,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -820,7 +822,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -862,7 +864,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -1072,7 +1074,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -1156,7 +1158,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.9
+       "multiplier": 4
       }
      ],
      "paused": false,
@@ -1662,7 +1664,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.6
+       "multiplier": 6.7
       }
      ],
      "paused": false,
@@ -1685,7 +1687,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.4
       }
      ],
      "paused": false,
@@ -1817,7 +1819,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -3791,7 +3793,9 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -3848,7 +3852,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.5
       }
      ],
      "paused": false,
@@ -3911,7 +3915,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 14.6
+       "multiplier": 14.4
       }
      ],
      "paused": false,
@@ -3925,14 +3929,16 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -4037,7 +4043,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.7
+       "multiplier": 5.6
       }
      ],
      "paused": false,
@@ -4163,7 +4169,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4268,7 +4274,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.0
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -4499,7 +4505,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -4606,7 +4612,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4860,7 +4866,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 13.9
+       "multiplier": 14.3
       }
      ],
      "paused": false,
@@ -4904,7 +4910,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -4988,7 +4994,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.4
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -5030,7 +5036,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.6
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -5248,7 +5254,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.0
+       "multiplier": 3.7
       }
      ],
      "paused": false,
@@ -5269,7 +5275,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.3
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -5355,7 +5361,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -5460,7 +5466,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -5481,7 +5487,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.2
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -5502,7 +5508,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -6548,7 +6554,9 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -9168,7 +9176,7 @@
      ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -9177,7 +9185,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 4
+     "alt_lines": 5
     },
     {
      "player": "Ajay Mitchell",
@@ -9470,7 +9478,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -9896,7 +9904,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -9961,12 +9969,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.3
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
+     "alt_lines": 3
     },
     {
      "player": "Julian Champagnie",
@@ -10104,7 +10112,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -10134,7 +10142,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 4
     },
     {
      "player": "Sam Merrill",
@@ -10449,7 +10457,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 4
     },
     {
      "player": "Mikel Brown Jr.",
@@ -10479,14 +10487,16 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 2.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -10696,7 +10706,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -10801,7 +10811,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -10872,7 +10882,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -10935,7 +10945,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -10949,14 +10959,16 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -11149,7 +11161,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -11242,7 +11254,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 2
     },
     {
      "player": "LaMelo Ball",
@@ -11689,7 +11701,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 2
+     "alt_lines": 1
     },
     {
      "player": "Julian Champagnie",
@@ -12337,12 +12349,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.4
+       "multiplier": 1.5
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 0
     },
     {
      "player": "Jabari Smith Jr.",
@@ -12447,7 +12459,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 2
     },
     {
      "player": "Day'Ron Sharpe",
@@ -12912,7 +12924,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -12996,7 +13008,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -13080,7 +13092,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.4
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -13250,7 +13262,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -13930,7 +13942,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.4
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -14100,7 +14112,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -14235,7 +14247,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Jaylen Wells",
@@ -14517,7 +14529,9 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -14709,7 +14723,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 2.1,
-   "multiplier_max": 6.6,
+   "multiplier_max": 6.7,
    "games": 9,
    "lines": []
   },
@@ -14797,7 +14811,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 1.9,
+   "multiplier_max": 2.0,
    "games": 9,
    "lines": [
     0.5,
