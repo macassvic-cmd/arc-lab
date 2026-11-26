@@ -16,3 +16,4 @@ slate_date,captured_at,off_schedule,status,kalshi_markets,kalshi_by_series,games
 2026-11-25,2026-11-25T21:06:04Z,0,captured,1721,"{""KXNBA3PT"": 493, ""KXNBAPTS"": 426, ""KXNBAREB"": 440, ""KXNBAAST"": 362}",9,0,72,9,2026-11-25T20:39:05.537522Z,140,ok; trigger=push
 2026-11-26,2026-11-26T21:00:27Z,0,skipped_no_kalshi_markets,0,"{""KXNBA3PT"": 0, ""KXNBAPTS"": 0, ""KXNBAREB"": 0, ""KXNBAAST"": 0}",,,,,,,"zero Kalshi markets for the slate: a skipped slate, not an error"
 2026-11-26,2026-11-26T21:01:01Z,0,skipped_no_kalshi_markets,0,"{""KXNBA3PT"": 0, ""KXNBAPTS"": 0, ""KXNBAREB"": 0, ""KXNBAAST"": 0}",,,,,,,"zero Kalshi markets for the slate: a skipped slate, not an error"
+2026-11-26,2026-11-26T21:14:23Z,0,skipped_no_kalshi_markets,0,"{""KXNBA3PT"": 0, ""KXNBAPTS"": 0, ""KXNBAREB"": 0, ""KXNBAAST"": 0}",,,,,,,"zero Kalshi markets for the slate: a skipped slate, not an error"
