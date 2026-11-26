@@ -704,6 +704,7 @@ def grade():
     latest = str(log.date.max()); t = now()
     picks = [{k: v for k, v in pk.items() if k != "rows"} for pk in picks_for(last_pretip(log, latest), hist, t, boxed, started)]
     gstat = R.drop_duplicates("event_id").set_index("event_id").status if len(R) else pd.Series(dtype=str)
+    pend = R[R.status == "pending"].drop_duplicates("event_id").sort_values("tip") if len(R) else R    # for health.py job 7; display-neutral
     doc = {"header": "Every pick graded against real results. Nothing filtered, nothing hidden.", "generated": t.strftime("%Y-%m-%dT%H:%M:%SZ"), "rule_file": RULE,
            "label": "Hit rate measures accuracy, not profit. Edge requires comparing to prices.",
            "games": int(len(pg)), "overall": {"n": n, "hits": hits, "misses": n - hits, "hit_rate": round(hits / n, 4) if n else None, "record": f"{hits}-{n - hits}", "mean_p": round(float(counted.top_p.mean()), 4) if n else None},
@@ -712,6 +713,7 @@ def grade():
            "top_picks_void": int((pg.top_started == 0).sum()) if len(pg) else 0, "rows_void": int((R.status == "didn't start").sum()), "rows_graded": int(len(gr)),
            "non_projected_games": int(pg.non_projected.sum()) if len(pg) else 0,
            "buckets": bucket_table(gr) if len(gr) else [], "rows_in_file": int(len(log)), "keys": int(len(snap)), "pending_games": int((gstat == "pending").sum()), "void_games": int((gstat == "void").sum()),
+           "pending_list": [{"date": str(x.date), "event_id": str(x.event_id), "tip": str(x.tip), "home": x.home, "away": x.away} for x in pend.itertuples()],
            "recent": _records(pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60)) if len(pg) else [],
            "nightly": nightly, "totals": report(pg, R) if len(pg) else None, "grades_file": "data/first_basket_grades.csv",
            "today": {"date": latest, "picks": picks, "pending": sum(p["status"] == "pending" for p in picks), "graded": sum(p["status"] == "graded" for p in picks), "void": sum(p["status"] == "void" for p in picks)},

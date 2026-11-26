@@ -9,6 +9,8 @@ data/health_state.json (committed by the workflow):
    cleared silently so each night starts clean. Game window: 90 minutes before tonight's first tip to 3 hours after the last,
    from data/slate.json; no games on the slate means no window and no lines alerts.
 2. Projections (every pass): docs/data/projections.json older than PROJ_STALE_HOURS posts once (and once on recovery).
+7. First-basket performance (every pass): docs/data/first_basket_performance.json stamped more than FB_PERF_STALE_HOURS ago, or
+   carrying a game still pending that long after its tip, posts once (and once on recovery).
    Added 2026-10-28 after the morning update-data cron never fired and nothing said so.
 3. Self-heal (every pass): on a game day, after SELF_HEAL_AFTER (ET), if projections.json's date is not today's ET date, dispatch
    the update-data workflow (`gh workflow run update-data.yml`, GH_TOKEN with actions: write) and say so on Discord. At most one
@@ -68,6 +70,8 @@ SELF_HEAL_MIN_GAP = dt.timedelta(hours=1)
 PRETIP_WINDOW = dt.timedelta(minutes=90)             # job 4: a build must land inside this window before the earliest tip
 FLIP_GRACE = dt.timedelta(minutes=45)                # job 5: a dispatched run gets this long to flip the published slate
 FB_TODAY = SITE_DATA / "first_basket_today.json"
+FB_PERF = SITE_DATA / "first_basket_performance.json"
+FB_PERF_STALE_HOURS = 36                             # job 7: the grade step runs twice daily; 36 h = three missed runs
 ET = ZoneInfo("America/New_York")
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
 WORKFLOW = "update-data.yml"
@@ -121,6 +125,34 @@ def projections_status(now, path=PROJ):
     age = (now - updated).total_seconds() / 3600
     n = len(doc.get("players") or [])
     return age > PROJ_STALE_HOURS, doc.get("date"), age, f"slate {doc.get('date')}, {n} players, built {age:.1f} h ago ({updated:%Y-%m-%d %H:%M}Z)"
+
+
+def fb_perf_status(now, path=FB_PERF):
+    """(stale: bool, detail: str) for docs/data/first_basket_performance.json (job 7). Stale when
+    1. the file is missing or its `generated` stamp does not parse, or the stamp is older than FB_PERF_STALE_HOURS; or
+    2. any game in the doc is still pending more than FB_PERF_STALE_HOURS after its tip, even with a fresh stamp.
+    No-games days: first_basket_model.py grade rewrites `generated` on EVERY run (it stamps now() whether or not a game was
+    graded), and the fb_grade step runs in every update-data build, games or not. So an old stamp always means the step did not
+    run, and the stamp condition needs no "has a game finished since" exception; a day without games keeps a fresh stamp and has
+    nothing pending, so it stays quiet. Pending games come from the doc's `pending_list` (every pending game with its tip;
+    written by the grader from 2026-11-25) and, in a doc without it, from `today.picks` (the latest logged date only)."""
+    doc = read_json(path, None)
+    if doc is None:
+        return True, "first_basket_performance.json is missing"
+    generated = parse_ts(doc.get("generated"))
+    if generated is None:
+        return True, f"first_basket_performance.json has no readable `generated` stamp ({doc.get('generated')!r})"
+    age = (now - generated).total_seconds() / 3600
+    detail = f"generated {generated:%Y-%m-%d %H:%M}Z ({age:.1f} h ago), {doc.get('games')} games graded, {doc.get('pending_games')} pending"
+    pend = doc.get("pending_list")
+    if pend is None:
+        pend = [p for p in ((doc.get("today") or {}).get("picks") or []) if p.get("status") == "pending"]
+    late = sorted((t, g) for t, g in ((parse_ts(g.get("tip")), g) for g in pend) if t and (now - t).total_seconds() / 3600 > FB_PERF_STALE_HOURS)
+    if late:
+        t, g = late[0]
+        detail += (f"; oldest pending game {g.get('away')} @ {g.get('home')} ({g.get('date')}, event {g.get('event_id')}) tipped {t:%Y-%m-%d %H:%M}Z, "
+                   f"{(now - t).total_seconds() / 3600:.1f} h ago and still ungraded ({len(late)} game{'' if len(late) == 1 else 's'} pending past {FB_PERF_STALE_HOURS} h)")
+    return age > FB_PERF_STALE_HOURS or bool(late), detail
 
 
 def is_game_day(day, session=requests):
@@ -310,6 +342,21 @@ def check_projections(now, state, proj_path, notify_fn):
     return "quiet"
 
 
+def check_fb_perf(now, state, path, notify_fn):
+    """Job 7. Mutates state. Returns "alert" | "recovered" | "quiet"."""
+    stale, detail = fb_perf_status(now, path)
+    if stale and not state.get("fb_perf_alerted"):
+        notify_fn(f"⚠️ Arc Lab first-basket performance stale (> {FB_PERF_STALE_HOURS} h): {detail}. Check the update-data fb_grade step and the first-shot label step.")
+        state.update({"fb_perf_alerted": True, "fb_perf_since": now.isoformat(), "fb_perf_detail": detail})
+        return "alert"
+    if not stale and state.get("fb_perf_alerted"):
+        notify_fn(f"✅ Arc Lab first-basket performance fresh again: {detail}.")
+        state.update({"fb_perf_alerted": False, "fb_perf_recovered": now.isoformat()})
+        return "recovered"
+    print(f"[health] first-basket performance {'STALE (already alerted)' if stale else 'fresh'}: {detail}")
+    return "quiet"
+
+
 def self_heal(now, state, proj_path, notify_fn, game_day_fn=is_game_day, dispatch_fn=dispatch_update):
     """Job 3. Mutates state. Returns "dispatched" | "dispatch_failed" | "throttled" | "not_needed" | "too_early" | "off_day"."""
     local = now.astimezone(ET)
@@ -406,13 +453,14 @@ def lineup_refresh(now, notify_fn, watch_fn=None):
 
 
 def check(now=None, force=False, state_path=STATE, lines_path=LINES, slate_path=SLATE, proj_path=PROJ, notify_fn=notify, game_day_fn=is_game_day, dispatch_fn=dispatch_update, running_fn=update_running,
-          fb_path=FB_TODAY, status_fn=run_conclusion, lineups_fn=None):
-    """One watchdog pass. Returns {"lines", "projections", "flip", "self_heal", "pretip", "lineups"}; the state file is rewritten once."""
+          fb_path=FB_TODAY, status_fn=run_conclusion, lineups_fn=None, fb_perf_path=FB_PERF):
+    """One watchdog pass. Returns {"lines", "projections", "fb_perf", "flip", "self_heal", "pretip", "lineups"}; the state file is rewritten once."""
     now = now or utcnow()
     state = read_json(state_path, {}) or {}
     before = json.dumps(state, sort_keys=True)
     out = {"lines": check_lines(now, state, force, lines_path, slate_path, notify_fn),
            "projections": check_projections(now, state, proj_path, notify_fn),
+           "fb_perf": check_fb_perf(now, state, fb_perf_path, notify_fn),
            "flip": flip_check(now, state, proj_path, fb_path, slate_path, notify_fn, dispatch_fn, status_fn)}
     out["self_heal"] = self_heal(now, state, proj_path, notify_fn, game_day_fn, dispatch_fn)
     out["pretip"] = pretip_heal(now, state, proj_path, slate_path, notify_fn, dispatch_fn, running_fn)
