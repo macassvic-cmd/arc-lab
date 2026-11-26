@@ -1,0 +1,35 @@
+# Posts one message to the Arc Lab Discord channel. Dispatched by scripts/first_basket_watch.py on the CEO's PC (the watcher
+# keeps no webhook locally): a push that did not land, a confirmed lineup that changed a game's picks, an unresolved starter.
+name: fb-watch-notify
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: Text to post
+        required: true
+permissions: {}
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Post to Discord
+        env:
+          MESSAGE: ${{ inputs.message }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys, urllib.request, urllib.error
+          hook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
+          if not hook:
+              sys.exit("no DISCORD_WEBHOOK_URL secret")
+          req = urllib.request.Request(hook, data=json.dumps({"content": os.environ["MESSAGE"][:1900]}).encode(),
+                                       headers={"Content-Type": "application/json", "User-Agent": "arc-lab-watcher"})
+          try:
+              urllib.request.urlopen(req, timeout=20).read()
+              print("posted")
+          except urllib.error.HTTPError as e:
+              sys.exit(f"discord answered {e.code}")
+          except Exception as e:
+              sys.exit(f"post failed: {type(e).__name__}")
+          EOF
