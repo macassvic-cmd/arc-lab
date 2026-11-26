@@ -520,6 +520,82 @@ def last_pretip(log, date=None):
     return d[d.logged_at == d.groupby(["date", "event_id"]).logged_at.transform("max")]
 
 
+# ---------------------------------------------------------------- confirmed-lineup rule (backtests/first_basket_confirmed_lineup_rule.md)
+CONFIRMED_RULE = "backtests/first_basket_confirmed_lineup_rule.md"
+ERA_START = "2026-11-25"            # section 3, stamped by the build: the first slate graded after the build landed
+ERA = "confirmed_lineup_rule"
+READ_GAMES = 100                    # section 5: the one read, at the first 100 graded post-fix games
+PASS_COVERAGE, PASS_WRONG_SLOTS = 0.90, 0.10
+
+
+def confirmed_keys(path=None):
+    """{(event_id, logged_at)} of the snapshots built on a CONFIRMED lineup: the why sidecar line written in the same append
+    carries lineup_status "confirmed" (first_basket_watch.py and first_basket_lineups.py). Every other snapshot is projected."""
+    path = path or WHY
+    out = set()
+    if path.exists():
+        for line in open(path, encoding="utf-8"):
+            try:
+                w = json.loads(line)
+            except ValueError:
+                continue
+            if w.get("lineup_status") == "confirmed":
+                out.add((str(w.get("event_id")), w.get("logged_at")))
+    return out
+
+
+def graded_rows(log, date=None, conf=None, era_start=ERA_START):
+    """The rows that grade, per game, with two added columns: era and graded_on.
+    Games dated before era_start: the last snapshot logged before the scheduled tip (rule 5), exactly as before; era and
+    graded_on blank. Games dated era_start or later (confirmed-lineup rule section 3): the last pre-tip snapshot built on a
+    CONFIRMED lineup; only when the game has none, the last pre-tip projected snapshot, tagged "projected". A confirmed
+    snapshot is never superseded by a projected one, whatever the append order. A snapshot stamped at or after tip never
+    grades. The log is never edited; this only reads it."""
+    conf = confirmed_keys() if conf is None else conf
+    d = log if date is None else log[log.date == date]
+    d = d[pd.to_datetime(d.logged_at, utc=True) < pd.to_datetime(d.tip, utc=True)].copy()
+    in_era = d.date.astype(str) >= era_start
+    is_conf = pd.Series([k in conf for k in zip(d.event_id, d.logged_at)], index=d.index, dtype=bool)
+    d["_c"] = (in_era & is_conf).astype(int)
+    d = d[d._c == d.groupby(["date", "event_id"])._c.transform("max")]          # era games with a confirmed snapshot keep only those
+    d = d[d.logged_at == d.groupby(["date", "event_id"]).logged_at.transform("max")].copy()
+    era_now = d.date.astype(str) >= era_start
+    d["era"] = np.where(era_now, ERA, "")
+    d["graded_on"] = np.where(era_now, np.where(d._c == 1, "confirmed", "projected"), "")
+    return d.drop(columns="_c")
+
+
+def era_report(pg, R):
+    """Section 4 (record split by era) and section 5 (the coverage read). pg: one row per graded game (void-label games are not in
+    it); R: the grade rows. Coverage, not accuracy: no model conclusion is drawn from the read either way."""
+    def rec(d):
+        c = d[d.top_started != 0] if len(d) else d
+        n = int(len(c)); h = int(c.hit.sum()) if n else 0
+        return {"games_graded": int(len(d)), "games_counted": n, "hits": h, "misses": n - h, "record": f"{h}-{n - h}", "hit_rate": round(h / n, 4) if n else None}
+    if not len(pg):
+        return None
+    pre, post = pg[pg.date.astype(str) < ERA_START], pg[pg.date.astype(str) >= ERA_START].sort_values(["tip", "event_id"])
+
+    def coverage(d):
+        conf = d[d.graded_on == "confirmed"]; n = int(len(d))
+        wrong = int(((R.status == "didn't start") & R.event_id.isin(set(conf.event_id))).sum())
+        return {"games": n, "graded_on_confirmed": int(len(conf)), "graded_on_projected": n - int(len(conf)), "confirmed_share": round(len(conf) / n, 4) if n else None,
+                "wrong_starter_slots_on_confirmed_games": wrong, "wrong_slots_per_confirmed_game": round(wrong / len(conf), 4) if len(conf) else None}
+    out = {"rule_file": CONFIRMED_RULE, "era_start": ERA_START, "era": ERA,
+           "note": "Records split by era. The pre-fix games graded on a confirmed lineup were not chosen at random and are not evidence the model is better.",
+           "pre_fix": rec(pre), "post_fix": {**rec(post), **coverage(post)}}
+    first = post.head(READ_GAMES)
+    read = {"at_games": READ_GAMES, "games_so_far": int(len(post)), "status": "pending", "marks": {"confirmed_share_min": PASS_COVERAGE, "wrong_slots_per_confirmed_game_max": PASS_WRONG_SLOTS},
+            "note": "Read once, at the first 100 graded post-fix games in scheduled-tip order; games with a void grade do not count. Coverage, not accuracy."}
+    if len(first) >= READ_GAMES:
+        c = coverage(first)
+        m1 = c["confirmed_share"] >= PASS_COVERAGE; m2 = c["wrong_slots_per_confirmed_game"] is not None and c["wrong_slots_per_confirmed_game"] <= PASS_WRONG_SLOTS
+        read.update({"status": "pass" if (m1 and m2) else "miss", "first_date": str(first.date.iloc[0]), "last_date": str(first.date.iloc[-1]), **c,
+                     "coverage_mark_met": bool(m1), "wrong_slot_mark_met": bool(m2)})
+    out["read"] = read
+    return out
+
+
 def labels_by_event():
     if not HIST.exists():
         return {}
@@ -581,7 +657,7 @@ def build_today(date=None, slate=None, skipped=None):
     date = date or (str(log.date.max()) if len(log) else None)
     if not date:
         return
-    d = last_pretip(log, date)
+    d = graded_rows(log, date)          # the same snapshot that will grade (confirmed-lineup rule section 3 from 2026-11-25)
     why = {}
     if WHY.exists():
         for line in open(WHY, encoding="utf-8"):
@@ -646,7 +722,7 @@ def _records(df):
 
 
 GRADE_FIELDS = ["date", "event_id", "tip", "away", "home", "team", "player_id", "player", "pos", "rank", "top_pick", "p_first_basket", "p_first_attempt", "started", "status",
-                "first_scorer", "scorer_logged", "non_projected_scorer", "logged_at"]
+                "first_scorer", "scorer_logged", "non_projected_scorer", "logged_at", "era", "graded_on"]
 
 
 def grade():
@@ -657,7 +733,7 @@ def grade():
             PERF.unlink()
         print("[first-basket] no log yet"); return
     log = pd.read_csv(LOG, dtype={"event_id": str, "player_id": str})
-    snap = last_pretip(log)                                   # rule 5: each game's last snapshot before tip, every row of it
+    snap = graded_rows(log)                                   # rule 5 before the 2026-11-25 slate; the confirmed-lineup rule's section 3 from it
     hist = labels_by_event(); boxed, started = actual_starters(); eps = params["constants"]["eps"]
     rows, per_game = [], []
     for e, g in snap.groupby("event_id"):
@@ -677,12 +753,12 @@ def grade():
             rows.append({"date": r.date, "event_id": e, "tip": r.tip, "away": away, "home": home, "team": r.team, "player_id": r.player_id, "player": r.player, "pos": r.pos, "rank": rank,
                          "top_pick": int(r.top_pick), "p_first_basket": float(r.p_first_basket), "p_first_attempt": float(r.p_first_attempt), "started": st, "status": status,
                          "first_scorer": res["scorer"] if gstat == "graded" else "", "scorer_logged": res["scorer_logged"] if gstat == "graded" else "",
-                         "non_projected_scorer": res["non_projected"] if gstat == "graded" else "", "logged_at": r.logged_at})
+                         "non_projected_scorer": res["non_projected"] if gstat == "graded" else "", "logged_at": r.logged_at, "era": r.era, "graded_on": r.graded_on})
         if gstat != "graded":
             continue
         top = g.iloc[0]; p_sc = res["scorer_p"]
         surv = res["scorer_logged"] and not res["non_projected"]
-        per_game.append({"date": top.date, "event_id": e, "home": home, "away": away, "top_pick": top.player, "top_p": round(float(top.p_first_basket), 3), "top_started": res["top_started"],
+        per_game.append({"date": top.date, "event_id": e, "tip": top.tip, "era": top.era, "graded_on": top.graded_on, "home": home, "away": away, "top_pick": top.player, "top_p": round(float(top.p_first_basket), 3), "top_started": res["top_started"],
                          "hit": res["hit"], "top3": res["top3"], "scorer": res["scorer"], "scorer_logged": res["scorer_logged"], "scorer_started": res["scorer_started"],
                          "non_projected": res["non_projected"], "rows_void": n_void,
                          "loss_v2": -np.log(max(float(p_sc), P_FLOOR)) if surv else -np.log(max(eps, P_FLOOR)), "loss_uniform": -np.log((1 - eps) / 10) if surv else -np.log(max(eps, P_FLOOR))})
@@ -702,7 +778,7 @@ def grade():
     latest_graded = str(pg.date.max()) if len(pg) else None
     nightly = {"date": latest_graded, **report(pg[pg.date == latest_graded], R[(R.date == latest_graded)])} if latest_graded else None
     latest = str(log.date.max()); t = now()
-    picks = [{k: v for k, v in pk.items() if k != "rows"} for pk in picks_for(last_pretip(log, latest), hist, t, boxed, started)]
+    picks = [{k: v for k, v in pk.items() if k != "rows"} for pk in picks_for(graded_rows(log, latest), hist, t, boxed, started)]
     gstat = R.drop_duplicates("event_id").set_index("event_id").status if len(R) else pd.Series(dtype=str)
     pend = R[R.status == "pending"].drop_duplicates("event_id").sort_values("tip") if len(R) else R    # for health.py job 7; display-neutral
     doc = {"header": "Every pick graded against real results. Nothing filtered, nothing hidden.", "generated": t.strftime("%Y-%m-%dT%H:%M:%SZ"), "rule_file": RULE,
@@ -716,6 +792,7 @@ def grade():
            "pending_list": [{"date": str(x.date), "event_id": str(x.event_id), "tip": str(x.tip), "home": x.home, "away": x.away} for x in pend.itertuples()],
            "recent": _records(pg.sort_values(["date", "top_p"], ascending=[False, False]).head(60)) if len(pg) else [],
            "nightly": nightly, "totals": report(pg, R) if len(pg) else None, "grades_file": "data/first_basket_grades.csv",
+           "confirmed_lineup_rule": era_report(pg, R),
            "today": {"date": latest, "picks": picks, "pending": sum(p["status"] == "pending" for p in picks), "graded": sum(p["status"] == "graded" for p in picks), "void": sum(p["status"] == "void" for p in picks)},
            "method": ["Ten projected starters per game logged before tip; the graded snapshot is the game's last snapshot before tip. Append-only log (data/first_basket_log.csv); row grades in data/first_basket_grades.csv.",
                       "Hit = the player scored the game's first made field goal (free throws excluded). A game without a clean label is void (shown, not hidden).",
