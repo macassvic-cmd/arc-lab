@@ -524,7 +524,9 @@ def last_pretip(log, date=None):
 CONFIRMED_RULE = "backtests/first_basket_confirmed_lineup_rule.md"
 ERA_START = "2026-11-25"            # section 3, stamped by the build: the first slate graded after the build landed
 ERA = "confirmed_lineup_rule"
-READ_GAMES = 100                    # section 5: the one read, at the first 100 graded post-fix games
+READ_GAMES = 100                    # section 5: the one read, at the first 100 graded games of the coverage count
+READ_START = "2026-11-27"           # CEO ruling 2026-11-25 (amendment note in section 3): the coverage count starts with the first slate the
+                                    # watcher covered; the 2026-11-25 games keep their grades and era marker but are outside the count
 PASS_COVERAGE, PASS_WRONG_SLOTS = 0.90, 0.10
 
 
@@ -584,9 +586,10 @@ def era_report(pg, R):
     out = {"rule_file": CONFIRMED_RULE, "era_start": ERA_START, "era": ERA,
            "note": "Records split by era. The pre-fix games graded on a confirmed lineup were not chosen at random and are not evidence the model is better.",
            "pre_fix": rec(pre), "post_fix": {**rec(post), **coverage(post)}}
-    first = post.head(READ_GAMES)
-    read = {"at_games": READ_GAMES, "games_so_far": int(len(post)), "status": "pending", "marks": {"confirmed_share_min": PASS_COVERAGE, "wrong_slots_per_confirmed_game_max": PASS_WRONG_SLOTS},
-            "note": "Read once, at the first 100 graded post-fix games in scheduled-tip order; games with a void grade do not count. Coverage, not accuracy."}
+    counted = post[post.date.astype(str) >= READ_START]
+    first = counted.head(READ_GAMES)
+    read = {"at_games": READ_GAMES, "count_starts": READ_START, "games_so_far": int(len(counted)), "games_in_era_outside_count": int(len(post) - len(counted)), "status": "pending", "marks": {"confirmed_share_min": PASS_COVERAGE, "wrong_slots_per_confirmed_game_max": PASS_WRONG_SLOTS},
+            "note": "Read once, at the first 100 graded games dated 2026-11-27 or later (CEO ruling 2026-11-25: the watcher never covered the 2026-11-25 slate), in scheduled-tip order; games with a void grade do not count. Coverage, not accuracy."}
     if len(first) >= READ_GAMES:
         c = coverage(first)
         m1 = c["confirmed_share"] >= PASS_COVERAGE; m2 = c["wrong_slots_per_confirmed_game"] is not None and c["wrong_slots_per_confirmed_game"] <= PASS_WRONG_SLOTS
