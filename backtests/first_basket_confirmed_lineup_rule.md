@@ -25,6 +25,8 @@ Effective the first slate graded after the build lands (the build stamps the exa
 
 **EFFECTIVE DATE (stamped by the build): slate 2026-11-25.** The build landed on main on 2026-11-26 (UTC), after every game of the 2026-11-25 slate had tipped and before any of them was graded (all nine were still pending in `data/first_basket_grades.csv`); the next slate with games is 2026-11-27 (no NBA games on 2026-11-26). The 2026-11-25 slate is therefore the first slate graded after the build landed. Every game dated 2026-11-25 or later is graded under this section; every game dated 2026-11-24 or earlier is graded as before.
 
+**Amendment note (CEO ruling, 2026-11-25): the coverage count starts 2026-11-27.** The effective grading date stays 2026-11-25: the games of that slate were graded under the new order, keep their era marker, and stand exactly as written (no re-grading, no row changes). They are outside the section 5 coverage count, because the watcher never covered that slate (it was registered after those games had tipped). The 100-game coverage read counts games dated 2026-11-27 or later, the first slate the watcher actually covered.
+
 - The graded row for a game is the last pre-tip row built on a CONFIRMED lineup.
 - If no confirmed row exists, the graded row is the last pre-tip projected row, and the grade row is tagged "projected".
 - A confirmed row can never be superseded by a projected row, regardless of append order. (This fixes game 401909941, 2026-11-07, where a projected snapshot appended after the confirmed one restored the wrong five in grading order.)
@@ -59,7 +61,7 @@ No parameter change, no refit, no change to the gate definitions or the baseline
 - **Selection code.** `first_basket_model.graded_rows` is the one selector for grading and for the page's picks. Games dated before the effective date go through the old "last pre-tip snapshot" path untouched.
 - **Era marker.** `data/first_basket_grades.csv` gains two columns: `era` (`confirmed_lineup_rule` from the effective date, blank before) and `graded_on` (`confirmed` or `projected` from the effective date, blank before). No pre-fix value changes.
 - **Wrong starter slot** (§5): a graded-snapshot row whose player did not start (the existing "didn't start" void row), the same count the 2026-11-25 measurement used.
-- **The 100** (§5): the first 100 post-fix games with a grade, in order of scheduled tip (ties by event id); games without a clean label (void grade) are not counted.
+- **The 100** (§5): the first 100 games dated 2026-11-27 or later (amendment note in §3) with a grade, in order of scheduled tip (ties by event id); games without a clean label (void grade) are not counted.
 - **Watcher checks.** Every check is logged with its target time and the actual time NBA.com answered, in `data/first_basket_watch_checks.csv` (append-only). A target the watcher never reached is logged as missed. A confirmed row is appended at the first check that sees the Confirmed stamp, and again at a later check only if the confirmed ten has changed since.
 - **Discord.** No webhook is stored on the PC. The watcher posts through the `fb-watch-notify` workflow (dispatched with the board scraper's GitHub login), which uses the repo's existing Discord secret.
 - **Not changed.** The METHOD layer (`first_basket_method.py`, its own rule and log) still reads the last pre-tip snapshot; health job 6 still runs.
