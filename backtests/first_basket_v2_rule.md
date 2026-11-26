@@ -137,3 +137,10 @@ box-score starters already labelled in `data/first_shot_starters.csv`; no row of
   `data/first_basket_grades.csv` (derived from the log and the labels, regenerated on every grade; the log stays the record).
 - The graded snapshot is the game's last pre-tip snapshot (rule 5) for every row: a player who appeared only in an earlier
   snapshot of the same game is not graded.
+
+## Addendum, 2026-11-25: grading order (confirmed-lineup rule)
+
+From the slate of 2026-11-25 the graded snapshot is chosen by `backtests/first_basket_confirmed_lineup_rule.md` section 3: the
+last pre-tip snapshot built on a CONFIRMED lineup, else the last pre-tip projected snapshot (tagged "projected"). This replaces
+"the game's last pre-tip snapshot" (rule 5 and the 2026-10-22 addendum) going forward only; no game dated 2026-11-24 or earlier
+is re-graded. The model, its constants and every other grading rule are unchanged.
