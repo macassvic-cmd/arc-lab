@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-25T23:33:52Z",
+ "captured_at": "2026-11-26T00:04:07Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -20,7 +20,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -41,7 +41,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -62,7 +62,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3
       }
      ],
      "paused": false,
@@ -104,7 +104,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -125,7 +125,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -188,7 +188,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -201,8 +201,10 @@
      "team": "CHI",
      "position": "PF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -230,7 +232,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -293,7 +295,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -306,8 +308,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -327,8 +331,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -411,8 +417,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -432,8 +440,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -474,8 +484,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -516,8 +528,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -545,7 +559,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -587,7 +601,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -621,8 +635,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -692,7 +708,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -713,7 +729,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -860,7 +876,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.9
       }
      ],
      "paused": false,
@@ -923,7 +939,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -944,7 +960,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.5
       }
      ],
      "paused": false,
@@ -1028,7 +1044,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1133,7 +1149,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1175,7 +1191,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5
+       "multiplier": 5.1
       }
      ],
      "paused": false,
@@ -1217,7 +1233,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 5.8
       }
      ],
      "paused": false,
@@ -1238,7 +1254,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 5.2
       }
      ],
      "paused": false,
@@ -1259,7 +1275,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -1398,8 +1414,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -1427,7 +1445,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.1
+       "multiplier": 6
       }
      ],
      "paused": false,
@@ -1557,7 +1575,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.8
+       "multiplier": 6.7
       }
      ],
      "paused": false,
@@ -1601,7 +1619,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -1643,7 +1661,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.4
+       "multiplier": 6.3
       }
      ],
      "paused": false,
@@ -2384,8 +2402,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2468,8 +2488,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2519,27 +2541,6 @@
       {
        "side": "Yes",
        "multiplier": 1.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Josh Giddey",
-     "player_short": "J. Giddey",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.0
       }
      ],
      "paused": false,
@@ -2615,8 +2616,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -2645,27 +2648,6 @@
       {
        "side": "Yes",
        "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Matas Buzelis",
-     "player_short": "M. Buzelis",
-     "team": "CHI",
-     "position": "PF",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -2799,27 +2781,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Buddy Hield",
-     "player_short": "B. Hield",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "De'Andre Hunter",
      "player_short": "D. Hunter",
      "team": "SAC",
@@ -2897,27 +2858,6 @@
       {
        "side": "Yes",
        "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Isaac Okoro",
-     "player_short": "I. Okoro",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st FG",
-     "dk_market": "Team 1st FG",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -3119,8 +3059,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -3203,8 +3145,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -3316,8 +3260,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3337,8 +3283,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3505,8 +3453,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3526,8 +3476,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3631,8 +3583,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3694,8 +3648,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3765,7 +3721,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.6
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -3862,8 +3818,10 @@
      "team": "CHI",
      "position": "PF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -3871,48 +3829,6 @@
       {
        "side": "Yes",
        "multiplier": 2.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -3983,27 +3899,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Jonathan Kuminga",
-     "player_short": "J. Kuminga",
-     "team": "MIN",
-     "position": "PF",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Yaxel Lendeborg",
      "player_short": "Y. Lendeborg",
      "team": "GSW",
@@ -4019,7 +3914,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4040,7 +3935,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.9
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -4069,69 +3964,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Ayo Dosunmu",
-     "player_short": "A. Dosunmu",
-     "team": "MIN",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Jaden McDaniels",
-     "player_short": "J. McDaniels",
-     "team": "MIN",
-     "position": "PF",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 3.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Kris Murray",
      "player_short": "K. Murray",
      "team": "MEM",
@@ -4153,27 +3985,6 @@
      "alt_lines": 0
     },
     {
-     "player": "LaMelo Ball",
-     "player_short": "L. Ball",
-     "team": "MIN",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Three",
-     "dk_market": "Game 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Darius Acuff Jr.",
      "player_short": "D. Acuff Jr.",
      "team": "SAC",
@@ -4187,7 +3998,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -4208,7 +4019,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.3
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -4250,7 +4061,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 6.1
       }
      ],
      "paused": false,
@@ -4391,8 +4202,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -4420,7 +4233,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.8
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -4441,7 +4254,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -4483,7 +4296,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.7
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -4504,7 +4317,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4525,7 +4338,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -4548,7 +4361,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.5
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -4569,7 +4382,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.4
+       "multiplier": 4.5
       }
      ],
      "paused": false,
@@ -4716,7 +4529,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3.0
       }
      ],
      "paused": false,
@@ -4842,8 +4655,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5583,8 +5398,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5730,8 +5547,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -5893,27 +5712,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Buddy Hield",
-     "player_short": "B. Hield",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Julius Randle",
      "player_short": "J. Randle",
      "team": "BKN",
@@ -5940,8 +5738,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -6075,27 +5875,6 @@
       {
        "side": "Yes",
        "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Matas Buzelis",
-     "player_short": "M. Buzelis",
-     "team": "CHI",
-     "position": "PF",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -6250,48 +6029,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Josh Giddey",
-     "player_short": "J. Giddey",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Isaac Okoro",
-     "player_short": "I. Okoro",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Team 1st Three",
-     "dk_market": "Team 1st 3PT Made",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Devin Booker",
      "player_short": "D. Booker",
      "team": "PHX",
@@ -6320,27 +6057,6 @@
   "1st Dunk": {
    "listed": true,
    "cards": [
-    {
-     "player": "Sion James",
-     "player_short": "S. James",
-     "team": "CHA",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 12.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
     {
      "player": "Yaxel Lendeborg",
      "player_short": "Y. Lendeborg",
@@ -6625,7 +6341,9 @@
      "position": "C",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -6675,27 +6393,6 @@
       {
        "side": "Yes",
        "multiplier": 6.1
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Isaac Okoro",
-     "player_short": "I. Okoro",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 12.7
       }
      ],
      "paused": false,
@@ -6934,27 +6631,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Naz Reid",
-     "player_short": "N. Reid",
-     "team": "CHA",
-     "position": "C",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 7.8
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Toumani Camara",
      "player_short": "T. Camara",
      "team": "POR",
@@ -6969,27 +6645,6 @@
       {
        "side": "Yes",
        "multiplier": 14.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Josh Giddey",
-     "player_short": "J. Giddey",
-     "team": "CHI",
-     "position": "SG",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 17.7
       }
      ],
      "paused": false,
@@ -7123,27 +6778,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Moussa Diabate",
-     "player_short": "M. Diabate",
-     "team": "CHA",
-     "position": "C",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Danny Wolf",
      "player_short": "D. Wolf",
      "team": "BKN",
@@ -7249,27 +6883,6 @@
      "alt_lines": 0
     },
     {
-     "player": "Matas Buzelis",
-     "player_short": "M. Buzelis",
-     "team": "CHI",
-     "position": "PF",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 2.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "Darius Acuff Jr.",
      "player_short": "D. Acuff Jr.",
      "team": "SAC",
@@ -7305,27 +6918,6 @@
       {
        "side": "Yes",
        "multiplier": 16.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Brandon Miller",
-     "player_short": "B. Miller",
-     "team": "CHA",
-     "position": "SF",
-     "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "1st Dunk",
-     "dk_market": "1st Dunk Scorer",
-     "line": null,
-     "sides": [
-      {
-       "side": "Yes",
-       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -7528,7 +7120,9 @@
      "position": "SG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -7612,7 +7206,9 @@
      "position": "SF",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -7703,8 +7299,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -7782,27 +7380,6 @@
      "alt_lines": 4
     },
     {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 2.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 5
-    },
-    {
      "player": "Karl-Anthony Towns",
      "player_short": "K. Towns",
      "team": "NYK",
@@ -7822,27 +7399,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 5
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.9
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
     },
     {
      "player": "Devin Vassell",
@@ -8026,11 +7582,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 2.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.8
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -8271,48 +7827,6 @@
      "alt_lines": 5
     },
     {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.0
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 4
-    },
-    {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Points 1st 3 Mins",
-     "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.3
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 3
-    },
-    {
      "player": "Charles Bassey",
      "player_short": "C. Bassey",
      "team": "GSW",
@@ -8431,7 +7945,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -8490,7 +8004,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -8532,7 +8046,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
@@ -8571,7 +8085,9 @@
      "position": "C",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8592,7 +8108,9 @@
      "position": "SF",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8613,7 +8131,9 @@
      "position": "SG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8654,8 +8174,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 1.5,
@@ -8784,11 +8306,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -8802,7 +8324,9 @@
      "position": "SG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8872,7 +8396,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -8948,8 +8472,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -8990,8 +8516,10 @@
      "team": "CHI",
      "position": "PF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9011,8 +8539,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9024,7 +8554,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 4
+     "alt_lines": 5
     },
     {
      "player": "Naz Reid",
@@ -9032,8 +8562,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9053,8 +8585,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9066,7 +8600,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 2
     },
     {
      "player": "Day'Ron Sharpe",
@@ -9116,8 +8650,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9137,15 +8673,17 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -9222,7 +8760,9 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -9321,7 +8861,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.0
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -9334,8 +8874,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9376,8 +8918,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9405,7 +8949,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -9426,7 +8970,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.7
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -9481,8 +9025,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -9694,27 +9240,6 @@
      "position": "C",
      "game": "LAC @ MEM",
      "start": "2026-11-26T01:10:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 0.7
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 2
-    },
-    {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
      "status_tags": [],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
@@ -10026,48 +9551,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
      "player": "Draymond Green",
      "player_short": "D. Green",
      "team": "GSW",
@@ -10126,27 +9609,6 @@
       {
        "side": "More",
        "multiplier": 1.6
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Rebounds 1st 3 Mins",
-     "dk_market": "Rebounds 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
       }
      ],
      "paused": false,
@@ -10369,8 +9831,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10453,8 +9917,10 @@
      "team": "CHI",
      "position": "PF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10600,8 +10066,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10621,8 +10089,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10726,8 +10196,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10747,8 +10219,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -10973,7 +10447,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.7
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -11049,8 +10523,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11070,8 +10546,10 @@
      "team": "CHA",
      "position": "C",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11091,8 +10569,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11134,14 +10614,16 @@
      "position": "C",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.1
       }
      ],
      "paused": false,
@@ -11155,7 +10637,9 @@
      "position": "SF",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11175,8 +10659,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11196,8 +10682,10 @@
      "team": "CHA",
      "position": "SF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11239,7 +10727,9 @@
      "position": "SG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11259,8 +10749,10 @@
      "team": "CHI",
      "position": "PF",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -11398,7 +10890,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Josh Hart",
@@ -11456,7 +10948,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -11506,27 +10998,6 @@
      "alt_lines": 1
     },
     {
-     "player": "Isaiah Hartenstein",
-     "player_short": "I. Hartenstein",
-     "team": "OKC",
-     "position": "C",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
-    },
-    {
      "player": "LaMelo Ball",
      "player_short": "L. Ball",
      "team": "MIN",
@@ -11546,48 +11017,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Shai Gilgeous-Alexander",
-     "player_short": "S. Gilgeous-Alexander",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.2
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 1
-    },
-    {
-     "player": "Ajay Mitchell",
-     "player_short": "A. Mitchell",
-     "team": "OKC",
-     "position": "SG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 1.5
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "De'Aaron Fox",
@@ -11689,7 +11118,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -11733,7 +11162,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.9
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -11781,27 +11210,6 @@
      "paused": false,
      "locked": false,
      "alt_lines": 1
-    },
-    {
-     "player": "Jared McCain",
-     "player_short": "J. McCain",
-     "team": "OKC",
-     "position": "PG",
-     "game": "MIN @ OKC",
-     "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
-     "market": "Assists 1st 3 Mins",
-     "dk_market": "Assists 1st 3 Mins",
-     "line": 0.5,
-     "sides": [
-      {
-       "side": "More",
-       "multiplier": 2.4
-      }
-     ],
-     "paused": false,
-     "locked": false,
-     "alt_lines": 0
     },
     {
      "player": "Donovan Clingan",
@@ -11987,7 +11395,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.2
+       "multiplier": 2.3
       }
      ],
      "paused": false,
@@ -12029,7 +11437,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -12084,8 +11492,10 @@
      "team": "CHA",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -12294,8 +11704,10 @@
      "team": "CHI",
      "position": "SG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -12316,7 +11728,9 @@
      "position": "SG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -12358,7 +11772,9 @@
      "position": "PG",
      "game": "CLE @ NYK",
      "start": "2026-11-26T00:40:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -12470,7 +11886,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -12483,8 +11899,10 @@
      "team": "CHA",
      "position": "PG",
      "game": "CHI @ CHA",
-     "start": "2026-11-26T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "start": "2026-11-26T00:15:00.0000000+00:00",
+     "status_tags": [
+      null
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -12639,8 +12057,8 @@
    "lines": []
   },
   "Team 1st FG": {
-   "cards": 78,
-   "open": 78,
+   "cards": 74,
+   "open": 74,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12653,22 +12071,22 @@
    "lines": []
   },
   "1st Three": {
-   "cards": 71,
-   "open": 71,
+   "cards": 64,
+   "open": 64,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
     "Yes"
    ],
    "cards_with_less": 0,
-   "multiplier_min": 2.0,
+   "multiplier_min": 2.3,
    "multiplier_max": 14.7,
-   "games": 8,
+   "games": 7,
    "lines": []
   },
   "Team 1st Three": {
-   "cards": 71,
-   "open": 71,
+   "cards": 67,
+   "open": 67,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12681,8 +12099,8 @@
    "lines": []
   },
   "1st Dunk": {
-   "cards": 63,
-   "open": 63,
+   "cards": 56,
+   "open": 56,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12691,12 +12109,12 @@
    "cards_with_less": 0,
    "multiplier_min": 0.9,
    "multiplier_max": 19.8,
-   "games": 8,
+   "games": 7,
    "lines": []
   },
   "Points 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 73,
+   "open": 73,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12713,8 +12131,8 @@
    ]
   },
   "Rebounds 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 73,
+   "open": 73,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
@@ -12722,7 +12140,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 2.0,
+   "multiplier_max": 1.9,
    "games": 8,
    "lines": [
     0.5,
@@ -12730,8 +12148,8 @@
    ]
   },
   "Assists 1st 3 Mins": {
-   "cards": 77,
-   "open": 77,
+   "cards": 73,
+   "open": 73,
    "paused": 0,
    "locked": 0,
    "sides_offered": [
