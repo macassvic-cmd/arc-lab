@@ -33,6 +33,7 @@ import csv
 import datetime as dt
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -191,7 +192,7 @@ def due_checks(games, done, now):
 # ---------------------------------------------------------------- git + notify
 def run(cmd, timeout=120):
     r = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True, timeout=timeout, env=GIT_ENV, creationflags=NO_WINDOW)
-    return r.returncode, (r.stdout + r.stderr).strip()
+    return r.returncode, re.sub(r"//[^/@\s]+@", "//***@", (r.stdout + r.stderr).strip())   # never carry credentials from a URL into a log
 
 
 def git(*args, timeout=120):
