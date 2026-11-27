@@ -1,5 +1,5 @@
 {
- "captured_at": "2026-11-27T16:24:31Z",
+ "captured_at": "2026-11-27T16:55:06Z",
  "source": "pick6.draftkings.com, logged out, visible Chrome with its own profile",
  "category": "Quick Hits",
  "markets": {
@@ -125,7 +125,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.8
+       "multiplier": 4.6
       }
      ],
      "paused": false,
@@ -146,7 +146,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 2.7
       }
      ],
      "paused": false,
@@ -209,7 +209,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.3
+       "multiplier": 4.7
       }
      ],
      "paused": false,
@@ -230,7 +230,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.9
+       "multiplier": 6.2
       }
      ],
      "paused": false,
@@ -244,7 +244,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "1st Point",
      "dk_market": "1st Points Scorer",
      "line": null,
@@ -587,7 +589,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 4.8
       }
      ],
      "paused": false,
@@ -692,7 +694,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.5
+       "multiplier": 3.6
       }
      ],
      "paused": false,
@@ -1154,7 +1156,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 2.9
       }
      ],
      "paused": false,
@@ -1238,7 +1240,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -1301,7 +1303,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.3
       }
      ],
      "paused": false,
@@ -1364,7 +1366,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -1471,7 +1473,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.5
+       "multiplier": 5.6
       }
      ],
      "paused": false,
@@ -1618,7 +1620,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 7.5
+       "multiplier": 7.6
       }
      ],
      "paused": false,
@@ -1639,7 +1641,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.3
+       "multiplier": 4.4
       }
      ],
      "paused": false,
@@ -1786,7 +1788,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.2
+       "multiplier": 4.1
       }
      ],
      "paused": false,
@@ -2143,7 +2145,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.3
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -2879,7 +2881,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Team 1st FG",
      "dk_market": "Team 1st FG",
      "line": null,
@@ -4112,7 +4116,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.8
       }
      ],
      "paused": false,
@@ -4217,7 +4221,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.7
+       "multiplier": 4.9
       }
      ],
      "paused": false,
@@ -4889,7 +4893,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.9
+       "multiplier": 3.1
       }
      ],
      "paused": false,
@@ -4910,7 +4914,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.2
+       "multiplier": 3.3
       }
      ],
      "paused": false,
@@ -4931,7 +4935,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.4
+       "multiplier": 3.5
       }
      ],
      "paused": false,
@@ -4952,7 +4956,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 4.1
+       "multiplier": 4.0
       }
      ],
      "paused": false,
@@ -5078,7 +5082,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.9
+       "multiplier": 6.0
       }
      ],
      "paused": false,
@@ -5456,7 +5460,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.7
+       "multiplier": 5.6
       }
      ],
      "paused": false,
@@ -5512,7 +5516,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "1st Three",
      "dk_market": "Game 1st 3PT Made",
      "line": null,
@@ -5540,7 +5546,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 2.7
+       "multiplier": 2.6
       }
      ],
      "paused": false,
@@ -5582,7 +5588,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 6.2
+       "multiplier": 6.5
       }
      ],
      "paused": false,
@@ -5645,7 +5651,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 3.1
+       "multiplier": 3.2
       }
      ],
      "paused": false,
@@ -5771,7 +5777,7 @@
      "sides": [
       {
        "side": "Yes",
-       "multiplier": 5.1
+       "multiplier": 5.0
       }
      ],
      "paused": false,
@@ -6108,7 +6114,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Team 1st Three",
      "dk_market": "Team 1st 3PT Made",
      "line": null,
@@ -8069,7 +8077,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "1st Dunk",
      "dk_market": "1st Dunk Scorer",
      "line": null,
@@ -9365,12 +9375,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 4
     },
     {
      "player": "Andrew Nembhard",
@@ -9685,7 +9695,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 3
+     "alt_lines": 4
     },
     {
      "player": "Kyrie Irving",
@@ -9722,7 +9732,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.3
+       "multiplier": 1.2
       }
      ],
      "paused": false,
@@ -10450,7 +10460,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
      "line": 0.5,
@@ -10462,7 +10474,7 @@
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 5
+     "alt_lines": 4
     },
     {
      "player": "Rudy Gobert",
@@ -10541,7 +10553,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -10747,7 +10759,7 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 0.5,
+     "line": 1.5,
      "sides": [
       {
        "side": "More",
@@ -10961,7 +10973,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.1
       }
      ],
      "paused": false,
@@ -11083,11 +11095,11 @@
      "status_tags": [],
      "market": "Points 1st 3 Mins",
      "dk_market": "Points 1st 3 Mins",
-     "line": 1.5,
+     "line": 0.5,
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.0
+       "multiplier": 0.9
       }
      ],
      "paused": false,
@@ -11109,7 +11121,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Rebounds 1st 3 Mins",
      "dk_market": "Rebounds 1st 3 Mins",
      "line": 0.5,
@@ -11431,7 +11445,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.7
+       "multiplier": 0.8
       }
      ],
      "paused": false,
@@ -11599,7 +11613,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.2
+       "multiplier": 1.3
       }
      ],
      "paused": false,
@@ -12775,12 +12789,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 0.9
+       "multiplier": 0.8
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 1
+     "alt_lines": 2
     },
     {
      "player": "Mikal Bridges",
@@ -12796,12 +12810,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.5
+       "multiplier": 1.3
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Jalen Brunson",
@@ -12817,7 +12831,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.9
+       "multiplier": 1.6
       }
      ],
      "paused": false,
@@ -13069,12 +13083,12 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.6
+       "multiplier": 1.4
       }
      ],
      "paused": false,
      "locked": false,
-     "alt_lines": 0
+     "alt_lines": 1
     },
     {
      "player": "Nickeil Alexander-Walker",
@@ -13174,7 +13188,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.3
+       "multiplier": 1.9
       }
      ],
      "paused": false,
@@ -13637,7 +13651,9 @@
      "position": "PF",
      "game": "MIA @ NYK",
      "start": "2026-11-28T00:10:00.0000000+00:00",
-     "status_tags": [],
+     "status_tags": [
+      "Q"
+     ],
      "market": "Assists 1st 3 Mins",
      "dk_market": "Assists 1st 3 Mins",
      "line": 0.5,
@@ -14043,7 +14059,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.1
+       "multiplier": 1.0
       }
      ],
      "paused": false,
@@ -14526,7 +14542,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 1.8
+       "multiplier": 1.7
       }
      ],
      "paused": false,
@@ -14757,7 +14773,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.3
+       "multiplier": 2.2
       }
      ],
      "paused": false,
@@ -14862,7 +14878,7 @@
      "sides": [
       {
        "side": "More",
-       "multiplier": 2.0
+       "multiplier": 1.8
       }
      ],
      "paused": false,
@@ -15535,7 +15551,7 @@
    ],
    "cards_with_less": 0,
    "multiplier_min": 0.7,
-   "multiplier_max": 2.3,
+   "multiplier_max": 2.0,
    "games": 11,
    "lines": [
     0.5,
