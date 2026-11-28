@@ -15,3 +15,4 @@ date,event_id,matchup,tip,target_min,target_at,actual_at,late_s,missed,result,ro
 2026-11-27,401909327,MIL@DET,2026-11-28T00:30:00Z,3,2026-11-28T00:27:00Z,2026-11-28T00:28:03Z,63,0,confirmed_row_appended,2026-11-28T00:28:03Z,"DET: out Isaiah Joe, in Javonte Green; top pick Daniss Jenkins"
 2026-11-27,401909328,PHI@IND,2026-11-28T00:30:00Z,3,2026-11-28T00:27:00Z,2026-11-28T00:28:03Z,63,0,confirmed_already_logged,2026-11-28T00:08:06Z,the last confirmed row has the same ten
 2026-11-27,401909329,BKN@TOR,2026-11-28T00:30:00Z,3,2026-11-28T00:27:00Z,2026-11-28T00:28:03Z,63,0,confirmed_already_logged,2026-11-28T00:08:11Z,the last confirmed row has the same ten
+2026-11-27,401909330,ATL@BOS,2026-11-28T01:00:00Z,22,2026-11-28T00:38:00Z,2026-11-28T00:38:04Z,4,0,confirmed_row_appended,2026-11-28T00:38:04Z,"BOS: out Sam Hauser, in Hugo Gonzalez; top pick Paul George"
