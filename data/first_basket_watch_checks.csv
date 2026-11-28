@@ -16,3 +16,7 @@ date,event_id,matchup,tip,target_min,target_at,actual_at,late_s,missed,result,ro
 2026-11-27,401909328,PHI@IND,2026-11-28T00:30:00Z,3,2026-11-28T00:27:00Z,2026-11-28T00:28:03Z,63,0,confirmed_already_logged,2026-11-28T00:08:06Z,the last confirmed row has the same ten
 2026-11-27,401909329,BKN@TOR,2026-11-28T00:30:00Z,3,2026-11-28T00:27:00Z,2026-11-28T00:28:03Z,63,0,confirmed_already_logged,2026-11-28T00:08:11Z,the last confirmed row has the same ten
 2026-11-27,401909330,ATL@BOS,2026-11-28T01:00:00Z,22,2026-11-28T00:38:00Z,2026-11-28T00:38:04Z,4,0,confirmed_row_appended,2026-11-28T00:38:04Z,"BOS: out Sam Hauser, in Hugo Gonzalez; top pick Paul George"
+2026-11-27,401909330,ATL@BOS,2026-11-28T01:00:00Z,15,2026-11-28T00:45:00Z,2026-11-28T00:46:03Z,63,0,confirmed_already_logged,2026-11-28T00:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909330,ATL@BOS,2026-11-28T01:00:00Z,8,2026-11-28T00:52:00Z,2026-11-28T00:52:03Z,3,0,confirmed_already_logged,2026-11-28T00:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909330,ATL@BOS,2026-11-28T01:00:00Z,3,2026-11-28T00:57:00Z,2026-11-28T00:58:03Z,63,0,confirmed_already_logged,2026-11-28T00:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909331,MEM@MIN,2026-11-28T01:30:00Z,22,2026-11-28T01:08:00Z,2026-11-28T01:08:04Z,4,0,confirmed_row_appended,2026-11-28T01:08:04Z,"MEM: out Cam Spencer, in Kris Murray; top pick Ty Jerome"
