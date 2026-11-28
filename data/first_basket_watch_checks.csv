@@ -6,3 +6,6 @@ date,event_id,matchup,tip,target_min,target_at,actual_at,late_s,missed,result,ro
 2026-11-27,401909327,MIL@DET,2026-11-28T00:30:00Z,22,2026-11-28T00:08:00Z,2026-11-28T00:08:05Z,5,0,not_confirmed,,"MIL: 5 with a position, Confirmed/Expected; DET: 5 with a position, Confirmed/Expected"
 2026-11-27,401909328,PHI@IND,2026-11-28T00:30:00Z,22,2026-11-28T00:08:00Z,2026-11-28T00:08:05Z,5,0,confirmed_row_appended,2026-11-28T00:08:06Z,"PHI: out Kentavious Caldwell-Pope, in Dominick Barlow; top pick Kelly Oubre Jr."
 2026-11-27,401909329,BKN@TOR,2026-11-28T00:30:00Z,22,2026-11-28T00:08:00Z,2026-11-28T00:08:05Z,5,0,confirmed_row_appended,2026-11-28T00:08:11Z,"BKN: out Ben Saraf, in Mikel Brown Jr.; TOR: out Collin Murray-Boyles, in Allen Graves; top pick Ja'Kobe Walter"
+2026-11-27,401909327,MIL@DET,2026-11-28T00:30:00Z,15,2026-11-28T00:15:00Z,2026-11-28T00:16:02Z,62,0,confirmed_row_appended,2026-11-28T00:16:03Z,"DET: out Javonte Green, in Isaiah Joe; top pick Daniss Jenkins"
+2026-11-27,401909328,PHI@IND,2026-11-28T00:30:00Z,15,2026-11-28T00:15:00Z,2026-11-28T00:16:02Z,62,0,confirmed_already_logged,2026-11-28T00:08:06Z,the last confirmed row has the same ten
+2026-11-27,401909329,BKN@TOR,2026-11-28T00:30:00Z,15,2026-11-28T00:15:00Z,2026-11-28T00:16:02Z,62,0,confirmed_already_logged,2026-11-28T00:08:11Z,the last confirmed row has the same ten
