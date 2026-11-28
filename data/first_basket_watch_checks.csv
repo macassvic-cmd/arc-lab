@@ -24,3 +24,10 @@ date,event_id,matchup,tip,target_min,target_at,actual_at,late_s,missed,result,ro
 2026-11-27,401909331,MEM@MIN,2026-11-28T01:30:00Z,8,2026-11-28T01:22:00Z,2026-11-28T01:22:03Z,3,0,confirmed_already_logged,2026-11-28T01:08:04Z,the last confirmed row has the same ten
 2026-11-27,401909331,MEM@MIN,2026-11-28T01:30:00Z,3,2026-11-28T01:27:00Z,2026-11-28T01:28:03Z,63,0,confirmed_already_logged,2026-11-28T01:08:04Z,the last confirmed row has the same ten
 2026-11-27,401909332,DAL@PHX,2026-11-28T02:00:00Z,22,2026-11-28T01:38:00Z,2026-11-28T01:38:04Z,4,0,confirmed_row_appended,2026-11-28T01:38:04Z,"DAL: out Kyrie Irving, in Zaccharie Risacher; top pick Jalen Green"
+2026-11-27,401909332,DAL@PHX,2026-11-28T02:00:00Z,15,2026-11-28T01:45:00Z,2026-11-28T01:46:04Z,64,0,confirmed_already_logged,2026-11-28T01:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909332,DAL@PHX,2026-11-28T02:00:00Z,8,2026-11-28T01:52:00Z,2026-11-28T01:52:03Z,3,0,confirmed_already_logged,2026-11-28T01:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909332,DAL@PHX,2026-11-28T02:00:00Z,3,2026-11-28T01:57:00Z,2026-11-28T01:58:03Z,63,0,confirmed_already_logged,2026-11-28T01:38:04Z,the last confirmed row has the same ten
+2026-11-27,401909333,LAL@SA,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,not_confirmed,,"LAL: 5 with a position, Confirmed/Expected; SA: 5 with a position, Confirmed/Expected"
+2026-11-27,401909334,DEN@UTAH,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,not_confirmed,,"DEN: 5 with a position, Confirmed; UTAH: 5 with a position, Confirmed/Expected"
+2026-11-27,401909335,NO@LAC,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,not_confirmed,,"NO: 5 with a position, Confirmed/Expected; LAC: 5 with a position, Confirmed/Expected"
+2026-11-27,401909336,GS@POR,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,confirmed_row_appended,2026-11-28T02:08:04Z,"GS: out Gui Santos, in Charles Bassey; top pick Deni Avdija"
