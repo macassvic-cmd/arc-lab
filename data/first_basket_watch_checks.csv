@@ -31,3 +31,7 @@ date,event_id,matchup,tip,target_min,target_at,actual_at,late_s,missed,result,ro
 2026-11-27,401909334,DEN@UTAH,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,not_confirmed,,"DEN: 5 with a position, Confirmed; UTAH: 5 with a position, Confirmed/Expected"
 2026-11-27,401909335,NO@LAC,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,not_confirmed,,"NO: 5 with a position, Confirmed/Expected; LAC: 5 with a position, Confirmed/Expected"
 2026-11-27,401909336,GS@POR,2026-11-28T02:30:00Z,22,2026-11-28T02:08:00Z,2026-11-28T02:08:04Z,4,0,confirmed_row_appended,2026-11-28T02:08:04Z,"GS: out Gui Santos, in Charles Bassey; top pick Deni Avdija"
+2026-11-27,401909333,LAL@SA,2026-11-28T02:30:00Z,15,2026-11-28T02:15:00Z,2026-11-28T02:16:03Z,63,0,confirmed_row_appended,2026-11-28T02:16:03Z,"LAL: out Quentin Grimes, in Jake LaRavia; top pick Luka Doncic"
+2026-11-27,401909334,DEN@UTAH,2026-11-28T02:30:00Z,15,2026-11-28T02:15:00Z,2026-11-28T02:16:03Z,63,0,confirmed_row_appended,2026-11-28T02:16:09Z,"UTAH: out Mo Bamba, in Jusuf Nurkic; top pick Ace Bailey"
+2026-11-27,401909335,NO@LAC,2026-11-28T02:30:00Z,15,2026-11-28T02:15:00Z,2026-11-28T02:16:03Z,63,0,confirmed_row_appended,2026-11-28T02:16:09Z,"NO: out Saddiq Bey, in Trey Murphy III; top pick Brandon Ingram"
+2026-11-27,401909336,GS@POR,2026-11-28T02:30:00Z,15,2026-11-28T02:15:00Z,2026-11-28T02:16:03Z,63,0,confirmed_already_logged,2026-11-28T02:08:04Z,the last confirmed row has the same ten
